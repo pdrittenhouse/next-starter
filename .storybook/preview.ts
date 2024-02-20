@@ -2,6 +2,7 @@ import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
+// import '../src/index.scss';
 
 const preview: Preview = {
   parameters: {
