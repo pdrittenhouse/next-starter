@@ -42,6 +42,21 @@ export default function Home() {
         />
       </div>
 
+      <a
+          href="https://graphql.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+      >
+        GraphQL
+      </a>
+      <a
+          href="https://react-bootstrap.netlify.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+      >
+        Bootstrap React
+      </a>
+
       <div className={styles.grid}>
         <a
           href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
