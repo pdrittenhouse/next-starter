@@ -24,6 +24,7 @@
     "@storybook/addon-interactions": "^7.6.16",
     "@storybook/addon-links": "^7.6.16",
     "@storybook/addon-onboarding": "^1.0.11",
+    "@storybook/addon-styling-webpack": "^0.0.6",
     "@storybook/addon-themes": "^7.6.16",
     "@storybook/blocks": "^7.6.16",
     "@storybook/nextjs": "^7.6.16",
@@ -33,11 +34,13 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "css-loader": "^6.10.0",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "eslint-plugin-storybook": "^0.8.0",
     "sass": "^1.71.0",
     "storybook": "^7.6.16",
+    "style-loader": "^3.3.4",
     "typescript": "^5"
   }
 }
