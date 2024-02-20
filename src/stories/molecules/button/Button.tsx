@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button as BootstrapButton } from 'react-bootstrap';
 import './button.css';
 
 interface ButtonProps {
@@ -13,7 +14,7 @@ interface ButtonProps {
   /**
    * How large should the button be?
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: 'sm' | 'md' | 'lg';
   /**
    * Button contents
    */
@@ -21,7 +22,7 @@ interface ButtonProps {
   /**
    * Optional click handler
    */
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 /**
@@ -29,24 +30,19 @@ interface ButtonProps {
  */
 export const Button = ({
   primary = false,
-  size = 'medium',
+  size = 'md',
   backgroundColor,
   label,
   ...props
 }: ButtonProps) => {
-  const mode = primary ? 'storybook-button--primary' : 'storybook-button--secondary';
   return (
-    <button
-      type="button"
-      className={['storybook-button', `storybook-button--${size}`, mode].join(' ')}
-      {...props}
-    >
-      {label}
-      <style jsx>{`
-        button {
-          background-color: ${backgroundColor};
-        }
-      `}</style>
-    </button>
+      <BootstrapButton
+          variant="primary"
+          size={size}
+          className={[].join(' ')}
+          {...props}
+      >
+          {label}
+      </BootstrapButton>
   );
 };
