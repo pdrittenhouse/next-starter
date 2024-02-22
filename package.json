@@ -20,16 +20,15 @@
     "react-dom": "^18"
   },
   "devDependencies": {
-    "@storybook/addon-essentials": "^7.6.16",
-    "@storybook/addon-interactions": "^7.6.16",
-    "@storybook/addon-links": "^7.6.16",
+    "@storybook/addon-essentials": "^7.6.17",
+    "@storybook/addon-interactions": "^7.6.17",
+    "@storybook/addon-links": "^7.6.17",
     "@storybook/addon-onboarding": "^1.0.11",
-    "@storybook/addon-styling-webpack": "^0.0.6",
-    "@storybook/addon-themes": "^7.6.16",
-    "@storybook/blocks": "^7.6.16",
-    "@storybook/nextjs": "^7.6.16",
-    "@storybook/react": "^7.6.16",
-    "@storybook/test": "^7.6.16",
+    "@storybook/addon-themes": "^7.6.17",
+    "@storybook/blocks": "^7.6.17",
+    "@storybook/nextjs": "^7.6.17",
+    "@storybook/react": "^7.6.17",
+    "@storybook/test": "^7.6.17",
     "@types/graphql": "^14.5.0",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -39,7 +38,7 @@
     "eslint-config-next": "14.1.0",
     "eslint-plugin-storybook": "^0.8.0",
     "sass": "^1.71.0",
-    "storybook": "^7.6.16",
+    "storybook": "^7.6.17",
     "style-loader": "^3.3.4",
     "typescript": "^5"
   }
