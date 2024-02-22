@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button } from '../../molecules/button/Button';
-import './header.css';
+import './header.scss';
 
 type User = {
   name: string;

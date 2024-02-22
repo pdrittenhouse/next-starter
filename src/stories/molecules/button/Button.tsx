@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button as BootstrapButton } from 'react-bootstrap';
-import './button.css';
+import './button.scss';
 
 interface ButtonProps {
   /**
