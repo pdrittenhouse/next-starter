@@ -4,11 +4,17 @@ import { within, userEvent, expect } from '@storybook/test';
 import { Page } from './Page';
 
 const meta = {
-  title: 'Example/Page',
+  title: 'Design System/Pages/Page',
   component: Page,
   parameters: {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'fullscreen',
+    docs: {
+      category: 'Pages',
+      description: {
+        component: 'This is a page component.',
+      },
+    },
   },
 } satisfies Meta<typeof Page>;
 

@@ -14,6 +14,11 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    options: {
+      storySort: {
+        order: ['Protons', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages'],
+      },
+    },
   },
 };
 
