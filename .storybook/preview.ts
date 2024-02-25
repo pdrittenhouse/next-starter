@@ -16,7 +16,8 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Protons', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages'],
+        order: ['*', ['Protons', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', '*']],
+        locales: 'en-US',
       },
     },
   },
