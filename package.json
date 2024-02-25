@@ -20,6 +20,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^7.6.17",
     "@storybook/addon-designs": "^7.0.9",
     "@storybook/addon-essentials": "^7.6.17",
     "@storybook/addon-interactions": "^7.6.17",
@@ -40,6 +41,7 @@
     "eslint-plugin-storybook": "^0.8.0",
     "sass": "^1.71.0",
     "storybook": "^7.6.17",
+    "storybook-deeper-sort": "^1.1.4",
     "style-loader": "^3.3.4",
     "typescript": "^5"
   }

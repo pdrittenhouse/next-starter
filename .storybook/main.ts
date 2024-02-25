@@ -1,4 +1,7 @@
 import type { StorybookConfig } from "@storybook/nextjs";
+import deeperSortSetup from "storybook-deeper-sort";
+
+deeperSortSetup(['*', ['Protons', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', '*']]);
 
 const config: StorybookConfig = {
   stories: [
@@ -6,12 +9,13 @@ const config: StorybookConfig = {
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
   addons: [
-    "@storybook/addon-ewlinks",
+    "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-onboarding",
     "@storybook/addon-interactions",
     "@storybook/addon-themes",
-    '@storybook/addon-designs',
+    "@storybook/addon-designs",
+    "@storybook/addon-a11y",
   ],
   framework: {
     name: "@storybook/nextjs",
