@@ -3,12 +3,20 @@ import React from 'react';
 import { Header } from '../../organisms/header/Header';
 import './page.scss';
 
+import { useQuery, gql } from "@apollo/client";
+import { GET_TOASTERS } from "../../utils/queries";
+
 type User = {
   name: string;
 };
 
 export const Page: React.FC = () => {
   const [user, setUser] = React.useState<User>();
+
+  const { loading, error, data } = useQuery(GET_TOASTERS)
+
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`
 
   return (
     <article>
@@ -54,6 +62,13 @@ export const Page: React.FC = () => {
           </a>
           .
         </p>
+        <div>
+          {data.toasters.edges.map((toaster, key) => (
+              <div key={key}>
+                <h2>{toaster.node.title}</h2>
+              </div>
+          ))}
+        </div>
         <div className="tip-wrapper">
           <span className="tip">Tip</span> Adjust the width of the canvas with the{' '}
           <svg width="10" height="10" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">

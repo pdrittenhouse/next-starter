@@ -1,8 +1,11 @@
 import type { Preview } from "@storybook/react";
 import { withThemeByDataAttribute } from '@storybook/addon-themes';
+import { MockedProvider } from '@apollo/client/testing';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../src/index.scss';
+import { gql } from "@apollo/client";
+import { sampleData } from '../src/stories/utils/sample-data'
 
 const preview: Preview = {
   parameters: {
@@ -19,6 +22,13 @@ const preview: Preview = {
         order: ['*', ['Protons', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', '*']],
         locales: 'en-US',
       },
+    },
+    fetchMock: {
+      debug: true,
+    },
+    apolloClient: {
+      MockedProvider,
+      globalMocks: sampleData,
     },
   },
 };

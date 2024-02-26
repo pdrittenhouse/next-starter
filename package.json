@@ -41,6 +41,8 @@
     "eslint-plugin-storybook": "^0.8.0",
     "sass": "^1.71.0",
     "storybook": "^7.6.17",
+    "storybook-addon-apollo-client": "^5.0.0",
+    "storybook-addon-fetch-mock": "^1.0.1",
     "storybook-deeper-sort": "^1.1.4",
     "style-loader": "^3.3.4",
     "typescript": "^5"
