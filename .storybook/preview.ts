@@ -3,7 +3,7 @@ import { withThemeByDataAttribute } from '@storybook/addon-themes';
 import { MockedProvider } from '@apollo/client/testing';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
-import '../src/index.scss';
+import '../src/app/global.scss';
 import { gql } from "@apollo/client";
 import { sampleData } from '../src/stories/utils/sample-data'
 

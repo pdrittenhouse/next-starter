@@ -1,21 +1,8 @@
 "use client";
 import Image from "next/image";
-import styles from "./page.module.css";
-import { useQuery, gql } from "@apollo/client";
-
-const GET_TOASTERS = gql`
-  query GetToasters {
-  toasters {
-    edges {
-      node {
-        id
-        title
-        slug
-      }
-    }
-  }
-}
-`
+import styles from "./page.module.scss";
+import { useQuery } from "@apollo/client";
+import GET_TOASTERS from '../utils/queries';
 
 export default function Home() {
 
