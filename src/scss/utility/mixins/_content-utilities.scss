@@ -1,0 +1,1161 @@
+@use "sass:math";
+
+/* stylelint-disable */
+
+//////////////////////////////////////////
+//CONTENT
+//////////////////////////////////////////
+// PX to REM
+//Usage
+//.class{
+//  @include rem-calc(420px);
+//}
+@mixin rem-calc($property, $values, $important:null) {
+  @if $important == true {
+    #{$property}: $values !important;
+    #{$property}: rem-calc($values) !important;
+  } @else {
+    #{$property}: $values;
+    #{$property}: rem-calc($values);
+  }
+}
+
+// PX to EM
+//Usage
+//.class{
+//  @include em-calc(420px);
+//}
+@mixin em-calc($property, $values, $important:null) {
+  @if $important == true {
+    #{$property}: $values !important;
+    #{$property}: em-calc($values) !important;
+  } @else {
+    #{$property}: $values;
+    #{$property}: em-calc($values);
+  }
+}
+
+// Break Out Container
+@mixin breakout() {
+  margin-left: calc((100vw - 100%) / (0 - 2));
+  width: 100vw;
+}
+
+// Mixin - Full Width, even outside container
+// @param {bool} $undo [false]
+// @link https://css-tricks.com/full-width-containers-limited-width-parents/ Source
+@mixin full-width($undo: false) {
+  @if $undo {
+    margin-left: 0;
+    margin-right: 0;
+    position: static;
+    left: auto;
+    right: auto;
+    width: auto;
+    max-width: 100%;
+  } @else {
+    width: 100vw;
+    max-width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+}
+
+/// Word Wrap fix for long spaceless strings
+/// @link https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+@mixin word-wrap() {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+// Ellipses
+// Position an element to the top, bottom, left or right of its container,
+// @param $multiline - specify a single line of text or multiple lines that wrap
+// @param $width - sets width for single line
+// @param $fontSize - sets font-size of text
+// @param $lineHeight - undo positioning on an element it was previously applied to
+// @param $context - undo positioning on an element it was previously applied to
+// @param $bgColor - background-color used for multiline
+// @param $undo - remove ellipsis from an element it was previously applied to
+// @link https://css-tricks.com/line-clampin/
+@mixin truncate($multiline: false, $fade: false, $width: auto, $fontSize: 1, $lineHeight: 1.25, $lineCount: 1, $context: 16px, $bgColor: transparent, $undo: false) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @if ($multiline == false) {
+    width: $width;
+    white-space: nowrap;
+  }
+
+  @if ($multiline == true) {
+    position: relative;
+    //position: relative;
+    display: block;
+    display: -webkit-box;
+    line-height: $lineHeight;
+    max-height: $fontSize * $lineHeight * $lineCount * $context;
+    max-width: 100%;
+    //text-align: justify;
+    //margin-right: -1em;
+    // padding-right: 1em;
+    //padding-right: $gutter-width*1.2;
+    font-size: $fontSize + em;
+    -webkit-line-clamp: $lineCount;
+    -webkit-box-orient: vertical;
+
+    &:before {
+      //content: '\02026';
+      //content: '...';
+      //position: absolute;
+      //right: 0;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0;
+      width: 1em;
+      height: 1em;
+      margin-top: 0.2em;
+      background: $bgColor;
+    }
+
+    @if ($fade == true) {
+      max-height: none;
+      height: calc(#{$lineCount} * 1.2em);
+      text-overflow: fade;
+
+      &:after {
+        content: "";
+        text-align: right;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 70%;
+        height: 1.2em;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+      }
+    }
+  }
+
+  @if ($undo) {
+    max-height: none;
+    height: auto;
+    overflow: visible;
+    text-overflow: unset;
+    width: auto;
+    white-space: normal;
+    display: initial;
+    line-height: initial;
+    max-width: none;
+    font-size: initial;
+
+    &:before,
+    &:after {
+      content: none;
+    }
+  }
+}
+
+//Gradient
+//@mixin vertical-gradient($start-color, $start-opacity, $end-color, $end-opacity, $start-position: 0%, $end-position: 100%) {
+//  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#000000+0,000000+100&1+0,0+100 */
+//  background: -moz-linear-gradient(0deg,  $start-color $start-position, $end-color $end-position); /* FF3.6-15 */
+//  background: -webkit-linear-gradient(0deg,  $start-color $start-position,$end-color $end-position); /* Chrome10-25,Safari5.1-6 */
+//  background: -ms-linear-gradient(0deg,  $start-color $start-position,$end-color $end-position);
+//  background: linear-gradient(0deg,  $start-color $start-position,$end-color $end-position); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+//  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=0 ); /* IE6-9 */
+//}
+
+@mixin gradient($start-color, $end-color, $orientation: vertical, $start-position: 0%, $end-position: 100%, $important: false, $root_var_name: null ) {
+
+  @if $root_var_name == false or $root_var_name == null {
+    @if $important == true {
+      @if $orientation == 'vertical' {
+        background: -moz-linear-gradient(0deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -webkit-linear-gradient(0deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -ms-linear-gradient(0deg, $start-color $start-position, $end-color $end-position) !important;
+        background: linear-gradient(0deg, $start-color $start-position, $end-color $end-position) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=0 ) !important;
+      }
+      @else if $orientation == 'horizontal' {
+        background: -moz-linear-gradient(90deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -webkit-linear-gradient(90deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -ms-linear-gradient(90deg, $start-color $start-position, $end-color $end-position) !important;
+        background: linear-gradient(90deg, $start-color $start-position, $end-color $end-position) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 ) !important;
+      }
+      @else if $orientation == 'diagonal-up' {
+        background: -moz-linear-gradient(45deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -webkit-linear-gradient(45deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -ms-linear-gradient(45deg, $start-color $start-position, $end-color $end-position) !important;
+        background: linear-gradient(45deg, $start-color $start-position, $end-color $end-position) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 ) !important;
+      }
+      @else if $orientation == 'diagonal-down' {
+        background: -moz-linear-gradient(-45deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -webkit-linear-gradient(-45deg, $start-color $start-position, $end-color $end-position) !important;
+        background: -ms-linear-gradient(-45deg, $start-color $start-position, $end-color $end-position) !important;
+        background: linear-gradient(135deg, $start-color $start-position, $end-color $end-position) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 ) !important;
+      }
+      @else if $orientation == 'radial' {
+        background: -moz-radial-gradient(center, ellipse cover, $start-color $start-position, $end-color $end-position) !important;
+        background: -webkit-radial-gradient(center, ellipse cover, $start-color $start-position, $end-color $end-position) !important;
+        background: -ms-linear-gradient(center, ellipse cover, $start-color $start-position, $end-color $end-position) !important;
+        background: radial-gradient(ellipse at center, $start-color $start-position, $end-color $end-position) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 ) !important;
+      }
+      @else {
+        background: -moz-linear-gradient($orientation, $start-color $start-position, $end-color $end-position) !important;
+        background: -webkit-linear-gradient($orientation, $start-color $start-position, $end-color $end-position) !important;
+        background: -ms-linear-gradient($orientation, $start-color $start-position, $end-color $end-position) !important;
+        background: linear-gradient($orientation, $start-color $start-position, $end-color $end-position) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 ) !important;
+      }
+    }
+    @else {
+      @if $orientation == 'vertical' {
+        background: -moz-linear-gradient(0deg, $start-color $start-position, $end-color $end-position);
+        background: -webkit-linear-gradient(0deg, $start-color $start-position, $end-color $end-position);
+        background: -ms-linear-gradient(0deg, $start-color $start-position, $end-color $end-position);
+        background: linear-gradient(0deg, $start-color $start-position, $end-color $end-position);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=0 );
+      }
+      @else if $orientation == 'horizontal' {
+        background: -moz-linear-gradient(90deg, $start-color $start-position, $end-color $end-position);
+        background: -webkit-linear-gradient(90deg, $start-color $start-position, $end-color $end-position);
+        background: -ms-linear-gradient(90deg, $start-color $start-position, $end-color $end-position);
+        background: linear-gradient(90deg, $start-color $start-position, $end-color $end-position);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 );
+      }
+      @else if $orientation == 'diagonal-up' {
+        background: -moz-linear-gradient(45deg, $start-color $start-position, $end-color $end-position);
+        background: -webkit-linear-gradient(45deg, $start-color $start-position, $end-color $end-position);
+        background: -ms-linear-gradient(45deg, $start-color $start-position, $end-color $end-position);
+        background: linear-gradient(45deg, $start-color $start-position, $end-color $end-position);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 );
+      }
+      @else if $orientation == 'diagonal-down' {
+        background: -moz-linear-gradient(-45deg, $start-color $start-position, $end-color $end-position);
+        background: -webkit-linear-gradient(-45deg, $start-color $start-position, $end-color $end-position);
+        background: -ms-linear-gradient(-45deg, $start-color $start-position, $end-color $end-position);
+        background: linear-gradient(135deg, $start-color $start-position, $end-color $end-position);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 );
+      }
+      @else if $orientation == 'radial' {
+        background: -moz-radial-gradient(center, ellipse cover, $start-color $start-position, $end-color $end-position);
+        background: -webkit-radial-gradient(center, ellipse cover, $start-color $start-position, $end-color $end-position);
+        background: -ms-linear-gradient(center, ellipse cover, $start-color $start-position, $end-color $end-position);
+        background: radial-gradient(ellipse at center, $start-color $start-position, $end-color $end-position);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 );
+      }
+      @else {
+        background: -moz-linear-gradient($orientation, $start-color $start-position, $end-color $end-position);
+        background: -webkit-linear-gradient($orientation, $start-color $start-position, $end-color $end-position);
+        background: -ms-linear-gradient($orientation, $start-color $start-position, $end-color $end-position);
+        background: linear-gradient($orientation, $start-color $start-position, $end-color $end-position);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#{$start-color}', endColorstr='#{$end-color}',GradientType=1 );
+      }
+    }
+  } @else {
+    @if $orientation == 'vertical' {
+      --#{$root_var_name}: linear-gradient(0deg, #{$start-color} #{$start-position}, #{$end-color} #{$end-position});
+    }
+    @else if $orientation == 'horizontal' {
+      --#{$root_var_name}: linear-gradient(90deg, #{$start-color} #{$start-position}, #{$end-color} #{$end-position});
+    }
+    @else if $orientation == 'diagonal-up' {
+      --#{$root_var_name}: linear-gradient(45deg, #{$start-color} #{$start-position}, #{$end-color} #{$end-position});
+    }
+    @else if $orientation == 'diagonal-down' {
+      --#{$root_var_name}: linear-gradient(135deg, #{$start-color} #{$start-position}, #{$end-color} #{$end-position});
+    }
+    @else if $orientation == 'radial' {
+      --#{$root_var_name}: radial-gradient(ellipse at center, #{$start-color} #{$start-position}, #{$end-color} #{$end-position});
+    }
+    @else {
+      --#{$root_var_name}: linear-gradient($orientation, #{$start-color} #{$start-position}, #{$end-color} #{$end-position});
+    }
+  }
+
+}
+
+//Transparent Backgrounds
+@mixin transparent($color, $alpha) {
+  $rgba: rgba($color, $alpha);
+  $ie-hex-str: ie-hex-str($rgba);
+  background-color: transparent;
+  background-color: $rgba;
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#{$ie-hex-str},endColorstr=#{$ie-hex-str});
+  zoom: 1;
+}
+
+
+//Prevents elements from being selecteable (form elements, links, etc.)
+//@include user-select(none);
+@mixin user-select($select) {
+  -webkit-touch-callout: $select;
+  -webkit-user-select: $select;
+  -khtml-user-select: $select;
+  -moz-user-select: $select;
+  -ms-user-select: $select;
+  user-select: $select;
+}
+
+
+//Overlays
+@mixin overlay($position: before) {
+  position: relative;
+  &:#{$position} {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 0;
+  }
+}
+
+// Color/Gradient/Image Overlay
+// @param $type - specify overlay type: 'color', 'image', 'gradient'
+// @param $color - color for color overlays
+// @param $url - image url for image overlays
+// @param $opacity - overlay opacity
+// @param $context - position of overlay pseudo content: before, after
+// @param $positionContent - boolean that specifies whether to position the child elements on top of the overlay
+// @param $start-color - start color for gradient overlays
+// @param $end-color - end color for gradient overlays
+// @param $orientation - orientation of gradient overlays
+// @param $start-position - gradient starting position
+// @param $end-position - gradient ending position
+// @param $undo - remove overlay from an element it was previously applied to
+@mixin overlays($type: 'color', $position: before, $color: #000, $url: '', $opacity: .8, $start-color: #ccc, $start-opacity: 1, $end-color: #333, $end-opacity: 1, $orientation: vertical, $start-position: 0%, $end-position: 100%, $positionContent: true, $undo: false) {
+  @include overlay($position);
+
+  @if ($type == 'color') {
+    &:#{$position} {
+      //@include transparent($color, $opacity);
+      background-color: $color;
+      opacity: $opacity;
+    }
+  }
+
+  @if ($type == 'image') {
+    &:#{$position} {
+      background-image: url($url);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: scroll;
+      background-position: center top;
+      opacity: $opacity;
+    }
+  }
+
+  @if ($type == 'gradient') {
+    &:#{$position} {
+      @include gradient($start-color, $end-color, $orientation, $start-position, $end-position);
+      opacity: $opacity;
+    }
+  }
+
+  @if ($positionContent == true) {
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  @if ($undo == true) {
+    position: static;
+
+    &:#{$position} {
+      content: none;
+    }
+  }
+}
+
+//////////////////////////////////////////
+//TYPE
+//////////////////////////////////////////
+
+// Font Family/Weight/Style
+@mixin font($font-stack: $font-stack-base, $font-weight: null, $font-style: null) {
+  font-family: $font-stack;
+
+  @if $font-weight != null {
+    font-weight: $font-weight;
+  }
+
+  @if $font-style != null {
+    font-style: $font-style;
+  }
+}
+
+//
+// Font size and line height mixin
+// @link: https://codepad.co/snippet/scss-font-size-and-line-height-mixin
+// Font size defaults to baseFontSize defined in non-printing/_type.scss
+//
+@mixin fontSize($fontSize: $baseFontSize, $lineHeight: false) {
+  font-size: rem-calc($fontSize);
+
+  @if $lineHeight != false and unitless($lineHeight) {
+    line-height: $lineHeight;
+  } @else if $lineHeight != false {
+    line-height: math.div($lineHeight, $fontSize);
+  }
+}
+
+
+// @font-face generator
+// @link https://bl.ocks.org/jonathantneal/d0460e5c2d5d7f9bc5e6
+// Example usage
+// @include font-face('robotoregular', '../../fonts/roboto/roboto-v20-latin-regular', 500, normal, woff2 woff);
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+  $src: null;
+
+  $extmods: (
+    eot: "?",
+    svg: "#" + str-replace($name, " ", "_")
+  );
+
+  $formats: (
+    otf: "opentype",
+    ttf: "truetype"
+  );
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: $style;
+    font-weight: $weight;
+    src: $src;
+  }
+}
+
+//Smallcaps
+@mixin smallcaps() {
+  // Some font-families don’t support small caps or don’t provide them with
+  // their web font.
+  font-variant: small-caps;
+  text-transform: lowercase;
+}
+
+
+// Headings
+// USAGE
+// @include headings() {
+//     color: #000;
+// }
+
+@mixin headings($from: 1, $to: 6){
+  @for $i from $from through $to{
+    h#{$i}{
+      @content
+    }
+  }
+}
+
+// Heading line element
+@mixin heading-line($color: c(black), $position: 'top', $width: 30px) {
+  position: relative;
+
+  @if $position == 'top' {
+    padding-top: rem-calc(27px);
+  } @else if $position == 'bottom' {
+    padding-bottom: rem-calc(15px);
+  } @else if $position == 'right' {
+
+  } @else if $position == 'left' {}
+
+  @if $position == 'top' or $position == 'bottom' {
+
+    &:before {
+      @include absolute-position($position, 'inside');
+    }
+
+  } @else {
+
+    &:before {
+      @include absolute-center(false, true, true);
+    }
+  }
+
+  @if $position == 'left' {
+    $padding: $width + 11px;
+    padding-left: rem-calc($padding);
+
+    &:before {
+      left: 0;
+    }
+  } @else if $position == 'right' {
+    $padding: $width + 11px;
+    padding-right: rem-calc($padding);
+
+    &:before {
+      right: 0;
+    }
+  }
+
+  &:before {
+    content: "";
+    display: block;
+    height: rem-calc(1px);
+    background-color: $color;
+
+    @if is-px($width) {
+      width: rem-calc($width);
+    } @else {
+      width: $width;
+    }
+  }
+}
+
+///
+/// Viewport sized typography with minimum and maximum values
+///
+/// @author Eduardo Boucas (@eduardoboucas)
+///
+/// @param {Number}   $responsive  - Viewport-based size
+/// @param {Number}   $min         - Minimum font size (px)
+/// @param {Number}   $max         - Maximum font size (px)
+///                                  (optional)
+/// @param {Number}   $fallback    - Fallback for viewport-
+///                                  based units (optional)
+///
+/// @example scss - 5vw font size (with 50px fallback),
+///                 minumum of 35px and maximum of 150px
+///  @include responsive-font(5vw, 35px, 150px, 50px);
+///
+@mixin responsive-font($responsive, $min, $max: false, $fallback: false) {
+  $responsive-unitless: math.div($responsive, ($responsive - $responsive + 1));
+  $dimension: if(unit($responsive) == 'vh', 'height', 'width');
+  $min-breakpoint: math.div($min, $responsive-unitless) * 100;
+
+  @media (max-#{$dimension}: #{$min-breakpoint}) {
+    font-size: $min;
+  }
+
+  @if $max {
+    $max-breakpoint: math.div($max, $responsive-unitless * 100);
+
+    @media (min-#{$dimension}: #{$max-breakpoint}) {
+      font-size: $max;
+    }
+  }
+
+  @if $fallback {
+    font-size: $fallback;
+  }
+
+  font-size: $responsive;
+}
+
+
+
+
+//////////////////////////////////////////
+//LISTS
+//////////////////////////////////////////
+
+//Remove Bullets
+@mixin no-bullets {
+  list-style-type: none;
+  list-style-image: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  ul{
+    list-style-image: none;
+    list-style-type: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  li{
+    list-style-type: none;
+    //margin-left: 0;
+    //margin-right: 0;
+    //padding-left: 0;
+    //padding-right: 0;
+    &:before {
+      content: none;
+    }
+  }
+}
+
+//Remove List
+@mixin no-list {
+  @include no-bullets;
+  li{
+    display: inline-block;
+  }
+}
+
+//Float List Items Left
+@mixin float-list {
+  @include no-bullets;
+  li{
+    float: left;
+  }
+}
+
+//Restore List - No Bullets
+@mixin  restore-list {
+  @include no-bullets;
+  li{
+    display: list-item;
+    float: none;
+  }
+}
+
+//Make Bulleted List
+@mixin make-list {
+  ul{
+    margin: 0 0 0 1.5em;
+  }
+  li{
+    list-style: disc outside none;
+    padding-left: 0;
+  }
+}
+
+// Custom Lists
+@mixin custom-list-style ($first-level-list-style-type:decimal, $second-level-list-style-type:lower-roman, $third-level-list-style-type:lower-alpha, $color: 'inherit', $font-family: 'inherit', $font-size: 16px, $font-weight: 900) {
+  list-style: none;
+  counter-reset: first-level-ol;
+  overflow: hidden;
+  zoom: 1;
+
+  li {
+    position: relative;
+    &:before {
+      color: $color;
+      font-family: $font-family;
+      font-weight: $font-weight;
+      font-size: rem-calc($font-size);
+      display: inline-block;
+      width: 1em;
+      margin-left: -22px;
+      margin-right: 9px;
+      text-align: right;
+      direction: rtl;//right-to-left so the dot we wrote in the :before content will be on the right of the number and longer numbers will extend left from there. Remember: RTL numbers do not change order!
+    }
+    //p{
+    //  display: inline;
+    //}
+  }
+  > li{
+    counter-increment: first-level-ol;
+    &:before{
+      //content: '.'counter(first-level-ol);//counter default is decimal
+      content: '.' counter(first-level-ol, $first-level-list-style-type);
+    }
+  }
+  ol{
+    counter-reset: second-level-ol;
+    > li {
+      counter-increment: second-level-ol;
+      &:before {
+        //content: '.' counter(second-level-ol, lower-alpha);//small letters
+        content: '.' counter(second-level-ol, $second-level-list-style-type);
+      }
+    }
+    ol{
+      counter-reset: third-level-ol;
+      > li {
+        counter-increment: third-level-ol;
+        &:before {
+          //content: '.' counter(third-level-ol, lower-roman);//small roman numerals
+          content: '.' counter(third-level-ol, $third-level-list-style-type);
+        }
+      }
+    }
+  }
+}
+
+@mixin custom-list-icon ($before-content:'', $icon-font-family: 'Font Awesome 5 Free', $icon-weight: 400, $color: 'inherit', $icon-size: 16px, $width:5px, $height:5px, $top-position:10px, $left-position:-15px, $background-color:#000, $border-radius:50%, $margin-bottom:0, $margin-right:0, $margin-left:0) {
+  overflow: hidden;
+  zoom: 1;
+  ul {
+    padding-left: 0;
+  }
+  > li {
+    list-style: none;
+    //padding-left: 24px;
+    position: relative;
+    &:before {
+      content: $before-content;
+      color: $color;
+      font-size: rem-calc($icon-size);
+      font-family: $icon-font-family;
+      font-weight: $icon-weight;
+      width: rem-calc($width);
+      height: rem-calc($height);
+      position: absolute;
+      top: $top-position;
+      left: $left-position;
+      background-color: $background-color;
+      border-radius: $border-radius;
+      vertical-align: middle;
+      display: block;
+      margin-bottom: $margin-bottom;
+      margin-left: $margin-left;
+      margin-right: $margin-right;
+    }
+  }
+}
+
+
+
+//////////////////////////////////////////
+//FORMS
+//////////////////////////////////////////
+
+//Form Placeholders
+@mixin placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder           {@content}
+  ::-moz-placeholder          {@content}
+  :-ms-input-placeholder      {@content}
+}
+
+@mixin input-placeholder {
+  &::-webkit-input-placeholder {@content}
+  &:-moz-placeholder           {@content}
+  &::-moz-placeholder          {@content}
+  &:-ms-input-placeholder      {@content}
+}
+
+//Custom Form Radio Buttons
+//labels should be a direct sibling of radio input.  e.g.: <input type="radio"></input><label></label>
+//include mixin on radio buttons.  e.g.: input[type="radio"] { @include custon-radio-buttons; }
+@mixin custom-radio-buttons( $button-height: 15px, $button-width: 15px, $button-color: #ccc, $border-color: #999, $button-checked: #eee, $border-checked: #333, $border-width: 2px, $checked-border-width: 2px, $border-radius: 50%, $checked-border-radius: 50% ) {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  + label {
+    position: relative;
+    padding-left: $button-width + 5px;
+    &:before {
+      @include vertical-center;
+      content: "";
+      display: block;
+      width: $button-width;
+      height: $button-height;
+      background-color: $button-color;
+      border: $gray-border-1;
+      border-color: $border-color;
+      border-width: $border-width;
+      border-radius: $border-radius;
+      left: 0;
+    }
+  }
+  &:checked + label:before {
+    background-color: $button-checked;
+    border-color: $border-checked;
+    border-width: $checked-border-width;
+    border-radius: $checked-border-radius;
+    width: $checked-width;
+    height: $checked-height;
+  }
+}
+
+//Custom Select Menu
+@mixin customSelect($font-size: 16px, $border-width:0, $borderColor:#fff, $borderRadius:15px, $verticalPadding:10.5px, $leftPadding:15px, $rightPadding:40px, $backgroundColor:#fff, $bgImage: false, $iconFont: false, $iconSize:16px, $icon:null, $iconFontWeight:bold, $iconColor: c(black)) {
+  border-radius: rem-calc($borderRadius);
+  border-width: rem-calc($border-width);
+  border-color: $borderColor;
+  border-style: solid;
+  overflow: hidden;
+  background: $backgroundColor;
+  position: relative;
+
+  @if $bgImage == false {
+    &:after {
+      @include absolute-center(false, true, true);
+      right: rem-calc($rightPadding * .5);
+      pointer-events: none;
+    }
+    @if $iconFont == false {
+      &:after {
+        border-left-width: rem-calc(8px);
+        border-right-width: rem-calc(8px);
+        border-top-width: rem-calc(10px);
+        content: "";
+        display: block;
+        width: 0;
+        height: 0;
+        border-left-style: solid;
+        border-right-style: solid;
+        border-top-style: solid;
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-top-color: #333;
+      }
+    }
+    @else {
+      &:after {
+        font-size: rem-calc($iconSize);
+        font-family: $iconFont;
+        font-weight: $iconFontWeight;
+        color: $iconColor;
+        content: $icon;
+        display: inline-block;
+      }
+    }
+  }
+  @else {
+    background-image: url($bgImage);
+    background-repeat: no-repeat;
+    background-position: 90% 50%;
+  }
+
+  select {
+    @include fontSize($font-size, $font-size);
+    padding-top: rem-calc($verticalPadding);
+    padding-bottom: rem-calc($verticalPadding);
+    padding-left: rem-calc($leftPadding);
+    padding-right: rem-calc($rightPadding);
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    width: 100%;
+    -webkit-appearance: none;
+
+    //@if (unitless($horizontalPadding)) {
+    //  //@include rem(padding-right, calc((#{$horizontalPadding}px * 2) + 1em));
+    //} @else {
+    //  //@include rem(padding-right, calc((#{$horizontalPadding} * 2) + 1em));
+    //}
+
+    //@media only screen and (min-width: $tablet-landscape) {
+    //  width: 130%;
+    //
+    //  @if (unitless($horizontalPadding)) {
+    //    @include rem(padding-right, calc(30% + (#{$horizontalPadding}px * 2) + 1em));
+    //  } @else {
+    //    @include rem(padding-right, calc(30% + (#{$horizontalPadding} * 2) + 1em));
+    //  }
+    //}
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+};
+
+// Button
+// Default button variables defined in non-printing/_custom-variables.scss
+@mixin button(
+  $bgcolor: $btnBackgroundColor,
+  $hover-bg-color: $btnBackgroundHoverColor,
+  $border-top-color: $btnBorderTopColor,
+  $border-bottom-color: $btnBorderBottomColor,
+  $border-left-color: $btnBorderLeftColor,
+  $border-right-color: $btnBorderRightColor,
+  $hover-border-top-color: $btnBorderTopHoverColor,
+  $hover-border-bottom-color: $btnBorderBottomHoverColor,
+  $hover-border-left-color: $btnBorderLeftHoverColor,
+  $hover-border-right-color: $btnBorderRightHoverColor,
+  $border-top-width: $btnBorderTopWidth,
+  $border-bottom-width: $btnBorderBottomWidth,
+  $border-left-width: $btnBorderLeftWidth,
+  $border-right-width: $btnBorderRightWidth,
+  $border-top-width-hover: $btnBorderTopWidthHover,
+  $border-bottom-width-hover: $btnBorderBottomWidthHover,
+  $border-left-width-hover: $btnBorderLeftWidthHover,
+  $border-right-width-hover: $btnBorderRightWidthHover,
+  $border-top-style: $btnBorderTopStyle,
+  $border-bottom-style: $btnBorderBottomStyle,
+  $border-left-style: $btnBorderLeftStyle,
+  $border-right-style: $btnBorderRightStyle,
+  $border-top-style-hover: $btnBorderTopStyleHover,
+  $border-bottom-style-hover: $btnBorderBottomStyleHover,
+  $border-left-style-hover: $btnBorderLeftStyleHover,
+  $border-right-style-hover: $btnBorderRightStyleHover,
+  $border-top-left-radius: $btnBorderTopLeftRadius,
+  $border-top-right-radius: $btnBorderTopRightRadius,
+  $border-bottom-left-radius: $btnBorderBottomLeftRadius,
+  $border-bottom-right-radius: $btnBorderBottomRightRadius,
+  $border-top-left-radius-hover: $btnBorderTopLeftRadiusHover,
+  $border-top-right-radius-hover: $btnBorderTopRightRadiusHover,
+  $border-bottom-left-radius-hover: $btnBorderBottomLeftRadiusHover,
+  $border-bottom-right-radius-hover: $btnBorderBottomRightRadiusHover,
+  $color: $btnColor,
+  $hover-color: $btnColorHover,
+  $font-family: $btnFontFamily,
+  $font-size: $btnFontSize,
+  $font-weight: $btnFontWeight,
+  $font-style: $btnFontStyle,
+  $letter-spacing: $btnLetterSpacing,
+  $line-height: $btnLineHeight,
+  $text-transform: $btnTextTransform,
+  $font-family-hover: $btnFontFamilyHover,
+  $font-size-hover: $btnFontSizeHover,
+  $font-weight-hover: $btnFontWeightHover,
+  $font-style-hover: $btnFontStyleHover,
+  $letter-spacing-hover: $btnLetterSpacingHover,
+  $line-height-hover: $btnLineHeightHover,
+  $text-transform-hover: $btnTextTransformHover,
+  $padding: $btnPadding,
+  $padding-hover: $btnPaddingHover,
+  $box-shadow-x: $btnBoxShadowX,
+  $box-shadow-y: $btnBoxShadowY,
+  $box-shadow-blur: $btnBoxShadowBlur,
+  $box-shadow-spread: $btnBoxShadowSpread,
+  $box-shadow-color: $btnBoxShadowColor,
+  $box-shadow-hover-x: $btnBoxShadowHoverX,
+  $box-shadow-hover-y: $btnBoxShadowHoverY,
+  $box-shadow-hover-blur: $btnBoxShadowHoverBlur,
+  $box-shadow-hover-spread: $btnBoxShadowHoverSpread,
+  $box-shadow-hover-color: $btnBoxShadowHoverColor,
+  $text-shadow-x: $btnTextShadowX,
+  $text-shadow-y: $btnTextShadowY,
+  $text-shadow-blur: $btnTextShadowBlur,
+  $text-shadow-color: $btnTextShadowColor,
+  $text-shadow-hover-x: $btnTextShadowHoverX,
+  $text-shadow-hover-y: $btnTextShadowHoverY,
+  $text-shadow-hover-blur: $btnTextShadowHoverBlur,
+  $text-shadow-hover-color: $btnTextShadowHoverColor
+) {
+  @include font($font-family, $font-weight, $font-style);
+  font-size: $font-size;
+  line-height: $line-height;
+  letter-spacing: $letter-spacing;
+  text-transform: $text-transform;
+  border-top-left-radius: $border-top-left-radius;
+  border-top-right-radius: $border-top-right-radius;
+  border-bottom-left-radius: $border-bottom-left-radius;
+  border-bottom-right-radius: $border-bottom-right-radius;
+  border-top-width: $border-top-width;
+  border-bottom-width: $border-bottom-width;
+  border-left-width: $border-left-width;
+  border-right-width: $border-right-width;
+  border-top-style: $border-top-style;
+  border-bottom-style: $border-bottom-style;
+  border-left-style: $border-left-style;
+  border-right-style: $border-right-style;
+  border-top-color: $border-top-color;
+  border-bottom-color: $border-bottom-color;
+  border-left-color: $border-left-color;
+  border-right-color: $border-right-color;
+  //font-size: rem-calc($font-size);
+  padding: $padding;
+  background-color: $bgcolor;
+  box-shadow: $box-shadow-x $box-shadow-y $box-shadow-blur $box-shadow-spread $box-shadow-color;
+  text-shadow: $text-shadow-x $text-shadow-y $text-shadow-blur $text-shadow-color;
+  color: $color;
+  text-align: center;
+  transition: all $transition-duration $transition-timing-function;
+  will-change: transform, color, background-color, border-top-color, border-bottom-color, border-left-color, border-right-color, padding, opacity;
+  display: inline-block;
+  text-decoration: none;
+  vertical-align: middle;
+
+  &:visited {
+    color: $color;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    @include font($font-family-hover, $font-weight-hover, $font-style-hover);
+    font-size: $font-size-hover;
+    line-height: $line-height-hover;
+    letter-spacing: $letter-spacing;
+    text-transform: $text-transform;
+    border-top-left-radius: $border-top-left-radius-hover;
+    border-top-right-radius: $border-top-right-radius-hover;
+    border-bottom-left-radius: $border-bottom-left-radius-hover;
+    border-bottom-right-radius: $border-bottom-right-radius-hover;
+    border-top-width: $border-top-width-hover;
+    border-bottom-width: $border-bottom-width-hover;
+    border-left-width: $border-left-width-hover;
+    border-right-width: $border-right-width-hover;
+    border-top-style: $border-top-style-hover;
+    border-bottom-style: $border-bottom-style-hover;
+    border-left-style: $border-left-style-hover;
+    border-right-style: $border-right-style-hover;
+    background-color: $hover-bg-color;
+    border-top-color: $hover-border-top-color;
+    border-bottom-color: $hover-border-bottom-color;
+    border-left-color: $hover-border-left-color;
+    border-right-color: $hover-border-right-color;
+    color: $hover-color;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: $box-shadow-hover-x $box-shadow-hover-y $box-shadow-hover-blur $box-shadow-hover-spread $box-shadow-hover-color;
+    text-shadow: $text-shadow-hover-x $text-shadow-hover-y $text-shadow-hover-blur $text-shadow-hover-color;
+    padding: $padding-hover;
+  }
+};
+
+//////////////////////////////////////////
+//MEDIA
+//////////////////////////////////////////
+
+// Inline SVG background image with a PNG fallback.
+// Fallback based on: http://pauginer.tumblr.com/post/36614680636/invisible-gradient-technique
+@mixin svg-background($image-name) {
+  background-image: image-url("bg/" + $image-name + ".png", false, false);
+  background-image: -webkit-linear-gradient(transparent, transparent), inline-image("bg/" + $image-name + ".svg");
+  background-image: linear-gradient(transparent, transparent), inline-image("bg/" + $image-name + ".svg");
+}
+
+@mixin svgz-background($image-name) {
+  background-image: image-url("bg/" + $image-name + ".png", false, false);
+  background-image: -webkit-linear-gradient(transparent, transparent), image-url("bg/" + $image-name + ".svgz");
+  background-image: linear-gradient(transparent, transparent), image-url("bg/" + $image-name + ".svgz");
+}
+
+// Maintain Aspect Ratio
+// USAGE
+// --HTML--
+// <div class="some-element">
+//     <div class="content"></div>
+// </div>
+// --SASS--
+// .some-element { @include aspect-ratio(16, 9, '.inner-content-element'); }
+
+@mixin aspect-ratio($width, $height, $content:'.content') {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: (math.div($height, $width)) * 100%;
+  }
+  > #{$content} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+//Responsive Video
+@mixin responsive-video($width, $height) {
+  position: relative;
+  height: 0;
+  padding-bottom: (math.div($height, $width)) * 100%;
+  iframe,
+  video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    border: none;
+  }
+}
+
+//Remove Aspect Ratio
+@mixin remove-aspect-ratio($content:'.content') {
+  position: relative;
+  &:before {
+    content: none;
+  }
+
+  > #{$content} {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom:auto;
+  }
+}
+
+// List of svg elements so we don't have to type them all out multiple times.
+@mixin svg-elements() {
+  svg,
+  g,
+  circle,
+  ellipse,
+  line,
+  path,
+  polygon,
+  polyline,
+  rect,
+  text {
+    @content;
+  }
+}
+
+// Scrollbars
+@mixin scrollbars($element) {
+
+  @if $element == 'scrollbar' {
+    &::-webkit-scrollbar {
+      @content;
+    }
+  }
+
+  @if $element == 'button' {
+    &::-webkit-scrollbar-button {
+      @content;
+    }
+  }
+
+  @if $element == 'track' {
+    &::-webkit-scrollbar-track {
+      @content;
+    }
+  }
+
+  @if $element == 'track-piece' {
+    &::-webkit-scrollbar-track-piece {
+      @content;
+    }
+  }
+
+  @if $element == 'thumb' {
+    &::-webkit-scrollbar-thumb {
+      @content;
+    }
+  }
+
+  @if $element == 'corner' {
+    &::-webkit-scrollbar-corner {
+      @content;
+    }
+  }
+
+  @if $element == 'resizer' {
+    &::-webkit-resizer {
+      @content;
+    }
+  }
+
+}
+
+
+
+// Webkit browser scoping
+@mixin webkit() {
+  @media screen and (-webkit-min-device-pixel-ratio:0) {
+    @content;
+  }
+}

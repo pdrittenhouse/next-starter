@@ -1,0 +1,40 @@
+@use "sass:math";
+
+// PX to EM
+// Does the main work of converting to a standardized unit by stripping a number
+// and multiplying by the em value.
+@function convert-to-em($value, $context) {
+  @if ($value != auto) {
+    $value: math.div(strip-unit($value), strip-unit($context)) * 1em;
+  }
+  @if ($value == 0em) {
+    $value: 0;
+  } // Turn 0rem into 0
+  @return $value;
+}
+
+// * A "use everywhere" function that converts any standard CSS measurement to rem.
+// * Call with 1, 2, 3 or 4 parameters. 'px' is not required but supported
+// * @example em-calc(10 20 30px 40);
+// * Numbers are space delimited. If you want to delimit using commas, wrap it in another pair of parens.
+// * @example em-calc((10, 20, 30, 40px));
+// * Context defaults to $baseFontSize (defined in non-printing/_type.scss).
+// * Appropriate usage requies context to be set to parent font size when used.
+// @example em-calc(10 20 30 40px, 20px);
+// @example em-calc((10, 20, 30, 40px), 20px);
+@function em-calc($values, $context: $baseFontSize) {
+  $max: length($values);
+
+  @if $max == 1 {
+    @return convert-to-em(nth($values, 1), $context);
+  }
+
+  $emValues: ();
+  @for $i from 1 through $max {
+    $emValues: append(
+        $emValues,
+        convert-to-em(nth($values, $i), $context)
+    );
+  }
+  @return $emValues;
+}

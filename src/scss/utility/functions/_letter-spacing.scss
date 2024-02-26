@@ -1,0 +1,25 @@
+// Photoshop Letter Spacing
+// Example usage
+// .button {
+//   letter-spacing: ls-basic(-5);
+// }
+// @link https://engageinteractive.co.uk/blog/time-saving-sass-functions
+@function ls-basic($value) {
+  @return $value / 1000 * 1em;
+}
+// Array of indexes in non-printing/_custom-variables.scss
+// $ls: (
+//   base: -10,
+//   heading: 10,
+//   button: 5,
+//   slogan: -100,
+// );
+// Example Usage
+// body {
+//   letter-spacing: ls(base);
+// }
+// @link https://www.benmarshall.me/convert-photoshop-letter-spacing-to-css/
+@function ls($name) {
+  $value: map_get($ls, $name);
+  @return ls-basic($value);
+}
