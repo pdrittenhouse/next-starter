@@ -1,0 +1,117 @@
+@use "sass:math";
+
+// Conditionals
+@function is-number($value) {
+  @return type-of($value) == 'number';
+}
+
+@function is-time($value) {
+  @return is-number($value) and index('ms' 's', unit($value)) != null;
+}
+
+@function is-duration($value) {
+  @return is-time($value);
+}
+
+@function is-angle($value) {
+  @return is-number($value) and index('deg' 'rad' 'grad' 'turn', unit($value)) != null;
+}
+
+@function is-frequency($value) {
+  @return is-number($value) and index('Hz' 'kHz', unit($value)) != null;
+}
+
+@function is-integer($value) {
+  @return is-number($value) and round($value) == $value;
+}
+
+@function is-relative-length($value) {
+  @return is-number($value) and index('em' 'ex' 'ch' 'rem' 'vw' 'vh' 'vmin' 'vmax', unit($value)) != null;
+}
+
+@function is-absolute-length($value) {
+  @return is-number($value) and index('cm' 'mm' 'in' 'px' 'pt' 'pc', unit($value)) != null;
+}
+
+@function is-percentage($value) {
+  @return is-number($value) and unit($value) == '%';
+}
+
+@function is-px($value) {
+  @return is-number($value) and unit($value) == 'px';
+}
+
+@function is-length($value) {
+  @return is-relative-length($value) or is-absolute-length($value);
+}
+
+@function is-resolution($value) {
+  @return is-number($value) and index('dpi' 'dpcm' 'dppx', unit($value)) != null;
+}
+
+@function is-position($value) {
+  @return is-length($value) or is-percentage($value) or index('top' 'right' 'bottom' 'left' 'center', $value) != null;
+}
+
+// Math
+@function exponent($base, $exponent) {
+  $result: 1;
+  @for $_ from 1 through $exponent {
+    $result: $result * $base;
+  }
+  @return $result;
+}
+
+@function sum($numbers...) {
+  $sum: 0;
+  @each $number in $numbers {
+    $sum: $sum + $number;
+  }
+  @return $sum;
+}
+
+@function half($num) {
+  @return $num * .5;
+}
+
+@function neg($num) {
+  @return 0 - $num;
+}
+
+@function neghalf($num) {
+  @return neg(half($num));
+}
+
+// String Replace
+// Authored by Hugo Giraudel
+// @link https://hugogiraudel.com/2013/08/08/advanced-sass-list-functions/
+// @link https://css-tricks.com/snippets/sass/str-replace-function/
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+  @return $string;
+}
+
+// Map keys
+// Authored by Hugo Giraudel
+// @link https://hugogiraudel.com/2013/08/08/advanced-sass-list-functions/
+// @link https://css-tricks.com/snippets/sass/deep-getset-maps/
+@function map-deep-get($map, $keys...) {
+  @each $key in $keys {
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+/// Remove the unit of a length
+/// @param {Number} $number - Number to remove unit from
+/// @return {Number} - Unitless number
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return math.div($number, $number * 0 + 1);
+  }
+
+  @return $number;
+}

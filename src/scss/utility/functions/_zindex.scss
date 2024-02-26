@@ -1,0 +1,25 @@
+// Manage Z Indexes
+// Array of indexes in non-printing/_custom-variables.scss
+// $z-indexes: (
+//   'modal',
+//   'site-nav',
+//   'site-header',
+//   'site-content',
+//   'site-footer'
+// );
+// Example Usage
+// .modal { z-index: z(modal); }
+// .site-nav { z-index: z(site-nav); }
+// .site-header { z-index: z(site-header); }
+// .site-content { z-index: z(site-content); }
+// .site-footer { z-index: z(site-footer; }
+// @link https://engageinteractive.co.uk/blog/time-saving-sass-functions
+@function z($name, $z-indexes-list: $z-indexes) {
+  @if index($z-indexes-list, $name) {
+    @return (length($z-indexes-list) - index($z-indexes-list, $name)) + 1;
+  } @else {
+    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes-list}';
+
+    @return null;
+  }
+}

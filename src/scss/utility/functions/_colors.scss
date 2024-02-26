@@ -1,0 +1,18 @@
+@use "utilities";
+
+// Map Colors
+// Example usage
+// Color array defined in non-printing/_custom-variables.scss
+// .element { color: c(gray, dark); }
+@function c($key, $variant: 'base', $map: $c-palette) {
+  @if not map-has-key($map, $key) {
+    @error "Key '#{$key}' not found in map: #{$map}";
+  }
+
+  $color: map-get($map, $key);
+  @if not map-has-key($color, $variant) {
+    @error "Variant '#{$variant}' not found in map: #{$color}";
+  }
+
+  @return map-deep-get($map, $key, $variant);
+}

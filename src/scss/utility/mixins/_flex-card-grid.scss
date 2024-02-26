@@ -1,0 +1,529 @@
+@use 'sass:math';
+// @param $columns [number]: number of grid columns
+// @param $card [string]: card element selector
+// @param $inner [string]: card inner element selector (use if flex is needed on card inner wrapping element)
+// @param $gutter [string]: width of grid gutters
+// @param $mobilecolumns [boolean]: display columns on mobile
+// @param $singlerow [boolean]: limit cards to a single row
+// @param $featured [string]: element selector for feature card
+// @param $masonry [string]: element selector for masonry grid-sizer
+
+
+@mixin flex-grid ($columns: 3, $card: '.card', $inner: null, $gutter: 30px, $mobilecolumns: false, $singlerow: false, $featured:'.featured', $masonry: false) {
+  $gutters: $columns - 1;
+  $gutter-total: $gutters * $gutter;
+  $column-width: calc((100% - #{$gutter-total}) / #{$columns}); //number of columns per row on desktop
+  //$column-width: calc(((100% - #{$gutter-total}) / #{$columns}) + #{$columns}px); //number of columns per row on desktop
+  $column-width-double: calc(((100% - #{$gutter-total}) / #{$columns}) * 2); //featured card width
+  $column-width-triple: calc(((100% - #{$gutter-total}) / #{$columns}) * 3); //featured card width
+
+  @if unitless($gutter-total) {
+    $column-width: calc((100% - #{$gutter-total}px) / #{$columns}); //number of columns per row on desktop if unit undefined
+    //$column-width: calc(((100% - #{$gutter-total}px) / #{$columns}) + #{$columns}px); //number of columns per row on desktop if unit undefined
+    $column-width-double: calc(((100% - #{$gutter-total}px) / #{$columns}) * 2); //featured card width
+    $column-width-triple: calc(((100% - #{$gutter-total}px) / #{$columns}) * 3); //featured card width
+  }
+
+  @if $masonry != false {
+    margin: 0;
+  }
+
+  //$column-width: calc((100% - #{$gutter-total}px) / #{$columns}); //px unit may be needed.  If grids not working remove $column-width calculation on line 17 above and use this instead
+  @include flexbox;
+  @include flex-flow(row wrap);
+  @include justify-content(flex-start);
+  @include align-items(flex-start);
+
+  &.slick {
+    .slick-track {
+      height: 100%;
+    }
+  }
+
+  .has-placecard &,
+  &.has-placecard {
+
+    &:after {
+      content: "";
+      display: block;
+      max-height: 0;
+    }
+  }
+
+  > .placecard {
+    @include hide;
+    display: block;
+    max-height: 0;
+  }
+
+  .break {
+    @include flex(0 1 100%);
+  }
+
+  // Card Margins
+  > #{$card} {
+    margin-top: rem-calc($gutter);
+
+    @include media-breakpoint-up(md) {
+      margin-left: rem-calc($gutter * .5);
+      margin-right: rem-calc($gutter * .5);
+    }
+
+    /* stylelint-disable */
+    &:first-child {
+      margin-top: 0 !important;
+    }
+
+    @if $mobilecolumns == true {
+      &:nth-of-type(2) {
+
+        @include media-breakpoint-down(lg) {
+          margin-top: 0 !important;
+        }
+      }
+
+      &:nth-of-type(2n - 1) {
+
+        @include media-breakpoint-down(lg) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(2n) {
+
+        @include media-breakpoint-down(lg) {
+          margin-right: 0 !important;
+        }
+      }
+    }
+
+    @if $columns == 2 {
+
+      &:nth-of-type(#{$columns}n + 1) { // First in row
+
+        @include media-breakpoint-up(md) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(#{$columns}n) { // Last in row
+
+        @include media-breakpoint-up(md) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + #{$columns}) { // First row
+
+        @include media-breakpoint-up(md) {
+          margin-top: 0 !important;
+        }
+      }
+    }
+
+    @if $columns == 3 {
+
+      // 2 columns
+      &:nth-of-type(2n + 1) { // First in row
+
+        @include media-breakpoint-only(lg) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(2n) { // Last in row
+
+        @include media-breakpoint-only(lg) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + 2) { // First row
+
+        @include media-breakpoint-only(lg) {
+          margin-top: 0 !important;
+        }
+      }
+
+
+      // 3 columns
+      &:nth-of-type(#{$columns}n + 1) { // First in row
+
+        @include media-breakpoint-up(xl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(#{$columns}n) { // Last in row
+
+        @include media-breakpoint-up(xl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + #{$columns}) { // First row
+
+        @include media-breakpoint-up(xl) {
+          margin-top: 0 !important;
+        }
+      }
+
+    }
+
+    @if $columns == 4 {
+
+      // 2 columns
+      &:nth-of-type(2n + 1) { // First in row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(2n) { // Last in row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + 2) { // First row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-top: 0 !important;
+        }
+      }
+
+
+      // 4 columns
+      &:nth-of-type(#{$columns}n + 1) { // First in row
+
+        @include media-breakpoint-up(xl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(#{$columns}n) { // Last in row
+
+        @include media-breakpoint-up(xl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + #{$columns}) { // First in row
+
+        @include media-breakpoint-up(xl) {
+          margin-top: 0 !important;
+        }
+      }
+    }
+
+    @if $columns == 5 {
+
+      // 2 columns
+      &:nth-of-type(2n + 1) { // First in row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(2n) { // Last in row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + 2) { // First row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-top: 0 !important;
+        }
+      }
+
+
+      // 5 columns
+      &:nth-of-type(#{$columns}n + 1) { // First in row
+
+        @include media-breakpoint-up(xl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(#{$columns}n) { // Last in row
+
+        @include media-breakpoint-up(xl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + #{$columns}) { // First row
+
+        @include media-breakpoint-up(xl) {
+          margin-top: 0 !important;
+        }
+      }
+    }
+
+    @if $columns == 6 {
+
+      // 2 columns
+      &:nth-of-type(2n + 1) { // First in row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(2n) { // Last in row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + 2) { // First row
+
+        @include media-breakpoint-between(md, xl) {
+          margin-top: 0 !important;
+        }
+      }
+
+      // 3 columns
+      &:nth-of-type(3n + 1) { // First in row
+
+        @include media-breakpoint-only(xl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(3n) { // Last in row
+
+        @include media-breakpoint-only(xl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + 3) { // Last in row
+
+        @include media-breakpoint-only(xl) {
+          margin-top: 0 !important;
+        }
+      }
+
+      // 6 columns
+      &:nth-of-type(#{$columns}n + 1) { // First in row
+
+        @include media-breakpoint-up(xxl) {
+          margin-left: 0 !important;
+        }
+      }
+
+      &:nth-of-type(#{$columns}n) { // Last in row
+
+        @include media-breakpoint-up(xxl) {
+          margin-right: 0 !important;
+        }
+      }
+
+      &:nth-of-type(-n + #{$columns}) { // First row
+
+        @include media-breakpoint-up(xxl) {
+          margin-top: 0 !important;
+        }
+      }
+    }
+    /* stylelint-enable */
+
+    @if $singlerow == true {
+      &:nth-of-type(n + #{$columns + 1}) {
+        @include remove;
+      }
+    }
+  }
+
+  @if $masonry != false {
+    > #{$masonry} {
+      margin-top: rem-calc($gutter);
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:nth-of-type(-n + #{$columns}) {
+
+        @include media-breakpoint-up(lg) {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  // Card Grid Layout
+  > #{$card},
+  > #{$masonry},
+  > .placecard,
+  &:after {
+    @include flex(0 1 100%);
+
+    @if $inner != null {
+      @include flexbox;
+      @include flex-flow(row wrap);
+      > #{$inner} {
+        @include flex(0 1 100%);
+      }
+    }
+
+    @if $mobilecolumns == true {
+      @include media-breakpoint-down(lg) {
+        @include flex(0 1 calc((100% - #{$gutter}) / 2));
+      }
+    }
+
+    @if $columns == 2 { //2 Column Flex Card Grid
+      @include media-breakpoint-up(md) {
+        @include flex(0 1 $column-width);
+      }
+    }
+
+    @else if $columns == 3 { //3 Column Flex Card Grid
+      @include media-breakpoint-only(lg) {
+        @include flex(0 1 calc((100% - #{$gutter}) / 2));
+      }
+      @include media-breakpoint-up(xl) {
+        @include flex(0 1 $column-width);
+      }
+    }
+
+    @else if $columns == 4 { //4 Column Flex Card Grid
+      @include media-breakpoint-between(md, xl) {
+        @include flex(0 1 calc((100% - #{$gutter}) / 2));
+      }
+      @include media-breakpoint-up(xl) {
+        @include flex(0 1 $column-width);
+      }
+    }
+
+    @else if $columns == 5 { //5 Column Flex Card Grid
+      @include media-breakpoint-between(md, xl) {
+        @include flex(0 1 calc((100% - #{$gutter}) / 2));
+      }
+      @include media-breakpoint-up(xl) {
+        @include flex(0 1 $column-width);
+      }
+    }
+
+    @else if $columns == 6 { //6 Column Flex Card Grid
+      @include media-breakpoint-between(md, xl) {
+        @include flex(0 1 calc((100% - #{$gutter}) / 2));
+      }
+      @include media-breakpoint-only(xl) {
+        @include flex(0 1 calc((100% - (#{$gutter} * 2)) / 3));
+      }
+      @include media-breakpoint-up(xxl) {
+        @include flex(0 1 $column-width);
+      }
+    }
+
+    //@else { //Default: 1 Column Flex Card Grid
+    //
+    //}
+  }
+
+  // Masonry Card Grid Layout
+  @if $masonry != false {
+    > #{$masonry} {
+      @include flex(0 1 100%);
+
+      @if $mobilecolumns == true {
+        @include media-breakpoint-down(lg) {
+          @include flex(0 1 calc((100% - #{$gutter}) / 2));
+        }
+      }
+
+      @if $columns == 2 { //2 Column Flex Card Grid
+        @include media-breakpoint-up(md) {
+          @include flex(0 1 $column-width);
+        }
+        &#{$featured} {
+          @include media-breakpoint-up(md) {
+            @include flex(0 1 $column-width-double);
+          }
+        }
+      }
+
+      @else if $columns == 3 { //3 Column Flex Card Grid
+        @include media-breakpoint-only(lg) {
+          @include flex(0 1 calc((100% - #{$gutter}) / 2));
+        }
+        @include media-breakpoint-up(xl) {
+          @include flex(0 1 $column-width);
+        }
+        &#{$featured} {
+          @include media-breakpoint-up(xl) {
+            @include flex(0 1 $column-width-double);
+          }
+        }
+      }
+
+      @else if $columns == 4 { //4 Column Flex Card Grid
+        @include media-breakpoint-between(md, xl) {
+          @include flex(0 1 calc((100% - #{$gutter}) / 2));
+        }
+        @include media-breakpoint-up(xl) {
+          @include flex(0 1 $column-width);
+        }
+        &#{$featured} {
+          @include media-breakpoint-between(md, xl) {
+            @include flex(0 1 calc((#{$column-width} * #{$columns}) + #{$gutter-total}));
+          }
+          @include media-breakpoint-up(xl) {
+            @include flex(0 1 $column-width-double);
+          }
+        }
+      }
+
+      @else if $columns == 5 { //5 Column Flex Card Grid
+        @include media-breakpoint-between(md, xl) {
+          @include flex(0 1 calc((100% - #{$gutter}) / 2));
+        }
+        @include media-breakpoint-up(xl) {
+          @include flex(0 1 $column-width);
+        }
+        &#{$featured} {
+          @include media-breakpoint-between(md, xl) {
+            @include flex(0 1 calc((#{$column-width} * #{$columns}) + #{$gutter-total}));
+          }
+          @include media-breakpoint-up(xl) {
+            @include flex(0 1 $column-width-double);
+          }
+        }
+      }
+
+      @else if $columns == 6 { //6 Column Flex Card Grid
+        @include media-breakpoint-between(md, xl) {
+          @include flex(0 1 calc((100% - #{$gutter}) / 2));
+        }
+        @include media-breakpoint-only(xl) {
+          @include flex(0 1 calc((100% - (#{$gutter} * 2)) / 3));
+        }
+        @include media-breakpoint-up(xxl) {
+          @include flex(0 1 $column-width);
+        }
+        &#{$featured} {
+          @include media-breakpoint-between(md, xl) {
+            @include flex(0 1 calc((#{$column-width} * #{$columns}) + #{$gutter-total}));
+          }
+          @include media-breakpoint-up(xxl) {
+            @include flex(0 1 $column-width);
+          }
+        }
+      }
+
+      //@else { //Default: 1 Column Flex Card Grid
+      //
+      //}
+    }
+  }
+}
