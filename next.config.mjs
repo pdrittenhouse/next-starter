@@ -8,6 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
     sassOptions: {
         includePaths: [path.join(__dirname, 'scss')],
+        prependData: "@import '../scss/variables.scss';",
     },
 };
 
