@@ -146,10 +146,10 @@ $font-weight-bolder:          bolder !default;
 $font-weight-base:            $font-weight-normal !default;
 $line-height-base:            1.4;
 
-$h1-font-size:                calc(#{$font-size-base} * 4.625); //74px
-$h2-font-size:                calc(#{$font-size-base} * 3.25); //52px
-$h3-font-size:                calc(#{$font-size-base} * 3); //48px
-$h4-font-size:                calc(#{$font-size-base} * 2.75); //44px
+$h1-font-size:                calc(#{$font-size-base} * 2.75); //44px
+$h2-font-size:                calc(#{$font-size-base} * 2.375); //38px
+$h3-font-size:                calc(#{$font-size-base} * 2.125); //34px
+$h4-font-size:                calc(#{$font-size-base} * 1.875); //30px
 $h5-font-size:                calc(#{$font-size-base} * 1.375); //22px
 $h6-font-size:                calc(#{$font-size-base} * 1.125); //18px
 

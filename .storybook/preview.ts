@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../src/scss/global.scss';
 import { gql } from "@apollo/client";
-import { sampleData } from '../src/stories/utils/sample-data'
+import { sampleData } from '../src/stories/utils/sample-data';
 
 const preview: Preview = {
   parameters: {
