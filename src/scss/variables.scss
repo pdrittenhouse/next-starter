@@ -1,1 +1,22 @@
+//
+// Global VARIABLES and HELPERS
+//
+// Place global config here like Bootstrap's _variables.scss.
+// This kind of config is often required prior to importing any libraries
+// (ie Bootstrap Sass), and does not produce any CSS, just variables and maps.
+//
+// This file is provided AUTOMATICALLY to every .scss file on the dependency
+// chain via the configuration of the sass-loader within next.config.mjs.
+// In other words, every .scss within /scss has `@import variables`
+// silently injected into the first line.
+//
+// As long as everything within this files DOES NOT PRINT CSS, there will be
+// no duplicated output. Again, for the people in the back:
+//
+// THIS FILE CONTAINS ONLY NON-PRINTING SASS, LIKE VARIABLES, MIXINS, & FUNCTIONS
+// NO PRINTING SASS SHOULD BE ADDED TO THIS FILE
+//
+
+@import "vars/all";
 @import "utility/all";
+@import "vars/libs/all";

@@ -1,0 +1,97 @@
+// COLOR PALETTE
+//
+// These are the colors you will use for design elements throughout the site.
+// You can set the keys to whatever you like. For example, keys like "1",
+// "blue", or "blue-1" will all work.
+//
+// Each key has sub-keys to reflect the variants of a color. The only sub-key
+// that is required is "base". You can add sub-keys for additional variants
+// of your colors.
+//
+// Access color palette values via c() function. See _functions.scss
+//
+// Examples:
+//    Access base color:
+//      color: c(1);
+//      color: c(blue);
+//      background: linear-gradient(45deg, c(1), c(blue));
+//
+//    Accessing variants:
+//      color: c(1, dark);
+//      color: c(blue, light);
+//      background: linear-gradient(45deg, c(1, light), c(blue, dark));
+//
+// Color Names: http://chir.ag/projects/name-that-color
+//
+$c-palette: (
+  // Example 1
+  // primary: (
+  //   base: #ff4444,
+  //   dark: #ff0000,
+  //   light: #ff9999
+  // ),
+  // Example 2
+  // 2: (
+  //   base: $emerald,
+  //   dark: darken($emerald, 10%),
+  //   light: lighten($emerald, 10%)
+  // ),
+  // Example 3
+  // persian-red: (
+  //   base: hsla(0, 64%, 51%, 1),
+  //   dark: hsla(0, 64%, 35%, 1),
+  //   transparent: hsla(0, 64%, 35%, .5),
+  // ),
+  white: (
+    base: #fff,
+  ),
+  black: (
+    base: #000,
+  ),
+  gray: (
+    base: #818181,
+    dark: #808080,
+    light: #898989,
+    ultralight: #ececec,
+  ),
+  blaze-orange: (
+    base: #ff6600,
+  ),
+  burnt-orange: (
+    base: #cc5500,
+  ),
+  california: (
+    base: #fe5d04,
+  ),
+  merlin: (
+    base: #3a3731,
+  ),
+  pacific-blue: (
+    base: #009dc4,
+  ),
+  shiraz: (
+    base: #b50335,
+  ),
+  // R House Farm
+  guardsman-red: (
+    base: #c90000,
+  ),
+  ultramarine: (
+    base: #1d0498,
+  ),
+  japanese-laurel: (
+    base: #007d0D,
+  ),
+  pattens-blue: (
+    base: #daeeff,
+  ),
+  chilean-heath: (
+    base: #fffee7,
+  ),
+  pickled-bluewood: (
+    base: #283448,
+  ),
+  tropical-blue: (
+    base: #d2e1f9,
+  ),
+);

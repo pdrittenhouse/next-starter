@@ -1,0 +1,20 @@
+// Z Indexes
+// Example Usage
+// .modal { z-index: z(modal); }
+// .site-nav { z-index: z(site-nav); }
+// .site-header { z-index: z(site-header); }
+// .site-content { z-index: z(site-content); }
+// .site-footer { z-index: z(site-footer; }
+// @link https://engageinteractive.co.uk/blog/time-saving-sass-functions
+$z-indexes: (
+  'toast',
+  'modal',
+  'skip-nav',
+  'alert',
+  'site-nav',
+  'site-header',
+  'site-notifications',
+  'site-content',
+  'prefooter',
+  'site-footer'
+);
