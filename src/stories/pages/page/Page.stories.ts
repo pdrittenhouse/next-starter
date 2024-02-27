@@ -29,12 +29,14 @@ export const LoggedOut: Story = {};
 export const LoggedIn: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    const loginButton = canvas.getByRole('button', { name: /Log in/i });
+    const loginButtonPromise = canvas.findByRole('button', { name: /Log in/i });
+    const loginButton = await loginButtonPromise;
     await expect(loginButton).toBeInTheDocument();
-    await userEvent.click(loginButton);
+    await userEvent.click(await loginButton);
     await expect(loginButton).not.toBeInTheDocument();
 
-    const logoutButton = canvas.getByRole('button', { name: /Log out/i });
+    const logoutButtonPromise = canvas.findByRole('button', { name: /Log out/i });
+    const logoutButton = await logoutButtonPromise;
     await expect(logoutButton).toBeInTheDocument();
   },
 };
