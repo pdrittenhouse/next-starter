@@ -41,7 +41,9 @@ export const Button = ({
           variant="primary"
           size={size}
           className={[].join(' ')}
-          onClick
+          onClick={onClick}
+          role="button"
+          name={label}
           {...props}
       >
           {label}
