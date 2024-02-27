@@ -1,0 +1,18 @@
+// Import Tupekit fonts
+//@import url("https://use.typekit.net/mko4orq.css"); // Good Headlines Pro
+@import url("https://use.typekit.net/mmf1mgf.css"); // Brother XL
+
+// Import Google fonts
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap'); // Montserrat
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap'); // Source Code Pro
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap'); // Poppins
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap'); // Barlow
+
+// Import local fonts
+//@import "./fonts/roboto/stylesheet.css"; // Roboto
+
+// Declare additional @font-face families below
+// @font-face generator mixin available in sass/utility/mixins/_content-utilities.scss
+// @link https://bl.ocks.org/jonathantneal/d0460e5c2d5d7f9bc5e6
+// Example usage
+// @include font-face('robotoregular', '../src/fonts//roboto/roboto-v20-latin-regular', 500, normal, woff2 woff);

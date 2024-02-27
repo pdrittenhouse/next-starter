@@ -1,86 +1,23 @@
 // Max-width containers [FIX FOR DEPRECATED BOOTSTRAP 4 FUNCTIONALITY]
-@mixin make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
-  @each $breakpoint, $container-max-width in $max-widths {
-    @include media-breakpoint-up($breakpoint, $breakpoints) {
-      max-width: $container-max-width;
-    }
-  }
-}
+//@mixin make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
+//  @each $breakpoint, $container-max-width in $max-widths {
+//    @include media-breakpoint-up($breakpoint, $breakpoints) {
+//      max-width: $container-max-width;
+//    }
+//  }
+//}
 
 // Bootstrap 4 - 5 Column
-@mixin bs-5-col($bp) {
-  @include flex(0 0 100%);
-  position: relative;
-  width: 100%;
-  min-height: rem-calc(1px);
-  padding-right: $grid-gutter-width * .5;
-  padding-left: $grid-gutter-width * .5;
-
-  @include media-breakpoint-up(#{$name}) {
-    @include flex(0 0 20%);
-    max-width: 20%;
-  }
-}
-
-// Angled Background Element
-@mixin angle($color, $direction: right, $position: top, $angle: '2') {
-  height: 0;
-  position: relative;
-  @if $position == bottom {
-    &:after {
-      content: "";
-      height: 56px;
-      width: 100%;
-      display: block;
-      position: absolute;
-      top: -28px;
-      z-index: 1;
-      background-color: $color;
-    }
-  }
-  @else {
-    &:before {
-      content: "";
-      height: 56px;
-      width: 100%;
-      display: block;
-      position: absolute;
-      top: -28px;
-      z-index: 1;
-      background-color: $color;
-    }
-  }
-
-  @if $direction == left {
-    @if $position == bottom {
-      &:after {
-        -webkit-transform: skewY(#{$angle}deg);
-        -ms-transform: skewY(#{$angle}deg);
-        transform: skewY(#{$angle}deg);
-      }
-    }
-    @else {
-      &:before {
-        -webkit-transform: skewY(#{$angle}deg);
-        -ms-transform: skewY(#{$angle}deg);
-        transform: skewY(#{$angle}deg);
-      }
-    }
-  }
-  @else {
-    @if $position == bottom {
-      &:after {
-        -webkit-transform: skewY(-#{$angle}deg);
-        -ms-transform: skewY(-#{$angle}deg);
-        transform: skewY(-#{$angle}deg);
-      }
-    }
-    @else {
-      &:before {
-        -webkit-transform: skewY(-#{$angle}deg);
-        -ms-transform: skewY(-#{$angle}deg);
-        transform: skewY(-#{$angle}deg);
-      }
-    }
-  }
-}
+//@mixin bs-5-col($bp) {
+//  @include flex(0 0 100%);
+//  position: relative;
+//  width: 100%;
+//  min-height: rem-calc(1px);
+//  padding-right: $grid-gutter-width * .5;
+//  padding-left: $grid-gutter-width * .5;
+//
+//  @include media-breakpoint-up(#{$name}) {
+//    @include flex(0 0 20%);
+//    max-width: 20%;
+//  }
+//}

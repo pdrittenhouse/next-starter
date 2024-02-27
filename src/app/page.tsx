@@ -3,6 +3,7 @@ import Image from "next/image";
 import styles from "./page.module.scss";
 import { useQuery } from "@apollo/client";
 import GET_TOASTERS from '../utils/queries';
+import Button from 'react-bootstrap/Button';
 
 export default function Home() {
 
@@ -13,6 +14,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      <Button variant="primary">Primary</Button>
       {console.log(data)}
       {data.toasters.edges.map((toaster, key) => (
           <div key={key}>
