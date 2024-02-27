@@ -5,8 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../src/scss/global.scss';
 import '../src/stories/storybook.scss';
-import { gql } from "@apollo/client";
-import { sampleData } from '../src/stories/utils/sample-data';
+import { mockData } from '../src/stories/utils/mock-data';
 
 const preview: Preview = {
   parameters: {
@@ -29,7 +28,7 @@ const preview: Preview = {
     },
     apolloClient: {
       MockedProvider,
-      globalMocks: sampleData,
+      globalMocks: mockData,
     },
   },
 };

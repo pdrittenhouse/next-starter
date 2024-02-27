@@ -1,6 +1,6 @@
 import {gql} from "@apollo/client";
 
-export const sampleData = [
+export const mockData = [
     {
         request: {
             query: gql`
