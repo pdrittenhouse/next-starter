@@ -175,13 +175,13 @@ $navbar-brand-height:         $navbar-brand-font-size * $line-height-base !defau
 $progress-font-size:          $font-size-base * .75 !default;
 
 // Buttons
-$btn-border-radius:           rem-calc(12);
+$btn-border-radius:           rem-calc(10);
 
 // Cards
-$card-border-width:           var(--card-border-width);
-$card-border-radius:          var(--card-border-radius);
-$card-border-color:           var(--card-border-color);
-$card-bg:                     var(--card-bg);
+$card-border-width:           rem-calc(1px);
+$card-border-radius:          rem-calc(10);
+$card-border-color:           $primary;
+$card-bg:                     $light;
 
 // Links
 $link-color:                              $septenary;
