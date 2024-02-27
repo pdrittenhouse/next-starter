@@ -36,13 +36,13 @@ $font-stack-code: $font-stack-monospace;
 $font-stack-buttons: $font-stack-headings;
 
 $font-stacks: (
-        'font-stack-serif': $font-stack-serif,
-        'font-stack-sans-serif': $font-stack-sans-serif,
-        'font-stack-base': $font-stack-base,
-        'font-stack-headings': $font-stack-headings,
-        'font-stack-monospace': $font-stack-monospace,
-        'font-stack-code': $font-stack-code,
-        'font-stack-buttons': $font-stack-buttons,
+  'font-stack-serif': $font-stack-serif,
+  'font-stack-sans-serif': $font-stack-sans-serif,
+  'font-stack-base': $font-stack-base,
+  'font-stack-headings': $font-stack-headings,
+  'font-stack-monospace': $font-stack-monospace,
+  'font-stack-code': $font-stack-code,
+  'font-stack-buttons': $font-stack-buttons,
 );
 
 // Photoshop Letter Spacing
@@ -60,6 +60,6 @@ $font-stacks: (
 //   letter-spacing: ls(base);
 // }
 $ls: (
-        base: 1,
-        button: 40, //1.04px @26px
+    base: 1,
+    button: 40, //1.04px @26px
 );
