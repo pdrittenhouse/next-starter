@@ -33,6 +33,7 @@ export const Button = ({
   size = 'md',
   backgroundColor,
   label,
+  onClick,
   ...props
 }: ButtonProps) => {
   return (
@@ -40,6 +41,7 @@ export const Button = ({
           variant="primary"
           size={size}
           className={[].join(' ')}
+          onClick
           {...props}
       >
           {label}
