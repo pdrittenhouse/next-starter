@@ -1,5 +1,6 @@
 import type { StorybookConfig } from "@storybook/nextjs";
 import deeperSortSetup from "storybook-deeper-sort";
+import '../src/scss/global.scss'd
 
 deeperSortSetup(['*', ['Protons', 'Atoms', 'Molecules', 'Organisms', 'Templates', 'Pages', '*']]);
 

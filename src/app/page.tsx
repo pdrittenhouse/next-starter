@@ -3,6 +3,7 @@ import Image from "next/image";
 import styles from "./page.module.scss";
 import { useQuery } from "@apollo/client";
 import GET_TOASTERS from '../utils/queries';
+import { Page } from '../stories/pages/page/Page';
 
 export default function Home() {
 
@@ -13,12 +14,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {console.log(data)}
-      {data.toasters.edges.map((toaster, key) => (
-          <div key={key}>
-            <h2>{toaster.node.title}</h2>
-          </div>
-      ))}
+
       <div className={styles.description}>
         <p>
           Get started by editing&nbsp;
@@ -54,20 +50,14 @@ export default function Home() {
         />
       </div>
 
-      <a
-          href="https://graphql.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-      >
-        GraphQL
-      </a>
-      <a
-          href="https://react-bootstrap.netlify.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-      >
-        Bootstrap React
-      </a>
+      {console.log(data)}
+      {data.toasters.edges.map((toaster, key) => (
+          <div key={key}>
+            <h2>{toaster.node.title}</h2>
+          </div>
+      ))}
+
+      <Page></Page>
 
       <div className={styles.grid}>
         <a
