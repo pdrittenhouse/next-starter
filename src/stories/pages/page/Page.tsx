@@ -8,7 +8,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { useQuery, gql } from "@apollo/client";
-import { GET_TOASTERS } from "../../utils/queries";
+import { GET_TOASTERS } from "../../data/queries/queries";
+
 import Image from "next/image";
 import vercelLogo from "../../../../public/vercel.svg";
 
