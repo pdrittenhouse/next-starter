@@ -2,8 +2,8 @@
 import Image from "next/image";
 import styles from "./page.module.scss";
 import { useQuery } from "@apollo/client";
-import GET_TOASTERS from '../utils/queries';
-import { Page } from '../stories/pages/page/Page';
+import GET_TOASTERS from '@/data/queries';
+import { Page } from '@/stories/pages/page/Page';
 
 export default function Home() {
 

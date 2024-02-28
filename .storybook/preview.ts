@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../src/scss/global.scss';
 import '../src/stories/storybook.scss';
-import { mockData } from '../src/stories/utils/mock-data';
+import { mockData } from '../src/stories/data/mock-data';
 
 const preview: Preview = {
   parameters: {
