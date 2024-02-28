@@ -13,8 +13,7 @@ export default function Home() {
   if (error) return `Error! ${error.message}`
 
   return (
-    <main className={styles.main}>
-
+    <>
       {console.log(data)}
       {data.toasters.edges.map((toaster, key) => (
           <div key={key}>
@@ -23,6 +22,6 @@ export default function Home() {
       ))}
 
       <Page></Page>
-    </main>
+    </>
   );
 }

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button as BootstrapButton } from 'react-bootstrap';
-import './button.scss';
+import styles from './button.scss';
 
 interface ButtonProps {
   /**
-   * Is this the principal call to action on the page?
+   * The button variant?
    */
-  primary?: boolean;
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'quinary' | 'senary' | 'septenary' | 'octonary' | 'nonary' | 'denary' | 'success' | 'info' | 'warning' | 'danger' | 'light' | 'dark';
   /**
    * What background color to use
    */
@@ -29,7 +29,7 @@ interface ButtonProps {
  * Primary UI component for user interaction
  */
 export const Button = ({
-  primary = false,
+  variant = 'primary',
   size = 'md',
   backgroundColor,
   label,
@@ -38,7 +38,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
       <BootstrapButton
-          variant="primary"
+          variant={variant}
           size={size}
           className={[].join(' ')}
           onClick={onClick}
