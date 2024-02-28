@@ -1,10 +1,17 @@
+.main {
+  //display: flex;
+  //flex-direction: column;
+  //justify-content: space-between;
+  //align-items: center;
+}
+
 .storybookPage {
   font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 24px;
   padding: 48px 20px;
-  margin: 0 auto;
-  max-width: 900px;
+  //margin: 0 auto;
+  //max-width: 900px;
   //color: #333;
 
   h2 {
@@ -47,7 +54,7 @@
     vertical-align: top;
   }
 
-  .tip-wrapper {
+  .tipWrapper {
     font-size: 13px;
     line-height: 20px;
     margin-top: 40px;
@@ -70,10 +77,10 @@
 
 .descriptionWrapper {
   //padding: 6rem;
-  max-width: 900px;
+  //max-width: 900px;
   padding: 48px 20px;
   //min-height: 100vh;
-  margin: 0 auto;
+  //margin: 0 auto;
 }
 
 .description {
@@ -81,8 +88,8 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.85rem;
-  max-width: var(--max-width);
-  width: 100%;
+  //max-width: var(--max-width);
+  //width: 100%;
   z-index: 2;
   font-family: var(--font-mono);
 
@@ -171,14 +178,17 @@
   }
 }
 
+.gridWrapper {
+  //max-width: 900px;
+  padding: 48px 20px;
+  //margin: 0 auto;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(25%, auto));
   //max-width: 100%;
-  width: var(--max-width);
-  max-width: 900px;
-  padding: 48px 20px;
-  margin: 0 auto;
+  //width: var(--max-width);
 
   /* Mobile */
   @media (max-width: 700px) {
