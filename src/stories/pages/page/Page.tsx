@@ -39,9 +39,9 @@ export const Page: React.FC = () => {
       <article>
         <Header
             user={user}
-            onLogin={() => setUser({ name: 'Jane Doe' })}
+            onLogin={() => setUser({ name: 'Kenneth Folk' })}
             onLogout={() => setUser(undefined)}
-            onCreateAccount={() => setUser({ name: 'Jane Doe' })}
+            onCreateAccount={() => setUser({ name: 'Kenneth Folk' })}
         />
 
         <section className={styles.descriptionWrapper}>
