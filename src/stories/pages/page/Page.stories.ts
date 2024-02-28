@@ -3,7 +3,7 @@ import { within, userEvent, expect } from '@storybook/test';
 
 import { Page } from './Page';
 
-const meta = {
+const meta: Meta<typeof Page> = {
   title: 'Design System/Pages/Page',
   component: Page,
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
@@ -18,7 +18,7 @@ const meta = {
       },
     },
   },
-} satisfies Meta<typeof Page>;
+};
 
 export default meta;
 type Story = StoryObj<typeof meta>;
