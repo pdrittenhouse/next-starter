@@ -9,7 +9,7 @@
   font-family: 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 24px;
-  padding: 48px 20px;
+  padding: 28px 20px;
   //margin: 0 auto;
   //max-width: 900px;
   //color: #333;
@@ -58,7 +58,7 @@
     font-size: 13px;
     line-height: 20px;
     margin-top: 40px;
-    margin-bottom: 40px;
+    //margin-bottom: 40px;
 
     svg {
       display: inline-block;
@@ -90,7 +90,7 @@
 .descriptionWrapper {
   //padding: 6rem;
   //max-width: 900px;
-  padding: 48px 20px;
+  padding: 28px 20px;
   //min-height: 100vh;
   //margin: 0 auto;
 }
@@ -192,40 +192,35 @@
 
 .gridWrapper {
   //max-width: 900px;
-  padding: 48px 20px;
+  padding: 28px 20px;
   //margin: 0 auto;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(25%, auto));
-  //max-width: 100%;
-  //width: var(--max-width);
+  margin-bottom: 40px;
 
   /* Mobile */
   @media (max-width: 700px) {
-    grid-template-columns: 1fr;
     margin-bottom: 120px;
     max-width: 320px;
     text-align: center;
   }
-
-  /* Tablet and Smaller Desktop */
-  @media (min-width: 701px) and (max-width: 1120px) {
-    grid-template-columns: repeat(2, 50%);
-  }
 }
 
-.card {
-  padding: 1rem 1.2rem;
+.gridCard {
   border-radius: var(--border-radius);
-  background: rgba(var(--card-rgb), 0);
-  border: 1px solid rgba(var(--card-border-rgb), 0);
   transition: background 200ms, border 200ms;
+  height: 100%;
 
   /* Mobile */
   @media (max-width: 700px) {
     padding: 1rem 2.5rem;
+  }
+
+  a {
+    padding: 1rem 1.2rem;
+    display: block;
+    height: 100%;
   }
 
   &:hover {
@@ -236,7 +231,7 @@
       border: 1px solid rgba(var(--card-border-rgb), 0.15);
     }
 
-    span {
+    .gridCardTitle span {
 
       @media (hover: hover) and (pointer: fine) {
         transform: translateX(4px);
@@ -248,12 +243,7 @@
     }
   }
 
-  span {
-    display: inline-block;
-    transition: transform 200ms;
-  }
-
-  h5 {
+  .gridCardTitle {
     font-weight: 600;
     margin-bottom: 0.7rem;
 
@@ -261,9 +251,14 @@
     @media (max-width: 700px) {
       margin-bottom: 0.5rem;
     }
+
+    span {
+      display: inline-block;
+      transition: transform 200ms;
+    }
   }
 
-  p {
+  .gridCardText {
     margin: 0;
     opacity: 0.6;
     font-size: 0.9rem;
