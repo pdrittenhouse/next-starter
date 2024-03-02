@@ -6,7 +6,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styles from './header.module.scss';
 import logo from "../../../../public/next.svg";
-import vercelLogo from "../../../../public/vercel.svg";
 
 type User = {
   name: string;
@@ -46,7 +45,7 @@ export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps
                   </>
               ) : (
                   <>
-                    <Button variant="secondary" size="small" onClick={onLogin} label="Log in" />
+                    <Button variant="tertiary" size="small" onClick={onLogin} label="Log in" />
                     <Button variant="primary" size="small" onClick={onCreateAccount} label="Sign up" />
                   </>
               )}

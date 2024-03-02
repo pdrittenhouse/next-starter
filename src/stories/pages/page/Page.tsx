@@ -3,6 +3,8 @@ import { Header } from '../../organisms/header/Header';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import CardLink from 'react-bootstrap/CardLink'
 import Image from "next/image";
 import vercelLogo from "../../../../public/vercel.svg";
 import styles from './page.module.scss';
@@ -134,59 +136,54 @@ export const Page: React.FC = () => {
 
         <section className={styles.gridWrapper}>
           <Container>
-            <Row>
+            <Row xs={1} md={2} xl={4} className={`${styles.grid} g-4`}>
               <Col>
-                <div className={styles.grid}>
-                  <a
-                      href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                      className={styles.card}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                  >
-                    <h5>
-                      Docs <span>-&gt;</span>
-                    </h5>
-                    <p>Find in-depth information about Next.js features and API.</p>
-                  </a>
-
-                  <a
-                      href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                      className={styles.card}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                  >
-                    <h5>
-                      Learn <span>-&gt;</span>
-                    </h5>
-                    <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-                  </a>
-
-                  <a
-                      href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                      className={styles.card}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                  >
-                    <h5>
-                      Templates <span>-&gt;</span>
-                    </h5>
-                    <p>Explore starter templates for Next.js.</p>
-                  </a>
-
-                  <a
-                      href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                      className={styles.card}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                  >
-                    <h5>
-                      Deploy <span>-&gt;</span>
-                    </h5>
-                    <p>
-                      Instantly deploy your Next.js site to a shareable URL with Vercel.
-                    </p>
-                  </a>
-                </div>
+                <Card bg="dark" border="light" className={styles.gridCard}>
+                  <Card.Link href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"  target="_blank">
+                    <Card.Body>
+                      <Card.Title className={styles.gridCardTitle}>Docs <span>-&gt;</span></Card.Title>
+                      <Card.Text className={styles.gridCardText}>
+                        Find in-depth information about Next.js features and API.
+                      </Card.Text>
+                    </Card.Body>
+                  </Card.Link>
+                </Card>
+              </Col>
+              <Col>
+                <Card bg="dark" border="light" className={styles.gridCard}>
+                  <Card.Link href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"  target="_blank">
+                    <Card.Body>
+                      <Card.Title className={styles.gridCardTitle}>Learn <span>-&gt;</span></Card.Title>
+                      <Card.Text className={styles.gridCardText}>
+                        Learn about Next.js in an interactive course with&nbsp;quizzes!
+                      </Card.Text>
+                    </Card.Body>
+                  </Card.Link>
+                </Card>
+              </Col>
+              <Col>
+                <Card bg="dark" border="light" className={styles.gridCard}>
+                  <Card.Link href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app" target="_blank">
+                    <Card.Body>
+                      <Card.Title className={styles.gridCardTitle}>Templates <span>-&gt;</span></Card.Title>
+                      <Card.Text className={styles.gridCardText}>
+                        Explore starter templates for Next.js.
+                      </Card.Text>
+                    </Card.Body>
+                  </Card.Link>
+                </Card>
+              </Col>
+              <Col>
+                <Card bg="dark" border="light" className={styles.gridCard}>
+                  <Card.Link href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"  target="_blank">
+                    <Card.Body>
+                      <Card.Title className={styles.gridCardTitle}>Deploy <span>-&gt;</span></Card.Title>
+                      <Card.Text className={styles.gridCardText}>
+                        Instantly deploy your Next.js site to a shareable URL with Vercel.
+                      </Card.Text>
+                    </Card.Body>
+                  </Card.Link>
+                </Card>
               </Col>
             </Row>
           </Container>
