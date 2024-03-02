@@ -35,7 +35,7 @@ export const Header = ({ user, onLogin, onLogout, onCreateAccount }: HeaderProps
               />
               <h1>Next.js</h1>
             </div>
-            <div>
+            <div className={styles.welcomeWrapper}>
               {user ? (
                   <>
             <span className={styles.welcome}>
