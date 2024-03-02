@@ -6,12 +6,22 @@
   align-items: center;
   justify-content: space-between;
 
+  /* Mobile */
+  @media (max-width: 700px) {
+    flex-flow: row wrap;
+  }
+
   .logoWrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     padding: 4rem 0;
+
+    /* Mobile */
+    @media (max-width: 700px) {
+      flex: 1 1 100%;
+    }
 
     &:before {
       background: var(--secondary-glow);
@@ -57,6 +67,15 @@
     margin: 6px 0 6px 10px;
     //display: inline-block;
     vertical-align: top;
+  }
+
+  .welcomeWrapper {
+
+    /* Mobile */
+    @media (max-width: 700px) {
+      flex: 1 1 100%;
+      text-align: center;
+    }
   }
 
   button + button {
