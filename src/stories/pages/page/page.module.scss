@@ -202,7 +202,6 @@
   /* Mobile */
   @media (max-width: 700px) {
     margin-bottom: 120px;
-    max-width: 320px;
     text-align: center;
   }
 }
@@ -211,11 +210,6 @@
   border-radius: var(--border-radius);
   transition: background 200ms, border 200ms;
   height: 100%;
-
-  /* Mobile */
-  @media (max-width: 700px) {
-    padding: 1rem 2.5rem;
-  }
 
   a {
     padding: 1rem 1.2rem;
