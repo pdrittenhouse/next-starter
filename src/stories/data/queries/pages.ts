@@ -36,7 +36,7 @@ export const PAGE_FIELDS = gql`
 export const GET_ALL_PAGES = gql`
   ${PAGE_FIELDS}
   query GetAllPages {
-    pages(first: 10000, where: { hasPassword: false }) {
+    pages(first: 100, where: { hasPassword: false }) {
       edges {
         node {
           ...PageFields
@@ -61,7 +61,7 @@ export const GET_ALL_PAGES = gql`
 export const GET_ALL_PAGES_WITH_CONTENT = gql`
   ${PAGE_FIELDS}
   query GetAllPagesWithContent {
-    pages(first: 10000, where: { hasPassword: false }) {
+    pages(first: 100, where: { hasPassword: false }) {
       edges {
         node {
           ...PageFields

@@ -2,7 +2,7 @@ import {gql} from "@apollo/client";
 
 export const GET_ALL_USERS = gql`
   query GetAllUsers {
-    users(first: 10000) {
+    users(first: 100) {
       edges {
         node {
           avatar {

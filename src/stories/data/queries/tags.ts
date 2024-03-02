@@ -2,7 +2,7 @@ import {gql} from "@apollo/client";
 
 export const GET_ALL_TAGS = gql`
   query GetAllTags {
-    categories(first: 10000) {
+    categories(first: 100) {
       edges {
         node {
             databaseId

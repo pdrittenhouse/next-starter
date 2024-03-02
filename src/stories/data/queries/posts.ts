@@ -25,7 +25,7 @@ export const POST_FIELDS = gql`
 export const GET_ALL_POSTS = gql`
   ${POST_FIELDS}
   query GetAllPosts {
-    posts(first: 10000, where: { hasPassword: false }) {
+    posts(first: 100, where: { hasPassword: false }) {
       edges {
         node {
           ...PostFields
@@ -51,7 +51,7 @@ export const GET_ALL_POSTS = gql`
 export const GET_ALL_POSTS_WITH_CONTENT = gql`
   ${POST_FIELDS}
   query GetAllPostsWithContent {
-    posts(first: 10000, where: { hasPassword: false }) {
+    posts(first: 100, where: { hasPassword: false }) {
       edges {
         node {
           ...PostFields
