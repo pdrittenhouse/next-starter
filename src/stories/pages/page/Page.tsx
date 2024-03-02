@@ -7,7 +7,7 @@ import Image from "next/image";
 import vercelLogo from "../../../../public/vercel.svg";
 import styles from './page.module.scss';
 import { useQuery, gql } from "@apollo/client";
-import { GET_ALL_MENUS } from "../../data/queries/menus";
+import { GET_GENERAL_SETTINGS } from "../../data/queries/settings";
 
 type User = {
   name: string;
@@ -16,24 +16,13 @@ type User = {
 export const Page: React.FC = () => {
   const [user, setUser] = React.useState<User>();
 
-  const { loading, error, data } = useQuery(GET_ALL_MENUS)
+  const { loading, error, data } = useQuery(GET_GENERAL_SETTINGS)
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`
 
   return (
     <main className={styles.main}>
-
-      <div>
-        --------------------------------
-        {console.log(data)}
-        {/*{data.toasters.edges.map((toaster, key) => (*/}
-        {/*    <div key={key}>*/}
-        {/*      <h2>{toaster.node.title}</h2>*/}
-        {/*    </div>*/}
-        {/*))}*/}
-      </div>
-
       <article>
         <Header
             user={user}
@@ -114,6 +103,17 @@ export const Page: React.FC = () => {
                     using Storybook.
                   </li>
                 </ul>
+                <div className={styles.dataWrapper}>
+                  {data.generalSettings && (
+                      <>
+                        <h4>Example Data</h4>
+                        <h5>
+                          <a href={data.generalSettings.url}>{data.generalSettings.title}</a>
+                        </h5>
+                        <p>{data.generalSettings.description}</p>
+                      </>
+                  )}
+                </div>
                 <div className={styles.tipWrapper}>
                   <span className="tip">Tip</span> Adjust the width of the canvas with the{' '}
                   <svg width="10" height="10" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
