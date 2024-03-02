@@ -1,17 +1,13 @@
 import React from 'react';
-
 import { Header } from '../../organisms/header/Header';
-import styles from './page.module.scss';
-
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
-import { useQuery, gql } from "@apollo/client";
-import { GET_TOASTERS } from "../../data/queries/queries";
-
 import Image from "next/image";
 import vercelLogo from "../../../../public/vercel.svg";
+import styles from './page.module.scss';
+import { useQuery, gql } from "@apollo/client";
+import { GET_ALL_MENUS } from "../../data/queries/menus";
 
 type User = {
   name: string;
@@ -20,7 +16,7 @@ type User = {
 export const Page: React.FC = () => {
   const [user, setUser] = React.useState<User>();
 
-  const { loading, error, data } = useQuery(GET_TOASTERS)
+  const { loading, error, data } = useQuery(GET_ALL_MENUS)
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`
@@ -30,11 +26,12 @@ export const Page: React.FC = () => {
 
       <div>
         --------------------------------
-        {data.toasters.edges.map((toaster, key) => (
-            <div key={key}>
-              <h2>{toaster.node.title}</h2>
-            </div>
-        ))}
+        {console.log(data)}
+        {/*{data.toasters.edges.map((toaster, key) => (*/}
+        {/*    <div key={key}>*/}
+        {/*      <h2>{toaster.node.title}</h2>*/}
+        {/*    </div>*/}
+        {/*))}*/}
       </div>
 
       <article>
