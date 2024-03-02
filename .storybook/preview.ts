@@ -5,7 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../src/scss/global.scss';
 import '../src/stories/storybook.scss';
+import { allSettingsData, generalSettingsData, readingSettingsData, discussionSettingsData, writingSettingsData } from '../src/stories/data/settings-data';
+import { usersData } from '../src/stories/data/users-data';
+import { allCategoriesData, categoryBySlugData } from '../src/stories/data/categories-data';
+import { allTagsData, tagBySlugData } from '../src/stories/data/tags-data';
+import { allTaxonomiesData, taxonomyByIdData, termsByTaxonomyData } from '../src/stories/data/taxonomies-data';
 import { menusData } from '../src/stories/data/menus-data';
+import { allPagesData, allPagesWithContentData, pageByUriData } from '../src/stories/data/pages-data';
+import { allPostsData, allPostsWithContentData, postBySlugData, postsByCategoryIdData, postsByAuthorSlugData } from '../src/stories/data/posts-data';
 
 const preview: Preview = {
   parameters: {
@@ -29,7 +36,28 @@ const preview: Preview = {
     apolloClient: {
       MockedProvider,
       globalMocks: [
-          menusData
+        allSettingsData,
+        usersData,
+        generalSettingsData,
+        readingSettingsData,
+        discussionSettingsData,
+        writingSettingsData,
+        allCategoriesData,
+        categoryBySlugData,
+        allTagsData,
+        tagBySlugData,
+        allTaxonomiesData,
+        taxonomyByIdData,
+        termsByTaxonomyData,
+        menusData,
+        allPagesData,
+        allPagesWithContentData,
+        pageByUriData,
+        allPostsData,
+        allPostsWithContentData,
+        postBySlugData,
+        postsByCategoryIdData,
+        postsByAuthorSlugData,
       ],
     },
   },

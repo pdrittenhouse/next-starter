@@ -1,7 +1,7 @@
 import {gql} from "@apollo/client";
 
 export const GET_ALL_TAGS = gql`
-  query GetAllCategories {
+  query GetAllTags {
     categories(first: 10000) {
       edges {
         node {
@@ -29,7 +29,7 @@ export const GET_ALL_TAGS = gql`
 `;
 
 export const GET_TAG_BY_SLUG = gql`
-  query GetCategoryBySlug($slug: ID!) {
+  query GetTagBySlug($slug: ID!) {
     tag(id: $slug, idType: SLUG) {
       databaseId
       description
