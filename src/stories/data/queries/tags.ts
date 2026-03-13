@@ -2,7 +2,7 @@ import {gql} from "@apollo/client";
 
 export const GET_ALL_TAGS = gql`
   query GetAllTags {
-    categories(first: 100) {
+    tags(first: 100) {
       edges {
         node {
             databaseId
@@ -15,9 +15,7 @@ export const GET_ALL_TAGS = gql`
             isTermNode
             link
             count
-            categoryId
-            parentDatabaseId
-            parentId
+            tagId
             taxonomyName
             termGroupId
             termTaxonomyId

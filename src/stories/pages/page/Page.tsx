@@ -10,6 +10,13 @@ import vercelLogo from "../../../../public/vercel.svg";
 import styles from './page.module.scss';
 import { useQuery, gql } from "@apollo/client";
 import { GET_GENERAL_SETTINGS } from "../../data/queries/settings";
+import { GET_ALL_POSTS } from "../../data/queries/posts";
+import { GET_ALL_PAGES } from "../../data/queries/pages";
+import { GET_ALL_CATEGORIES } from "../../data/queries/categories";
+import { GET_ALL_TAGS } from "../../data/queries/tags";
+import { GET_ALL_TAXONOMIES } from "../../data/queries/taxonomies";
+import { GET_ALL_USERS } from "../../data/queries/users";
+import { GET_ALL_MENUS } from "../../data/queries/menus";
 
 type User = {
   name: string;
@@ -19,6 +26,13 @@ export const Page: React.FC = () => {
   const [user, setUser] = React.useState<User>();
 
   const { loading, error, data } = useQuery(GET_GENERAL_SETTINGS)
+  const { loading: postsLoading, data: postsData } = useQuery(GET_ALL_POSTS)
+  const { loading: pagesLoading, data: pagesData } = useQuery(GET_ALL_PAGES)
+  const { loading: categoriesLoading, data: categoriesData } = useQuery(GET_ALL_CATEGORIES)
+  const { loading: tagsLoading, data: tagsData } = useQuery(GET_ALL_TAGS)
+  const { loading: taxonomiesLoading, data: taxonomiesData } = useQuery(GET_ALL_TAXONOMIES)
+  const { loading: usersLoading, data: usersData } = useQuery(GET_ALL_USERS)
+  const { loading: menusLoading, data: menusData } = useQuery(GET_ALL_MENUS)
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`
@@ -98,7 +112,7 @@ export const Page: React.FC = () => {
                 <ul>
                   <li>
                     Use a higher-level connected component. Storybook helps you compose such data from the
-                    "args" of child component stories
+                    &ldquo;args&rdquo; of child component stories
                   </li>
                   <li>
                     Assemble data in the page component from your services. You can mock these services out
@@ -114,6 +128,51 @@ export const Page: React.FC = () => {
                         </h5>
                         <p>{data.generalSettings.description}</p>
                       </>
+                  )}
+                </div>
+                <div className={styles.dataWrapper}>
+                  <h4>All Query Data</h4>
+                  {postsLoading ? <p>Loading posts...</p> : postsData && (
+                    <details>
+                      <summary>Posts ({postsData.posts?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(postsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {pagesLoading ? <p>Loading pages...</p> : pagesData && (
+                    <details>
+                      <summary>Pages ({pagesData.pages?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(pagesData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {categoriesLoading ? <p>Loading categories...</p> : categoriesData && (
+                    <details>
+                      <summary>Categories ({categoriesData.categories?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(categoriesData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {tagsLoading ? <p>Loading tags...</p> : tagsData && (
+                    <details>
+                      <summary>Tags ({tagsData.tags?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(tagsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {taxonomiesLoading ? <p>Loading taxonomies...</p> : taxonomiesData && (
+                    <details>
+                      <summary>Taxonomies ({taxonomiesData.taxonomies?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(taxonomiesData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {usersLoading ? <p>Loading users...</p> : usersData && (
+                    <details>
+                      <summary>Users ({usersData.users?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(usersData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {menusLoading ? <p>Loading menus...</p> : menusData && (
+                    <details>
+                      <summary>Menus ({menusData.menus?.nodes?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(menusData, null, 2)}</pre>
+                    </details>
                   )}
                 </div>
                 <div className={styles.tipWrapper}>

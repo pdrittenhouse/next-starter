@@ -16,8 +16,8 @@ export const GET_ALL_TAXONOMIES = gql`
 `;
 
 export const GET_TAXONOMY_BY_ID = gql`
-  query GetTaxonomyById($tasonomyId: Int!) {
-    taxonomy(id: $tasonomyId, idType: ID) {
+  query GetTaxonomyById($taxonomyId: Int!) {
+    taxonomy(id: $taxonomyId, idType: ID) {
       edges {
         node {
           id
@@ -31,8 +31,8 @@ export const GET_TAXONOMY_BY_ID = gql`
 `;
 
 export const GET_TERMS_BY_TAXONOMY = gql`
-  query GetTermsByTaxonomy($tasonomy: ID!) {
-    terms(where: {taxonomies: $tasonomy}) {
+  query GetTermsByTaxonomy($taxonomy: ID!) {
+    terms(where: {taxonomies: $taxonomy}) {
       edges {
         node {
           description

@@ -4,7 +4,7 @@ export const allTagsData = {
     request: {
             query: gql`
                 query GetAllTags {
-                  categories(first: 10000) {
+                  tags(first: 100) {
                     edges {
                       node {
                         databaseId
@@ -17,9 +17,7 @@ export const allTagsData = {
                         isTermNode
                         link
                         count
-                        categoryId
-                        parentDatabaseId
-                        parentId
+                        tagId
                         taxonomyName
                         termGroupId
                         termTaxonomyId
@@ -32,7 +30,7 @@ export const allTagsData = {
         },
     result: {
             data: {
-                categories: {
+                tags: {
                     edges: [
                         {
                             node: {
@@ -46,9 +44,7 @@ export const allTagsData = {
                                 isTermNode: true,
                                 link: "http://example.com/tag-1",
                                 count: 10,
-                                categoryId: "tag-1",
-                                parentDatabaseId: null,
-                                parentId: null,
+                                tagId: "tag-1",
                                 taxonomyName: "post_tag",
                                 termGroupId: null,
                                 termTaxonomyId: null,

@@ -4,7 +4,7 @@ export const usersData = {
     request: {
         query: gql`
                 query GetAllUsers {
-                    users(first: 10000) {
+                    users(first: 100) {
                       edges {
                         node {
                           avatar {

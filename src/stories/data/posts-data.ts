@@ -4,7 +4,7 @@ export const allPostsData = {
     request: {
         query: gql`
             query GetAllPosts {
-                posts(first: 10000, where: { hasPassword: false }) {
+                posts(first: 100, where: { hasPassword: false }) {
                     edges {
                         node {
                             id
@@ -130,7 +130,7 @@ export const allPostsWithContentData = {
     request: {
         query: gql`
             query GetAllPostsWithContent {
-                posts(first: 10000, where: { hasPassword: false }) {
+                posts(first: 100, where: { hasPassword: false }) {
                     edges {
                         node {
                             id

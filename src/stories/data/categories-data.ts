@@ -4,7 +4,7 @@ export const allCategoriesData = {
     request: {
         query: gql`
                 query GetAllCategories {
-                  categories(first: 10000) {
+                  categories(first: 100) {
                     edges {
                       node {
                           databaseId

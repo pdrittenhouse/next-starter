@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button as BootstrapButton } from 'react-bootstrap';
-import styles from './button.scss';
+import styles from './button.module.scss';
 
 interface ButtonProps {
   /**
@@ -39,7 +39,7 @@ export const Button = ({
   return (
       <BootstrapButton
           variant={variant}
-          size={size}
+          size={size === 'md' ? undefined : size}
           className={[].join(' ')}
           onClick={onClick}
           role="button"

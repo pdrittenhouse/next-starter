@@ -4,16 +4,37 @@ export const allPagesData = {
     request: {
         query: gql`
             query GetAllPages {
-                pages(first: 10000, where: { hasPassword: false }) {
+                pages(first: 100, where: { hasPassword: false }) {
                     edges {
                         node {
-                            id
-                            slug
-                            uri
-                            ... on Page {
-                                id
-                                title
+                            children {
+                                edges {
+                                    node {
+                                        id
+                                        slug
+                                        uri
+                                        ... on Page {
+                                            id
+                                            title
+                                        }
+                                    }
+                                }
                             }
+                            id
+                            menuOrder
+                            parent {
+                                node {
+                                    id
+                                    slug
+                                    uri
+                                    ... on Page {
+                                        title
+                                    }
+                                }
+                            }
+                            slug
+                            title
+                            uri
                             author {
                                 node {
                                     avatar {
@@ -38,10 +59,13 @@ export const allPagesData = {
                 edges: [
                     {
                         node: {
+                            children: { edges: [] },
                             id: 'page-1',
+                            menuOrder: 1,
+                            parent: null,
                             slug: 'page-1',
-                            uri: '/page-1',
                             title: 'Page 1',
+                            uri: '/page-1',
                             author: {
                                 node: {
                                     avatar: {
@@ -58,10 +82,13 @@ export const allPagesData = {
                     },
                     {
                         node: {
+                            children: { edges: [] },
                             id: 'page-2',
+                            menuOrder: 2,
+                            parent: null,
                             slug: 'page-2',
-                            uri: '/page-2',
                             title: 'Page 2',
+                            uri: '/page-2',
                             author: {
                                 node: {
                                     avatar: {
@@ -87,16 +114,37 @@ export const allPagesWithContentData = {
     request: {
         query: gql`
       query GetAllPagesWithContent {
-        pages(first: 10000, where: { hasPassword: false }) {
+        pages(first: 100, where: { hasPassword: false }) {
           edges {
             node {
-              id
-              slug
-              uri
-              ... on Page {
-                id
-                title
+              children {
+                edges {
+                  node {
+                    id
+                    slug
+                    uri
+                    ... on Page {
+                      id
+                      title
+                    }
+                  }
+                }
               }
+              id
+              menuOrder
+              parent {
+                node {
+                  id
+                  slug
+                  uri
+                  ... on Page {
+                    title
+                  }
+                }
+              }
+              slug
+              title
+              uri
               content
               featuredImage {
                 node {
@@ -132,10 +180,13 @@ export const allPagesWithContentData = {
                 edges: [
                     {
                         node: {
+                            children: { edges: [] },
                             id: 'page-1',
+                            menuOrder: 1,
+                            parent: null,
                             slug: 'page-1',
-                            uri: '/page-1',
                             title: 'Page 1',
+                            uri: '/page-1',
                             content: '<p>This is the content of Page 1</p>',
                             featuredImage: {
                                 node: {
@@ -163,10 +214,13 @@ export const allPagesWithContentData = {
                     },
                     {
                         node: {
+                            children: { edges: [] },
                             id: 'page-2',
+                            menuOrder: 2,
+                            parent: null,
                             slug: 'page-2',
-                            uri: '/page-2',
                             title: 'Page 2',
+                            uri: '/page-2',
                             content: '<p>This is the content of Page 2</p>',
                             featuredImage: {
                                 node: {

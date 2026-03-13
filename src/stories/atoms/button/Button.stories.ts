@@ -51,14 +51,14 @@ export const Tertiary: Story = {
 
 export const Large: Story = {
   args: {
-    size: 'large',
+    size: 'lg',
     label: 'Large Button',
   },
 };
 
 export const Small: Story = {
   args: {
-    size: 'small',
+    size: 'sm',
     label: 'Small Button',
   },
 };
