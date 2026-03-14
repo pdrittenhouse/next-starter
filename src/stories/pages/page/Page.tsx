@@ -17,6 +17,19 @@ import { GET_ALL_TAGS } from "../../data/queries/tags";
 import { GET_ALL_TAXONOMIES } from "../../data/queries/taxonomies";
 import { GET_ALL_USERS } from "../../data/queries/users";
 import { GET_ALL_MENUS } from "../../data/queries/menus";
+import { GET_SCHEMA_QUERY_FIELDS } from "../../data/queries/introspection";
+import { GET_ALL_SETTINGS, GET_DISCUSSION_SETTINGS, GET_READING_SETTINGS, GET_WRITING_SETTINGS } from "../../data/queries/settings";
+import { GET_ALL_THEMES } from "../../data/queries/themes";
+import { GET_ALL_MEDIA_ITEMS } from "../../data/queries/media";
+import { GET_ALL_COMMENTS } from "../../data/queries/comments";
+import { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES } from "../../data/queries/content";
+import { GET_ALL_PLUGINS } from "../../data/queries/plugins";
+import { GET_ALL_POST_FORMATS } from "../../data/queries/post-formats";
+import { GET_ALL_TOASTERS } from "../../data/queries/toasters";
+import { GET_VIEWER } from "../../data/queries/viewer";
+import { GET_ALL_USER_ROLES } from "../../data/queries/user-roles";
+import { GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS } from "../../data/queries/enqueued-assets";
+import { GET_ALL_REVISIONS } from "../../data/queries/revisions";
 
 type User = {
   name: string;
@@ -33,6 +46,24 @@ export const Page: React.FC = () => {
   const { loading: taxonomiesLoading, data: taxonomiesData } = useQuery(GET_ALL_TAXONOMIES)
   const { loading: usersLoading, data: usersData } = useQuery(GET_ALL_USERS)
   const { loading: menusLoading, data: menusData } = useQuery(GET_ALL_MENUS)
+  const { loading: schemaLoading, data: schemaData } = useQuery(GET_SCHEMA_QUERY_FIELDS)
+  const { loading: allSettingsLoading, data: allSettingsData } = useQuery(GET_ALL_SETTINGS)
+  const { loading: discussionLoading, data: discussionData } = useQuery(GET_DISCUSSION_SETTINGS)
+  const { loading: readingLoading, data: readingData } = useQuery(GET_READING_SETTINGS)
+  const { loading: writingLoading, data: writingData } = useQuery(GET_WRITING_SETTINGS)
+  const { loading: themesLoading, data: themesData } = useQuery(GET_ALL_THEMES)
+  const { loading: mediaLoading, data: mediaData } = useQuery(GET_ALL_MEDIA_ITEMS)
+  const { loading: commentsLoading, data: commentsData } = useQuery(GET_ALL_COMMENTS)
+  const { loading: contentTypesLoading, data: contentTypesData } = useQuery(GET_ALL_CONTENT_TYPES)
+  const { loading: contentNodesLoading, data: contentNodesData } = useQuery(GET_ALL_CONTENT_NODES)
+  const { loading: pluginsLoading, data: pluginsData } = useQuery(GET_ALL_PLUGINS)
+  const { loading: postFormatsLoading, data: postFormatsData } = useQuery(GET_ALL_POST_FORMATS)
+  const { loading: toastersLoading, error: toastersError, data: toastersData } = useQuery(GET_ALL_TOASTERS)
+  const { loading: viewerLoading, data: viewerData } = useQuery(GET_VIEWER)
+  const { loading: userRolesLoading, data: userRolesData } = useQuery(GET_ALL_USER_ROLES)
+  const { loading: scriptsLoading, data: scriptsData } = useQuery(GET_REGISTERED_SCRIPTS)
+  const { loading: stylesLoading, data: stylesData } = useQuery(GET_REGISTERED_STYLESHEETS)
+  const { loading: revisionsLoading, data: revisionsData } = useQuery(GET_ALL_REVISIONS)
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`
@@ -131,7 +162,52 @@ export const Page: React.FC = () => {
                   )}
                 </div>
                 <div className={styles.dataWrapper}>
-                  <h4>All Query Data</h4>
+                  <h5>All Query Data</h5>
+
+                  <br />
+                  <h6>Introspection</h6>
+                  {schemaLoading ? <p>Loading schema...</p> : schemaData && (
+                    <details>
+                      <summary>Schema Query Fields ({schemaData.__schema?.queryType?.fields?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(schemaData.__schema.queryType.fields, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Settings</h6>
+                  {allSettingsLoading ? <p>Loading all settings...</p> : allSettingsData && (
+                    <details>
+                      <summary>All Settings</summary>
+                      <pre>{JSON.stringify(allSettingsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {data.generalSettings && (
+                    <details>
+                      <summary>General Settings</summary>
+                      <pre>{JSON.stringify(data.generalSettings, null, 2)}</pre>
+                    </details>
+                  )}
+                  {readingLoading ? <p>Loading reading settings...</p> : readingData && (
+                    <details>
+                      <summary>Reading Settings</summary>
+                      <pre>{JSON.stringify(readingData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {writingLoading ? <p>Loading writing settings...</p> : writingData && (
+                    <details>
+                      <summary>Writing Settings</summary>
+                      <pre>{JSON.stringify(writingData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {discussionLoading ? <p>Loading discussion settings...</p> : discussionData && (
+                    <details>
+                      <summary>Discussion Settings</summary>
+                      <pre>{JSON.stringify(discussionData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Content</h6>
                   {postsLoading ? <p>Loading posts...</p> : postsData && (
                     <details>
                       <summary>Posts ({postsData.posts?.edges?.length ?? 0})</summary>
@@ -142,6 +218,56 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Pages ({pagesData.pages?.edges?.length ?? 0})</summary>
                       <pre>{JSON.stringify(pagesData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {commentsLoading ? <p>Loading comments...</p> : commentsData && (
+                    <details>
+                      <summary>Comments ({commentsData.comments?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(commentsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {revisionsLoading ? <p>Loading revisions...</p> : revisionsData && (
+                    <details>
+                      <summary>Revisions ({revisionsData.revisions?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(revisionsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {contentTypesLoading ? <p>Loading content types...</p> : contentTypesData && (
+                    <details>
+                      <summary>Content Types ({contentTypesData.contentTypes?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(contentTypesData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {contentNodesLoading ? <p>Loading content nodes...</p> : contentNodesData && (
+                    <details>
+                      <summary>Content Nodes ({contentNodesData.contentNodes?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(contentNodesData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {postFormatsLoading ? <p>Loading post formats...</p> : postFormatsData && (
+                    <details>
+                      <summary>Post Formats ({postFormatsData.postFormats?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(postFormatsData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Custom Post Types</h6>
+                  {toastersLoading ? <p>Loading toasters...</p> : toastersError ? (
+                    <p style={{color: 'red'}}>Toasters Error: {toastersError.message}</p>
+                  ) : toastersData && (
+                    <details>
+                      <summary>Toasters ({toastersData.toasters?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(toastersData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Taxonomies</h6>
+                  {taxonomiesLoading ? <p>Loading taxonomies...</p> : taxonomiesData && (
+                    <details>
+                      <summary>Taxonomies ({taxonomiesData.taxonomies?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(taxonomiesData, null, 2)}</pre>
                     </details>
                   )}
                   {categoriesLoading ? <p>Loading categories...</p> : categoriesData && (
@@ -156,10 +282,31 @@ export const Page: React.FC = () => {
                       <pre>{JSON.stringify(tagsData, null, 2)}</pre>
                     </details>
                   )}
-                  {taxonomiesLoading ? <p>Loading taxonomies...</p> : taxonomiesData && (
+
+                  <br />
+                  <h6>Media</h6>
+                  {mediaLoading ? <p>Loading media...</p> : mediaData && (
                     <details>
-                      <summary>Taxonomies ({taxonomiesData.taxonomies?.edges?.length ?? 0})</summary>
-                      <pre>{JSON.stringify(taxonomiesData, null, 2)}</pre>
+                      <summary>Media Items ({mediaData.mediaItems?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(mediaData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Navigation</h6>
+                  {menusLoading ? <p>Loading menus...</p> : menusData && (
+                    <details>
+                      <summary>Menus ({menusData.menus?.nodes?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(menusData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Users &amp; Roles</h6>
+                  {viewerLoading ? <p>Loading viewer...</p> : viewerData && (
+                    <details>
+                      <summary>Viewer (Current User)</summary>
+                      <pre>{JSON.stringify(viewerData, null, 2)}</pre>
                     </details>
                   )}
                   {usersLoading ? <p>Loading users...</p> : usersData && (
@@ -168,10 +315,37 @@ export const Page: React.FC = () => {
                       <pre>{JSON.stringify(usersData, null, 2)}</pre>
                     </details>
                   )}
-                  {menusLoading ? <p>Loading menus...</p> : menusData && (
+                  {userRolesLoading ? <p>Loading user roles...</p> : userRolesData && (
                     <details>
-                      <summary>Menus ({menusData.menus?.nodes?.length ?? 0})</summary>
-                      <pre>{JSON.stringify(menusData, null, 2)}</pre>
+                      <summary>User Roles ({userRolesData.userRoles?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(userRolesData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Themes &amp; Assets</h6>
+                  {themesLoading ? <p>Loading themes...</p> : themesData && (
+                    <details>
+                      <summary>Themes ({themesData.themes?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(themesData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {pluginsLoading ? <p>Loading plugins...</p> : pluginsData && (
+                    <details>
+                      <summary>Plugins ({pluginsData.plugins?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(pluginsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {scriptsLoading ? <p>Loading scripts...</p> : scriptsData && (
+                    <details>
+                      <summary>Registered Scripts ({scriptsData.registeredScripts?.nodes?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(scriptsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {stylesLoading ? <p>Loading stylesheets...</p> : stylesData && (
+                    <details>
+                      <summary>Registered Stylesheets ({stylesData.registeredStylesheets?.nodes?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(stylesData, null, 2)}</pre>
                     </details>
                   )}
                 </div>
