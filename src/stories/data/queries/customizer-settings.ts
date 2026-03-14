@@ -1,8 +1,8 @@
 import {gql} from "@apollo/client";
 
-export const GET_THEME_SETTINGS = gql`
-    query GetThemeSettings {
-      themeSettings {
+export const GET_CUSTOMIZER_SETTINGS = gql`
+    query GetCustomizerSettings {
+      customizerSettings {
         customLogo {
           id
           sourceUrl
@@ -30,4 +30,4 @@ export const GET_THEME_SETTINGS = gql`
     }
 `;
 
-export default GET_THEME_SETTINGS;
+export default GET_CUSTOMIZER_SETTINGS;
