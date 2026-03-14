@@ -46,7 +46,7 @@ export const Page: React.FC = () => {
   const { loading: taxonomiesLoading, data: taxonomiesData } = useQuery(GET_ALL_TAXONOMIES)
   const { loading: usersLoading, data: usersData } = useQuery(GET_ALL_USERS)
   const { loading: menusLoading, data: menusData } = useQuery(GET_ALL_MENUS)
-  const { loading: schemaLoading, data: schemaData } = useQuery(GET_SCHEMA_QUERY_FIELDS)
+  const { loading: schemaLoading, error: schemaError, data: schemaData } = useQuery(GET_SCHEMA_QUERY_FIELDS, { context: { useAuth: true } })
   const { loading: allSettingsLoading, data: allSettingsData } = useQuery(GET_ALL_SETTINGS)
   const { loading: discussionLoading, data: discussionData } = useQuery(GET_DISCUSSION_SETTINGS)
   const { loading: readingLoading, data: readingData } = useQuery(GET_READING_SETTINGS)
@@ -166,7 +166,9 @@ export const Page: React.FC = () => {
 
                   <br />
                   <h6>Introspection</h6>
-                  {schemaLoading ? <p>Loading schema...</p> : schemaData && (
+                  {schemaLoading ? <p>Loading schema...</p> : schemaError ? (
+                    <p><small>Requires either a valid <code>.env.local</code> with <code>NEXT_PUBLIC_WP_AUTH_USER</code> and <code>NEXT_PUBLIC_WP_AUTH_APP_PASSWORD</code>, or &ldquo;Enable Public Introspection&rdquo; in WP Admin &gt; GraphQL &gt; Settings.</small></p>
+                  ) : schemaData && (
                     <details>
                       <summary>Schema Query Fields ({schemaData.__schema?.queryType?.fields?.length ?? 0})</summary>
                       <pre>{JSON.stringify(schemaData.__schema.queryType.fields, null, 2)}</pre>
