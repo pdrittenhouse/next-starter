@@ -30,6 +30,7 @@ import { GET_VIEWER } from "../../data/queries/viewer";
 import { GET_ALL_USER_ROLES } from "../../data/queries/user-roles";
 import { GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS } from "../../data/queries/enqueued-assets";
 import { GET_ALL_REVISIONS } from "../../data/queries/revisions";
+import { GET_THEME_SETTINGS } from "../../data/queries/theme-settings";
 
 type User = {
   name: string;
@@ -64,6 +65,7 @@ export const Page: React.FC = () => {
   const { loading: scriptsLoading, data: scriptsData } = useQuery(GET_REGISTERED_SCRIPTS)
   const { loading: stylesLoading, data: stylesData } = useQuery(GET_REGISTERED_STYLESHEETS)
   const { loading: revisionsLoading, data: revisionsData } = useQuery(GET_ALL_REVISIONS)
+  const { loading: themeSettingsLoading, error: themeSettingsError, data: themeSettingsData } = useQuery(GET_THEME_SETTINGS)
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`
@@ -205,6 +207,14 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Discussion Settings</summary>
                       <pre>{JSON.stringify(discussionData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {themeSettingsLoading ? <p>Loading theme settings...</p> : themeSettingsError ? (
+                    <p style={{color: 'red'}}>Theme Settings Error: {themeSettingsError.message}</p>
+                  ) : themeSettingsData && (
+                    <details>
+                      <summary>Theme Settings</summary>
+                      <pre>{JSON.stringify(themeSettingsData, null, 2)}</pre>
                     </details>
                   )}
 
