@@ -15,6 +15,12 @@ export const GET_CUSTOMIZER_SETTINGS = gql`
           altText
         }
         siteIconUrl
+        headerImage
+        headerImageData {
+          id
+          sourceUrl
+          altText
+        }
         headerTextColor
         backgroundColor
         displayHeaderText
