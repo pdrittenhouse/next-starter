@@ -30,7 +30,6 @@ export const GET_CUSTOMIZER_SETTINGS = gql`
         backgroundSize
         backgroundAttachment
         customCss
-        widgets
         menuLocations
       }
     }

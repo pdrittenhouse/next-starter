@@ -34,4 +34,23 @@ export const GET_REGISTERED_STYLESHEETS = gql`
     }
 `;
 
+export const GET_THEME_ENQUEUED_ASSETS = gql`
+    query GetThemeEnqueuedAssets {
+      themeEnqueuedScripts {
+        handle
+        src
+        version
+        dependencies
+        context
+      }
+      themeEnqueuedStylesheets {
+        handle
+        src
+        version
+        dependencies
+        context
+      }
+    }
+`;
+
 export default GET_REGISTERED_SCRIPTS;

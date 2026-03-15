@@ -28,10 +28,12 @@ import { GET_ALL_POST_FORMATS } from "../../data/queries/post-formats";
 import { GET_ALL_TOASTERS } from "../../data/queries/toasters";
 import { GET_VIEWER } from "../../data/queries/viewer";
 import { GET_ALL_USER_ROLES } from "../../data/queries/user-roles";
-import { GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS } from "../../data/queries/enqueued-assets";
+import { GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS } from "../../data/queries/enqueued-assets";
 import { GET_ALL_REVISIONS } from "../../data/queries/revisions";
 import { GET_CUSTOMIZER_SETTINGS } from "../../data/queries/customizer-settings";
 import { GET_THEME_SETTINGS } from "../../data/queries/theme-settings";
+import { GET_WIDGET_AREAS } from "../../data/queries/widgets";
+import { GET_BLOCK_PATTERNS } from "../../data/queries/patterns";
 
 type User = {
   name: string;
@@ -68,6 +70,9 @@ export const Page: React.FC = () => {
   const { loading: revisionsLoading, data: revisionsData } = useQuery(GET_ALL_REVISIONS)
   const { loading: customizerLoading, error: customizerError, data: customizerData } = useQuery(GET_CUSTOMIZER_SETTINGS)
   const { loading: themeSettingsLoading, error: themeSettingsError, data: themeSettingsData } = useQuery(GET_THEME_SETTINGS)
+  const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
+  const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
+  const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`
@@ -316,6 +321,34 @@ export const Page: React.FC = () => {
                   )}
 
                   <br />
+                  <h6>Widgets</h6>
+                  {widgetAreasLoading ? <p>Loading widget areas...</p> : widgetAreasError ? (
+                    <p style={{color: 'red'}}>Widget Areas Error: {widgetAreasError.message}</p>
+                  ) : widgetAreasData && (
+                    <details>
+                      <summary>Widget Areas ({widgetAreasData.widgetAreas?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(widgetAreasData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>Patterns</h6>
+                  {patternsLoading ? <p>Loading patterns...</p> : patternsError ? (
+                    <p style={{color: 'red'}}>Patterns Error: {patternsError.message}</p>
+                  ) : patternsData && (
+                    <>
+                      <details>
+                        <summary>Block Patterns ({patternsData.blockPatterns?.length ?? 0})</summary>
+                        <pre>{JSON.stringify(patternsData.blockPatterns, null, 2)}</pre>
+                      </details>
+                      <details>
+                        <summary>Block Pattern Categories ({patternsData.blockPatternCategories?.length ?? 0})</summary>
+                        <pre>{JSON.stringify(patternsData.blockPatternCategories, null, 2)}</pre>
+                      </details>
+                    </>
+                  )}
+
+                  <br />
                   <h6>Users &amp; Roles</h6>
                   {viewerLoading ? <p>Loading viewer...</p> : viewerData && (
                     <details>
@@ -369,6 +402,20 @@ export const Page: React.FC = () => {
                       <summary>Theme Settings</summary>
                       <pre>{JSON.stringify(themeSettingsData, null, 2)}</pre>
                     </details>
+                  )}
+                  {themeAssetsLoading ? <p>Loading theme enqueued assets...</p> : themeAssetsError ? (
+                    <p style={{color: 'red'}}>Theme Enqueued Assets Error: {themeAssetsError.message}</p>
+                  ) : themeAssetsData && (
+                    <>
+                      <details>
+                        <summary>Theme Enqueued Scripts ({themeAssetsData.themeEnqueuedScripts?.length ?? 0})</summary>
+                        <pre>{JSON.stringify(themeAssetsData.themeEnqueuedScripts, null, 2)}</pre>
+                      </details>
+                      <details>
+                        <summary>Theme Enqueued Stylesheets ({themeAssetsData.themeEnqueuedStylesheets?.length ?? 0})</summary>
+                        <pre>{JSON.stringify(themeAssetsData.themeEnqueuedStylesheets, null, 2)}</pre>
+                      </details>
+                    </>
                   )}
                 </div>
                 <div className={styles.tipWrapper}>
