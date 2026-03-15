@@ -24,10 +24,13 @@ const SKIP_FIELDS = new Set([
   'dateGmt', 'modifiedGmt', 'lastEditedBy',
 ]);
 
-// Introspection query to discover fields on a specific type
+// Introspection query to discover fields and interfaces on a specific type
 const buildIntrospectionQuery = (typeName: string) => gql`
   query Introspect_${typeName} {
     __type(name: "${typeName}") {
+      interfaces {
+        name
+      }
       fields {
         name
         type {
@@ -109,11 +112,47 @@ const buildListingQuery = (pluralName: string): DocumentNode => {
   `;
 };
 
-const buildContentQuery = (pluralName: string, customFields: string[]): DocumentNode => {
+const buildContentQuery = (pluralName: string, customFields: string[], interfaces: Set<string>): DocumentNode => {
   const fieldName = lcFirst(pluralName);
   const customFieldsStr = customFields.length > 0
     ? '\n          ' + customFields.join('\n          ')
     : '';
+
+  const titleFragment = interfaces.has('NodeWithTitle') ? `
+            ... on NodeWithTitle {
+              title
+            }` : '';
+  const contentFragment = interfaces.has('NodeWithContentEditor') ? `
+            ... on NodeWithContentEditor {
+              content
+            }` : '';
+  const excerptFragment = interfaces.has('NodeWithExcerpt') ? `
+            ... on NodeWithExcerpt {
+              excerpt
+            }` : '';
+  const authorFragment = interfaces.has('NodeWithAuthor') ? `
+            ... on NodeWithAuthor {
+              author {
+                node {
+                  id
+                  name
+                  slug
+                }
+              }
+            }` : '';
+  const featuredImageFragment = interfaces.has('NodeWithFeaturedImage') ? `
+            ... on NodeWithFeaturedImage {
+              featuredImage {
+                node {
+                  id
+                  sourceUrl
+                  altText
+                  caption
+                  srcSet
+                  sizes
+                }
+              }
+            }` : '';
 
   return gql`
     query GetDynamicWithContent_${fieldName} {
@@ -126,37 +165,7 @@ const buildContentQuery = (pluralName: string, customFields: string[]): Document
             date
             modified
             status
-            uri
-            ... on NodeWithTitle {
-              title
-            }
-            ... on NodeWithContentEditor {
-              content
-            }
-            ... on NodeWithExcerpt {
-              excerpt
-            }
-            ... on NodeWithAuthor {
-              author {
-                node {
-                  id
-                  name
-                  slug
-                }
-              }
-            }
-            ... on NodeWithFeaturedImage {
-              featuredImage {
-                node {
-                  id
-                  sourceUrl
-                  altText
-                  caption
-                  srcSet
-                  sizes
-                }
-              }
-            }
+            uri${titleFragment}${contentFragment}${excerptFragment}${authorFragment}${featuredImageFragment}
             terms {
               edges {
                 node {
@@ -187,6 +196,12 @@ export const DynamicPostType: React.FC<DynamicPostTypeProps> = ({ pluralName, si
     skip: !withContent,
   });
 
+  // Extract implemented interfaces from introspection
+  const implementedInterfaces = React.useMemo(() => {
+    const names = introData?.__type?.interfaces?.map((i: { name: string }) => i.name) ?? [];
+    return new Set<string>(names);
+  }, [introData]);
+
   // Build the appropriate query
   React.useEffect(() => {
     if (!withContent) {
@@ -196,7 +211,7 @@ export const DynamicPostType: React.FC<DynamicPostTypeProps> = ({ pluralName, si
 
     if (!introData?.__type?.fields) {
       // Fallback if introspection fails - use content query with no custom fields
-      setDataQuery(buildContentQuery(pluralName, []));
+      setDataQuery(buildContentQuery(pluralName, [], implementedInterfaces));
       return;
     }
 
@@ -205,11 +220,11 @@ export const DynamicPostType: React.FC<DynamicPostTypeProps> = ({ pluralName, si
       .map(buildFieldSelection)
       .filter((f): f is string => f !== null);
 
-    setDataQuery(buildContentQuery(pluralName, customFields));
-  }, [introData, pluralName, withContent]);
+    setDataQuery(buildContentQuery(pluralName, customFields, implementedInterfaces));
+  }, [introData, pluralName, withContent, implementedInterfaces]);
 
   // Execute the data query
-  const fallbackQuery = withContent ? buildContentQuery(pluralName, []) : buildListingQuery(pluralName);
+  const fallbackQuery = withContent ? buildContentQuery(pluralName, [], implementedInterfaces) : buildListingQuery(pluralName);
   const { loading, error, data } = useQuery(dataQuery || fallbackQuery, {
     skip: !dataQuery,
   });

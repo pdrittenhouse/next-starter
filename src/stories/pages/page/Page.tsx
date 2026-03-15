@@ -319,7 +319,7 @@ export const Page: React.FC = () => {
                         <DynamicTaxonomy
                           key={edge.node.name}
                           pluralName={edge.node.graphqlPluralName}
-                          label={edge.node.label || edge.node.name}
+                          label={edge.node.label || edge.node.name.charAt(0).toUpperCase() + edge.node.name.slice(1)}
                         />
                       ))
                   )}
