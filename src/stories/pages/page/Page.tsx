@@ -35,6 +35,7 @@ import { GET_WIDGET_AREAS } from "../../data/queries/widgets";
 import { GET_BLOCK_PATTERNS } from "../../data/queries/patterns";
 import { DynamicPostType } from "../../components/DynamicPostType";
 import { DynamicTaxonomy } from "../../components/DynamicTaxonomy";
+import { DynamicThemeOptions } from "../../components/DynamicThemeOptions";
 
 type User = {
   name: string;
@@ -417,14 +418,6 @@ export const Page: React.FC = () => {
                       <pre>{JSON.stringify(stylesData, null, 2)}</pre>
                     </details>
                   )}
-                  {themeSettingsLoading ? <p>Loading theme settings...</p> : themeSettingsError ? (
-                    <p style={{color: 'red'}}>Theme Settings Error: {themeSettingsError.message}</p>
-                  ) : themeSettingsData && (
-                    <details>
-                      <summary>Theme Settings</summary>
-                      <pre>{JSON.stringify(themeSettingsData, null, 2)}</pre>
-                    </details>
-                  )}
                   {themeAssetsLoading ? <p>Loading theme enqueued assets...</p> : themeAssetsError ? (
                     <p style={{color: 'red'}}>Theme Enqueued Assets Error: {themeAssetsError.message}</p>
                   ) : themeAssetsData && (
@@ -438,6 +431,38 @@ export const Page: React.FC = () => {
                         <pre>{JSON.stringify(themeAssetsData.themeEnqueuedStylesheets, null, 2)}</pre>
                       </details>
                     </>
+                  )}
+
+                  <br />
+                  <h6>Timberland</h6>
+                  {themeSettingsLoading ? <p>Loading theme settings...</p> : themeSettingsError ? (
+                    <p style={{color: 'red'}}>Theme Settings Error: {themeSettingsError.message}</p>
+                  ) : themeSettingsData && (
+                    <details>
+                      <summary>Theme Settings (Customizer)</summary>
+                      <pre>{JSON.stringify(themeSettingsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {schemaLoading ? <p>Loading theme options...</p> : schemaData && (
+                    schemaData.__schema?.queryType?.fields
+                      ?.filter((field: any) =>
+                        field.type.kind === 'OBJECT' &&
+                        !field.description &&
+                        ['themeGeneralOptions', 'themeHeaderOptions', 'themeFooterOptions',
+                         'cacheOptions', 'menuWidgetOptions', 'fontOptions', 'blockModules'
+                        ].includes(field.name)
+                      )
+                      .map((field: any) => (
+                        <DynamicThemeOptions
+                          key={field.name}
+                          fieldName={field.name}
+                          typeName={field.type.name}
+                          label={field.name
+                            .replace(/([A-Z])/g, ' $1')
+                            .replace(/^./, (s: string) => s.toUpperCase())
+                            .trim()}
+                        />
+                      ))
                   )}
                 </div>
                 <div className={styles.tipWrapper}>
