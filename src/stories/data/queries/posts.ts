@@ -41,7 +41,41 @@ export const GET_ALL_POSTS = gql`
               slug
             }
           }
+          content
           excerpt
+          modified
+          status
+          uri
+          featuredImage {
+            node {
+              altText
+              caption
+              sourceUrl
+              srcSet
+              sizes
+              id
+            }
+          }
+          tags {
+            edges {
+              node {
+                id
+                name
+                slug
+              }
+            }
+          }
+          terms {
+            edges {
+              node {
+                id
+                name
+                slug
+                taxonomyName
+                uri
+              }
+            }
+          }
         }
       }
     }

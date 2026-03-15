@@ -9,6 +9,8 @@ export const GET_ALL_TAXONOMIES = gql`
           label
           name
           description
+          graphqlPluralName
+          graphqlSingleName
         }
       }
     }

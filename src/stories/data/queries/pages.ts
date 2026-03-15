@@ -52,6 +52,32 @@ export const GET_ALL_PAGES = gql`
               slug
             }
           }
+          content
+          date
+          modified
+          status
+          databaseId
+          featuredImage {
+            node {
+              altText
+              caption
+              sourceUrl
+              srcSet
+              sizes
+              id
+            }
+          }
+          terms {
+            edges {
+              node {
+                id
+                name
+                slug
+                taxonomyName
+                uri
+              }
+            }
+          }
         }
       }
     }

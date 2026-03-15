@@ -25,7 +25,6 @@ import { GET_ALL_COMMENTS } from "../../data/queries/comments";
 import { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES } from "../../data/queries/content";
 import { GET_ALL_PLUGINS } from "../../data/queries/plugins";
 import { GET_ALL_POST_FORMATS } from "../../data/queries/post-formats";
-import { GET_ALL_TOASTERS } from "../../data/queries/toasters";
 import { GET_VIEWER } from "../../data/queries/viewer";
 import { GET_ALL_USER_ROLES } from "../../data/queries/user-roles";
 import { GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS } from "../../data/queries/enqueued-assets";
@@ -34,6 +33,8 @@ import { GET_CUSTOMIZER_SETTINGS } from "../../data/queries/customizer-settings"
 import { GET_THEME_SETTINGS } from "../../data/queries/theme-settings";
 import { GET_WIDGET_AREAS } from "../../data/queries/widgets";
 import { GET_BLOCK_PATTERNS } from "../../data/queries/patterns";
+import { DynamicPostType } from "../../components/DynamicPostType";
+import { DynamicTaxonomy } from "../../components/DynamicTaxonomy";
 
 type User = {
   name: string;
@@ -62,7 +63,6 @@ export const Page: React.FC = () => {
   const { loading: contentNodesLoading, data: contentNodesData } = useQuery(GET_ALL_CONTENT_NODES)
   const { loading: pluginsLoading, data: pluginsData } = useQuery(GET_ALL_PLUGINS)
   const { loading: postFormatsLoading, data: postFormatsData } = useQuery(GET_ALL_POST_FORMATS)
-  const { loading: toastersLoading, error: toastersError, data: toastersData } = useQuery(GET_ALL_TOASTERS)
   const { loading: viewerLoading, data: viewerData } = useQuery(GET_VIEWER)
   const { loading: userRolesLoading, data: userRolesData } = useQuery(GET_ALL_USER_ROLES)
   const { loading: scriptsLoading, data: scriptsData } = useQuery(GET_REGISTERED_SCRIPTS)
@@ -272,13 +272,24 @@ export const Page: React.FC = () => {
 
                   <br />
                   <h6>Custom Post Types</h6>
-                  {toastersLoading ? <p>Loading toasters...</p> : toastersError ? (
-                    <p style={{color: 'red'}}>Toasters Error: {toastersError.message}</p>
-                  ) : toastersData && (
-                    <details>
-                      <summary>Toasters ({toastersData.toasters?.edges?.length ?? 0})</summary>
-                      <pre>{JSON.stringify(toastersData, null, 2)}</pre>
-                    </details>
+                  {contentTypesLoading ? <p>Loading custom post types...</p> : contentTypesData && (
+                    contentTypesData.contentTypes?.edges
+                      ?.filter((edge: any) => !['post', 'page', 'attachment'].includes(edge.node.name))
+                      .map((edge: any) => (
+                        <React.Fragment key={edge.node.name}>
+                          <DynamicPostType
+                            pluralName={edge.node.graphqlPluralName}
+                            singleName={edge.node.graphqlSingleName}
+                            label={edge.node.label}
+                          />
+                          <DynamicPostType
+                            pluralName={edge.node.graphqlPluralName}
+                            singleName={edge.node.graphqlSingleName}
+                            label={edge.node.label}
+                            withContent
+                          />
+                        </React.Fragment>
+                      ))
                   )}
 
                   <br />
@@ -300,6 +311,17 @@ export const Page: React.FC = () => {
                       <summary>Tags ({tagsData.tags?.edges?.length ?? 0})</summary>
                       <pre>{JSON.stringify(tagsData, null, 2)}</pre>
                     </details>
+                  )}
+                  {taxonomiesLoading ? null : taxonomiesData && (
+                    taxonomiesData.taxonomies?.edges
+                      ?.filter((edge: any) => !['category', 'post_tag', 'post_format'].includes(edge.node.name))
+                      .map((edge: any) => (
+                        <DynamicTaxonomy
+                          key={edge.node.name}
+                          pluralName={edge.node.graphqlPluralName}
+                          label={edge.node.label || edge.node.name}
+                        />
+                      ))
                   )}
 
                   <br />
