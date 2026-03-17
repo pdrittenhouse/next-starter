@@ -78,6 +78,12 @@ export const GET_ALL_PAGES = gql`
               }
             }
           }
+          editorBlocks {
+            name
+            clientId
+            parentClientId
+            renderedHtml
+          }
         }
       }
     }

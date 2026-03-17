@@ -76,6 +76,12 @@ export const GET_ALL_POSTS = gql`
               }
             }
           }
+          editorBlocks {
+            name
+            clientId
+            parentClientId
+            renderedHtml
+          }
         }
       }
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useQuery, useApolloClient, gql } from '@apollo/client';
+import { useQuery, gql } from '@apollo/client';
 import type { DocumentNode } from 'graphql';
 
 interface DynamicPostTypeProps {
@@ -21,7 +21,7 @@ const SKIP_FIELDS = new Set([
   'previewRevisionId', 'guid', 'enclosure', 'isRestricted', 'link',
   'desiredSlug', 'editingLockedBy', 'isContentNode', 'isTermNode',
   'enqueuedScripts', 'enqueuedStylesheets', 'contentTypeName',
-  'dateGmt', 'modifiedGmt', 'lastEditedBy',
+  'dateGmt', 'modifiedGmt', 'lastEditedBy', 'editorBlocks',
 ]);
 
 // Introspection query to discover fields and interfaces on a specific type
@@ -176,6 +176,12 @@ const buildContentQuery = (pluralName: string, customFields: string[], interface
                   uri
                 }
               }
+            }
+            editorBlocks {
+              name
+              clientId
+              parentClientId
+              renderedHtml
             }${customFieldsStr}
           }
         }
