@@ -84,6 +84,21 @@ export const GET_ALL_PAGES = gql`
             parentClientId
             renderedHtml
           }
+          seo {
+            title
+            description
+            canonicalUrl
+            ogTitle
+            ogDescription
+            ogImage
+            ogType
+            twitterTitle
+            twitterDescription
+            twitterImage
+            twitterCard
+            robots
+            schema
+          }
         }
       }
     }

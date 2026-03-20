@@ -8,31 +8,22 @@ import CardLink from 'react-bootstrap/CardLink'
 import Image from "next/image";
 import vercelLogo from "../../../../public/vercel.svg";
 import styles from './page.module.scss';
-import { useQuery, gql } from "@apollo/client";
-import { GET_GENERAL_SETTINGS } from "../../data/queries/settings";
-import { GET_ALL_POSTS } from "../../data/queries/posts";
-import { GET_ALL_PAGES } from "../../data/queries/pages";
-import { GET_ALL_CATEGORIES } from "../../data/queries/categories";
-import { GET_ALL_TAGS } from "../../data/queries/tags";
-import { GET_ALL_TAXONOMIES } from "../../data/queries/taxonomies";
-import { GET_ALL_USERS } from "../../data/queries/users";
-import { GET_ALL_MENUS } from "../../data/queries/menus";
-import { GET_SCHEMA_QUERY_FIELDS } from "../../data/queries/introspection";
-import { GET_ALL_SETTINGS, GET_DISCUSSION_SETTINGS, GET_READING_SETTINGS, GET_WRITING_SETTINGS } from "../../data/queries/settings";
-import { GET_ALL_THEMES } from "../../data/queries/themes";
-import { GET_ALL_MEDIA_ITEMS } from "../../data/queries/media";
-import { GET_ALL_COMMENTS } from "../../data/queries/comments";
-import { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES } from "../../data/queries/content";
-import { GET_ALL_PLUGINS } from "../../data/queries/plugins";
-import { GET_ALL_POST_FORMATS } from "../../data/queries/post-formats";
-import { GET_VIEWER } from "../../data/queries/viewer";
-import { GET_ALL_USER_ROLES } from "../../data/queries/user-roles";
-import { GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS } from "../../data/queries/enqueued-assets";
-import { GET_ALL_REVISIONS } from "../../data/queries/revisions";
-import { GET_CUSTOMIZER_SETTINGS } from "../../data/queries/customizer-settings";
-import { GET_THEME_SETTINGS } from "../../data/queries/theme-settings";
-import { GET_WIDGET_AREAS } from "../../data/queries/widgets";
-import { GET_BLOCK_PATTERNS } from "../../data/queries/patterns";
+import { useQuery } from "@apollo/client";
+import {
+  GET_GENERAL_SETTINGS, GET_ALL_SETTINGS, GET_DISCUSSION_SETTINGS, GET_READING_SETTINGS, GET_WRITING_SETTINGS,
+  GET_ALL_POSTS, GET_ALL_PAGES, GET_ALL_CATEGORIES, GET_ALL_TAGS, GET_ALL_TAXONOMIES,
+  GET_ALL_USERS, GET_ALL_MENUS, GET_SCHEMA_QUERY_FIELDS,
+  GET_ALL_THEMES, GET_ALL_MEDIA_ITEMS, GET_ALL_COMMENTS,
+  GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES,
+  GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
+  GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
+  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS,
+  GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
+  GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
+  GET_ALL_GRAVITY_FORMS,
+  GET_ALL_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_ALL_ORDERS, GET_ALL_COUPONS, GET_SHOP_SETTINGS,
+} from "@/lib/wp/queries";
+import { THEME_OPTIONS_FIELDS, camelToLabel, taxonomyLabel } from "@/lib/wp/utils";
 import { DynamicPostType } from "../../components/DynamicPostType";
 import { DynamicTaxonomy } from "../../components/DynamicTaxonomy";
 import { DynamicThemeOptions } from "../../components/DynamicThemeOptions";
@@ -74,6 +65,16 @@ export const Page: React.FC = () => {
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
+  const { loading: permalinksLoading, error: permalinksError, data: permalinksData } = useQuery(GET_PERMALINK_SETTINGS)
+  const { loading: siteHealthLoading, error: siteHealthError, data: siteHealthData } = useQuery(GET_SITE_HEALTH)
+  const { loading: redirectsLoading, error: redirectsError, data: redirectsData } = useQuery(GET_REDIRECTS)
+  const { loading: seoLoading, error: seoError, data: seoData } = useQuery(GET_SEO_SETTINGS)
+  const { loading: gfLoading, error: gfError, data: gfData } = useQuery(GET_ALL_GRAVITY_FORMS)
+  const { loading: productsLoading, error: productsError, data: productsData } = useQuery(GET_ALL_PRODUCTS)
+  const { loading: productCatsLoading, error: productCatsError, data: productCatsData } = useQuery(GET_PRODUCT_CATEGORIES)
+  const { loading: ordersLoading, error: ordersError, data: ordersData } = useQuery(GET_ALL_ORDERS)
+  const { loading: couponsLoading, error: couponsError, data: couponsData } = useQuery(GET_ALL_COUPONS)
+  const { loading: shopLoading, error: shopError, data: shopData } = useQuery(GET_SHOP_SETTINGS)
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`
@@ -217,6 +218,38 @@ export const Page: React.FC = () => {
                       <pre>{JSON.stringify(discussionData, null, 2)}</pre>
                     </details>
                   )}
+                  {permalinksLoading ? <p>Loading permalink settings...</p> : permalinksError ? (
+                    <p style={{color: 'red'}}>Permalink Settings Error: {permalinksError.message}</p>
+                  ) : permalinksData && (
+                    <details>
+                      <summary>Permalink Settings ({permalinksData.permalinkSettings?.rewriteRules?.length ?? 0} rewrite rules)</summary>
+                      <pre>{JSON.stringify(permalinksData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {siteHealthLoading ? <p>Loading site health...</p> : siteHealthError ? (
+                    <p style={{color: 'red'}}>Site Health Error: {siteHealthError.message}</p>
+                  ) : siteHealthData && (
+                    <details>
+                      <summary>Site Health</summary>
+                      <pre>{JSON.stringify(siteHealthData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {redirectsLoading ? <p>Loading redirects...</p> : redirectsError ? (
+                    <p style={{color: 'red'}}>Redirects Error: {redirectsError.message}</p>
+                  ) : redirectsData && (
+                    <details>
+                      <summary>Redirects ({redirectsData.redirects?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(redirectsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {seoLoading ? <p>Loading SEO settings...</p> : seoError ? (
+                    <p style={{color: 'red'}}>SEO Settings Error: {seoError.message}</p>
+                  ) : seoData && (
+                    <details>
+                      <summary>SEO Settings ({seoData.seoSettings?.plugin || 'none detected'})</summary>
+                      <pre>{JSON.stringify(seoData, null, 2)}</pre>
+                    </details>
+                  )}
                   {customizerLoading ? <p>Loading customizer settings...</p> : customizerError ? (
                     <p style={{color: 'red'}}>Customizer Settings Error: {customizerError.message}</p>
                   ) : customizerData && (
@@ -320,7 +353,7 @@ export const Page: React.FC = () => {
                         <DynamicTaxonomy
                           key={edge.node.name}
                           pluralName={edge.node.graphqlPluralName}
-                          label={edge.node.label || edge.node.name.charAt(0).toUpperCase() + edge.node.name.slice(1)}
+                          label={taxonomyLabel(edge.node.label, edge.node.name)}
                         />
                       ))
                   )}
@@ -448,21 +481,70 @@ export const Page: React.FC = () => {
                       ?.filter((field: any) =>
                         field.type.kind === 'OBJECT' &&
                         !field.description &&
-                        ['themeGeneralOptions', 'themeHeaderOptions', 'themeFooterOptions',
-                         'cacheOptions', 'menuWidgetOptions', 'fontOptions', 'blockModules'
-                        ].includes(field.name)
+                        (THEME_OPTIONS_FIELDS as readonly string[]).includes(field.name)
                       )
                       .map((field: any) => (
                         <DynamicThemeOptions
                           key={field.name}
                           fieldName={field.name}
                           typeName={field.type.name}
-                          label={field.name
-                            .replace(/([A-Z])/g, ' $1')
-                            .replace(/^./, (s: string) => s.toUpperCase())
-                            .trim()}
+                          label={camelToLabel(field.name)}
                         />
                       ))
+                  )}
+
+                  <br />
+                  <h6>Gravity Forms</h6>
+                  {gfLoading ? <p>Loading gravity forms...</p> : gfError ? (
+                    <p style={{color: 'red'}}>Gravity Forms Error: {gfError.message}</p>
+                  ) : gfData && (
+                    <details>
+                      <summary>Forms ({gfData.gfForms?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(gfData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  <br />
+                  <h6>WooCommerce</h6>
+                  {productsLoading ? <p>Loading products...</p> : productsError ? (
+                    <p style={{color: 'red'}}>Products Error: {productsError.message}</p>
+                  ) : productsData && (
+                    <details>
+                      <summary>Products ({productsData.products?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(productsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {productCatsLoading ? <p>Loading product categories...</p> : productCatsError ? (
+                    <p style={{color: 'red'}}>Product Categories Error: {productCatsError.message}</p>
+                  ) : productCatsData && (
+                    <details>
+                      <summary>Product Categories ({productCatsData.productCategories?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(productCatsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {ordersLoading ? <p>Loading orders...</p> : ordersError ? (
+                    <p style={{color: 'red'}}>Orders Error: {ordersError.message}</p>
+                  ) : ordersData && (
+                    <details>
+                      <summary>Orders ({ordersData.orders?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(ordersData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {couponsLoading ? <p>Loading coupons...</p> : couponsError ? (
+                    <p style={{color: 'red'}}>Coupons Error: {couponsError.message}</p>
+                  ) : couponsData && (
+                    <details>
+                      <summary>Coupons ({couponsData.coupons?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(couponsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {shopLoading ? <p>Loading shop settings...</p> : shopError ? (
+                    <p style={{color: 'red'}}>Shop Settings Error: {shopError.message}</p>
+                  ) : shopData && (
+                    <details>
+                      <summary>Shop Settings</summary>
+                      <pre>{JSON.stringify(shopData, null, 2)}</pre>
+                    </details>
                   )}
                 </div>
                 <div className={styles.tipWrapper}>

@@ -82,6 +82,21 @@ export const GET_ALL_POSTS = gql`
             parentClientId
             renderedHtml
           }
+          seo {
+            title
+            description
+            canonicalUrl
+            ogTitle
+            ogDescription
+            ogImage
+            ogType
+            twitterTitle
+            twitterDescription
+            twitterImage
+            twitterCard
+            robots
+            schema
+          }
         }
       }
     }

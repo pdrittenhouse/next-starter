@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
 import type { DocumentNode } from 'graphql';
+import { lcFirst, ucFirst, CONTENT_NODE_SKIP_FIELDS } from '@/lib/wp/utils';
 
 interface DynamicPostTypeProps {
   pluralName: string;
@@ -8,21 +9,6 @@ interface DynamicPostTypeProps {
   label: string;
   withContent?: boolean;
 }
-
-// WPGraphQL root query fields use lowerCamelCase
-const lcFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
-const ucFirst = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
-// Fields that are part of the ContentNode interface (already handled)
-const SKIP_FIELDS = new Set([
-  '__typename', 'id', 'databaseId', 'slug', 'date', 'modified', 'status',
-  'uri', 'title', 'content', 'excerpt', 'featuredImage', 'author',
-  'terms', 'contentType', 'template', 'isPreview', 'previewRevisionDatabaseId',
-  'previewRevisionId', 'guid', 'enclosure', 'isRestricted', 'link',
-  'desiredSlug', 'editingLockedBy', 'isContentNode', 'isTermNode',
-  'enqueuedScripts', 'enqueuedStylesheets', 'contentTypeName',
-  'dateGmt', 'modifiedGmt', 'lastEditedBy', 'editorBlocks',
-]);
 
 // Introspection query to discover fields and interfaces on a specific type
 const buildIntrospectionQuery = (typeName: string) => gql`
@@ -78,7 +64,7 @@ const getLeafType = (type: FieldInfo['type']): { name: string | null; kind: stri
 
 // Build a field selection string for a scalar or simple object field
 const buildFieldSelection = (field: FieldInfo): string | null => {
-  if (SKIP_FIELDS.has(field.name)) return null;
+  if (CONTENT_NODE_SKIP_FIELDS.has(field.name)) return null;
   const leaf = getLeafType(field.type);
   if (leaf.kind === 'SCALAR' || leaf.kind === 'ENUM') {
     return field.name;
@@ -182,6 +168,21 @@ const buildContentQuery = (pluralName: string, customFields: string[], interface
               clientId
               parentClientId
               renderedHtml
+            }
+            seo {
+              title
+              description
+              canonicalUrl
+              ogTitle
+              ogDescription
+              ogImage
+              ogType
+              twitterTitle
+              twitterDescription
+              twitterImage
+              twitterCard
+              robots
+              schema
             }${customFieldsStr}
           }
         }

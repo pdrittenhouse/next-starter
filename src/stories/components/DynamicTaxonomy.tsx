@@ -1,12 +1,11 @@
 import React from 'react';
 import { useQuery, gql } from '@apollo/client';
+import { lcFirst } from '@/lib/wp/utils';
 
 interface DynamicTaxonomyProps {
   pluralName: string;
   label: string;
 }
-
-const lcFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 const buildQuery = (pluralName: string) => {
   const fieldName = lcFirst(pluralName);
