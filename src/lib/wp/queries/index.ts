@@ -2,13 +2,13 @@
 export { GET_NODE_BY_URI, RESOLVE_URI } from './node-by-uri';
 
 // Content
-export { POST_FIELDS, GET_ALL_POSTS, GET_ALL_POSTS_WITH_CONTENT, GET_POST_BY_SLUG, GET_POSTS_BY_CATEGORY_ID, GET_POSTS_BY_AUTHOR_SLUG } from './posts';
-export { PAGE_FIELDS, GET_ALL_PAGES, GET_ALL_PAGES_WITH_CONTENT, GET_PAGE_BY_URI } from './pages';
+export { POST_FIELDS, GET_ALL_POSTS, GET_ALL_POSTS_WITH_CONTENT, GET_POST_BY_SLUG, GET_POSTS_BY_CATEGORY_ID, GET_POSTS_BY_AUTHOR_SLUG, GET_ADJACENT_POSTS, GET_POSTS_PAGINATED, GET_POSTS_BY_DATE, GET_ALL_POST_URIS, GET_PREVIEW_POST } from './posts';
+export { PAGE_FIELDS, GET_ALL_PAGES, GET_ALL_PAGES_WITH_CONTENT, GET_PAGE_BY_URI, GET_ALL_PAGE_URIS } from './pages';
 export { GET_ALL_CATEGORIES, GET_CATEGORY_BY_SLUG } from './categories';
 export { GET_ALL_TAGS, GET_TAG_BY_SLUG } from './tags';
 export { GET_ALL_TAXONOMIES, GET_TAXONOMY_BY_ID, GET_TERMS_BY_TAXONOMY } from './taxonomies';
-export { GET_ALL_COMMENTS } from './comments';
-export { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES } from './content';
+export { GET_ALL_COMMENTS, GET_COMMENTS_BY_POST } from './comments';
+export { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES, SEARCH_CONTENT } from './content';
 export { GET_ALL_POST_FORMATS } from './post-formats';
 export { GET_ALL_REVISIONS } from './revisions';
 
@@ -19,7 +19,7 @@ export { GET_ALL_MEDIA_ITEMS, GET_MEDIA_ITEM_BY_ID } from './media';
 export { GET_ALL_MENUS } from './menus';
 
 // Users & Roles
-export { GET_ALL_USERS } from './users';
+export { GET_ALL_USERS, GET_USER_BY_SLUG, GET_ALL_USER_SLUGS } from './users';
 export { GET_VIEWER } from './viewer';
 export { GET_ALL_USER_ROLES } from './user-roles';
 

@@ -26,6 +26,7 @@ export const GET_NODE_BY_URI = gql`
         status
         content
         excerpt
+        commentStatus
         author {
           node {
             id
@@ -108,6 +109,9 @@ export const GET_NODE_BY_URI = gql`
         status
         content
         menuOrder
+        template {
+          templateName
+        }
         parent {
           node {
             id
@@ -150,17 +154,6 @@ export const GET_NODE_BY_URI = gql`
             caption
             srcSet
             sizes
-          }
-        }
-        terms {
-          edges {
-            node {
-              id
-              name
-              slug
-              taxonomyName
-              uri
-            }
           }
         }
         editorBlocks {

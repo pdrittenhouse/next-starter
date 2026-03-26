@@ -1,8 +1,7 @@
 "use client";
 import { Page } from '@/stories/pages/page/Page';
-import styles from "./page.module.scss";
 
-export default function Home() {
+export default function DataPage() {
   return (
     <>
       <Page></Page>

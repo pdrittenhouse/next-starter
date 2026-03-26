@@ -2,24 +2,26 @@
 import React from "react";
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { getWpConfig, buildAuthHeader } from "@/lib/wp/config";
 
-const config = getWpConfig();
-
+// Note: Must use literal process.env.NEXT_PUBLIC_* access here.
+// Webpack/Storybook statically replaces these at build time —
+// dynamic access like process.env[key] does NOT work in client components.
 const httpLink = new HttpLink({
-    uri: config.graphqlUrl || "http://headless-test.local/graphql",
+    uri: process.env.NEXT_PUBLIC_WP_GRAPHQL_URL || "http://headless-test.local/graphql",
 });
 
 const authLink = setContext((_request, previousContext) => {
     if (!previousContext.useAuth) return { headers: previousContext.headers };
 
-    const authHeader = buildAuthHeader(config);
-    if (!authHeader) return { headers: previousContext.headers };
+    const user = process.env.NEXT_PUBLIC_WP_AUTH_USER;
+    const pass = process.env.NEXT_PUBLIC_WP_AUTH_APP_PASSWORD;
+    if (!user || !pass) return { headers: previousContext.headers };
 
+    const token = btoa(`${user}:${pass}`);
     return {
         headers: {
             ...previousContext.headers,
-            Authorization: authHeader,
+            Authorization: `Basic ${token}`,
         },
     };
 });

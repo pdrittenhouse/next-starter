@@ -1,3 +1,8 @@
-.btn-secondary {
-  background-color: $secondary;
+// Button atom styles — local (CSS Module) classes only.
+// Global styles are in src/scss/global/_button.scss.
+
+// Block button utility (deprecated Bootstrap 4 compat)
+.btnBlock {
+  display: block;
+  width: 100%;
 }

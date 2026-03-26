@@ -1,23 +1,73 @@
 import { Button } from './Button';
 
-# Button Component
+# Button
 
-Primary UI component for user interaction.
+Button atom — mirrors the theme's Pattern Lab button. Supports all Bootstrap 5 button features.
 
 ## Usage
 
 ```jsx
-<Button label="Click me" onClick={() => console.log('Button clicked')} />
+// Basic
+<Button label="Click me" />
+
+// With variant and size
+<Button variant="secondary" size="lg" label="Large Secondary" />
+
+// Outline
+<Button variant="danger" outline label="Outline Danger" />
+
+// Anchor button
+<Button href="/some-page" target="_blank" label="Link Button" />
+
+// Block (full-width)
+<Button block label="Full Width" />
+
+// With rich children (icons, etc.)
+<Button variant="primary">
+  <Icon name="arrow-right" /> Continue
+</Button>
+
+// Close button
+<Button closeButton />
+
+// Tooltip
+<Button label="Hover me" tooltip="Tooltip text" placement="top" />
+
+// Popover
+<Button label="Click me" popoverTitle="Title" popoverContent="Body" />
+
+// Toggle (collapse, modal, dropdown, tab)
+<Button label="Toggle" toggle="collapse" target="#myCollapse" expanded={false} controls="myCollapse" />
 ```
 
 ## Props
 
-```jsx
-| Name             | Type                    | Default     | Description                                               |
-| ---------------- | ----------------------- | ----------- | --------------------------------------------------------- |
-| `primary`        | `boolean`               | `false`     | Specifies if this button is the principal call to action. |
-| `size`           | `'sm' | 'md' | 'lg'`    | `'md'`      | Determines how large the button should be.                |
-| `backgroundColor`| `string`                | `undefined` | Specifies the background color of the button.             |
-| `label`          | `string`                | `''`        | The content displayed on the button.                      |
-| `onClick`        | `() => void`            | `undefined` | An optional click handler function.                       |
-```
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `ButtonVariant` | `'primary'` | Color variant (primary, secondary, tertiary, etc.) |
+| `outline` | `boolean` | `false` | Render as outline button |
+| `size` | `'sm' \| 'lg'` | — | Button size |
+| `block` | `boolean` | `false` | Full-width block button |
+| `as` | `'button' \| 'a' \| 'input'` | `'button'` | HTML element type |
+| `type` | `'button' \| 'submit' \| 'reset'` | `'button'` | HTML type attribute |
+| `href` | `string` | — | URL (auto-sets as="a") |
+| `target` | `string` | — | Link target or data-bs-target |
+| `label` | `string` | — | Button text |
+| `children` | `ReactNode` | — | Rich content (overrides label) |
+| `active` | `boolean` | `false` | Active/pressed state |
+| `disabled` | `boolean` | `false` | Disabled state |
+| `toggle` | `ButtonToggle` | — | Bootstrap toggle (collapse, dropdown, modal, tab) |
+| `value` | `string` | — | Value attribute (for input) |
+| `id` | `string` | — | HTML id |
+| `expanded` | `boolean` | — | aria-expanded |
+| `controls` | `string` | — | aria-controls |
+| `role` | `string` | `'button'` | ARIA role |
+| `nowrap` | `boolean` | `false` | Prevent text wrapping |
+| `closeButton` | `boolean \| 'white'` | `false` | Render as close button |
+| `hideLabel` | `boolean` | `false` | Visually hide label text |
+| `tooltip` | `string` | — | Tooltip content (supports HTML) |
+| `popoverTitle` | `string` | — | Popover header |
+| `popoverContent` | `string` | — | Popover body |
+| `placement` | `Placement` | `'top'` | Tooltip/popover placement |
+| `className` | `string` | — | Additional CSS classes |
+| `onClick` | `(e) => void` | — | Click handler |

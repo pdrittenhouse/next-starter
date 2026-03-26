@@ -1,0 +1,53 @@
+// Button atom — global styles
+// Mirrors: updater-starter/src/patternlab/source/_patterns/01-atoms/button/_button.scss
+
+.button {
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:not(.navbar-toggler) {
+
+    &.btn-block {
+      width: 100%;
+      display: block;
+    }
+  }
+}
+
+.button--label {
+  vertical-align: middle;
+}
+
+.button .svg {
+  vertical-align: middle;
+  transition: color $transition-duration $transition-timing-function;
+}
+
+.buttons-group {
+  text-align: center;
+
+  &.vertical {
+
+    .button {
+      margin-bottom: 30px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &:not(.vertical) {
+
+    .button {
+      margin-right: 30px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

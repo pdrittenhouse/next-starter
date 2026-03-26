@@ -45,4 +45,33 @@ export const GET_ALL_COMMENTS = gql`
     }
 `;
 
+/**
+ * Get comments for a specific post/page by its database ID.
+ * Returns threaded comments (parentDatabaseId for nesting).
+ */
+export const GET_COMMENTS_BY_POST = gql`
+  query GetCommentsByPost($contentId: ID!) {
+    comments(where: { contentId: $contentId, orderby: COMMENT_DATE, order: ASC }, first: 100) {
+      edges {
+        node {
+          id
+          databaseId
+          content
+          date
+          parentDatabaseId
+          author {
+            node {
+              ... on CommentAuthor {
+                id
+                name
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export default GET_ALL_COMMENTS;

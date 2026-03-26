@@ -61,4 +61,55 @@ export const GET_ALL_CONTENT_NODES = gql`
     }
 `;
 
+export const SEARCH_CONTENT = gql`
+    query SearchContent($first: Int = 10, $after: String, $search: String!) {
+      contentNodes(
+        first: $first
+        after: $after
+        where: {
+          search: $search
+          status: PUBLISH
+        }
+      ) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
+        edges {
+          node {
+            id
+            databaseId
+            uri
+            contentType {
+              node {
+                name
+              }
+            }
+            ... on Post {
+              title
+              excerpt
+              featuredImage {
+                node {
+                  sourceUrl
+                  altText
+                }
+              }
+            }
+            ... on Page {
+              title
+              featuredImage {
+                node {
+                  sourceUrl
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+`;
+
 export default GET_ALL_CONTENT_TYPES;

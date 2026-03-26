@@ -17,22 +17,18 @@ export interface WpConfig {
  * Astro:   PUBLIC_WP_*
  * Node:    WP_*
  */
+// Next.js/webpack requires literal process.env.NEXT_PUBLIC_* access for static replacement.
+// Dynamic access like process.env[key] does NOT work in client bundles.
 export function getWpConfig(): WpConfig {
   const graphqlUrl =
     process.env.NEXT_PUBLIC_WP_GRAPHQL_URL ??
-    process.env.PUBLIC_WP_GRAPHQL_URL ??
-    process.env.WP_GRAPHQL_URL ??
     '';
 
   const authUser =
-    process.env.NEXT_PUBLIC_WP_AUTH_USER ??
-    process.env.PUBLIC_WP_AUTH_USER ??
-    process.env.WP_AUTH_USER;
+    process.env.NEXT_PUBLIC_WP_AUTH_USER;
 
   const authPassword =
-    process.env.NEXT_PUBLIC_WP_AUTH_APP_PASSWORD ??
-    process.env.PUBLIC_WP_AUTH_APP_PASSWORD ??
-    process.env.WP_AUTH_APP_PASSWORD;
+    process.env.NEXT_PUBLIC_WP_AUTH_APP_PASSWORD;
 
   if (!graphqlUrl) {
     console.warn('[wp] No WP_GRAPHQL_URL found in environment variables.');

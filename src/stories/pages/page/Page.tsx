@@ -178,7 +178,10 @@ export const Page: React.FC = () => {
                   <br />
                   <h6>Introspection</h6>
                   {schemaLoading ? <p>Loading schema...</p> : schemaError ? (
+                    <>
                     <p><small>Requires either a valid <code>.env.local</code> with <code>NEXT_PUBLIC_WP_AUTH_USER</code> and <code>NEXT_PUBLIC_WP_AUTH_APP_PASSWORD</code>, or &ldquo;Enable Public Introspection&rdquo; in WP Admin &gt; GraphQL &gt; Settings.</small></p>
+                    <p><small><strong>Error:</strong> {schemaError.message}</small></p>
+                    </>
                   ) : schemaData && (
                     <details>
                       <summary>Schema Query Fields ({schemaData.__schema?.queryType?.fields?.length ?? 0})</summary>

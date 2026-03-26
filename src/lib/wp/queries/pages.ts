@@ -67,17 +67,6 @@ export const GET_ALL_PAGES = gql`
               id
             }
           }
-          terms {
-            edges {
-              node {
-                id
-                name
-                slug
-                taxonomyName
-                uri
-              }
-            }
-          }
           editorBlocks {
             name
             clientId
@@ -183,6 +172,23 @@ export const GET_PAGE_BY_URI = gql`
       slug
       title
       uri
+    }
+  }
+`;
+
+/**
+ * Get all page URIs for static generation.
+ * Lightweight — only fetches uri and slug.
+ */
+export const GET_ALL_PAGE_URIS = gql`
+  query GetAllPageUris {
+    pages(first: 1000, where: { hasPassword: false }) {
+      edges {
+        node {
+          uri
+          slug
+        }
+      }
     }
   }
 `;
