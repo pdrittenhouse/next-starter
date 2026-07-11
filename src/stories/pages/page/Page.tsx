@@ -12,12 +12,12 @@ import { useQuery } from "@apollo/client";
 import {
   GET_GENERAL_SETTINGS, GET_ALL_SETTINGS, GET_DISCUSSION_SETTINGS, GET_READING_SETTINGS, GET_WRITING_SETTINGS,
   GET_ALL_POSTS, GET_ALL_PAGES, GET_ALL_CATEGORIES, GET_ALL_TAGS, GET_ALL_TAXONOMIES,
-  GET_ALL_USERS, GET_ALL_MENUS, GET_SCHEMA_QUERY_FIELDS,
+  GET_ALL_USERS, GET_ALL_MENUS, GET_ALL_MEGA_MENU_PANELS, GET_SCHEMA_QUERY_FIELDS,
   GET_ALL_THEMES, GET_ALL_MEDIA_ITEMS, GET_ALL_COMMENTS,
   GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES,
   GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
-  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS,
+  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS,
   GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
   GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
   GET_ALL_GRAVITY_FORMS,
@@ -43,6 +43,7 @@ export const Page: React.FC = () => {
   const { loading: taxonomiesLoading, data: taxonomiesData } = useQuery(GET_ALL_TAXONOMIES)
   const { loading: usersLoading, data: usersData } = useQuery(GET_ALL_USERS)
   const { loading: menusLoading, data: menusData } = useQuery(GET_ALL_MENUS)
+  const { loading: megaMenuPanelsLoading, error: megaMenuPanelsError, data: megaMenuPanelsData } = useQuery(GET_ALL_MEGA_MENU_PANELS)
   const { loading: schemaLoading, error: schemaError, data: schemaData } = useQuery(GET_SCHEMA_QUERY_FIELDS, { context: { useAuth: true } })
   const { loading: allSettingsLoading, data: allSettingsData } = useQuery(GET_ALL_SETTINGS)
   const { loading: discussionLoading, data: discussionData } = useQuery(GET_DISCUSSION_SETTINGS)
@@ -62,6 +63,7 @@ export const Page: React.FC = () => {
   const { loading: revisionsLoading, data: revisionsData } = useQuery(GET_ALL_REVISIONS)
   const { loading: customizerLoading, error: customizerError, data: customizerData } = useQuery(GET_CUSTOMIZER_SETTINGS)
   const { loading: themeSettingsLoading, error: themeSettingsError, data: themeSettingsData } = useQuery(GET_THEME_SETTINGS)
+  const { loading: publicOptionsLoading, error: publicOptionsError, data: publicOptionsData } = useQuery(GET_PUBLIC_OPTIONS)
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
@@ -378,6 +380,14 @@ export const Page: React.FC = () => {
                       <pre>{JSON.stringify(menusData, null, 2)}</pre>
                     </details>
                   )}
+                  {megaMenuPanelsLoading ? <p>Loading mega menu panels...</p> : megaMenuPanelsError ? (
+                    <p style={{color: 'red'}}>Mega Menu Panels Error: {megaMenuPanelsError.message}</p>
+                  ) : megaMenuPanelsData && (
+                    <details>
+                      <summary>Mega Menu Panels ({megaMenuPanelsData.megaMenuPanels?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(megaMenuPanelsData, null, 2)}</pre>
+                    </details>
+                  )}
 
                   <br />
                   <h6>Widgets</h6>
@@ -477,6 +487,14 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Theme Settings (Customizer)</summary>
                       <pre>{JSON.stringify(themeSettingsData, null, 2)}</pre>
+                    </details>
+                  )}
+                  {publicOptionsLoading ? <p>Loading public options...</p> : publicOptionsError ? (
+                    <p style={{color: 'red'}}>Public Options: not available (no keys registered via timberland/graphql/public_options filter)</p>
+                  ) : publicOptionsData && (
+                    <details>
+                      <summary>Public Options ({publicOptionsData.publicOptions?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(publicOptionsData.publicOptions, null, 2)}</pre>
                     </details>
                   )}
                   {schemaLoading ? <p>Loading theme options...</p> : schemaData && (

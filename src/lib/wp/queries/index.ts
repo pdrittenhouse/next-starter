@@ -17,6 +17,7 @@ export { GET_ALL_MEDIA_ITEMS, GET_MEDIA_ITEM_BY_ID } from './media';
 
 // Navigation
 export { GET_ALL_MENUS } from './menus';
+export { GET_ALL_MEGA_MENU_PANELS, GET_MEGA_MENU_PANEL_BY_ID } from './mega-menu-panels';
 
 // Users & Roles
 export { GET_ALL_USERS, GET_USER_BY_SLUG, GET_ALL_USER_SLUGS } from './users';
@@ -31,6 +32,7 @@ export { GET_REDIRECTS } from './redirects';
 export { GET_SEO_SETTINGS } from './seo';
 export { GET_CUSTOMIZER_SETTINGS } from './customizer-settings';
 export { GET_THEME_SETTINGS } from './theme-settings';
+export { GET_PUBLIC_OPTIONS } from './public-options';
 
 // Themes & Assets
 export { GET_ALL_THEMES } from './themes';

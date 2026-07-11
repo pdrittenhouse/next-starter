@@ -96,6 +96,11 @@ export const GET_ALL_POSTS = gql`
             twitterCard
             robots
             schema
+            breadcrumbs {
+              label
+              url
+              isCurrentPage
+            }
           }
         }
       }

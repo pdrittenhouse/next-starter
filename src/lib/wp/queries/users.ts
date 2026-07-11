@@ -5,20 +5,37 @@ export const GET_ALL_USERS = gql`
     users(first: 100) {
       edges {
         node {
+          id
+          databaseId
+          name
+          slug
+          firstName
+          lastName
+          description
+          url
           avatar {
             height
             width
             url
           }
-          description
-          id
-          name
           roles {
             nodes {
               name
             }
           }
-          slug
+          socialLinks {
+            website
+            twitter
+            facebook
+            instagram
+            linkedin
+            youtube
+            pinterest
+          }
+          userMeta {
+            key
+            value
+          }
         }
       }
     }
@@ -36,11 +53,27 @@ export const GET_USER_BY_SLUG = gql`
       databaseId
       name
       slug
+      firstName
+      lastName
       description
+      url
       avatar {
         url
         height
         width
+      }
+      socialLinks {
+        website
+        twitter
+        facebook
+        instagram
+        linkedin
+        youtube
+        pinterest
+      }
+      userMeta {
+        key
+        value
       }
     }
   }

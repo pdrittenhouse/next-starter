@@ -87,6 +87,11 @@ export const GET_ALL_PAGES = gql`
             twitterCard
             robots
             schema
+            breadcrumbs {
+              label
+              url
+              isCurrentPage
+            }
           }
         }
       }
