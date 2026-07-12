@@ -16,6 +16,7 @@ import {
   GET_ALL_THEMES, GET_ALL_MEDIA_ITEMS, GET_ALL_COMMENTS,
   GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES,
   GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
+  GET_ALL_REUSABLE_BLOCKS,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
   GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS,
   GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
@@ -56,6 +57,7 @@ export const Page: React.FC = () => {
   const { loading: contentNodesLoading, data: contentNodesData } = useQuery(GET_ALL_CONTENT_NODES)
   const { loading: pluginsLoading, data: pluginsData } = useQuery(GET_ALL_PLUGINS)
   const { loading: postFormatsLoading, data: postFormatsData } = useQuery(GET_ALL_POST_FORMATS)
+  const { loading: reusableBlocksLoading, error: reusableBlocksError, data: reusableBlocksData } = useQuery(GET_ALL_REUSABLE_BLOCKS)
   const { loading: viewerLoading, data: viewerData } = useQuery(GET_VIEWER)
   const { loading: userRolesLoading, data: userRolesData } = useQuery(GET_ALL_USER_ROLES)
   const { loading: scriptsLoading, data: scriptsData } = useQuery(GET_REGISTERED_SCRIPTS)
@@ -306,6 +308,15 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Post Formats ({postFormatsData.postFormats?.edges?.length ?? 0})</summary>
                       <pre>{JSON.stringify(postFormatsData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  {reusableBlocksLoading ? <p>Loading reusable blocks...</p> : reusableBlocksError ? (
+                    <p style={{color: 'red'}}>Reusable Blocks Error: {reusableBlocksError.message}</p>
+                  ) : reusableBlocksData && (
+                    <details>
+                      <summary>Reusable Blocks / Synced Patterns ({reusableBlocksData.reusableBlocks?.edges?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(reusableBlocksData, null, 2)}</pre>
                     </details>
                   )}
 

@@ -3,7 +3,7 @@ export { GET_NODE_BY_URI, RESOLVE_URI } from './node-by-uri';
 
 // Content
 export { POST_FIELDS, GET_ALL_POSTS, GET_ALL_POSTS_WITH_CONTENT, GET_POST_BY_SLUG, GET_POSTS_BY_CATEGORY_ID, GET_POSTS_BY_AUTHOR_SLUG, GET_ADJACENT_POSTS, GET_POSTS_PAGINATED, GET_POSTS_BY_DATE, GET_ALL_POST_URIS, GET_PREVIEW_POST } from './posts';
-export { PAGE_FIELDS, GET_ALL_PAGES, GET_ALL_PAGES_WITH_CONTENT, GET_PAGE_BY_URI, GET_ALL_PAGE_URIS } from './pages';
+export { PAGE_FIELDS, GET_ALL_PAGES, GET_ALL_PAGES_WITH_CONTENT, GET_PAGE_BY_URI, GET_ALL_PAGE_URIS, GET_PAGES_PAGINATED } from './pages';
 export { GET_ALL_CATEGORIES, GET_CATEGORY_BY_SLUG } from './categories';
 export { GET_ALL_TAGS, GET_TAG_BY_SLUG } from './tags';
 export { GET_ALL_TAXONOMIES, GET_TAXONOMY_BY_ID, GET_TERMS_BY_TAXONOMY } from './taxonomies';
@@ -11,12 +11,13 @@ export { GET_ALL_COMMENTS, GET_COMMENTS_BY_POST } from './comments';
 export { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES, SEARCH_CONTENT } from './content';
 export { GET_ALL_POST_FORMATS } from './post-formats';
 export { GET_ALL_REVISIONS } from './revisions';
+export { GET_ALL_REUSABLE_BLOCKS, GET_REUSABLE_BLOCK_BY_ID } from './reusable-blocks';
 
 // Media
 export { GET_ALL_MEDIA_ITEMS, GET_MEDIA_ITEM_BY_ID } from './media';
 
 // Navigation
-export { GET_ALL_MENUS } from './menus';
+export { GET_ALL_MENUS, GET_MENU_BY_LOCATION } from './menus';
 export { GET_ALL_MEGA_MENU_PANELS, GET_MEGA_MENU_PANEL_BY_ID } from './mega-menu-panels';
 
 // Users & Roles

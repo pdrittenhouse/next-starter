@@ -28,6 +28,9 @@ export const PAGE_FIELDS = gql`
       }
     }
     slug
+    template {
+      templateName
+    }
     title
     uri
   }
@@ -192,6 +195,64 @@ export const GET_ALL_PAGE_URIS = gql`
         node {
           uri
           slug
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * Cursor-based paginated pages query.
+ * Optionally filter by parent ID (for sub-page listings) or search term.
+ */
+export const GET_PAGES_PAGINATED = gql`
+  ${PAGE_FIELDS}
+  query GetPagesPaginated($first: Int = 10, $after: String, $parent: ID, $search: String) {
+    pages(
+      first: $first
+      after: $after
+      where: {
+        hasPassword: false
+        parent: $parent
+        search: $search
+      }
+    ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        node {
+          ...PageFields
+          content
+          date
+          modified
+          status
+          databaseId
+          author {
+            node {
+              id
+              name
+              slug
+              avatar {
+                height
+                url
+                width
+              }
+            }
+          }
+          featuredImage {
+            node {
+              altText
+              caption
+              sourceUrl
+              srcSet
+              sizes
+              id
+            }
+          }
         }
       }
     }

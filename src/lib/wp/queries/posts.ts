@@ -13,6 +13,7 @@ export const POST_FIELDS = gql`
         }
       }
     }
+    commentCount
     databaseId
     date
     isSticky
