@@ -22,6 +22,49 @@ export const GET_ALL_MENUS = gql`
                 target
                 url
                 title
+                connectedNode {
+                  node {
+                    __typename
+                    ... on Post {
+                      id
+                      databaseId
+                      title
+                      slug
+                      uri
+                      excerpt
+                      featuredImage {
+                        node {
+                          sourceUrl
+                          altText
+                        }
+                      }
+                    }
+                    ... on Page {
+                      id
+                      databaseId
+                      title
+                      slug
+                      uri
+                    }
+                    ... on Category {
+                      id
+                      databaseId
+                      name
+                      slug
+                      uri
+                      description
+                      count
+                    }
+                    ... on Tag {
+                      id
+                      databaseId
+                      name
+                      slug
+                      uri
+                      count
+                    }
+                  }
+                }
               }
             }
           }
@@ -60,6 +103,49 @@ export const GET_MENU_BY_LOCATION = gql`
               target
               url
               title
+              connectedNode {
+                node {
+                  __typename
+                  ... on Post {
+                    id
+                    databaseId
+                    title
+                    slug
+                    uri
+                    excerpt
+                    featuredImage {
+                      node {
+                        sourceUrl
+                        altText
+                      }
+                    }
+                  }
+                  ... on Page {
+                    id
+                    databaseId
+                    title
+                    slug
+                    uri
+                  }
+                  ... on Category {
+                    id
+                    databaseId
+                    name
+                    slug
+                    uri
+                    description
+                    count
+                  }
+                  ... on Tag {
+                    id
+                    databaseId
+                    name
+                    slug
+                    uri
+                    count
+                  }
+                }
+              }
             }
           }
         }

@@ -98,6 +98,11 @@ export const GET_NODE_BY_URI = gql`
           twitterCard
           robots
           schema
+          breadcrumbs {
+            label
+            url
+            isCurrentPage
+          }
         }
       }
       ... on Page {
@@ -176,6 +181,11 @@ export const GET_NODE_BY_URI = gql`
           twitterCard
           robots
           schema
+          breadcrumbs {
+            label
+            url
+            isCurrentPage
+          }
         }
       }
       ... on Category {
@@ -185,6 +195,21 @@ export const GET_NODE_BY_URI = gql`
         description
         count
         uri
+        seo {
+          title
+          description
+          canonicalUrl
+          ogTitle
+          ogDescription
+          ogImage
+          ogType
+          twitterTitle
+          twitterDescription
+          twitterImage
+          twitterCard
+          robots
+          schema
+        }
       }
       ... on Tag {
         databaseId
@@ -193,6 +218,42 @@ export const GET_NODE_BY_URI = gql`
         description
         count
         uri
+        seo {
+          title
+          description
+          canonicalUrl
+          ogTitle
+          ogDescription
+          ogImage
+          ogType
+          twitterTitle
+          twitterDescription
+          twitterImage
+          twitterCard
+          robots
+          schema
+        }
+      }
+      ... on User {
+        databaseId
+        name
+        slug
+        description
+        url
+        avatar {
+          url
+          height
+          width
+        }
+        socialLinks {
+          website
+          twitter
+          facebook
+          instagram
+          linkedin
+          youtube
+          pinterest
+        }
       }
       ... on MediaItem {
         databaseId

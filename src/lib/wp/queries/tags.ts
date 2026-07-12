@@ -20,6 +20,21 @@ export const GET_ALL_TAGS = gql`
             termGroupId
             termTaxonomyId
             uri
+            seo {
+              title
+              description
+              canonicalUrl
+              ogTitle
+              ogDescription
+              ogImage
+              ogType
+              twitterTitle
+              twitterDescription
+              twitterImage
+              twitterCard
+              robots
+              schema
+            }
         }
       }
     }
@@ -34,6 +49,39 @@ export const GET_TAG_BY_SLUG = gql`
       id
       name
       slug
+      count
+      uri
+      seo {
+        title
+        description
+        canonicalUrl
+        ogTitle
+        ogDescription
+        ogImage
+        ogType
+        twitterTitle
+        twitterDescription
+        twitterImage
+        twitterCard
+        robots
+        schema
+      }
+    }
+  }
+`;
+
+/**
+ * Get all tag URIs for static generation of taxonomy archive pages.
+ */
+export const GET_ALL_TAG_URIS = gql`
+  query GetAllTagUris {
+    tags(first: 1000) {
+      edges {
+        node {
+          uri
+          slug
+        }
+      }
     }
   }
 `;
