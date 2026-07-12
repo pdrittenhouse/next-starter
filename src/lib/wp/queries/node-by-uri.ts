@@ -302,6 +302,10 @@ export const RESOLVE_URI = gql`
         slug
         taxonomyName
       }
+      ... on User {
+        databaseId
+        slug
+      }
     }
   }
 `;
