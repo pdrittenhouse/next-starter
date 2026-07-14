@@ -1,10 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Provider } from "../utils/ApolloClientProvider";
+import Script from 'next/script';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import '../scss/global.scss';
 
-const inter = Inter({ subsets: ["latin"] });
+// Font loading patterns:
+//
+// Google Fonts — use next/font/google (self-hosted, inlined, zero external request):
+//   import { Inter } from 'next/font/google';
+//   const inter = Inter({ subsets: ['latin'] });
+//   <body className={inter.className}>
+//
+// Adobe Fonts (Typekit) — use the async JS embed (non-blocking):
+//   Set NEXT_PUBLIC_TYPEKIT_ID=your_kit_id in .env.local
+//   The Script below handles it — the preconnects in <head> open the connection early.
+//
+// Never use <link rel="stylesheet"> for web fonts in the <head> — it blocks first paint.
+// Never use CSS @import url() for web fonts — it blocks rendering and is discovered late.
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -26,12 +37,39 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const typekitId = process.env.NEXT_PUBLIC_TYPEKIT_ID;
+
   return (
       <html lang="en">
-        <body className={inter.className}>
-          <Provider>
-            {children}
-          </Provider>
+        <head>
+          {typekitId && (
+            <>
+              <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+              <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
+            </>
+          )}
+        </head>
+        <body>
+          {children}
+          {/* Adobe Fonts async — loads after page paint, no render-blocking.
+              Fonts swap in with font-display:swap (set per-font in the Typekit dashboard). */}
+          {typekitId && (
+            <Script
+              id="adobe-fonts"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function(d) {
+                    var tk = d.createElement('script'), s = d.scripts[0];
+                    tk.src = 'https://use.typekit.net/${typekitId}.js';
+                    tk.async = true;
+                    tk.onload = function() { try { Typekit.load({ async: true }); } catch(e) {} };
+                    s.parentNode.insertBefore(tk, s);
+                  })(document);
+                `,
+              }}
+            />
+          )}
         </body>
       </html>
   );

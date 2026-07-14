@@ -180,6 +180,28 @@ export const GET_PAGE_BY_URI = gql`
       slug
       title
       uri
+      settingsPageOptions {
+        headerPosition
+        hidePageHeader
+        hideFeaturedImage
+        hidePageTitle
+        hideSidebar
+        leftSidebar
+        hideTravelingCta
+        headerAlertMessage
+        removeHeaderContainer
+        removeContentContainer
+        removeFooterContainer
+        pageClasses
+        pageSeoDescription
+        pageSeoOgImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+        pageSeoNoindex
+      }
     }
   }
 `;

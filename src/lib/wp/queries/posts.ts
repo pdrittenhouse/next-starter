@@ -191,6 +191,28 @@ export const GET_POST_BY_SLUG = gql`
       title
       slug
       isSticky
+      settingsPostOptions {
+        headerPosition
+        hidePageHeader
+        hideFeaturedImage
+        hidePageTitle
+        hideSidebar
+        leftSidebar
+        hideTravelingCta
+        headerAlertMessage
+        removeHeaderContainer
+        removeContentContainer
+        removeFooterContainer
+        pageClasses
+        postSeoDescription
+        postSeoOgImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+        postSeoNoindex
+      }
     }
   }
 `;

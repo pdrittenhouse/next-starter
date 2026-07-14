@@ -1,12 +1,22 @@
-// Import Tupekit fonts
-//@import url("https://use.typekit.net/mko4orq.css"); // Good Headlines Pro
-@import url("https://use.typekit.net/mmf1mgf.css"); // Brother XL
-
-// Import Google fonts
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap'); // Montserrat
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap'); // Source Code Pro
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap'); // Poppins
-@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap'); // Barlow
+// Font loading has been moved out of CSS to prevent render-blocking.
+// CSS @import is resolved serially after stylesheet download — the worst
+// possible place to load web fonts. Use one of these patterns instead:
+//
+// Google Fonts  → next/font/google in layout.tsx (self-hosted, inlined, zero latency)
+// Adobe Fonts   → <link rel="preconnect"> + <link rel="stylesheet"> in layout.tsx
+// Self-hosted   → @font-face below, or via a local @import in this file
+//
+// Active kit (Brother XL + project fonts) is loaded in layout.tsx:
+//   <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+//   <link rel="stylesheet" href="https://use.typekit.net/mmf1mgf.css" />
+//
+// To re-enable any of these as a fallback during development, uncomment below:
+//@import url("https://use.typekit.net/mko4orq.css"); // Good Headlines Pro (alternate kit)
+//@import url("https://use.typekit.net/mmf1mgf.css"); // Brother XL
+//@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap');
+//@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+//@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+//@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 // Import local fonts
 //@import "./fonts/roboto/stylesheet.css"; // Roboto

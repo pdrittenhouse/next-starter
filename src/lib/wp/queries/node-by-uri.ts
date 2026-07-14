@@ -104,6 +104,28 @@ export const GET_NODE_BY_URI = gql`
             isCurrentPage
           }
         }
+        settingsPostOptions {
+          headerPosition
+          hidePageHeader
+          hideFeaturedImage
+          hidePageTitle
+          hideSidebar
+          leftSidebar
+          hideTravelingCta
+          headerAlertMessage
+          removeHeaderContainer
+          removeContentContainer
+          removeFooterContainer
+          pageClasses
+          postSeoDescription
+          postSeoOgImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+          postSeoNoindex
+        }
       }
       ... on Page {
         databaseId
@@ -187,6 +209,28 @@ export const GET_NODE_BY_URI = gql`
             isCurrentPage
           }
         }
+        settingsPageOptions {
+          headerPosition
+          hidePageHeader
+          hideFeaturedImage
+          hidePageTitle
+          hideSidebar
+          leftSidebar
+          hideTravelingCta
+          headerAlertMessage
+          removeHeaderContainer
+          removeContentContainer
+          removeFooterContainer
+          pageClasses
+          pageSeoDescription
+          pageSeoOgImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+          pageSeoNoindex
+        }
       }
       ... on Category {
         databaseId
@@ -195,21 +239,6 @@ export const GET_NODE_BY_URI = gql`
         description
         count
         uri
-        seo {
-          title
-          description
-          canonicalUrl
-          ogTitle
-          ogDescription
-          ogImage
-          ogType
-          twitterTitle
-          twitterDescription
-          twitterImage
-          twitterCard
-          robots
-          schema
-        }
       }
       ... on Tag {
         databaseId
@@ -218,21 +247,6 @@ export const GET_NODE_BY_URI = gql`
         description
         count
         uri
-        seo {
-          title
-          description
-          canonicalUrl
-          ogTitle
-          ogDescription
-          ogImage
-          ogType
-          twitterTitle
-          twitterDescription
-          twitterImage
-          twitterCard
-          robots
-          schema
-        }
       }
       ... on User {
         databaseId

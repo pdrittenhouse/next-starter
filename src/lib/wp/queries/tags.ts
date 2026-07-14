@@ -20,21 +20,6 @@ export const GET_ALL_TAGS = gql`
             termGroupId
             termTaxonomyId
             uri
-            seo {
-              title
-              description
-              canonicalUrl
-              ogTitle
-              ogDescription
-              ogImage
-              ogType
-              twitterTitle
-              twitterDescription
-              twitterImage
-              twitterCard
-              robots
-              schema
-            }
         }
       }
     }
@@ -51,21 +36,6 @@ export const GET_TAG_BY_SLUG = gql`
       slug
       count
       uri
-      seo {
-        title
-        description
-        canonicalUrl
-        ogTitle
-        ogDescription
-        ogImage
-        ogType
-        twitterTitle
-        twitterDescription
-        twitterImage
-        twitterCard
-        robots
-        schema
-      }
     }
   }
 `;

@@ -48,10 +48,21 @@ export const GET_ALL_COMMENTS = gql`
 /**
  * Get comments for a specific post/page by its database ID.
  * Returns threaded comments (parentDatabaseId for nesting).
+ * Cursor-based pagination: pass $after from pageInfo.endCursor for the next page.
  */
 export const GET_COMMENTS_BY_POST = gql`
-  query GetCommentsByPost($contentId: ID!) {
-    comments(where: { contentId: $contentId, orderby: COMMENT_DATE, order: ASC }, first: 100) {
+  query GetCommentsByPost($contentId: ID!, $first: Int = 20, $after: String) {
+    comments(
+      first: $first
+      after: $after
+      where: { contentId: $contentId, orderby: COMMENT_DATE, order: ASC }
+    ) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
       edges {
         node {
           id

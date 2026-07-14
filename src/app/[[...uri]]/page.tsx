@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { notFound, redirect } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import { print } from 'graphql';
@@ -9,13 +10,15 @@ import {
   GET_POSTS_BY_DATE,
   GET_ALL_POST_URIS,
   GET_ALL_PAGE_URIS,
-  GET_ALL_SETTINGS,
+  GET_READING_SETTINGS,
 } from '@/lib/wp/queries';
 import { checkRedirects } from '@/lib/wp/utils';
 import { SingleTemplate } from '@/stories/templates/single';
 import { PageTemplate } from '@/stories/templates/page';
 import { FrontPageTemplate } from '@/stories/templates/front-page';
+import { HomeTemplate } from '@/stories/templates/home';
 import { ArchiveTemplate } from '@/stories/templates/archive';
+import { AuthorTemplate } from '@/stories/templates/author';
 import { SearchTemplate } from '@/stories/templates/search';
 import { DateArchiveTemplate } from '@/stories/templates/date-archive';
 
@@ -43,8 +46,10 @@ function parseDateArchiveUri(segments: string[] | undefined): { year: number; mo
 
 /**
  * Fetch the node data for a given URI from WordPress.
+ * Wrapped with React cache() so generateMetadata and the page component
+ * share a single fetch per render rather than making duplicate requests.
  */
-async function getNodeByUri(uri: string) {
+const getNodeByUri = cache(async (uri: string) => {
   const { data, errors } = await fetchGraphQL<{ nodeByUri: any }>(
     print(GET_NODE_BY_URI),
     { uri },
@@ -53,39 +58,44 @@ async function getNodeByUri(uri: string) {
     console.error('[routing] GraphQL errors for URI:', uri, errors);
   }
   return data?.nodeByUri ?? null;
-}
+});
 
 /**
  * Fetch reading settings to determine homepage behavior.
+ * Uses GET_READING_SETTINGS — the focused query — instead of the full allSettings.
  */
 async function getReadingSettings() {
-  const { data } = await fetchGraphQL<{ allSettings: any }>(
-    print(GET_ALL_SETTINGS),
+  const { data } = await fetchGraphQL<{ readingSettings: any }>(
+    print(GET_READING_SETTINGS),
   );
   return {
-    showOnFront: data?.allSettings?.readingSettingsShowOnFront ?? 'posts',
-    pageOnFront: data?.allSettings?.readingSettingsPageOnFront ?? 0,
-    pageForPosts: data?.allSettings?.readingSettingsPageForPosts ?? 0,
+    showOnFront: data?.readingSettings?.showOnFront ?? 'posts',
+    pageOnFront: data?.readingSettings?.pageOnFront ?? 0,
+    pageForPosts: data?.readingSettings?.pageForPosts ?? 0,
   };
 }
 
 /**
  * Determine which template to render based on the WP node's __typename.
+ * Mirrors the WordPress template hierarchy — front-page vs home are separate
+ * because their layouts differ fundamentally (static page vs posts listing).
  */
 function resolveTemplate(node: any, isHomepage: boolean, isSearch: boolean) {
   if (isSearch) return 'search';
-  if (isHomepage) return 'front-page';
 
   switch (node?.__typename) {
     case 'Post':
       return 'single';
     case 'Page':
-      return 'page';
+      // The homepage static page routes to front-page; all other pages to page.
+      return isHomepage ? 'front-page' : 'page';
     case 'Category':
     case 'Tag':
       return 'archive';
+    case 'User':
+      return 'author';
     case 'MediaItem':
-      return 'single'; // media items render like singles
+      return 'single';
     case 'ContentType':
       return 'archive'; // CPT archive pages
     default:
@@ -129,9 +139,9 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       notFound();
     }
     const previewTemplate = resolveTemplate(previewNode, false, false);
-    return previewTemplate === 'single'
-      ? <SingleTemplate node={previewNode} />
-      : <PageTemplate node={previewNode} />;
+    if (previewTemplate === 'single') return <SingleTemplate node={previewNode} />;
+    if (previewTemplate === 'archive') return <ArchiveTemplate node={previewNode} />;
+    return <PageTemplate node={previewNode} />;
   }
 
   // Date-based archives — detect /YYYY/, /YYYY/MM/, /YYYY/MM/DD/ patterns
@@ -140,30 +150,33 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     return <DateArchiveTemplate {...dateArchive} />;
   }
 
-  // Check for redirects BEFORE resolving the node — redirects take priority
-  // over existing content (e.g. /hello-world may be a real post but also
-  // have a redirect configured in the Redirection plugin).
-  if (!isHomepage) {
-    const wpBaseUrl = process.env.NEXT_PUBLIC_WP_GRAPHQL_URL?.replace(/\/graphql$/, '') ?? '';
-    const match = await checkRedirects(uri, wpBaseUrl);
-    if (match) {
-      redirect(match.to);
-    }
-  }
+  const wpBaseUrl = process.env.NEXT_PUBLIC_WP_GRAPHQL_URL?.replace(/\/graphql$/, '') ?? '';
 
-  // Fetch reading settings for homepage logic
+  // Homepage and non-homepage both parallelize their fetches to eliminate waterfalls.
   let node: any = null;
   if (isHomepage) {
-    const settings = await getReadingSettings();
+    // Fetch settings and the root node simultaneously — settings decides which
+    // we use, but the node is ISR-cached and cheap to fetch speculatively.
+    const [settings, homeNode] = await Promise.all([
+      getReadingSettings(),
+      getNodeByUri(uri),
+    ]);
     if (settings.showOnFront === 'page' && settings.pageOnFront) {
-      // Static front page — fetch that page's data
-      node = await getNodeByUri(uri);
+      // Static front page — fall through to template switch with the page node.
+      node = homeNode;
     } else {
-      // Blog listing homepage
-      return <FrontPageTemplate type="posts" />;
+      // Blog posts index (showOnFront='posts') — home.php equivalent.
+      return <HomeTemplate />;
     }
   } else {
-    node = await getNodeByUri(uri);
+    // Redirect check and node fetch run concurrently. The redirect result is
+    // evaluated first so it still takes priority over existing content.
+    const [match, fetchedNode] = await Promise.all([
+      checkRedirects(uri, wpBaseUrl),
+      getNodeByUri(uri),
+    ]);
+    if (match) redirect(match.to);
+    node = fetchedNode;
   }
 
   if (!node) {
@@ -174,13 +187,15 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
 
   switch (template) {
     case 'front-page':
-      return <FrontPageTemplate type="page" node={node} />;
+      return <FrontPageTemplate node={node} />;
     case 'single':
       return <SingleTemplate node={node} />;
     case 'page':
       return <PageTemplate node={node} />;
     case 'archive':
       return <ArchiveTemplate node={node} />;
+    case 'author':
+      return <AuthorTemplate slug={node.slug} name={node.name} />;
     default:
       // Fallback: render as page
       return <PageTemplate node={node} />;
