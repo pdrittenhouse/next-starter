@@ -1,3 +1,9 @@
+@use "../functions/em" as *;
+@use "../functions/rem" as *;
+@use "../functions/colors" as *;
+@use "../colors" as *;
+@use "../type" as *;
+
 // Bootstrap variable customization
 // See all variables available at: src/libs/bootstrap/scss/_variables.scss
 // NOTE: This DOES NOT override the values and styles coming from the parent thene unless used

@@ -1,4 +1,6 @@
 @use "sass:math";
+@use "./utilities" as *;
+@use "../type" as *;
 
 // PX to REM
 // Does the main work of converting to a standardized unit by stripping a number

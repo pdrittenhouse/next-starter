@@ -1,10 +1,10 @@
-@import "utilities";
-@import "colors";
-@import "css-vars";
-@import "letter-spacing";
-@import "rem";
-@import "em";
-@import "svg-bg";
-@import "zindex";
-@import "custom-functions";
+@forward "utilities";
+@forward "colors";
+@forward "css-vars";
+@forward "letter-spacing";
+@forward "rem";
+@forward "em";
+@forward "svg-bg";
+@forward "zindex";
+@forward "custom-functions";
 

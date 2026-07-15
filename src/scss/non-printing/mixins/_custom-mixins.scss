@@ -1,3 +1,7 @@
+@use "../libs/bootstrap" as *;
+@use "./flexbox" as *;
+@use "../functions/all" as *;
+
 // Max-width containers [FIX FOR DEPRECATED BOOTSTRAP 4 FUNCTIONALITY]
 @mixin make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
  @each $breakpoint, $container-max-width in $max-widths {

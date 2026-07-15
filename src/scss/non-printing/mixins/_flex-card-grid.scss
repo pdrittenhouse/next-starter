@@ -1,4 +1,8 @@
 @use 'sass:math';
+@use "./flexbox" as *;
+@use "./layout-utilities" as *;
+@use "../functions/all" as *;
+@use "../libs/bootstrap" as *;
 // @param $columns [number]: number of grid columns
 // @param $card [string]: card element selector
 // @param $inner [string]: card inner element selector (use if flex is needed on card inner wrapping element)

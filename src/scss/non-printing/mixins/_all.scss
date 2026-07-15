@@ -1,8 +1,8 @@
-@import "layout-utilities";
-@import "content-utilities";
-@import "export-data";
-@import "css-columns";
-@import "flexbox";
-@import "flex-card-grid";
-@import "custom-mixins";
-@import "custom-placeholders";
+@forward "layout-utilities";
+@forward "content-utilities";
+@forward "export-data";
+@forward "css-columns";
+@forward "flexbox";
+@forward "flex-card-grid";
+@forward "custom-mixins";
+@forward "custom-placeholders";

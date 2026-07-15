@@ -17,8 +17,9 @@ try {
 
 const nextConfig = {
     sassOptions: {
-        includePaths: [path.join(__dirname, 'scss')],
-        prependData: "@import '/src/scss/variables.scss';",
+        includePaths: [path.join(__dirname, 'src', 'scss')],
+        additionalData: '@use "variables" as *;\n',
+        silenceDeprecations: ['legacy-js-api', 'global-builtin', 'import'],
     },
     images: {
         remotePatterns: [

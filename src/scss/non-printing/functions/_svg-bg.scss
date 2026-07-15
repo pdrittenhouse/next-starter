@@ -1,4 +1,4 @@
-@use "utilities";
+@use "./utilities" as *;
 @use "sass:math";
 
 // SVG as background image with data URI
