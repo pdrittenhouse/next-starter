@@ -34,6 +34,7 @@ export { GET_SEO_SETTINGS } from './seo';
 export { GET_CUSTOMIZER_SETTINGS } from './customizer-settings';
 export { GET_THEME_SETTINGS } from './theme-settings';
 export { GET_PUBLIC_OPTIONS } from './public-options';
+export { GET_DESIGN_TOKENS } from './design-tokens';
 export { GET_THEME_GENERAL_OPTIONS, GET_HEADER_OPTIONS, GET_FOOTER_OPTIONS, GET_MENU_WIDGET_OPTIONS } from './acf-options';
 
 // Themes & Assets
