@@ -6,6 +6,8 @@
 // TODO: Add @font-face generation
 // @link: https://github.com/jonathantneal/postcss-font-magician
 
+@use "synced.generated" as s;
+
 $baseFontSize: 16px;
 
 // Define font stacks
@@ -24,16 +26,16 @@ $reckfield: 'reckfield', sans-serif;
 $newston: 'newston', sans-serif;
 $catchland: 'catchland', sans-serif;
 
-// Define font stack variables
-$font-stack-base: $larken;
-$font-stack-alternate: $catchland;
-$font-stack-serif: $newston;
-$font-stack-sans-serif: $reckfield;
-$font-stack-navs: $font-stack-sans-serif;
-$font-stack-headings: $font-stack-sans-serif;
-$font-stack-monospace: $source-code-pro;
-$font-stack-code: $font-stack-monospace;
-$font-stack-buttons: $font-stack-headings;
+// Define font stack variables — synced from WP when available
+$font-stack-base:       if(s.$font-stack-base != null,       s.$font-stack-base,       $larken);
+$font-stack-alternate:  $catchland;
+$font-stack-serif:      if(s.$font-stack-serif != null,      s.$font-stack-serif,      $newston);
+$font-stack-sans-serif: if(s.$font-stack-sans-serif != null, s.$font-stack-sans-serif, $reckfield);
+$font-stack-navs:       $font-stack-sans-serif;
+$font-stack-headings:   if(s.$font-stack-headings != null,   s.$font-stack-headings,   $font-stack-sans-serif);
+$font-stack-monospace:  if(s.$font-stack-monospace != null,  s.$font-stack-monospace,  $source-code-pro);
+$font-stack-code:       if(s.$font-stack-code != null,       s.$font-stack-code,       $font-stack-monospace);
+$font-stack-buttons:    if(s.$font-stack-buttons != null,    s.$font-stack-buttons,    $font-stack-headings);
 
 $font-stacks: (
   'font-stack-serif': $font-stack-serif,

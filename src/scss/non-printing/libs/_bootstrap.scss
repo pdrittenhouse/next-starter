@@ -140,8 +140,8 @@ $body-color:                if(s.$body-color != null, s.$body-color, c(black));
 // Assumes the browser default, typically `16px`. Should match base font size set in /non-printing/_type.scss.
 $font-size-base:              if(s.$font-size-base != null, s.$font-size-base, $baseFontSize);
 
-$font-size-lg:                $font-size-base * 1.25 !default;
-$font-size-sm:                $font-size-base * .875 !default;
+$font-size-lg:                if(s.$font-size-lg != null, s.$font-size-lg, $font-size-base * 1.25);
+$font-size-sm:                if(s.$font-size-sm != null, s.$font-size-sm, $font-size-base * .875);
 
 $font-family-sans-serif:      $font-stack-sans-serif;
 $font-family-monospace:       $font-stack-monospace;
@@ -149,9 +149,9 @@ $font-family-base:            if(s.$font-family-base != null, s.$font-family-bas
 $font-family-code:            $font-stack-code;
 
 $font-weight-lighter:         lighter !default;
-$font-weight-light:           300 !default;
-$font-weight-normal:          400 !default;
-$font-weight-bold:            700 !default;
+$font-weight-light:           if(s.$font-weight-light  != null, s.$font-weight-light,  300);
+$font-weight-normal:          if(s.$font-weight-normal != null, s.$font-weight-normal, 400);
+$font-weight-bold:            if(s.$font-weight-bold   != null, s.$font-weight-bold,   700);
 $font-weight-bolder:          bolder !default;
 
 $font-weight-base:            $font-weight-normal !default;
@@ -190,11 +190,14 @@ $btn-border-radius:           if(s.$btn-border-radius != null, s.$btn-border-rad
 $btn-border-radius-sm:        rem-calc(10);
 $btn-border-radius-lg:        rem-calc(10);
 
-// Cards
-$card-border-width:           rem-calc(1px);
-$card-border-radius:          rem-calc(10);
-$card-border-color:           $primary;
-$card-bg:                     $light;
+// Cards — values driven by CSS custom properties defined in printing/_css-variables.scss
+$card-border-width:           var(--card-border-width);
+$card-border-radius:          var(--card-border-radius);
+$card-border-color:           var(--card-border-color);
+$card-bg:                     var(--card-bg);
+
+// Modal
+$modal-backdrop-opacity:      1;
 
 // Links
 $link-color:                              if(s.$link-color != null, s.$link-color, $septenary);

@@ -3,7 +3,7 @@
 // Run `npm run sync-tokens` to refresh.
 //
 // Scalar and map tokens are always written.
-// null = WP theme uses Bootstrap default; _bootstrap.scss if() falls back to its own value.
+// null = WP theme uses Bootstrap default; consumer files if() fall back to their own value.
 
 // --- Bootstrap scalar tokens ---
 $line-height-base: 1.4 !default;
@@ -21,6 +21,22 @@ $btn-border-radius: 0 !default;
 $body-bg: rgb(255, 255, 255) !default;
 $body-color: rgb(0, 0, 0) !default;
 $font-size-base: 16px !default;
+$font-size-lg: 20px !default;
+$font-size-sm: 14px !default;
+
+// --- Font stack tokens ---
+$font-stack-serif: Georgia, Times, "Times New Roman", serif !default;
+$font-stack-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-stack-base: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-stack-headings: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-stack-monospace: Courier, monospace !default;
+$font-stack-code: Courier, monospace !default;
+$font-stack-buttons: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+// --- Font weight tokens ---
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
 
 // --- Synced map tokens ---
 $grid-breakpoints: (
@@ -116,4 +132,36 @@ $theme-colors: (
   "merlin": rgb(58, 55, 49),
   "pacific-blue": rgb(0, 157, 196),
   "shiraz": rgb(181, 3, 53),
+) !default;
+$c-palette: (
+  "white": (
+    "base": rgb(255, 255, 255),
+  ),
+  "black": (
+    "base": rgb(0, 0, 0),
+  ),
+  "gray": (
+    "base": rgb(129, 129, 129),
+    "dark": rgb(128, 128, 128),
+    "light": rgb(137, 137, 137),
+    "ultralight": rgb(236, 236, 236),
+  ),
+  "blaze-orange": (
+    "base": rgb(255, 102, 0),
+  ),
+  "burnt-orange": (
+    "base": rgb(204, 85, 0),
+  ),
+  "california": (
+    "base": rgb(254, 93, 4),
+  ),
+  "merlin": (
+    "base": rgb(58, 55, 49),
+  ),
+  "pacific-blue": (
+    "base": rgb(0, 157, 196),
+  ),
+  "shiraz": (
+    "base": rgb(181, 3, 53),
+  ),
 ) !default;

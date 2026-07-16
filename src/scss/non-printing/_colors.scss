@@ -23,7 +23,12 @@
 //
 // Color Names: http://chir.ag/projects/name-that-color
 //
-$c-palette: (
+
+@use "synced.generated" as s;
+
+// Local fallback palette — project-specific colors always present.
+// Synced colors from WP are merged on top; local-only entries (e.g. guardsman-red) are preserved.
+$_c-palette-local: (
   // Example 1
   // primary: (
   //   base: #ff4444,
@@ -94,4 +99,11 @@ $c-palette: (
   tropical-blue: (
     base: #d2e1f9,
   ),
+);
+
+// Merge: local is the base, synced keys win and new WP colors are added.
+$c-palette: if(
+  s.$c-palette != null,
+  map-merge($_c-palette-local, s.$c-palette),
+  $_c-palette-local
 );

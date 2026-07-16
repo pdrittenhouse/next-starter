@@ -6,15 +6,18 @@
  *
  * Synced tokens:
  *   Scalar Bootstrap variables (from scssBootstrap key)
- *   $font-size-base          (from fontSizes.base)
- *   $grid-breakpoints        (from scssBreakpoints)
- *   $container-max-widths    (from contentWidths)
- *   $spacers                 (from scssSpacing)
- *   $theme-colors            (from scssColors)
+ *   $font-size-base/lg/sm      (from fontSizes key)
+ *   $font-stack-*              (from fontFamilies key)
+ *   $font-weight-*             (from fontWeights key)
+ *   $grid-breakpoints          (from scssBreakpoints)
+ *   $container-max-widths      (from contentWidths)
+ *   $spacers                   (from scssSpacing)
+ *   $theme-colors              (from scssColors)
+ *   $c-palette                 (derived from scssColors, nested map)
  *
  * All variables are always written — null when the WP theme doesn't provide them.
- * This guarantees @use references in _bootstrap.scss never throw "Undefined variable".
- * _bootstrap.scss uses if(s.$var != null, s.$var, fallback) for each variable.
+ * This guarantees @use references never throw "Undefined variable".
+ * Consumer files use if(s.$var != null, s.$var, fallback) for each variable.
  *
  * scssBootstrap key → Sass variable mapping:
  *   Most keys map directly (e.g. btn-border-radius → $btn-border-radius).
@@ -48,6 +51,26 @@ const BOOTSTRAP_VARS = [
   ['body-color',            'body-color'],
 ];
 
+// Font stack variables from fontFamilies top-level key.
+// [jsonKey within fontFamilies, sassVarName]
+const FONT_STACK_VARS = [
+  ['font-stack-serif',      'font-stack-serif'],
+  ['font-stack-sans-serif', 'font-stack-sans-serif'],
+  ['font-stack-base',       'font-stack-base'],
+  ['font-stack-headings',   'font-stack-headings'],
+  ['font-stack-monospace',  'font-stack-monospace'],
+  ['font-stack-code',       'font-stack-code'],
+  ['font-stack-buttons',    'font-stack-buttons'],
+];
+
+// Font weight variables from fontWeights top-level key.
+// [jsonKey within fontWeights, sassVarName]
+const FONT_WEIGHT_VARS = [
+  ['light',  'font-weight-light'],
+  ['normal', 'font-weight-normal'],
+  ['bold',   'font-weight-bold'],
+];
+
 // Map tokens: [top-level JSON key, Sass variable name]
 const SASS_MAPS = [
   ['scssBreakpoints', 'grid-breakpoints'],
@@ -79,17 +102,28 @@ const env = { ...loadDotEnv(join(root, '.env.local')), ...process.env };
 // Ensure the file always exists so builds don't fail after a fresh clone.
 function ensurePlaceholder() {
   if (!existsSync(OUT)) {
-    const nullScalars = BOOTSTRAP_VARS.map(([, v]) => `$${v}: null !default;`);
-    const nullMaps = SASS_MAPS.map(([, v]) => `$${v}: null !default;`);
+    const nullBootstrap  = BOOTSTRAP_VARS.map(([, v]) => `$${v}: null !default;`);
+    const nullFontStacks = FONT_STACK_VARS.map(([, v]) => `$${v}: null !default;`);
+    const nullWeights    = FONT_WEIGHT_VARS.map(([, v]) => `$${v}: null !default;`);
+    const nullMaps       = SASS_MAPS.map(([, v]) => `$${v}: null !default;`);
     const content = [
       '// AUTO-GENERATED — run `npm run sync-tokens` to populate.',
       '',
       '// Bootstrap scalar tokens (all null until sync runs)',
-      ...nullScalars,
+      ...nullBootstrap,
       '$font-size-base: null !default;',
+      '$font-size-lg: null !default;',
+      '$font-size-sm: null !default;',
+      '',
+      '// Font stack tokens (all null until sync runs)',
+      ...nullFontStacks,
+      '',
+      '// Font weight tokens (all null until sync runs)',
+      ...nullWeights,
       '',
       '// Synced map tokens (all null until sync runs)',
       ...nullMaps,
+      '$c-palette: null !default;',
       '',
     ].join('\n');
     writeFileSync(OUT, content, 'utf8');
@@ -182,9 +216,66 @@ function toSassMap(obj) {
 }
 
 // ---------------------------------------------------------------------------
+// $c-palette builder
+// ---------------------------------------------------------------------------
+
+// Semantic role keys are excluded from $c-palette (they belong in $theme-colors only).
+const SEMANTIC_ROLES = new Set([
+  'primary', 'secondary', 'tertiary', 'quaternary', 'quinary',
+  'senary', 'septenary', 'octonary', 'nonary', 'denary',
+  'success', 'info', 'warning', 'danger', 'light', 'dark',
+]);
+
+const VARIANT_SUFFIXES = ['-dark', '-light', '-ultralight', '-transparent'];
+
+// Build a nested $c-palette structure from the flat scssColors map.
+// Colors with variant suffixes (-dark, -light, etc.) become sub-keys of their base color.
+function buildCPalette(flatColors) {
+  const palette = {};
+  for (const [key, value] of Object.entries(flatColors)) {
+    if (SEMANTIC_ROLES.has(key)) continue;
+    let placed = false;
+    for (const suffix of VARIANT_SUFFIXES) {
+      if (key.endsWith(suffix)) {
+        const baseName = key.slice(0, -suffix.length);
+        if (flatColors[baseName] !== undefined && !SEMANTIC_ROLES.has(baseName)) {
+          if (!palette[baseName]) palette[baseName] = {};
+          palette[baseName][suffix.slice(1)] = value;
+          placed = true;
+          break;
+        }
+      }
+    }
+    if (!placed) {
+      if (!palette[key]) palette[key] = {};
+      palette[key].base = value;
+    }
+  }
+  return palette;
+}
+
+// Serialize the nested palette as a Sass map of maps.
+function toNestedSassMap(palette) {
+  const entries = Object.entries(palette);
+  if (!entries.length) return null;
+  const outerLines = entries.map(([name, variants]) => {
+    const variantLines = Object.entries(variants).map(([variant, value]) => {
+      const sassVal = toSassLiteral(value);
+      return sassVal ? `    "${variant}": ${sassVal}` : null;
+    }).filter(Boolean);
+    if (!variantLines.length) return null;
+    return `  "${name}": (\n${variantLines.join(',\n')},\n  )`;
+  }).filter(Boolean);
+  return outerLines.length ? `(\n${outerLines.join(',\n')},\n)` : null;
+}
+
+// ---------------------------------------------------------------------------
 // Build output
 // ---------------------------------------------------------------------------
-const bootstrap = tokens.scssBootstrap ?? {};
+const bootstrap   = tokens.scssBootstrap ?? {};
+const fontFamilies = tokens.fontFamilies ?? {};
+const fontWeights  = tokens.fontWeights  ?? {};
+const fontSizes    = tokens.fontSizes    ?? {};
 
 const lines = [
   '// AUTO-GENERATED — do not edit manually.',
@@ -192,7 +283,7 @@ const lines = [
   '// Run `npm run sync-tokens` to refresh.',
   '//',
   '// Scalar and map tokens are always written.',
-  '// null = WP theme uses Bootstrap default; _bootstrap.scss if() falls back to its own value.',
+  '// null = WP theme uses Bootstrap default; consumer files if() fall back to their own value.',
   '',
   '// --- Bootstrap scalar tokens ---',
 ];
@@ -210,13 +301,41 @@ for (const [jsonKey, sassVar] of BOOTSTRAP_VARS) {
   }
 }
 
-// $font-size-base from fontSizes.base (separate top-level key, not in scssBootstrap)
-const fontSizeBase = toSassLiteral(tokens.fontSizes?.base ?? null);
-if (fontSizeBase !== null) {
-  lines.push(`$font-size-base: ${fontSizeBase} !default;`);
-  nonNullCount++;
-} else {
-  lines.push('$font-size-base: null !default;');
+// $font-size-base/lg/sm from fontSizes top-level key
+for (const [sizeKey, sassVar] of [['base', 'font-size-base'], ['lg', 'font-size-lg'], ['sm', 'font-size-sm']]) {
+  const sassVal = toSassLiteral(fontSizes[sizeKey] ?? null);
+  if (sassVal !== null) {
+    lines.push(`$${sassVar}: ${sassVal} !default;`);
+    nonNullCount++;
+  } else {
+    lines.push(`$${sassVar}: null !default;`);
+  }
+}
+
+lines.push('', '// --- Font stack tokens ---');
+
+for (const [jsonKey, sassVar] of FONT_STACK_VARS) {
+  const raw = fontFamilies[jsonKey];
+  const sassVal = toSassLiteral(raw ?? null);
+  if (sassVal !== null) {
+    lines.push(`$${sassVar}: ${sassVal} !default;`);
+    nonNullCount++;
+  } else {
+    lines.push(`$${sassVar}: null !default;`);
+  }
+}
+
+lines.push('', '// --- Font weight tokens ---');
+
+for (const [jsonKey, sassVar] of FONT_WEIGHT_VARS) {
+  const raw = fontWeights[jsonKey];
+  const sassVal = toSassLiteral(raw ?? null);
+  if (sassVal !== null) {
+    lines.push(`$${sassVar}: ${sassVal} !default;`);
+    nonNullCount++;
+  } else {
+    lines.push(`$${sassVar}: null !default;`);
+  }
 }
 
 lines.push('', '// --- Synced map tokens ---');
@@ -232,12 +351,27 @@ for (const [jsonKey, sassVar] of SASS_MAPS) {
   }
 }
 
+// $c-palette derived from scssColors (nested map of color variants)
+const flatColors = tokens.scssColors;
+if (flatColors && typeof flatColors === 'object') {
+  const palette  = buildCPalette(flatColors);
+  const nestedMap = toNestedSassMap(palette);
+  if (nestedMap !== null) {
+    lines.push(`$c-palette: ${nestedMap} !default;`);
+    nonNullCount++;
+  } else {
+    lines.push('$c-palette: null !default;');
+  }
+} else {
+  lines.push('$c-palette: null !default;');
+}
+
 lines.push('');
 
 // ---------------------------------------------------------------------------
 // Write
 // ---------------------------------------------------------------------------
-const totalVars = BOOTSTRAP_VARS.length + 1 + SASS_MAPS.length; // scalars + font-size-base + maps
+const totalVars = BOOTSTRAP_VARS.length + 3 + FONT_STACK_VARS.length + FONT_WEIGHT_VARS.length + SASS_MAPS.length + 1;
 writeFileSync(OUT, lines.join('\n'), 'utf8');
 const rel = OUT.replace(root + '/', '');
 console.log(`[sync-tokens] Wrote ${rel} (${nonNullCount} of ${totalVars} variables synced).`);
