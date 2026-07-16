@@ -1,0 +1,464 @@
+/* stylelint-disable */
+
+// CSS Grid Mixins
+// Modern browsers have native support for CSS Grid.
+// No vendor prefixes needed for current browser support.
+//
+// For full support table check: https://caniuse.com/css-grid
+//
+// References:
+// * https://css-tricks.com/snippets/css/complete-guide-grid/
+// * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout
+
+//----------------------------------------------------------------------
+
+// Grid Container
+//
+// Defines an element as a grid container and establishes a new grid
+// formatting context for its contents.
+//
+// Values: grid | inline-grid
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/display#grid
+
+@mixin grid {
+  display: grid;
+}
+
+@mixin inline-grid {
+  display: inline-grid;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Template Columns
+//
+// Defines the columns of the grid with a space-separated list of values.
+// The values represent the track size, and the space between them represents
+// the grid line.
+//
+// Values: none | <track-list> | <auto-track-list>
+// Default: none
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns
+
+@mixin grid-template-columns($columns) {
+  grid-template-columns: $columns;
+}
+
+// Shorter version:
+@mixin grid-cols($columns) { @include grid-template-columns($columns); }
+
+//----------------------------------------------------------------------
+
+// Grid Template Rows
+//
+// Defines the rows of the grid with a space-separated list of values.
+// The values represent the track size, and the space between them represents
+// the grid line.
+//
+// Values: none | <track-list> | <auto-track-list>
+// Default: none
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-rows
+
+@mixin grid-template-rows($rows) {
+  grid-template-rows: $rows;
+}
+
+// Shorter version:
+@mixin grid-rows($rows) { @include grid-template-rows($rows); }
+
+//----------------------------------------------------------------------
+
+// Grid Template Areas
+//
+// Defines a grid template by referencing the names of the grid areas which
+// are specified with the grid-area property.
+//
+// Values: none | <string>+
+// Default: none
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-areas
+
+@mixin grid-template-areas($areas) {
+  grid-template-areas: $areas;
+}
+
+// Shorter version:
+@mixin grid-areas($areas) { @include grid-template-areas($areas); }
+
+//----------------------------------------------------------------------
+
+// Grid Template (shorthand)
+//
+// A shorthand property for grid-template-rows, grid-template-columns,
+// and grid-template-areas.
+//
+// Values: none | <grid-template-rows> / <grid-template-columns>
+// Default: none
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template
+
+@mixin grid-template($template) {
+  grid-template: $template;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Column Gap (deprecated, use gap)
+//
+// Specifies the size of the gap between columns.
+//
+// Values: <length> | <percentage>
+// Default: 0
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/column-gap
+
+@mixin grid-column-gap($gap) {
+  column-gap: $gap;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Row Gap (deprecated, use gap)
+//
+// Specifies the size of the gap between rows.
+//
+// Values: <length> | <percentage>
+// Default: 0
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/row-gap
+
+@mixin grid-row-gap($gap) {
+  row-gap: $gap;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Gap (shorthand)
+//
+// A shorthand property for row-gap and column-gap.
+//
+// Values: <row-gap> <column-gap>?
+// Default: 0 0
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/gap
+
+@mixin grid-gap($row-gap, $column-gap: null) {
+  @if $column-gap {
+    gap: $row-gap $column-gap;
+  } @else {
+    gap: $row-gap;
+  }
+}
+
+// Modern version:
+@mixin gap($row-gap, $column-gap: null) {
+  @include grid-gap($row-gap, $column-gap);
+}
+
+//----------------------------------------------------------------------
+
+// Grid Auto Columns
+//
+// Specifies the size of an implicitly-created grid column track or pattern
+// of tracks.
+//
+// Values: <track-size>+
+// Default: auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-columns
+
+@mixin grid-auto-columns($columns) {
+  grid-auto-columns: $columns;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Auto Rows
+//
+// Specifies the size of an implicitly-created grid row track or pattern
+// of tracks.
+//
+// Values: <track-size>+
+// Default: auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-rows
+
+@mixin grid-auto-rows($rows) {
+  grid-auto-rows: $rows;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Auto Flow
+//
+// Controls how the auto-placement algorithm works, specifying exactly
+// how auto-placed items get flowed into the grid.
+//
+// Values: row | column | dense | row dense | column dense
+// Default: row
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-auto-flow
+
+@mixin grid-auto-flow($flow: row) {
+  grid-auto-flow: $flow;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Column Start
+//
+// Specifies a grid item's start position within the grid column.
+//
+// Values: <integer> | <name> | span <number> | span <name> | auto
+// Default: auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column-start
+
+@mixin grid-column-start($start) {
+  grid-column-start: $start;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Column End
+//
+// Specifies a grid item's end position within the grid column.
+//
+// Values: <integer> | <name> | span <number> | span <name> | auto
+// Default: auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column-end
+
+@mixin grid-column-end($end) {
+  grid-column-end: $end;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Column (shorthand)
+//
+// Specifies a grid item's size and location within a grid column.
+//
+// Values: <start-line> / <end-line>
+// Default: auto / auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column
+
+@mixin grid-column($column) {
+  grid-column: $column;
+}
+
+// Shorter version:
+@mixin grid-col($column) { @include grid-column($column); }
+
+//----------------------------------------------------------------------
+
+// Grid Row Start
+//
+// Specifies a grid item's start position within the grid row.
+//
+// Values: <integer> | <name> | span <number> | span <name> | auto
+// Default: auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row-start
+
+@mixin grid-row-start($start) {
+  grid-row-start: $start;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Row End
+//
+// Specifies a grid item's end position within the grid row.
+//
+// Values: <integer> | <name> | span <number> | span <name> | auto
+// Default: auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row-end
+
+@mixin grid-row-end($end) {
+  grid-row-end: $end;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Row (shorthand)
+//
+// Specifies a grid item's size and location within a grid row.
+//
+// Values: <start-line> / <end-line>
+// Default: auto / auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row
+
+@mixin grid-row($row) {
+  grid-row: $row;
+}
+
+//----------------------------------------------------------------------
+
+// Grid Area
+//
+// Gives an item a name so that it can be referenced by a template created
+// with grid-template-areas. Also can be used as shorthand for grid-row-start,
+// grid-column-start, grid-row-end, grid-column-end.
+//
+// Values: <name> | <row-start> / <column-start> / <row-end> / <column-end>
+// Default: auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/grid-area
+
+@mixin grid-area($area) {
+  grid-area: $area;
+}
+
+//----------------------------------------------------------------------
+
+// Justify Items
+//
+// Aligns grid items along the inline (row) axis.
+//
+// Values: start | end | center | stretch
+// Default: stretch
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/justify-items
+
+@mixin justify-items($value: stretch) {
+  justify-items: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Align Items
+//
+// Aligns grid items along the block (column) axis.
+//
+// Values: start | end | center | stretch
+// Default: stretch
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/align-items
+
+@mixin align-items-grid($value: stretch) {
+  align-items: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Place Items (shorthand)
+//
+// Sets both align-items and justify-items properties.
+//
+// Values: <align-items> / <justify-items>
+// Default: auto auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/place-items
+
+@mixin place-items($align, $justify: null) {
+  @if $justify {
+    place-items: $align $justify;
+  } @else {
+    place-items: $align;
+  }
+}
+
+//----------------------------------------------------------------------
+
+// Justify Content
+//
+// Aligns the grid along the inline (row) axis.
+//
+// Values: start | end | center | stretch | space-around | space-between | space-evenly
+// Default: start
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content
+
+@mixin justify-content-grid($value: start) {
+  justify-content: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Align Content
+//
+// Aligns the grid along the block (column) axis.
+//
+// Values: start | end | center | stretch | space-around | space-between | space-evenly
+// Default: start
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/align-content
+
+@mixin align-content-grid($value: start) {
+  align-content: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Place Content (shorthand)
+//
+// Sets both align-content and justify-content properties.
+//
+// Values: <align-content> / <justify-content>
+// Default: normal normal
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/place-content
+
+@mixin place-content($align, $justify: null) {
+  @if $justify {
+    place-content: $align $justify;
+  } @else {
+    place-content: $align;
+  }
+}
+
+//----------------------------------------------------------------------
+
+// Justify Self
+//
+// Aligns a grid item inside a cell along the inline (row) axis.
+//
+// Values: start | end | center | stretch
+// Default: stretch
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/justify-self
+
+@mixin justify-self($value: stretch) {
+  justify-self: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Align Self
+//
+// Aligns a grid item inside a cell along the block (column) axis.
+//
+// Values: start | end | center | stretch
+// Default: stretch
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/align-self
+
+@mixin align-self-grid($value: stretch) {
+  align-self: $value;
+}
+
+//----------------------------------------------------------------------
+
+// Place Self (shorthand)
+//
+// Sets both align-self and justify-self properties.
+//
+// Values: <align-self> / <justify-self>
+// Default: auto auto
+//
+// https://developer.mozilla.org/en-US/docs/Web/CSS/place-self
+
+@mixin place-self($align, $justify: null) {
+  @if $justify {
+    place-self: $align $justify;
+  } @else {
+    place-self: $align;
+  }
+}

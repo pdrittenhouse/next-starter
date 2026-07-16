@@ -1,0 +1,51 @@
+////////////////////////////////////////////////////////////////////
+// Selected FontAwesome Icons
+// Only outputs CSS for icons we actually use in CSS
+////////////////////////////////////////////////////////////////////
+
+// Define which icons we actually use in CSS
+$selected-icon-names: (
+  "arrow-left",
+  "arrow-right",
+  "chevron-left",
+  "chevron-right",
+  "rss"
+);
+
+$selected-brand-icon-names: (
+  "square-facebook",
+  "square-instagram",
+  "square-twitter",
+  "facebook-f",
+  "x-twitter",
+  "linkedin-in",
+  "instagram",
+  "youtube"
+);
+
+// Generate classes only for selected icons by filtering $icons map
+@each $name in $selected-icon-names {
+  @if map-has-key($icons, $name) {
+    .#{$css-prefix}-#{$name}::before {
+      content: unquote("\"#{map-get($icons, $name)}\"");
+    }
+  }
+
+  @else {
+    @warn "Icon '#{$name}' not found in $icons map";
+  }
+}
+
+
+// Generate classes for brand icons
+@each $name in $selected-brand-icon-names {
+  @if map-has-key($brand-icons, $name) {
+    .#{$css-prefix}-#{$name}::before {
+      content: unquote("\"#{map-get($brand-icons, $name)}\"");
+    }
+  }
+
+  @else {
+    @warn "Icon '#{$name}' not found in $brand-icons map";
+  }
+}

@@ -165,3 +165,24 @@ $c-palette: (
     "base": rgb(181, 3, 53),
   ),
 ) !default;
+$z-indexes: (
+  "toast",
+  "modal",
+  "modal-backdrop",
+  "skip-nav",
+  "alert",
+  "dropdown",
+  "site-nav",
+  "site-header",
+  "site-overlay",
+  "site-notifications",
+  "dropdown-backdrop",
+  "site-content",
+  "prefooter",
+  "site-footer",
+) !default;
+
+// --- Transition duration tokens ---
+$transition-short: 200ms !default;
+$transition-medium: 500ms !default;
+$transition-long: 600ms !default;

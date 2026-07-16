@@ -6,7 +6,9 @@
 // .site-content { z-index: z(site-content); }
 // .site-footer { z-index: z(site-footer; }
 // @link https://engageinteractive.co.uk/blog/time-saving-sass-functions
-$z-indexes: (
+@use "synced.generated" as s;
+
+$_z-indexes-local: (
   'toast',
   'modal',
   'modal-backdrop',
@@ -22,3 +24,5 @@ $z-indexes: (
   'prefooter',
   'site-footer'
 );
+
+$z-indexes: if(s.$z-indexes != null, s.$z-indexes, $_z-indexes-local);

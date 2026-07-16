@@ -1,0 +1,58 @@
+////////////////////////////////////////////////////////////////////
+// Use either the free or pro versions of Font Awesome
+// Loading both versions will cause a conflict error during compile
+// DO NOT LOAD BOTH VERSIONS AT THE SAME TIME
+////////////////////////////////////////////////////////////////////
+
+// FA CSS files use $css-prefix, $icons, $brand-icons — @import is needed
+// to put them in the @import global scope so FA's CSS partials can access them
+@import "variables";
+
+// v7 namespaces its own vars internally (@use 'variables' as v) so loading
+// core/sizing/etc. below no longer leaks $icons, $brand-icons, $css-prefix
+// into this file's scope — import variables directly for ./fa to use them.
+@import '@fortawesome/fontawesome-free/scss/variables';
+
+// Base .fa / .fas / .far / .fab class rules (font-family, smoothing, display).
+// Defined here (printing) not in non-printing, to prevent contaminating
+// bootstrap-component CSS files via webpack additionalData.
+@import '@fortawesome/fontawesome-free/scss/core';
+
+// Font Awesome Free's CSS-generating output
+//
+// This is the exact order within:
+//   @fortawesome/fontawesome-free/scss/fontawesome
+// Override all Font Awesome variables at:
+//   non-printing/libs/_font-awesome.scss
+// @import '@fortawesome/fontawesome-free/scss/sizing';
+// @import '@fortawesome/fontawesome-free/scss/widths';
+// @import '@fortawesome/fontawesome-free/scss/list';
+// @import '@fortawesome/fontawesome-free/scss/bordered';
+// @import '@fortawesome/fontawesome-free/scss/pulled';
+// @import '@fortawesome/fontawesome-free/scss/animated';
+// @import '@fortawesome/fontawesome-free/scss/rotated-flipped';
+// @import '@fortawesome/fontawesome-free/scss/stacked';
+
+// v7: "fixed-width" was renamed to "widths"; "bordered-pulled" was split
+// into separate "bordered" and "pulled" partials; "screen-reader" was
+// dropped entirely (FA no longer ships an sr-only utility) — the framework
+// already defines its own sr-only mixin in non-printing/mixins/_layout-utilities.scss.
+@import '@fortawesome/fontawesome-free/scss/sizing';
+@import '@fortawesome/fontawesome-free/scss/widths';
+@import '@fortawesome/fontawesome-free/scss/list';
+@import '@fortawesome/fontawesome-free/scss/bordered';
+@import '@fortawesome/fontawesome-free/scss/pulled';
+@import '@fortawesome/fontawesome-free/scss/animated';
+@import '@fortawesome/fontawesome-free/scss/rotated-flipped';
+@import '@fortawesome/fontawesome-free/scss/stacked';
+// COMMENTED OUT: Using FontAwesome JS API instead of CSS fonts
+// The JS API (dom.watch()) dynamically converts <i> tags to inline SVG.
+// @import '@fortawesome/fontawesome-free/scss/icons'; // all icons
+// Importing specific icons
+@import './fa';
+
+// Import Font Awesome Free Fonts
+// Needed for CSS-based icons in pseudo-elements
+@import '@fortawesome/fontawesome-free/scss/regular';
+@import '@fortawesome/fontawesome-free/scss/solid';
+@import '@fortawesome/fontawesome-free/scss/brands';

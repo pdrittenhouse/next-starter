@@ -6,3 +6,4 @@
 @forward "non-printing/custom-variables";
 @forward "non-printing/all";
 @forward "non-printing/libs/bootstrap" hide str-replace, clearfix;
+@forward "non-printing/libs/font-awesome" show fa-content, $var-arrow-left, $var-arrow-right;

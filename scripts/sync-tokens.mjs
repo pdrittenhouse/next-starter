@@ -1,19 +1,23 @@
 #!/usr/bin/env node
 /**
  * Fetches compiled SCSS design tokens from the WordPress REST API
- * (GET /wp-json/timberland/v1/design-tokens) and writes
- * src/scss/non-printing/_synced.generated.scss.
+ * (GET /wp-json/timberland/v1/design-tokens) and writes two files:
  *
- * Synced tokens:
- *   Scalar Bootstrap variables (from scssBootstrap key)
- *   $font-size-base/lg/sm      (from fontSizes key)
- *   $font-stack-*              (from fontFamilies key)
- *   $font-weight-*             (from fontWeights key)
- *   $grid-breakpoints          (from scssBreakpoints)
- *   $container-max-widths      (from contentWidths)
- *   $spacers                   (from scssSpacing)
- *   $theme-colors              (from scssColors)
- *   $c-palette                 (derived from scssColors, nested map)
+ *   src/scss/non-printing/_synced.generated.scss
+ *     Scalar Bootstrap variables (from scssBootstrap key)
+ *     $font-size-base/lg/sm      (from fontSizes key)
+ *     $font-stack-*              (from fontFamilies key)
+ *     $font-weight-*             (from fontWeights key)
+ *     $grid-breakpoints          (from scssBreakpoints)
+ *     $container-max-widths      (from contentWidths)
+ *     $spacers                   (from scssSpacing)
+ *     $theme-colors              (from scssColors)
+ *     $c-palette                 (derived from scssColors, nested map)
+ *     $z-indexes                 (from scssZIndexes — Sass list)
+ *     $transition-short/medium/long (from transitionDurations)
+ *
+ *   src/scss/printing/_synced-css-variables.scss
+ *     :root { --button-*: value; }  (from buttonVariables)
  *
  * All variables are always written — null when the WP theme doesn't provide them.
  * This guarantees @use references never throw "Undefined variable".
@@ -30,7 +34,8 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
-const OUT = join(root, 'src', 'scss', 'non-printing', '_synced.generated.scss');
+const OUT          = join(root, 'src', 'scss', 'non-printing', '_synced.generated.scss');
+const OUT_PRINTING = join(root, 'src', 'scss', 'printing', '_synced-css-variables.scss');
 
 // Bootstrap scalar variables. Always written — null if WP theme doesn't set them.
 // [jsonKey within scssBootstrap, sassVarName]
@@ -79,6 +84,14 @@ const SASS_MAPS = [
   ['scssColors',      'theme-colors'],
 ];
 
+// Transition duration scalars from transitionDurations key.
+// [jsonKey within transitionDurations, sassVarName]
+const TRANSITION_VARS = [
+  ['short',  'transition-short'],
+  ['medium', 'transition-medium'],
+  ['long',   'transition-long'],
+];
+
 // ---------------------------------------------------------------------------
 // Environment
 // ---------------------------------------------------------------------------
@@ -99,13 +112,14 @@ function loadDotEnv(path) {
 
 const env = { ...loadDotEnv(join(root, '.env.local')), ...process.env };
 
-// Ensure the file always exists so builds don't fail after a fresh clone.
+// Ensure both output files always exist so builds don't fail after a fresh clone.
 function ensurePlaceholder() {
   if (!existsSync(OUT)) {
-    const nullBootstrap  = BOOTSTRAP_VARS.map(([, v]) => `$${v}: null !default;`);
-    const nullFontStacks = FONT_STACK_VARS.map(([, v]) => `$${v}: null !default;`);
-    const nullWeights    = FONT_WEIGHT_VARS.map(([, v]) => `$${v}: null !default;`);
-    const nullMaps       = SASS_MAPS.map(([, v]) => `$${v}: null !default;`);
+    const nullBootstrap    = BOOTSTRAP_VARS.map(([, v]) => `$${v}: null !default;`);
+    const nullFontStacks   = FONT_STACK_VARS.map(([, v]) => `$${v}: null !default;`);
+    const nullWeights      = FONT_WEIGHT_VARS.map(([, v]) => `$${v}: null !default;`);
+    const nullMaps         = SASS_MAPS.map(([, v]) => `$${v}: null !default;`);
+    const nullTransitions  = TRANSITION_VARS.map(([, v]) => `$${v}: null !default;`);
     const content = [
       '// AUTO-GENERATED — run `npm run sync-tokens` to populate.',
       '',
@@ -124,9 +138,16 @@ function ensurePlaceholder() {
       '// Synced map tokens (all null until sync runs)',
       ...nullMaps,
       '$c-palette: null !default;',
+      '$z-indexes: null !default;',
+      '',
+      '// Transition duration tokens (all null until sync runs)',
+      ...nullTransitions,
       '',
     ].join('\n');
     writeFileSync(OUT, content, 'utf8');
+  }
+  if (!existsSync(OUT_PRINTING)) {
+    writeFileSync(OUT_PRINTING, '// AUTO-GENERATED — run `npm run sync-tokens` to populate.\n', 'utf8');
   }
 }
 
@@ -189,8 +210,8 @@ function toSassLiteral(val) {
   if (typeof val === 'string') {
     // CSS/Sass functions and hex colors — write unquoted
     if (/^(rgb|rgba|hsl|hsla|calc|var|linear-gradient|#)/.test(val)) return val;
-    // CSS dimension values (e.g. 18.75rem, 64em, 1.5rem, 0px) — write unquoted
-    if (/^-?\d*\.?\d+(rem|em|px|%|vh|vw|vmin|vmax|pt|cm|mm|in|ex|ch)$/.test(val)) return val;
+    // CSS dimension values (e.g. 18.75rem, 64em, 1.5rem, 0px, 200ms) — write unquoted
+    if (/^-?\d*\.?\d+(rem|em|px|%|vh|vw|vmin|vmax|pt|cm|mm|in|ex|ch|ms|s)$/.test(val)) return val;
     // Font stacks and other quoted strings
     return `"${val.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
   }
@@ -213,6 +234,30 @@ function toSassMap(obj) {
   }).filter(Boolean);
   if (lines.length === 0) return null;
   return `(\n${lines.join(',\n')},\n)`;
+}
+
+// ---------------------------------------------------------------------------
+// CSS value serializer (for printing/_synced-css-variables.scss)
+// ---------------------------------------------------------------------------
+
+/**
+ * Convert a JSON value to a CSS custom property value string, or return null.
+ * Used for the printing output file only — does not produce Sass syntax.
+ */
+function toCssValue(val) {
+  if (val === null || val === undefined) return null;
+  if (typeof val === 'number') return String(val);
+  if (Array.isArray(val)) {
+    // Font family lists: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"]
+    // Multi-word names get CSS double-quotes; single-word are bare identifiers.
+    if (val.length === 0) return null;
+    return val.map(item => {
+      const s = String(item);
+      return /\s/.test(s) ? `"${s.replace(/"/g, '\\"')}"` : s;
+    }).join(', ');
+  }
+  if (typeof val === 'string') return val;
+  return null;
 }
 
 // ---------------------------------------------------------------------------
@@ -272,10 +317,11 @@ function toNestedSassMap(palette) {
 // ---------------------------------------------------------------------------
 // Build output
 // ---------------------------------------------------------------------------
-const bootstrap   = tokens.scssBootstrap ?? {};
-const fontFamilies = tokens.fontFamilies ?? {};
-const fontWeights  = tokens.fontWeights  ?? {};
-const fontSizes    = tokens.fontSizes    ?? {};
+const bootstrap          = tokens.scssBootstrap      ?? {};
+const fontFamilies       = tokens.fontFamilies       ?? {};
+const fontWeights        = tokens.fontWeights        ?? {};
+const fontSizes          = tokens.fontSizes          ?? {};
+const transitionDurations = tokens.transitionDurations ?? {};
 
 const lines = [
   '// AUTO-GENERATED — do not edit manually.',
@@ -366,12 +412,68 @@ if (flatColors && typeof flatColors === 'object') {
   lines.push('$c-palette: null !default;');
 }
 
+// $z-indexes from scssZIndexes (JSON array → Sass list of quoted strings)
+const zIndexes = tokens.scssZIndexes;
+if (Array.isArray(zIndexes) && zIndexes.length > 0) {
+  const items = zIndexes.map(name => `"${name}"`).join(',\n  ');
+  lines.push(`$z-indexes: (\n  ${items},\n) !default;`);
+  nonNullCount++;
+} else {
+  lines.push('$z-indexes: null !default;');
+}
+
+lines.push('', '// --- Transition duration tokens ---');
+
+for (const [jsonKey, sassVar] of TRANSITION_VARS) {
+  const sassVal = toSassLiteral(transitionDurations[jsonKey] ?? null);
+  if (sassVal !== null) {
+    lines.push(`$${sassVar}: ${sassVal} !default;`);
+    nonNullCount++;
+  } else {
+    lines.push(`$${sassVar}: null !default;`);
+  }
+}
+
 lines.push('');
 
 // ---------------------------------------------------------------------------
-// Write
+// Write non-printing file
 // ---------------------------------------------------------------------------
-const totalVars = BOOTSTRAP_VARS.length + 3 + FONT_STACK_VARS.length + FONT_WEIGHT_VARS.length + SASS_MAPS.length + 1;
+const totalVars = BOOTSTRAP_VARS.length + 3 + FONT_STACK_VARS.length + FONT_WEIGHT_VARS.length + SASS_MAPS.length + 1 + 1 + TRANSITION_VARS.length;
 writeFileSync(OUT, lines.join('\n'), 'utf8');
 const rel = OUT.replace(root + '/', '');
 console.log(`[sync-tokens] Wrote ${rel} (${nonNullCount} of ${totalVars} variables synced).`);
+
+// ---------------------------------------------------------------------------
+// Build printing CSS variables file (button CSS custom properties)
+// ---------------------------------------------------------------------------
+const buttonVariables = tokens.buttonVariables;
+const printingLines = [
+  '// AUTO-GENERATED — do not edit manually.',
+  `// Source: ${url}`,
+  '// Run `npm run sync-tokens` to refresh.',
+  '//',
+  '// Button CSS custom property overrides — imported after _css-variables.scss',
+  '// so these values win over the hardcoded defaults in that file.',
+];
+
+if (buttonVariables && typeof buttonVariables === 'object' && Object.keys(buttonVariables).length > 0) {
+  printingLines.push('', ':root {');
+  let buttonCount = 0;
+  for (const [key, val] of Object.entries(buttonVariables)) {
+    const cssVal = toCssValue(val);
+    if (cssVal !== null) {
+      printingLines.push(`  --button-${key}: ${cssVal};`);
+      buttonCount++;
+    }
+  }
+  printingLines.push('}', '');
+  writeFileSync(OUT_PRINTING, printingLines.join('\n'), 'utf8');
+  const relPrinting = OUT_PRINTING.replace(root + '/', '');
+  console.log(`[sync-tokens] Wrote ${relPrinting} (${buttonCount} button CSS custom properties).`);
+} else {
+  printingLines.push('');
+  writeFileSync(OUT_PRINTING, printingLines.join('\n'), 'utf8');
+  const relPrinting = OUT_PRINTING.replace(root + '/', '');
+  console.log(`[sync-tokens] Wrote ${relPrinting} (no buttonVariables from API).`);
+}

@@ -1,0 +1,35 @@
+////////////////////////////////////////////////////////////////////
+// Use either the free or pro versions of Font Awesome
+// Loading both versions will cause a conflict error during compile
+// DO NOT LOAD BOTH VERSIONS AT THE SAME TIME
+////////////////////////////////////////////////////////////////////
+
+// v7 dropped the "fa-" prefix from FA's own Sass variables — these must be
+// unprefixed to actually override the !default values in scss/variables.
+$font-path:    "../webfonts";
+$font-display: swap;
+
+// Import Font Awesome Free (functions, variables, mixins only — no CSS output)
+@import '@fortawesome/fontawesome-free/scss/functions';
+@import '@fortawesome/fontawesome-free/scss/variables';
+@import '@fortawesome/fontawesome-free/scss/mixins';
+
+// Define FA placeholders here (non-printing) so pattern files can @extend them.
+// NOTE: Do NOT @import core here — core.scss generates printing CSS (.fa, .fas, etc.)
+// that would contaminate every bootstrap-component CSS file via webpack additionalData.
+// Add a printing/libs/_font-awesome.scss with @import core to output those rules.
+%fa-icon {
+  @include fa-icon;
+}
+
+// Equivalent of @extend .fas — provides the solid-style font family/weight
+// without depending on the .fas class being defined in the current compilation unit.
+%fa-solid {
+  font-family: $style-family;
+  font-weight: 900;
+}
+
+// Import Font Awesome Pro
+//@import '~@fortawesome/fontawesome-pro/scss/functions';
+//@import '~@fortawesome/fontawesome-pro/scss/variables';
+//@import '~@fortawesome/fontawesome-pro/scss/mixins';

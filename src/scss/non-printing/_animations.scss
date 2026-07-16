@@ -1,7 +1,9 @@
 // Transitions
+@use "synced.generated" as s;
+
 $global-transition-properties: var(--global-transition-properties);
 $transition-duration:           var(--global-transition-duration);
 $transition-timing-function:    var(--global-transition-timing-function);
-$transition-short:              200ms;
-$transition-medium:             500ms;
-$transition-long:               600ms;
+$transition-short:  if(s.$transition-short  != null, s.$transition-short,  200ms);
+$transition-medium: if(s.$transition-medium != null, s.$transition-medium, 500ms);
+$transition-long:   if(s.$transition-long   != null, s.$transition-long,   600ms);
