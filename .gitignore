@@ -29,6 +29,10 @@ yarn-error.log*
 .env*.local
 /.idea/
 
+# Design-token sync output — populated locally by `npm run sync-tokens`, never committed.
+# The sync script creates this file on a fresh clone (ensurePlaceholder).
+src/scss/non-printing/_synced.generated.scss
+
 # vercel
 .vercel
 

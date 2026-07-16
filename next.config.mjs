@@ -19,7 +19,7 @@ const nextConfig = {
     sassOptions: {
         includePaths: [path.join(__dirname, 'src', 'scss')],
         additionalData: '@use "variables" as *;\n',
-        silenceDeprecations: ['legacy-js-api', 'global-builtin', 'import'],
+        silenceDeprecations: ['legacy-js-api', 'global-builtin', 'import', 'if-function'],
     },
     images: {
         remotePatterns: [

@@ -3,6 +3,7 @@
 @use "../functions/colors" as *;
 @use "../colors" as *;
 @use "../type" as *;
+@use "../synced.generated" as s;
 
 // Bootstrap variable customization
 // See all variables available at: src/libs/bootstrap/scss/_variables.scss
@@ -128,8 +129,8 @@ $theme-colors: (
 //}
 
 // Content
-$body-bg:                   c(white);
-$body-color:                c(black);
+$body-bg:                   if(s.$body-bg != null, s.$body-bg, c(white));
+$body-color:                if(s.$body-color != null, s.$body-color, c(black));
 
 // Type
 // Assumes the browser default, typically `16px`. Should match base font size set in /non-printing/_type.scss.
@@ -140,7 +141,7 @@ $font-size-sm:                $font-size-base * .875 !default;
 
 $font-family-sans-serif:      $font-stack-sans-serif;
 $font-family-monospace:       $font-stack-monospace;
-$font-family-base:            $font-stack-base;
+$font-family-base:            if(s.$font-family-base != null, s.$font-family-base, $font-stack-base);
 $font-family-code:            $font-stack-code;
 
 $font-weight-lighter:         lighter !default;
@@ -150,17 +151,17 @@ $font-weight-bold:            700 !default;
 $font-weight-bolder:          bolder !default;
 
 $font-weight-base:            $font-weight-normal !default;
-$line-height-base:            1.4;
+$line-height-base:            if(s.$line-height-base != null, s.$line-height-base, 1.4);
 
-$h1-font-size:                calc(#{$font-size-base} * 2.75); //44px
-$h2-font-size:                calc(#{$font-size-base} * 2.375); //38px
-$h3-font-size:                calc(#{$font-size-base} * 2.125); //34px
-$h4-font-size:                calc(#{$font-size-base} * 1.875); //30px
-$h5-font-size:                calc(#{$font-size-base} * 1.375); //22px
-$h6-font-size:                calc(#{$font-size-base} * 1.125); //18px
+$h1-font-size:                if(s.$h1-font-size != null, s.$h1-font-size, calc(#{$font-size-base} * 2.75)); //44px
+$h2-font-size:                if(s.$h2-font-size != null, s.$h2-font-size, calc(#{$font-size-base} * 2.375)); //38px
+$h3-font-size:                if(s.$h3-font-size != null, s.$h3-font-size, calc(#{$font-size-base} * 2.125)); //34px
+$h4-font-size:                if(s.$h4-font-size != null, s.$h4-font-size, calc(#{$font-size-base} * 1.875)); //30px
+$h5-font-size:                if(s.$h5-font-size != null, s.$h5-font-size, calc(#{$font-size-base} * 1.375)); //22px
+$h6-font-size:                if(s.$h6-font-size != null, s.$h6-font-size, calc(#{$font-size-base} * 1.125)); //18px
 
 $headings-margin-bottom:      calc(#{$spacer} * .625);
-$headings-font-family:        $font-stack-headings;
+$headings-font-family:        if(s.$headings-font-family != null, s.$headings-font-family, $font-stack-headings);
 $headings-font-weight:        500 !default;
 $headings-line-height:        var(--heading-line-height);
 $headings-color:              null !default;
@@ -181,7 +182,7 @@ $navbar-brand-height:         $navbar-brand-font-size * $line-height-base !defau
 $progress-font-size:          $font-size-base * .75 !default;
 
 // Buttons
-$btn-border-radius:           rem-calc(10);
+$btn-border-radius:           if(s.$btn-border-radius != null, s.$btn-border-radius, rem-calc(10));
 $btn-border-radius-sm:        rem-calc(10);
 $btn-border-radius-lg:        rem-calc(10);
 
@@ -192,10 +193,10 @@ $card-border-color:           $primary;
 $card-bg:                     $light;
 
 // Links
-$link-color:                              $septenary;
+$link-color:                              if(s.$link-color != null, s.$link-color, $septenary);
 $link-decoration:                         var(--link-decoration-line) var(--link-decoration-style) var(--link-decoration-color);
 $link-shade-percentage:                   20% !default;
-$link-hover-color:                        $primary;
+$link-hover-color:                        if(s.$link-hover-color != null, s.$link-hover-color, $primary);
 $link-hover-decoration:                   var(--link-hover-decoration-line) var(--link-hover-decoration-style) var(--link-hover-decoration-color);
 
 // Form Inputs
