@@ -37,6 +37,7 @@ $spacers: (
         11: $spacer * 15,
         12: $spacer * 20
 ) !default;
+$spacers: if(s.$spacers != null, s.$spacers, $spacers);
 
 // Grid
 $grid-columns:                12 !default;
@@ -54,6 +55,7 @@ $grid-breakpoints: (
     xxxxl: em-calc(1708px), //106.75em
     xxxxxl: em-calc(2300px), //143.75em
 );
+$grid-breakpoints: if(s.$grid-breakpoints != null, s.$grid-breakpoints, $grid-breakpoints);
 
 $container-max-widths: (
     sm: rem-calc(370px), //23.125rem
@@ -65,6 +67,7 @@ $container-max-widths: (
     xxxxl: rem-calc(1440px), //111.25rem
     xxxxxl: rem-calc(1680px), //150rem
 );
+$container-max-widths: if(s.$container-max-widths != null, s.$container-max-widths, $container-max-widths);
 
 // Colors
 $primary:       c(guardsman-red);
@@ -120,6 +123,7 @@ $theme-colors: (
     }
   }
 }
+$theme-colors: if(s.$theme-colors != null, s.$theme-colors, $theme-colors);
 
 // Create CSS properties for colors without bs- prefix [FIX FOR DEPRECATED BOOTSTRAP 4 FUNCTIONALITY]
 //@each $name, $color in $theme-colors {
@@ -134,7 +138,7 @@ $body-color:                if(s.$body-color != null, s.$body-color, c(black));
 
 // Type
 // Assumes the browser default, typically `16px`. Should match base font size set in /non-printing/_type.scss.
-$font-size-base:              $baseFontSize;
+$font-size-base:              if(s.$font-size-base != null, s.$font-size-base, $baseFontSize);
 
 $font-size-lg:                $font-size-base * 1.25 !default;
 $font-size-sm:                $font-size-base * .875 !default;

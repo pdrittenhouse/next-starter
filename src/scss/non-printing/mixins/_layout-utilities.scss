@@ -15,9 +15,6 @@
     margin-top: -1px;
     visibility: hidden;
   }
-  &{
-    *zoom: 1;
-  }
 }
 %clearfix {
   @include clearfix;
