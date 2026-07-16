@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Header } from './Header';
 
 const meta: Meta<typeof Header> = {
@@ -10,7 +10,6 @@ const meta: Meta<typeof Header> = {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'fullscreen',
     docs: {
-      category: 'Organisms',
       description: {
         component: 'This is a header component.',
       },

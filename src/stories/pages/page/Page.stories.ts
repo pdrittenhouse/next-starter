@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { within, userEvent, expect } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { within, userEvent, expect } from 'storybook/test';
 
 import { Page } from './Page';
 
@@ -12,7 +12,6 @@ const meta: Meta<typeof Page> = {
     // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
     layout: 'fullscreen',
     docs: {
-      category: 'Pages',
       description: {
         component: 'This is a page component.',
       },
