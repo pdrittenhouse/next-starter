@@ -18,7 +18,7 @@ import {
   GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
   GET_ALL_REUSABLE_BLOCKS,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
-  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS,
+  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS,
   GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
   GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
   GET_ALL_GRAVITY_FORMS,
@@ -69,6 +69,7 @@ export const Page: React.FC = () => {
   const { loading: designTokensLoading, error: designTokensError, data: designTokensData } = useQuery(GET_DESIGN_TOKENS)
   const { loading: spritemapIconsLoading, error: spritemapIconsError, data: spritemapIconsData } = useQuery(GET_SPRITEMAP_ICONS)
   const { loading: customizerCssLoading, error: customizerCssError, data: customizerCssData } = useQuery(GET_CUSTOMIZER_CSS)
+  const { loading: fontOptionsCssLoading, error: fontOptionsCssError, data: fontOptionsCssData } = useQuery(GET_FONT_OPTIONS_CSS)
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
@@ -533,6 +534,14 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Customizer CSS</summary>
                       <pre>{customizerCssData.customizerCss}</pre>
+                    </details>
+                  )}
+                  {fontOptionsCssLoading ? <p>Loading font options CSS...</p> : fontOptionsCssError ? (
+                    <p style={{color: 'red'}}>Font Options CSS Error: {fontOptionsCssError.message}</p>
+                  ) : fontOptionsCssData && (
+                    <details>
+                      <summary>Font Options CSS</summary>
+                      <pre>{fontOptionsCssData.fontOptionsCss}</pre>
                     </details>
                   )}
                   {schemaLoading ? <p>Loading theme options...</p> : schemaData && (
