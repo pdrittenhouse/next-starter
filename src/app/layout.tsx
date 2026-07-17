@@ -3,8 +3,8 @@ import Script from 'next/script';
 import { print } from 'graphql';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import '../scss/global.scss';
+import { gql } from '@apollo/client';
 import { fetchGraphQL } from '@/lib/wp/client';
-import { GET_CUSTOMIZER_CSS } from '@/lib/wp/queries';
 
 // Font loading patterns:
 //
@@ -41,10 +41,26 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const typekitId = process.env.NEXT_PUBLIC_TYPEKIT_ID;
-  const { data: cssData } = await fetchGraphQL<{ customizerCss: string | null }>(
-    print(GET_CUSTOMIZER_CSS)
-  ).catch(() => ({ data: null })) as any;
-  const customizerCss = cssData?.customizerCss ?? null;
+
+  const GET_GLOBAL_CSS = gql`
+    query GetGlobalCss {
+      customizerCss
+      fontOptionsCss
+      customizerSettings { customCss }
+    }
+  `;
+
+  const { data: cssData } = await fetchGraphQL<{
+    customizerCss: string | null;
+    fontOptionsCss: string | null;
+    customizerSettings: { customCss: string | null } | null;
+  }>(print(GET_GLOBAL_CSS)).catch(() => ({ data: null })) as any;
+
+  const globalCss = [
+    cssData?.customizerCss,
+    cssData?.fontOptionsCss,
+    cssData?.customizerSettings?.customCss,
+  ].filter(Boolean).join('\n') || null;
 
   return (
       <html lang="en">
@@ -55,8 +71,8 @@ export default async function RootLayout({
               <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
             </>
           )}
-          {customizerCss && (
-            <style dangerouslySetInnerHTML={{ __html: customizerCss }} />
+          {globalCss && (
+            <style dangerouslySetInnerHTML={{ __html: globalCss }} />
           )}
         </head>
         <body>
