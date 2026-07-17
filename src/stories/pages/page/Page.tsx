@@ -18,7 +18,7 @@ import {
   GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
   GET_ALL_REUSABLE_BLOCKS,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
-  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS,
+  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS,
   GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
   GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
   GET_ALL_GRAVITY_FORMS,
@@ -67,6 +67,7 @@ export const Page: React.FC = () => {
   const { loading: themeSettingsLoading, error: themeSettingsError, data: themeSettingsData } = useQuery(GET_THEME_SETTINGS)
   const { loading: publicOptionsLoading, error: publicOptionsError, data: publicOptionsData } = useQuery(GET_PUBLIC_OPTIONS)
   const { loading: designTokensLoading, error: designTokensError, data: designTokensData } = useQuery(GET_DESIGN_TOKENS)
+  const { loading: spritemapIconsLoading, error: spritemapIconsError, data: spritemapIconsData } = useQuery(GET_SPRITEMAP_ICONS)
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
@@ -515,6 +516,14 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Design Tokens ({designTokensData.designTokens?.length ?? 0})</summary>
                       <pre>{JSON.stringify(designTokensData.designTokens, null, 2)}</pre>
+                    </details>
+                  )}
+                  {spritemapIconsLoading ? <p>Loading spritemap icons...</p> : spritemapIconsError ? (
+                    <p style={{color: 'red'}}>Spritemap Icons Error: {spritemapIconsError.message}</p>
+                  ) : spritemapIconsData && (
+                    <details>
+                      <summary>Spritemap Icons</summary>
+                      <pre>{JSON.stringify(spritemapIconsData.spritemapIcons, null, 2)}</pre>
                     </details>
                   )}
                   {schemaLoading ? <p>Loading theme options...</p> : schemaData && (
