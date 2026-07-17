@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "sync-tokens": "node scripts/sync-tokens.mjs",
-    "predev": "node scripts/sync-tokens.mjs",
+    "sync-icons": "node scripts/sync-icons.mjs",
+    "predev": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-tokens.mjs",
+    "prebuild": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
