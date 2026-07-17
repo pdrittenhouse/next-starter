@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Script from 'next/script';
+import { print } from 'graphql';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import '../scss/global.scss';
+import { fetchGraphQL } from '@/lib/wp/client';
+import { GET_CUSTOMIZER_CSS } from '@/lib/wp/queries';
 
 // Font loading patterns:
 //
@@ -32,12 +35,16 @@ export const metadata: Metadata = {
     ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const typekitId = process.env.NEXT_PUBLIC_TYPEKIT_ID;
+  const { data: cssData } = await fetchGraphQL<{ customizerCss: string | null }>(
+    print(GET_CUSTOMIZER_CSS)
+  ).catch(() => ({ data: null })) as any;
+  const customizerCss = cssData?.customizerCss ?? null;
 
   return (
       <html lang="en">
@@ -47,6 +54,9 @@ export default function RootLayout({
               <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
               <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
             </>
+          )}
+          {customizerCss && (
+            <style dangerouslySetInnerHTML={{ __html: customizerCss }} />
           )}
         </head>
         <body>
