@@ -3,6 +3,11 @@ import Script from 'next/script';
 import { print } from 'graphql';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import '../scss/global.scss';
+// Phosphor Icons — CSS-only package; loaded here so the bundler resolves font URLs
+// from node_modules. Uncomment additional weights as needed.
+import '@phosphor-icons/web/regular';
+// import '@phosphor-icons/web/bold';
+// import '@phosphor-icons/web/fill';
 import { gql } from '@apollo/client';
 import { fetchGraphQL } from '@/lib/wp/client';
 

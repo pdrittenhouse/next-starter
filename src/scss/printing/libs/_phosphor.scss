@@ -1,0 +1,12 @@
+// Phosphor Icons
+// @phosphor-icons/web ships CSS-only — Sass cannot inline CSS @imports, so Phosphor
+// is loaded at the JS/layout level instead of here.
+//
+// Next.js: add to src/app/layout.tsx
+//   import '@phosphor-icons/web/regular';
+//
+// Available weights: regular, thin, light, bold, fill, duotone.
+// Each weight is a separate @font-face + ~1500 classes — only load what you use.
+//
+// If a custom SCSS wrapper is ever needed (e.g., to extend .ph or define placeholders),
+// add it in this file and import it from _all.scss.
