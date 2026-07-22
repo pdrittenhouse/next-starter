@@ -1,9 +1,9 @@
 @use "sass:math";
-@use "../type" as *;
-@use "../animations" as *;
-@use "../custom-variables" as *;
-@use "./layout-utilities" as *;
-@use "../functions/all" as *;
+@use "non-printing/animations" as *;
+@use "non-printing/type" as *;
+@use "non-printing/custom-variables" as *;
+@use "non-printing/mixins/layout-utilities" as *;
+@use "non-printing/functions/all" as *;
 
 /* stylelint-disable */
 
@@ -437,8 +437,10 @@
   );
 
   @each $ext in $exts {
-    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
-    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $extmod: $ext;
+    @if map-has-key($extmods, $ext) { $extmod: $ext + map-get($extmods, $ext); }
+    $format: $ext;
+    @if map-has-key($formats, $ext) { $format: map-get($formats, $ext); }
     $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
   }
 
@@ -447,6 +449,7 @@
     font-style: $style;
     font-weight: $weight;
     src: $src;
+    font-display: swap;
   }
 }
 
@@ -465,9 +468,9 @@
 //     color: #000;
 // }
 
-@mixin headings($from: 1, $to: 6){
-  @for $i from $from through $to{
-    h#{$i}{
+@mixin headings($from: 1, $to: 6) {
+  @for $i from $from through $to {
+    h#{$i} {
       @content
     }
   }
@@ -546,7 +549,8 @@
 ///
 @mixin responsive-font($responsive, $min, $max: false, $fallback: false) {
   $responsive-unitless: math.div($responsive, ($responsive - $responsive + 1));
-  $dimension: if(unit($responsive) == 'vh', 'height', 'width');
+  $dimension: 'width';
+  @if unit($responsive) == 'vh' { $dimension: 'height'; }
   $min-breakpoint: math.div($min, $responsive-unitless) * 100;
 
   @media (max-#{$dimension}: #{$min-breakpoint}) {
@@ -693,7 +697,7 @@
   }
 }
 
-@mixin custom-list-icon ($before-content:'', $icon-font-family: 'Font Awesome 5 Free', $icon-weight: 400, $color: 'inherit', $icon-size: 16px, $width:5px, $height:5px, $top-position:10px, $left-position:-15px, $background-color:#000, $border-radius:50%, $margin-bottom:0, $margin-right:0, $margin-left:0) {
+@mixin custom-list-icon ($before-content:'', $icon-font-family: 'Font Awesome 7 Free', $icon-weight: 400, $color: 'inherit', $icon-size: 16px, $width:5px, $height:5px, $top-position:10px, $left-position:-15px, $background-color:#000, $border-radius:50%, $margin-bottom:0, $margin-right:0, $margin-left:0) {
   overflow: hidden;
   zoom: 1;
   ul {
@@ -916,13 +920,17 @@
   $font-style: $btnFontStyle,
   $letter-spacing: $btnLetterSpacing,
   $line-height: $btnLineHeight,
+  $label-font-size: $btnLabelFontSize,
+  $label-line-height: $btnLabelLineHeight,
   $text-transform: $btnTextTransform,
   $font-family-hover: $btnFontFamilyHover,
   $font-size-hover: $btnFontSizeHover,
+  $label-font-size-hover: $btnLabelFontSizeHover,
   $font-weight-hover: $btnFontWeightHover,
   $font-style-hover: $btnFontStyleHover,
   $letter-spacing-hover: $btnLetterSpacingHover,
   $line-height-hover: $btnLineHeightHover,
+  $label-line-height-hover: $btnLabelLineHeightHover,
   $text-transform-hover: $btnTextTransformHover,
   $padding: $btnPadding,
   $padding-hover: $btnPaddingHover,
@@ -979,6 +987,11 @@
   text-decoration: none;
   vertical-align: middle;
 
+  .button--label,
+  .button-label {
+    line-height: $label-line-height;
+  }
+
   &:visited {
     color: $color;
   }
@@ -1014,6 +1027,11 @@
     box-shadow: $box-shadow-hover-x $box-shadow-hover-y $box-shadow-hover-blur $box-shadow-hover-spread $box-shadow-hover-color;
     text-shadow: $text-shadow-hover-x $text-shadow-hover-y $text-shadow-hover-blur $text-shadow-hover-color;
     padding: $padding-hover;
+
+    .button--label,
+    .button-label {
+      line-height: $label-line-height-hover;
+    }
   }
 };
 

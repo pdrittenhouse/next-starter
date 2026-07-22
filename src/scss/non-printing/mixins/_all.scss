@@ -1,9 +1,13 @@
-@forward "layout-utilities";
+// AUTO-GENERATED — do not edit manually. Managed by sync-scss-utils.mjs.
+// Source: http://headless-test.local/wp-json/timberland/v1/scss-utils
+// Run `npm run sync-scss-utils` to refresh.
+
 @forward "content-utilities";
-@forward "export-data";
-@forward "css-columns";
+@forward "flex-card-grid";
+@forward "layout-utilities";
 @forward "css-grid";
 @forward "flexbox";
-@forward "flex-card-grid";
+@forward "css-columns";
+@forward "export-data";
 @forward "custom-mixins";
 @forward "custom-placeholders";

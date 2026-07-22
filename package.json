@@ -5,9 +5,10 @@
   "scripts": {
     "sync-tokens": "node scripts/sync-tokens.mjs",
     "sync-icons": "node scripts/sync-icons.mjs",
-    "predev": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs",
+    "sync-scss-utils": "node scripts/sync-scss-utils.mjs",
+    "predev": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs",
+    "prebuild": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

@@ -1,6 +1,6 @@
 @use "sass:math";
-@use "./utilities" as *;
-@use "../type" as *;
+@use "non-printing/type" as *;
+@use "utilities" as *;
 
 // PX to EM
 // Does the main work of converting to a standardized unit by stripping a number

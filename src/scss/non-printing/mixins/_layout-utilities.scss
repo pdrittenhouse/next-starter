@@ -1,3 +1,4 @@
+@use "non-printing/animations" as *;
 /* stylelint-disable */
 
 //Clearfix
@@ -14,6 +15,8 @@
     height: 1px;
     margin-top: -1px;
     visibility: hidden;
+  }
+  &{
   }
 }
 %clearfix {
@@ -56,6 +59,7 @@
 @mixin hide {
   visibility: hidden;
   opacity: 0;
+  transition: opacity $transition-duration $transition-timing-function;
 }
 
 
@@ -63,6 +67,7 @@
 @mixin show {
   visibility: visible;
   opacity: 1;
+  transition: opacity $transition-duration $transition-timing-function;
 }
 
 
@@ -221,8 +226,8 @@
 }
 
 //Cover Element
-@mixin cover {
-  position: absolute;
+@mixin cover($position: absolute) {
+  position: $position;
   top: 0;
   bottom: 0;
   left: 0;

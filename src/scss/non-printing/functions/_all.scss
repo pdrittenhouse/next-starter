@@ -1,10 +1,13 @@
+// AUTO-GENERATED — do not edit manually. Managed by sync-scss-utils.mjs.
+// Source: http://headless-test.local/wp-json/timberland/v1/scss-utils
+// Run `npm run sync-scss-utils` to refresh.
+
 @forward "utilities";
 @forward "colors";
-@forward "css-vars";
-@forward "letter-spacing";
 @forward "rem";
 @forward "em";
+@forward "letter-spacing";
+@forward "css-vars";
 @forward "svg-bg";
 @forward "zindex";
 @forward "custom-functions";
-
