@@ -1,0 +1,93 @@
+// Custom styles for modal
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.modal {
+  // background-color: rgba(c(black), .9); // Moved to .modal-backdrop
+  text-align: left;
+  z-index: z(modal);
+  z-index: 1051; // Needed for modals not in footer
+
+  &-backdrop {
+    // z-index: 0;
+    z-index: z(modal-backdrop); // Needed for modals not in footer
+    background-color: rgba(c(black), .75);
+  }
+
+  &-dialog {
+
+    &:not(.modal-fullscreen) {
+      //width: 100%;
+      //max-width: 80%;
+      //margin-left: auto;
+      //margin-right: auto;
+    }
+
+    &.modal-fullscreen {
+      max-width: none;
+    }
+  }
+
+  &-content {
+    background-color: #{c(white)};
+    border-radius: rem-calc(8px);
+    border: none;
+  }
+
+  &-header {
+
+    .modal--close {
+      margin: calc(var(--bs-modal-header-padding-y)*-0.5) calc(var(--bs-modal-header-padding-x)*-0.5) calc(var(--bs-modal-header-padding-y)*-0.5) auto;
+    }
+  }
+
+  &--close {
+    transition: opacity $transition-timing-function $transition-duration;
+  }
+
+  &-title {
+    @include font($font-stack-headings);
+    color: c(black);
+    font-size: rem-calc(32px);
+    font-weight: bold;
+    font-style: normal;
+    line-height: $headings-line-height;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  &-body {}
+
+  &-footer {
+    @include justify-content(flex-end);
+    @include flex-flow(row wrap);
+  }
+
+  &-footer-content {
+    @include flex(1 0 auto);
+    max-width: calc(100% - 8px);
+
+    @include headings() {
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &-actions {
+    @include flex(0 1 auto);
+    @include flexbox;
+    @include flex-flow(row wrap);
+    @include justify-content(flex-end);
+    max-width: calc(100% - 8px);
+  }
+}

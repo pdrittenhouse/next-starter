@@ -1,0 +1,30 @@
+// Custom styles for toast
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.toast {
+
+  &-wrapper {}
+
+  &--controls {}
+
+  &-container {
+    z-index: z(toast);
+  }
+
+  &-header {}
+
+  &--icon {}
+
+  &--image {}
+
+  &--title {}
+
+  &--meta {}
+
+  .btn-close {}
+
+  &-body {}
+}

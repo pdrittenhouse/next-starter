@@ -1,0 +1,43 @@
+// Custom styles for skip nav
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.skip-nav {
+  position: absolute;
+  top: rem-calc(-1000px);
+  left: rem-calc(-1000px);
+  height: rem-calc(1px);
+  width: rem-calc(1px);
+  text-align: left;
+  overflow: hidden;
+  display: block;
+  background-color: c(black);
+  color: c(white);
+  padding: rem-calc(20px);
+  border: none;
+  z-index: z(skip-nav);
+
+  &.screen-reader-text {
+    background-color: c(black);
+
+    &.focus {
+      background-color: c(black);
+    }
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    color: #fff;
+    text-decoration: none;
+    outline: none;
+  }
+}

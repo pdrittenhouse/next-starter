@@ -1,0 +1,37 @@
+.table {
+  
+  th,
+  td {
+
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  // Border spacing utilities
+  &-border-separate {
+    border-collapse: separate;
+  }
+
+  // Generate border spacing classes for common values
+  @for $i from 1 through 20 {
+    &-border-spacing-#{$i} {
+      border-spacing: #{$i}px;
+    }
+  }
+
+  // Generate border spacing classes for larger values
+  @each $spacing in 25, 30, 40, 50 {
+    &-border-spacing-#{$spacing} {
+      border-spacing: #{$spacing}px;
+    }
+  }
+}
+
+// Generate table variant classes for custom theme colors
+@each $color, $value in $theme-colors {
+  .table-#{$color} {
+    --bs-table-bg: #{rgba($value, 0.125)};
+    --bs-table-color: #{color-contrast($value)};
+  }
+}

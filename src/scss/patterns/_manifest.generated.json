@@ -1,0 +1,166 @@
+{
+  "generated_at": "2026-07-22T22:45:43.332Z",
+  "source": "http://headless-test.local/wp-json/timberland/v1/pattern-styles",
+  "patterns": [
+    {
+      "name": "alert",
+      "level": "atoms"
+    },
+    {
+      "name": "badge",
+      "level": "atoms"
+    },
+    {
+      "name": "breadcrumb",
+      "level": "atoms"
+    },
+    {
+      "name": "button",
+      "level": "atoms"
+    },
+    {
+      "name": "figure",
+      "level": "atoms"
+    },
+    {
+      "name": "form",
+      "level": "atoms"
+    },
+    {
+      "name": "grid",
+      "level": "atoms"
+    },
+    {
+      "name": "image",
+      "level": "atoms"
+    },
+    {
+      "name": "list-group",
+      "level": "atoms"
+    },
+    {
+      "name": "progress",
+      "level": "atoms"
+    },
+    {
+      "name": "skip-nav",
+      "level": "atoms"
+    },
+    {
+      "name": "spinner",
+      "level": "atoms"
+    },
+    {
+      "name": "svg",
+      "level": "atoms"
+    },
+    {
+      "name": "table",
+      "level": "atoms"
+    },
+    {
+      "name": "video",
+      "level": "atoms"
+    },
+    {
+      "name": "accordion",
+      "level": "molecules"
+    },
+    {
+      "name": "blockquote",
+      "level": "molecules"
+    },
+    {
+      "name": "branding",
+      "level": "molecules"
+    },
+    {
+      "name": "button-group",
+      "level": "molecules"
+    },
+    {
+      "name": "carousel",
+      "level": "molecules"
+    },
+    {
+      "name": "flickity-carousel",
+      "level": "molecules"
+    },
+    {
+      "name": "jumbotron",
+      "level": "molecules"
+    },
+    {
+      "name": "list",
+      "level": "molecules"
+    },
+    {
+      "name": "modal",
+      "level": "molecules"
+    },
+    {
+      "name": "nav",
+      "level": "molecules"
+    },
+    {
+      "name": "offcanvas",
+      "level": "molecules"
+    },
+    {
+      "name": "pagination",
+      "level": "molecules"
+    },
+    {
+      "name": "slick-carousel",
+      "level": "molecules"
+    },
+    {
+      "name": "tabs",
+      "level": "molecules"
+    },
+    {
+      "name": "testimonial",
+      "level": "molecules"
+    },
+    {
+      "name": "traveling-cta",
+      "level": "molecules"
+    },
+    {
+      "name": "video-promo",
+      "level": "molecules"
+    },
+    {
+      "name": "card",
+      "level": "organisms"
+    },
+    {
+      "name": "card-grid",
+      "level": "organisms"
+    },
+    {
+      "name": "collapse",
+      "level": "organisms"
+    },
+    {
+      "name": "dropdown",
+      "level": "organisms"
+    },
+    {
+      "name": "footer",
+      "level": "organisms"
+    },
+    {
+      "name": "header",
+      "level": "organisms"
+    },
+    {
+      "name": "social-nav",
+      "level": "organisms"
+    },
+    {
+      "name": "toast",
+      "level": "organisms"
+    }
+  ]
+}

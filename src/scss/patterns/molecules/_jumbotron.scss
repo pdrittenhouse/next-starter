@@ -1,0 +1,148 @@
+// Custom styles for jumbotron
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.jumbotron {
+
+  &.vertical-center {
+
+    &.no-container {
+      @include align-items(center);
+    }
+
+    .container {
+      height: 100%;
+    }
+
+    .row {
+      height: 100%;
+      @include align-items(center);
+    }
+  }
+
+  &:not(.no-container) {
+
+    .jumbotron--image {
+      @include make-col-ready;
+      @include make-col(12);
+    }
+
+    .jumbotron--content {
+      @include make-col-ready;
+      @include make-col(12);
+    }
+
+    &.has-image {
+
+      .jumbotron--image {
+
+        @include media-breakpoint-up(lg) {
+          @include make-col(4);
+          @include order(1);
+        }
+      }
+
+      .jumbotron--content {
+
+        @include media-breakpoint-up(lg) {
+          @include make-col(8);
+          @include order(0);
+        }
+      }
+
+      &.image-left {
+
+        .jumbotron--image {
+
+          @include media-breakpoint-up(lg) {
+            @include order(0);
+          }
+        }
+
+        .jumbotron--content {
+
+          @include media-breakpoint-up(lg) {
+            @include order(1);
+          }
+        }
+      }
+    }
+  }
+
+  &.no-container {
+    @include flexbox;
+    @include flex-flow(row wrap);
+
+    @include media-breakpoint-up(lg) {
+      @include flex-flow(row nowrap);
+    }
+
+    .jumbotron--image {
+      @include flex(1 1 100%);
+    }
+
+    .jumbotron--content {
+      @include flex(1 1 100%);
+    }
+
+    &.has-image {
+
+      .jumbotron--image {
+
+        @include media-breakpoint-up(lg) {
+          @include flex(0 0 33.333%);
+          @include order(1);
+        }
+      }
+
+      .jumbotron--content {
+
+        @include media-breakpoint-up(lg) {
+          @include flex(0 0 66.667%);
+          @include order(0);
+        }
+      }
+
+      &.image-left {
+
+        .jumbotron--image {
+
+          @include media-breakpoint-up(lg) {
+            @include order(0);
+          }
+        }
+
+        .jumbotron--content {
+
+          @include media-breakpoint-up(lg) {
+            @include order(1);
+          }
+        }
+      }
+    }
+  }
+
+  &--image {
+    text-align: center;
+
+    img {
+      width: 100%;
+    }
+
+    .jumbotron-inner-blocks {
+      text-align: left;
+    }
+  }
+
+  &--content {}
+
+  &--label {}
+
+  &--label {}
+
+  &--title {}
+
+  &--subtitle {}
+}

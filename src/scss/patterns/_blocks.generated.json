@@ -1,0 +1,133 @@
+{
+  "acf/accordion": [
+    "atoms/button",
+    "molecules/accordion"
+  ],
+  "acf/accordion-item": [
+    "atoms/button"
+  ],
+  "acf/alert": [
+    "atoms/alert",
+    "atoms/button",
+    "atoms/grid",
+    "atoms/image",
+    "atoms/svg",
+    "molecules/list",
+    "organisms/card"
+  ],
+  "acf/branding": [
+    "atoms/image",
+    "atoms/svg",
+    "molecules/branding"
+  ],
+  "acf/breadcrumb": [
+    "atoms/breadcrumb"
+  ],
+  "acf/button": [
+    "atoms/button",
+    "atoms/svg"
+  ],
+  "acf/button-group": [
+    "atoms/button",
+    "molecules/button-group"
+  ],
+  "acf/card": [
+    "atoms/button",
+    "atoms/grid",
+    "atoms/image",
+    "atoms/svg",
+    "molecules/list",
+    "organisms/card"
+  ],
+  "acf/card-grid": [
+    "atoms/button",
+    "atoms/grid",
+    "atoms/image",
+    "atoms/svg",
+    "molecules/list",
+    "organisms/card",
+    "organisms/card-grid"
+  ],
+  "acf/hero-unit": [
+    "atoms/button",
+    "atoms/image",
+    "molecules/jumbotron"
+  ],
+  "acf/icons": [
+    "atoms/svg"
+  ],
+  "acf/image": [
+    "atoms/image"
+  ],
+  "acf/jumbotron": [
+    "atoms/button",
+    "atoms/image",
+    "molecules/jumbotron"
+  ],
+  "acf/link-group": [
+    "atoms/button"
+  ],
+  "acf/menu": [
+    "atoms/button",
+    "atoms/svg",
+    "molecules/list",
+    "molecules/nav",
+    "organisms/social-nav"
+  ],
+  "acf/modal": [
+    "atoms/button",
+    "atoms/svg",
+    "molecules/modal"
+  ],
+  "acf/offcanvas": [
+    "atoms/button",
+    "atoms/svg",
+    "molecules/offcanvas"
+  ],
+  "acf/post-meta": [
+    "atoms/image"
+  ],
+  "acf/posts-loop": [
+    "atoms/button",
+    "atoms/grid",
+    "atoms/image",
+    "atoms/spinner",
+    "atoms/svg",
+    "molecules/carousel",
+    "molecules/feature",
+    "molecules/flickity-carousel",
+    "molecules/jumbotron",
+    "molecules/list",
+    "molecules/modal",
+    "molecules/promo",
+    "molecules/slick-carousel",
+    "organisms/card",
+    "organisms/card-grid"
+  ],
+  "acf/quote": [
+    "atoms/image",
+    "molecules/blockquote"
+  ],
+  "acf/slider": [
+    "atoms/button",
+    "atoms/image",
+    "molecules/carousel",
+    "molecules/flickity-carousel",
+    "molecules/slick-carousel"
+  ],
+  "acf/social-share": [
+    "atoms/svg",
+    "molecules/list",
+    "organisms/social-nav"
+  ],
+  "acf/table": [
+    "atoms/table"
+  ],
+  "acf/tabs": [
+    "atoms/button",
+    "molecules/tabs"
+  ],
+  "acf/video": [
+    "atoms/video"
+  ]
+}

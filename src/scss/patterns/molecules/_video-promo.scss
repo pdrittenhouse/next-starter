@@ -1,0 +1,115 @@
+// Custom styles for video promo
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.video-promo {
+  //position: relative;
+  //z-index: z('site-content');
+
+  &--content {}
+
+  &--header {
+    text-align: center;
+    padding: rem-calc(30px 0);
+
+    @include media-breakpoint-up(lg) {
+      padding: rem-calc(60px 0);
+    }
+
+    .video-promo--container {}
+  }
+
+  &--title {}
+
+  &--subtitle {}
+
+  &--intro {}
+
+  &--body {
+    position: relative;
+
+    .video-promo--header + & {
+
+      @include media-breakpoint-up(lg) {
+        padding-top: 0;
+      }
+    }
+
+    .video-promo--container {
+
+      @include media-breakpoint-up(xl) {
+        @include make-container-max-widths;
+      }
+    }
+
+    .video-promo--content {
+
+      @include media-breakpoint-down(lg) {
+        padding: 0;
+      }
+    }
+  }
+
+  &--video {
+    position: relative;
+  }
+
+  &--play {
+    @include absolute-center(true, true, true);
+    border: rem-calc(3px) solid var(--white);
+    border-radius: 50%;
+    width: rem-calc(95px);
+    height: rem-calc(95px);
+    position: absolute;
+    right: rem-calc(40px);
+    bottom: rem-calc(30px);
+    z-index: z('site-content');
+    color: var(--white);
+    background-color: rgba(c(white), .52);
+    transition-property: opacity, color, border-bottom-color, border-left-color, border-right-color, border-top-color, background-color;
+    transition-duration: $transition-duration;
+    transition-timing-function: $transition-timing-function;
+    will-change: opacity;
+
+    &:hover,
+    &:focus {
+      color: var(--secondary);
+      border-color: var(--secondary);
+      //background-color: rgba(c(thunderbird), .52);
+    }
+
+    &.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  .video {}
+
+  &--promos {
+    @include flexbox;
+    @include flex-flow(row wrap);
+
+    @include media-breakpoint-up(lg) {
+      @include flex(0 0 nowrap);
+    }
+
+    .button {
+      @include flex(0 0 100%);
+
+      @include media-breakpoint-up(lg) {
+        @include flex(1 1 auto);
+      }
+
+      &:not(.navbar-toggler)[class*='btn-'] {
+        @include fontSize(26px, 42px);
+      }
+
+      .button--label {}
+
+      .svg {}
+    }
+  }
+}

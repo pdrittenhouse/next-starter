@@ -1,0 +1,58 @@
+// Custom styles for list
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.list {
+  &-type--ordered {
+    @include custom-list-style ();
+  }
+
+  &-type--unordered {
+    @include custom-list-icon ();
+  }
+
+  &.bullet-icons {
+
+    > .list-item  {
+      &:before {
+        content: none;
+      }
+
+      > .icon,
+      > .svg {
+        position: absolute;
+        top: 0;
+      }
+    }
+
+    &--before{
+      > .list-item {
+        > .icon,
+        > .svg {
+          right: calc(100% + 5px);
+        }
+      }
+    }
+
+    &--after {
+      padding-left: 0;
+      padding-right: rem-calc(40px);
+      text-align: right;
+      width: auto;
+      display: inline-block;
+      > .list-item {
+        > .icon,
+        > .svg {
+          left: calc(100% + 5px);
+        }
+      }
+    }
+  }
+
+  .icon,
+  .svg {
+    vertical-align: middle;
+  }
+}

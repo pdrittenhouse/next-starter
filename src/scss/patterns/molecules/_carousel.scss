@@ -1,0 +1,26 @@
+// Custom styles for carousel
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.carousel {
+
+  &-indicators {}
+
+  &--indicator {}
+
+  &-inner {}
+
+  &-item {}
+
+  &--image {}
+
+  &--label {}
+
+  &--caption {}
+
+  &-control-prev {}
+
+  &-control-next {}
+}

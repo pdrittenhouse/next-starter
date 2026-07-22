@@ -1,0 +1,584 @@
+// stylelint-disable max-nesting-depth, selector-max-specificity
+// Custom styles for nav
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.navbar-nav {
+
+  // Hoverable Dropdown Menus
+  &.dropdown-hover {
+
+    > ul, > ol, > div {
+
+      > .dropdown {
+      
+        >.dropdown-toggle {
+          position: relative;
+    
+          &:after {
+            content: none;
+          }
+
+          .item-label {
+            vertical-align: middle;
+          }
+      
+          .caret {
+            min-width: rem-calc(15px);
+            min-height: rem-calc(7px);
+            z-index: z(site-nav);
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+      
+            &:after {
+              @include absolute-center(true, true, true);
+              display: inline-block;
+              content: "";
+              border-top: rem-calc(5px) solid;
+              border-right: rem-calc(5px) solid transparent;
+              border-bottom: 0;
+              border-left: rem-calc(5px) solid transparent;
+            }
+          }
+        }
+    
+        >.dropdown-menu {
+          //display: none;
+          opacity: 0;
+          max-height: 0;
+          transition-property: max-height, opacity;
+          transition-duration: $transition-duration;
+          transition-timing-function: $transition-timing-function;
+          transform: none;
+          top: auto;
+          left: auto;
+          will-change: max-height, opacity;
+          overflow: visible;
+          margin: 0;
+          padding: 0;
+          border: none;
+        }
+    
+        //MULTILEVEL MENU SUPPORT
+        .dropdown-item {
+    
+          &:active {
+            color: inherit;
+            background-color: inherit;
+          }
+    
+          .dropdown-submenu {
+            padding: 0;
+            min-width: 10rem;
+            display: none;
+            position: relative;
+            top: auto;
+            left: auto;
+
+            &.show {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
+.nav {
+  width: 100%;
+
+  &-item {}
+
+  &-link {
+    @include font($font-stack-navs, bold);
+
+    &:hover {}
+  }
+
+  .item-label {}
+
+  .dropdown {
+
+    &.hide-dropdown-icon {
+
+     > .dropdown-toggle {
+
+       &:after {
+         content: none;
+       }
+
+       .caret {
+         @include remove;
+
+         &:after {
+           content: none;
+         }
+       }
+     }
+   }
+  }
+
+  .dropdown-toggle {
+
+    &:after {}
+  }
+
+  .dropdown-menu {}
+
+  .dropdown-item {
+
+    .nav-link {
+
+      &:hover {}
+    }
+
+    .item-label {}
+  }
+
+}
+
+// Container relative menus
+.container-relative-menu {
+
+  .dropdown:not(.has-mega-menu) {
+    position: static;
+  }
+
+  .dropdown-menu {
+    left: auto;
+    right: auto;
+    margin-top: 0;
+  }
+}
+
+/**
+ * ========================================
+ * Mega Menu Styles
+ * ========================================
+ */
+
+.nav-item {
+  // Nav item with mega menu attached
+  &.has-mega-menu {
+    // Static positioning so mega menu can be relative to header
+    position: static;
+
+    // Mega menu dropdown
+    .mega-menu-dropdown {
+      // Reset Bootstrap dropdown positioning
+      transform: none;
+      margin: 0;
+      padding: 0;
+
+      // Responsive behavior based on navbar-expand-* breakpoint
+      @each $breakpoint in map-keys($grid-breakpoints) {
+        $next: breakpoint-next($breakpoint, $grid-breakpoints);
+        $infix: breakpoint-infix($next, $grid-breakpoints);
+
+        // Desktop: Full viewport width, absolute positioning
+        .navbar-expand#{$infix} & {
+          @if $breakpoint != 'none' and $breakpoint != 'xs' and $next != null {
+            @include media-breakpoint-up($next) {
+              position: absolute;
+              left: 0;
+              right: 0;
+              // width: 100vw;
+              top: 100%; // Position at bottom of positioned ancestor (header/navbar)
+              z-index: z('dropdown');
+            }
+
+            // Mobile: Regular dropdown behavior
+            @include media-breakpoint-down($breakpoint) {
+              position: relative;
+              width: 100%;
+              left: auto;
+              right: auto;
+              top: auto;
+            }
+          }
+        }
+      }
+
+      // Mobile Only
+      .navbar-expand-none & {
+
+        .nav-item {
+
+          // Nav item with mega menu attached
+          &.has-mega-menu {
+        
+            // Mega menu dropdown
+            .mega-menu-dropdown {
+              position: relative;
+              width: 100%;
+              left: auto;
+              right: auto;
+              top: auto;
+            }
+          }
+        }
+      }
+
+      // Desktop Only
+      .navbar-expand-xs & {
+
+        .nav-item {
+
+          // Nav item with mega menu attached
+          &.has-mega-menu {
+        
+            // Mega menu dropdown
+            .mega-menu-dropdown {
+              position: absolute;
+              left: 0;
+              right: 0;
+              // width: 100vw;
+              top: 100%; // Position at bottom of positioned ancestor (header/navbar)
+              z-index: z('dropdown');
+            }
+          }
+        }
+      }
+
+      // Content panel - no max-width, blocks handle containers
+      .mega-menu-panel {
+        // padding: $spacer * 2;
+
+        // Reset block spacing at root level
+        > * {
+          &:first-child {
+            margin-top: 0;
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.nav-item-relative-mega-menu {
+
+  .has-mega-menu {
+    position: relative;
+  }
+
+  .mega-menu-dropdown {
+    width: 100vw;
+  }
+}
+
+// Mega menu hover dropdown overrides
+.navbar-nav.dropdown-hover {
+
+  > ul {
+
+    > .dropdown.has-mega-menu {
+    
+      > .dropdown-menu.mega-menu-dropdown {
+
+        // Responsive behavior based on navbar-expand-* breakpoint
+        @each $breakpoint in map-keys($grid-breakpoints) {
+          $next: breakpoint-next($breakpoint, $grid-breakpoints);
+          $infix: breakpoint-infix($next, $grid-breakpoints);
+      
+          // Desktop: Full viewport width, absolute positioning
+          .navbar-expand#{$infix} & {
+            @if $breakpoint != 'none' and $breakpoint != 'xs' {
+              @include media-breakpoint-up($next) {
+                left: 0;
+              }
+      
+              // Mobile: Regular dropdown behavior
+              @include media-breakpoint-down($breakpoint) {}
+            }
+          }
+        }
+      }
+    }
+  }  
+}
+
+// Body state when mega menu is open
+body {
+  &.mega-menu-open,
+  &.nav-open {
+    // Optional: Add overlay or prevent scrolling
+    // overflow: hidden;
+    overflow-x: hidden;
+
+    &.has-menu-overlays {
+
+      &:before {
+        opacity: 1;
+      }
+
+      .mega-menu-dropdown {
+        z-index: z('dropdown');
+      }
+    }
+
+    .site-header {
+
+      &.relative-to-container {
+
+        &:not(.center-mobile) {
+
+          &.mobile-nav-right {
+
+            .site-header--container {
+              position: static;
+            }
+          }
+        }
+      }
+
+      .site-header--content {
+        position: relative;
+      }
+
+      .site-header--container {
+        position: static;
+      }
+    }
+  }
+
+  &.has-menu-overlays {
+
+      &:before {
+        @include cover(fixed);
+        content: "";
+        display: block;
+        background: rgba(0, 0, 0, .7);
+        z-index: z('dropdown-backdrop');
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity $transition-duration $transition-timing-function;
+      }
+    }
+}
+
+
+/**
+* ========================================
+* Menu Layouts
+* ========================================
+*/
+.navbar-nav {
+
+ .cols {
+
+   .dropdown-toggle {
+
+     &:after {
+       content: none;
+     }
+   }
+
+   .dropdown-menu {
+     background-color: transparent;
+     border: none;
+     border-radius: 0;
+     // display: block;
+     padding: 0;
+     margin: 0;
+     min-width: 0;
+   }
+
+   &.one-col,
+   &.two-col,
+   &.three-col,
+   &.four-col,
+   &.five-col,
+   &.six-col {
+     flex-direction: column !important;
+     display: block !important;
+   }
+
+   &:not(.one-col):not(.two-col):not(.three-col):not(.four-col):not(.five-col):not(.six-col) {
+
+     .dropdown-item {
+       padding: 0;
+
+       .nav-link {
+         padding-left: 8px;
+         padding-right: 8px;
+       }
+     }
+   }
+
+   &.one-col {}
+
+   &.two-col {}
+
+   &.three-col {}
+
+   &.four-col {}
+
+   &.five-col {}
+
+   &.six-col {}
+ }
+
+ // Responsive behavior based on navbar-expand-* breakpoint
+ @each $breakpoint in map-keys($grid-breakpoints) {
+   $next: breakpoint-next($breakpoint, $grid-breakpoints);
+   $infix: breakpoint-infix($next, $grid-breakpoints);
+
+   // Desktop: Full viewport width, absolute positioning
+   .navbar-expand#{$infix} & {
+     @if $breakpoint != 'none' and $breakpoint != 'xs' {
+
+       .navbar-nav {
+
+         .cols {
+
+           @include media-breakpoint-up($next) {
+             @include css-column-gap(rem-calc(32px));
+           }
+
+           .dropdown {
+
+             @include media-breakpoint-up($next) {
+               @include css-break-inside(avoid);
+             }
+           }
+
+           .dropdown-menu {
+
+             @include media-breakpoint-up($next) {
+               position: relative;
+               display: block;
+             }
+
+             &[data-bs-popper] {
+
+               @include media-breakpoint-up($next) {
+                 top: auto;
+                 left: auto;
+               }
+             }
+           }
+
+           .dropdown-item {
+
+             &:hover {
+
+               @include media-breakpoint-up($next) {
+                 background-color: transparent;
+               }
+             }
+           }
+
+           &.one-col {}
+
+           &.two-col {
+
+             @include media-breakpoint-up($next) {
+               @include css-columns(2);
+             }
+           }
+
+           &.three-col {
+
+             @include media-breakpoint-up($next) {
+               @include css-columns(3);
+             }
+           }
+
+           &.four-col {
+
+             @include media-breakpoint-up($next) {
+               @include css-columns(4);
+             }
+           }
+
+           &.five-col {
+
+             @include media-breakpoint-up($next) {
+               @include css-columns(5);
+             }
+           }
+
+           &.six-col {
+
+             @include media-breakpoint-up($next) {
+               @include css-columns(6);
+             }
+           }
+         }
+       }
+
+       // Mobile: Regular dropdown behavior
+       @include media-breakpoint-down($breakpoint) {}
+     }
+   }
+ }
+
+
+ // Mobile only
+ .navbar-expand-none & {}
+
+
+ // Desktop Only
+ .navbar-expand-xs & {
+
+   .navbar-nav {
+
+     .cols {
+       @include css-column-gap(rem-calc(32px));
+
+       .dropdown {
+         @include css-break-inside(avoid);
+       }
+
+       .dropdown-menu {
+         position: relative;
+
+         &[data-bs-popper] {
+           top: auto;
+           left: auto;
+         }
+       }
+
+       .dropdown-item {
+
+         &:hover {
+           background-color: transparent;
+         }
+       }
+
+       &.one-col {}
+
+       &.two-col {
+         @include css-columns(2);
+       }
+
+       &.three-col {
+         @include css-columns(3);
+       }
+
+       &.four-col {
+         @include css-columns(4);
+       }
+
+       &.five-col {
+         @include css-columns(5);
+       }
+
+       &.six-col {
+         @include css-columns(6);
+       }
+     }
+   }
+ }
+}
+

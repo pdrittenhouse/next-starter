@@ -1,0 +1,496 @@
+// Custom styles for card grid
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.card-grid-wrapper {
+
+  &--title {
+    text-align: center;
+  }
+}
+
+.card {
+
+  &-count {
+    counter-reset: cardCount;
+
+    .card {
+
+      &-content {
+
+        &:before {
+          counter-increment: cardCount;
+          content: counter(cardCount);
+          padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x) 0;
+          display: block;
+        }
+      }
+    }
+  }
+
+  &-grid {
+
+    &[class*="grid-cols-"] {
+      //@include flex-grid ($columns: 2, $gutter: 30px, $featured:'.featured');
+    }
+
+    &.grid-cols-2 {
+      @include flex-grid ($columns: 2, $gutter: 30px, $featured:'.featured');
+    }
+
+    &.grid-cols-3 {
+      @include flex-grid ($gutter: 30px, $featured:'.featured');
+    }
+
+    &.grid-cols-4 {
+      @include flex-grid ($columns: 4, $gutter: 30px, $featured:'.featured');
+    }
+
+    &.grid-cols-5 {
+      @include flex-grid ($columns: 5, $gutter: 30px, $featured:'.featured');
+    }
+
+    &.grid-cols-6 {
+      @include flex-grid ($columns: 6, $gutter: 30px, $featured:'.featured');
+    }
+
+    &.placecard {}
+
+    &.single-row {
+
+      &.grid-cols-2 {
+        @include flex-grid ($columns: 2, $gutter: 30px, $singlerow: true);
+      }
+
+      &.grid-cols-3 {
+        @include flex-grid ($gutter: 30px, $singlerow: true);
+      }
+
+      &.grid-cols-4 {
+        @include flex-grid ($columns: 4, $gutter: 30px, $singlerow: true);
+      }
+
+      &.grid-cols-5 {
+        @include flex-grid ($columns: 5, $gutter: 30px, $singlerow: true);
+      }
+
+      &.grid-cols-6 {
+        @include flex-grid ($columns: 6, $gutter: 30px, $singlerow: true);
+      }
+
+      &.placecard {}
+
+      &.vertical-offset {
+        $offset: 15px;
+        //@include align-items(center);
+
+        .card {}
+
+        /* stylelint-disable */
+        &-left {
+
+          &.grid-cols-2 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(md) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(md) {
+
+                }
+              }
+            }
+          }
+
+          &.grid-cols-3 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xl) {
+
+                }
+              }
+            }
+          }
+
+          &.grid-cols-4 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 3 !important;
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(4) {
+
+                @include media-breakpoint-up(xl) {
+
+                }
+              }
+            }
+          }
+
+          &.grid-cols-5 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 4 !important;
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 3 !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+
+              &:nth-of-type(4) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(5) {
+
+                @include media-breakpoint-up(xl) {
+
+                }
+              }
+            }
+          }
+
+          &.grid-cols-6 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 5 !important;
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 4 !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 3 !important;
+                }
+              }
+
+              &:nth-of-type(4) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+
+              &:nth-of-type(5) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(6) {
+
+                @include media-breakpoint-up(xxl) {
+
+                }
+              }
+            }
+          }
+        }
+
+        &-right {
+
+          &.grid-cols-2 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(md) {
+
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(md) {
+                  margin-top: $offset !important;
+                }
+              }
+            }
+          }
+
+          &.grid-cols-3 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xl) {
+
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+            }
+          }
+
+          &.grid-cols-4 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xl) {
+
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+
+              &:nth-of-type(4) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 3 !important;
+                }
+              }
+            }
+          }
+
+          &.grid-cols-5 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xl) {
+
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+
+              &:nth-of-type(4) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 3 !important;
+                }
+              }
+
+              &:nth-of-type(5) {
+
+                @include media-breakpoint-up(xl) {
+                  margin-top: $offset * 4 !important;
+                }
+              }
+            }
+          }
+
+          &.grid-cols-6 {
+
+            > .card {
+
+              &:nth-of-type(1) {
+
+                @include media-breakpoint-up(xxl) {
+
+                }
+              }
+
+              &:nth-of-type(2) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset !important;
+                }
+              }
+
+              &:nth-of-type(3) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 2 !important;
+                }
+              }
+
+              &:nth-of-type(4) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 3 !important;
+                }
+              }
+
+              &:nth-of-type(5) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 4 !important;
+                }
+              }
+
+              &:nth-of-type(6) {
+
+                @include media-breakpoint-up(xxl) {
+                  margin-top: $offset * 5 !important;
+                }
+              }
+            }
+          }
+        }
+        /* stylelint-enable */
+      }
+    }
+
+    &.mobile-columns {
+
+      &.grid-cols-2 {
+        @include flex-grid ($columns: 2, $gutter: 30px, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-3 {
+        @include flex-grid ($gutter: 30px, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-4 {
+        @include flex-grid ($columns: 4, $gutter: 30px, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-5 {
+        @include flex-grid ($columns: 5, $gutter: 30px, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-6 {
+        @include flex-grid ($columns: 6, $gutter: 30px, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.placecard {}
+    }
+
+    &.single-row.mobile-columns {
+      &.grid-cols-2 {
+        @include flex-grid ($columns: 2, $gutter: 30px, $singlerow: true, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-3 {
+        @include flex-grid ($gutter: 30px, $singlerow: true, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-4 {
+        @include flex-grid ($columns: 4, $gutter: 30px, $singlerow: true, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-5 {
+        @include flex-grid ($columns: 5, $gutter: 30px, $singlerow: true, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.grid-cols-6 {
+        @include flex-grid ($columns: 6, $gutter: 30px, $singlerow: true, $mobilecolumns: true, $featured:'.featured');
+      }
+
+      &.placecard {}
+    }
+  }
+
+  &-row {}
+
+  &-group {}
+
+  &-deck {}
+}

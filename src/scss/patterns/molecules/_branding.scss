@@ -1,0 +1,93 @@
+// Custom styles for branding
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.branding {
+
+  &.text-center {
+
+    .branding--logo-img {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  &.text-right {
+
+    .branding--logo-img {
+      margin-left: auto;
+    }
+  }
+
+  &.hide-text {
+
+    .branding--site-name,
+    .branding--site-slogan {
+      @include remove;
+    }
+  }
+
+  a {
+    display: block;
+  }
+
+  &.logo-type--bg {
+    min-width: rem-calc(125px);
+  }
+
+  &.logo-type--svg {}
+
+  &--site-logo {}
+
+  &--logo-img {
+    display: block;
+    min-height: rem-calc(25px);
+
+    img,
+    svg {
+      width: 100%;
+    }
+  }
+
+  &--site-name,
+  &--site-slogan {
+    color: var(--branding-color);
+
+    &:hover,
+    &:focus {
+      color: var(--branding-hover-color);
+    }
+  }
+
+  &--site-name {
+    margin-top: rem-calc(10px);
+    font-family: var(--branding-font-family);
+    font-size: var(--branding-font-size-mobile);
+    font-weight: var(--branding-font-weight);
+    font-style: var(--branding-font-style);
+    line-height: var(--branding-line-height-mobile);
+    letter-spacing: var(--branding-letter-spacing-mobile);
+    text-transform: var(--branding-text-transform);
+    text-shadow: var(--branding-text-shadow-x) var(--branding-text-shadow-y) var(--branding-text-shadow-blur) var(--branding-text-shadow-color);
+    transition: font-size $transition-duration $transition-timing-function;
+
+    + .branding--site-slogan {
+      margin-top: 0;
+    }
+  }
+
+  &--site-slogan {
+    margin-top: rem-calc(10px);
+    font-family: var(--slogan-font-family);
+    font-size: var(--slogan-font-size-mobile);
+    font-weight: var(--slogan-font-weight);
+    font-style: var(--slogan-font-style);
+    line-height: var(--slogan-line-height-mobile);
+    letter-spacing: var(--slogan-letter-spacing-mobile);
+    text-transform: var(--slogan-text-transform);
+    text-shadow: var(--slogan-text-shadow-x) var(--slogan-text-shadow-y) var(--slogan-text-shadow-blur) var(--slogan-text-shadow-color);
+    transition: font-size $transition-duration $transition-timing-function;
+  }
+}

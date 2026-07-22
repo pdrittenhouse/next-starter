@@ -1,0 +1,94 @@
+// Custom styles for video
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.video {
+
+  &.image-format--youtube,
+  &.image-format--vimeo,
+  &.image-format--iframe {
+
+    .video-responsive,
+    iframe {
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &.hide-suggested {
+
+    .video-responsive {
+
+      &.ended {
+
+        &:after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          cursor: pointer;
+          background-color: var(--black);
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: rem-calc(64px 64px);
+          background-image: url('data:image/svg+xml;utf8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2aWV3Qm94PSIwIDAgNTEwIDUxMCI+PHBhdGggZD0iTTI1NSAxMDJWMEwxMjcuNSAxMjcuNSAyNTUgMjU1VjE1M2M4NC4xNSAwIDE1MyA2OC44NSAxNTMgMTUzcy02OC44NSAxNTMtMTUzIDE1My0xNTMtNjguODUtMTUzLTE1M0g1MWMwIDExMi4yIDkxLjggMjA0IDIwNCAyMDRzMjA0LTkxLjggMjA0LTIwNC05MS44LTIwNC0yMDQtMjA0eiIgZmlsbD0iI0ZGRiIvPjwvc3ZnPg==');
+        }
+      }
+
+      &.paused {
+
+        &:after {
+          content: "";
+          position: absolute;
+          //top: rem-calc(70px);
+          top: 0;
+          left :0;
+          //bottom: rem-calc(15px);
+          bottom: 0;
+          right: 0;
+          cursor: pointer;
+          background-color: var(--black);
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: rem-calc(40px 40px);
+          background-image: url('data:image/svg+xml;utf8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNzA2LjY2NyIgaGVpZ2h0PSIxNzA2LjY2NyIgdmlld0JveD0iMCAwIDEyODAgMTI4MCI+PHBhdGggZD0iTTE1Ny42MzUgMi45ODRMMTI2MC45NzkgNjQwIDE1Ny42MzUgMTI3Ny4wMTZ6IiBmaWxsPSIjZmZmIi8+PC9zdmc+');
+        }
+      }
+    }
+  }
+
+  &-title {}
+
+  &-responsive {
+    @include responsive-video(4, 3);
+  }
+
+  video {
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  &.wide {
+    .video-responsive {
+      @include responsive-video(16, 9);
+    }
+  }
+
+  &.aspect-ratio--3-4 {
+    .video-responsive {
+      @include responsive-video(3, 4);
+    }
+  }
+
+  &.aspect-ratio--1920-1080 {
+    .video-responsive {
+      @include responsive-video(1920, 1080);
+    }
+  }
+}

@@ -1,0 +1,112 @@
+// Custom styles for form
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.form {
+
+  &-title {
+
+  }
+
+  &-intro {
+
+  }
+}
+
+// Form Elements
+fieldset {}
+
+legend {}
+
+label {}
+
+select {}
+
+keygen {}
+
+textarea,
+input:not([type="submit"]) {
+  transition-property: background-color, padding-left;
+  transition-duration: $transition-duration;
+  transition-timing-function: $transition-timing-function;
+  will-change: background-color, padding-left;
+  color: var(--input-color);
+  background-color: var(--input-background-color);
+  border: var(--input-border-color) var(--input-border-width) var(--input-border-style);
+  border-radius: var(--input-border-radius);
+  font-size: var(--input-font-size);
+  line-height: var(--input-line-height);
+  padding: var(--input-vertical-padding) var(--input-horizontal-padding);
+  vertical-align: middle;
+  font-weight: var(--header-search-input-font-weight);
+  font-style: var(--header-search-input-font-style);
+  letter-spacing: var(--header-search-input-letter-spacing);
+  text-transform: var(--header-search-input-text-transform);
+  max-width: 100%;
+
+  &:hover,
+  &:focus {
+    //outline-color: var(--primary);
+    outline: none;
+    color: var(--input-hover-color);
+    background-color: var(--input-hover-background-color);
+    border-color: var(--input-hover-border-color);
+    padding-left: var(--input-hover-horizontal-padding);
+    padding-right: var(--input-hover-horizontal-padding);
+  }
+}
+
+input {
+
+  &[type="image"] {}
+
+  &[type="range"] {}
+
+  &[type="color"] {}
+
+  &[type="checkbox"] {
+
+    // Custom Checkbox
+    + label {}
+
+    &:checked {
+
+      + label {}
+    }
+  }
+
+  &[type="radio"] {
+
+    // Custom Radio Button
+    + label {}
+
+    &:checked {
+
+      + label {}
+    }
+  }
+
+  &[type="submit"] {
+    @include button();
+  }
+}
+
+//Placeholders
+@include placeholder {}
+
+.form {
+
+  &.placeholder-black {
+    @include placeholder {
+      color: var(--black);
+    }
+  }
+
+  &.placeholder-white {
+    @include placeholder {
+      color: var(--white);
+    }
+  }
+}

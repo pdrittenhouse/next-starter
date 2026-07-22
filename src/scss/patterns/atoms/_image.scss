@@ -1,0 +1,49 @@
+// Custom styles for image
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.image {
+
+  &--bg {
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+  }
+
+  &--aspect-ratio {
+    overflow: hidden;
+    width: 100%;
+
+    img {
+      @include cover-image-max;
+      max-width: 100%;
+    }
+    &.ar-1-1 {
+      @include aspect-ratio(1, 1);
+    }
+    &.ar-2-3 {
+      @include aspect-ratio(2, 3);
+    }
+    &.ar-3-2 {
+      @include aspect-ratio(3, 2);
+    }
+    &.ar-3-4 {
+      @include aspect-ratio(3, 4);
+    }
+    &.ar-4-3 {
+      @include aspect-ratio(4, 3);
+    }
+    &.ar-5-7 {
+      @include aspect-ratio(5, 7);
+    }
+    &.ar-16-9 {
+      @include aspect-ratio(16, 9);
+    }
+    &.ar-21-9 {
+      @include aspect-ratio(21, 9);
+    }
+  }
+
+}

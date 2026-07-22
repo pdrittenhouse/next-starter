@@ -1,0 +1,149 @@
+// Custom styles for pagination
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.pagination {
+  @include justify-content(center);
+
+  &:not(.nav) {
+    @include no-bullets;
+    margin-bottom: 0;
+  }
+
+  &-wrapper {
+    padding: rem-calc(30px 0);
+  }
+
+  .page-item {
+    margin-right: rem-calc(15px);
+
+    &.current {
+
+      .page-link {
+        background-color: c(gray, dark);
+        border-color: c(gray, dark);
+        color: c(white);
+      }
+    }
+
+    &.btn {
+      padding: 0;
+      opacity: 1;
+      transition: opacity $transition-duration $transition-timing-function;
+      will-change: opacity;
+
+      &.disabled {
+        opacity: 0;
+      }
+
+      a {
+        font-size: 0;
+      }
+
+      .page-link {
+        @extend %fa-icon;
+        @extend %fa-solid;
+        background-color: c(white);
+        border: rem-calc(3.008px) solid c(black);
+        border-radius: 50%;
+        width: rem-calc(45px);
+        height: rem-calc(45px);
+        transition-property: background-color, border-top-color, border-bottom-color, border-left-color, border-right-color;
+        transition-duration: $transition-duration;
+        transition-timing-function: $transition-timing-function;
+        will-change: background-color;
+        z-index: z(site-content);
+        vertical-align: top;
+
+        &:before {
+          @include absolute-center(true, true, true);
+          @include font($fontAwesome);
+          @include fontSize(16px);
+          color: c(black);
+          transition: color $transition-duration $transition-timing-function;
+          will-change: color;
+        }
+
+        &:hover {
+          background-color: c(gray, light);
+          border-color: c(gray, light);
+
+          &:before {
+            color: white;
+          }
+        }
+      }
+    }
+
+    &.first {
+      @include remove;
+      margin-right: rem-calc(25px);
+
+      .page-link {
+
+        &:before {
+          //content: fa-content($var-arrow-to-left);
+          content: fa-content($var-arrow-left);
+        }
+      }
+    }
+
+    &.prev {
+      margin-right: rem-calc(25px);
+
+      .page-link {
+
+        &:before {
+          content: fa-content($var-arrow-left);
+        }
+      }
+    }
+
+    &.next {
+      margin-left: rem-calc(10px);
+      margin-right: 0;
+
+      .page-link {
+
+        &:before {
+          content: fa-content($var-arrow-right);
+        }
+      }
+    }
+
+    &.last {
+      @include remove;
+      margin-left: rem-calc(25px);
+
+      .page-link {
+
+        &:before {
+          //content: fa-content($var-arrow-to-right);
+          content: fa-content($var-arrow-right);
+        }
+      }
+    }
+  }
+
+  .page-link {
+    @include font($font-stack-headings, bold);
+    @include fontSize(20px, 23px);
+    //letter-spacing: ls(promo);
+    padding: rem-calc(8.03px 15.85px);
+    background-color: c(white);
+    color: c(black);
+    transition-property: color, background-color, border-top-color, border-right-color, border-bottom-color, border-left-color;
+    transition-duration: $transition-duration;
+    transition-timing-function: $transition-timing-function;
+    will-change: color, background-color, border-top-color, border-right-color, border-bottom-color, border-left-color;
+    border: rem-calc(3.008px) solid c(black);
+
+    &:hover {
+      background-color: c(gray, light);
+      color: c(white);
+      border-color: c(gray, light);
+    }
+  }
+}

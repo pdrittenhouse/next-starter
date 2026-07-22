@@ -1,0 +1,378 @@
+// Custom styles for tabs
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+// Import responsive-tabs CSS (moved from index.js to prevent webpack chunking issues)
+@import 'responsive-tabs/css/responsive-tabs.css';
+
+.tabs-wrapper {
+  margin: rem-calc(20px 0);
+  background-color: transparent;
+  border: none;
+
+  .tabs__tab {
+    @include remove;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  &.vertical {
+
+    // jQuery Responsive Tabs
+    &.jquery {
+
+      @include media-breakpoint-up(lg) {
+        @include flexbox;
+        @include flex-flow(row nowrap);
+      }
+
+      > .tabs {
+        @include media-breakpoint-up(lg) {
+          @include flex(0 0 30%);
+          display: block;
+          z-index: 1;
+        }
+
+        .tabs__tab {
+          @include media-breakpoint-up(lg) {
+            display: block;
+            border-left: rem-calc(1px) solid var(--gray-dark);
+            border-bottom: none;
+          }
+
+          &:last-child {
+            @include media-breakpoint-up(lg) {
+              border-bottom: rem-calc(1px) solid var(--gray-dark);
+            }
+
+            &.r-tabs-state-active {
+              @include media-breakpoint-up(lg) {
+                border-bottom: rem-calc(1px) solid var(--gray-dark);
+              }
+            }
+          }
+
+          &.r-tabs-state-active {
+            @include media-breakpoint-up(lg) {
+              //border-bottom: rem-calc(1px) solid var(--gray);
+              border-right: rem-calc(1px) solid transparent;
+            }
+          }
+        }
+      }
+
+      > .tabs__content-wrapper {
+
+        @include media-breakpoint-up(lg) {
+          @include flex(0 0 70%);
+        }
+
+        &.r-tabs-panel {
+
+          @include media-breakpoint-up(lg) {
+            margin-left: rem-calc(-1px);
+            margin-top: 0;
+          }
+        }
+      }
+
+      > .tabs__content {}
+    }
+
+    // Bootstrap
+    &.bootstrap {
+      @include flexbox;
+      @include flex-flow(row nowrap);
+
+      > nav {
+        @include flex(0 0 auto);
+
+        .nav-tabs {
+          border-bottom: none;
+          border-right: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+
+          .nav-link {
+            border: var(--bs-nav-tabs-border-width) solid transparent;
+
+            &.active {
+              //border-color: var(--bs-nav-tabs-link-active-border-color);
+              border-color: var(--bs-nav-tabs-border-color);
+              border-bottom-color: var(--bs-nav-tabs-border-color);
+              border-right-color: transparent;
+              //border-top-right-right: 0;
+              //border-bottom-right-radius: 0;
+            }
+          }
+        }
+      }
+
+      > .tab-content {
+        @include flex(1 1 auto);
+        padding-left: rem-calc(30px);
+      }
+    }
+  }
+
+  // jQuery Responsive Tabs
+  &.jquery {
+
+    .tabs {
+      @include flexbox;
+      @include flex-flow(column nowrap);
+      @include remove;
+      //margin: rem-calc(8px 0);
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      flex-direction: column;
+
+      @include media-breakpoint-up(lg) {
+        @include replace(flex);
+        @include flex-flow(row nowrap);
+      }
+
+      .typeset & {
+        margin-bottom: 0;
+      }
+
+      > .tabs__tab {
+        @include replace(inline-block);
+        width: auto;
+        height: auto;
+        overflow: auto;
+      }
+
+      &__tab {
+        @include flex(0 0 auto);
+        border-bottom: rem-calc(1px) solid var(--gray-dark);
+        border-right: rem-calc(1px) solid var(--gray-dark);
+        border-top: rem-calc(1px) solid var(--gray-dark);
+        background: var(--gray-ultralight);
+
+        &:hover,
+        &:focus {
+          background: var(--white);
+        }
+
+        &.r-tabs-state-active {
+          border: rem-calc(1px) solid var(--gray-dark);
+          border-bottom: rem-calc(1px) solid transparent;
+          border-left: 0;
+          background: var(--white);
+
+          .tabs__tab-link {
+            color: var(--black);
+          }
+        }
+
+        &:first-child {
+          border-left: rem-calc(1px) solid var(--gray-dark);
+        }
+
+        &.r-tabs-state-disabled {
+          background-color: var(--gray-ultralight);
+
+          &:hover {
+            cursor: not-allowed;
+          }
+
+          .tabs__tab-link {
+            color: var(--gray-dark);
+            pointer-events: none;
+          }
+        }
+
+        @include media-breakpoint-up(lg) {
+          display: inline-block;
+          width: auto;
+        }
+      }
+
+      .tabs__tab-link {
+        @include replace(block);
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+
+      &__tab-link {
+        @include font($font-stack-headings);
+        @include fontSize(14px);
+        @include remove;
+        padding: rem-calc(5px 16px);
+        color: var(--black);
+        text-transform: uppercase;
+        //display: inline-block;
+        //width: 100%;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+
+        &:hover,
+        &:focus {
+          color: var(--black);
+          text-decoration: none;
+        }
+      }
+
+      &--secondary {
+        width: 100%;
+
+        .tabs__tab {
+          margin: rem-calc(8px 8px 8px 0);
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+
+          &.r-tabs-state-active {
+            background: var(--black);
+
+            .tabs__tab-link {}
+          }
+        }
+
+        .tabs__tab-link {}
+
+        ~ .tabs__content-wrapper {
+          border: none;
+          margin-top: 0;
+        }
+      }
+
+      //> .tabs__content-wrapper {
+      //  @include remove;
+      //  width: 0;
+      //  height: 0;
+      //  overflow: hidden;
+      //}
+
+      &__content-wrapper {
+        border-left: rem-calc(1px) solid var(--gray-dark);
+        border-right: rem-calc(1px) solid var(--gray-dark);
+
+        @include media-breakpoint-up(lg) {
+          border: rem-calc(1px) solid var(--gray-dark);
+        }
+
+        &.r-tabs-panel {
+          margin-top: rem-calc(-1px);
+          padding: 0;
+        }
+      }
+
+      &__content {
+        padding: rem-calc(20px);
+      }
+    }
+
+    .r-tabs-accordion-title {
+      border-bottom: rem-calc(1px) solid var(--white);
+
+      .tabs + & {
+
+        .r-tabs-anchor {
+          border-top-left-radius: rem-calc(4px);
+          border-top-right-radius: rem-calc(4px);
+
+          @include media-breakpoint-up(lg) {
+            border-radius: 0;
+          }
+        }
+      }
+
+      &:nth-last-child(2) {
+
+        .r-tabs-anchor {
+          border-bottom-left-radius: rem-calc(4px);
+          border-bottom-right-radius: rem-calc(4px);
+
+          @include media-breakpoint-up(lg) {
+            border-radius: 0;
+          }
+        }
+
+        + .tabs__content-wrapper {
+          border-bottom-left-radius: rem-calc(4px);
+          border-bottom-right-radius: rem-calc(4px);
+          border-bottom: rem-calc(1px) solid var(--gray-dark);
+
+          @include media-breakpoint-up(lg) {
+            border-radius: 0;
+          }
+        }
+      }
+
+      &.r-tabs-state-active {
+
+        &:nth-last-child(2) {
+
+          .r-tabs-anchor {
+            border-radius: 0;
+          }
+        }
+
+        .r-tabs-anchor {
+          background-color: var(--gray-dark);
+
+          &:after {
+            @include sprite('chevron-up');
+          }
+        }
+      }
+
+      &.r-tabs-state-disabled {
+        &:hover {
+          cursor: not-allowed;
+        }
+
+        .r-tabs-anchor {
+          color: var(--gray);
+          background-color: var(--gray-light);
+          pointer-events: none;
+        }
+      }
+
+      .r-tabs-anchor {
+        @include fontSize(14px);
+        padding: rem-calc(10px 50px 10px 20px);
+        display: block;
+        color: var(--white);
+        background-color: var(--black);
+        position: relative;
+        transition-property: background-color, border-bottom-left-radius, border-bottom-right-radius;
+        transition-duration: $transition-duration;
+        transition-timing-function: $transition-timing-function;
+
+        &:hover {
+          background-color: var(--gray-dark);
+        }
+
+        &:after {
+          @include sprite('chevron-down');
+          @include absolute-center(false, true, true);
+          right: rem-calc(20px);
+          width: rem-calc(16px);
+          height: rem-calc(16px);
+          content: "";
+          display: block;
+        }
+      }
+    }
+  }
+
+  // Bootstrap
+  &.bootstrap {
+
+    > nav {}
+
+    > .tab-content {
+      padding: rem-calc(30px) $grid-gutter-width * .5;
+      background-color: var(--white);
+      border: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+      border-top: none;
+    }
+  }
+}

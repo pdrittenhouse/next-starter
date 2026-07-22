@@ -1,0 +1,126 @@
+// Custom styles for SVG
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.svg {
+
+  &--colorable {
+    // Set svg elements to current color.
+    /* purgecss start ignore */
+    @include svg-elements() {
+      color: currentColor;
+      fill: currentColor;
+    }
+    /* purgecss end ignore */
+  }
+
+  picture {
+    display: block;
+  }
+
+  &--icon {
+    display: inline-block;
+    width: rem-calc(30px);
+
+    svg {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      height: auto;
+    }
+
+    // Set svgicon elements to current color.
+    /* purgecss start ignore */
+    @include svg-elements() {
+      color: currentColor;
+      fill: currentColor;
+    }
+    /* purgecss end ignore */
+  }
+
+  &--link {}
+}
+
+// Phosphor Icons inline SVG — mirrors .svg-inline--fa sizing behavior
+.svg-inline--ph {
+  height: 1em;
+  overflow: visible;
+  display: inline-block;
+  vertical-align: -0.125em;
+}
+
+// Bootstrap Icons inline SVG — mirrors .svg-inline--fa sizing behavior
+.svg-inline--bi {
+  height: 1em;
+  overflow: visible;
+  display: inline-block;
+  vertical-align: -0.125em;
+}
+
+// // Get the sprite name from generated scss in generated file
+// $svgicons: map-keys($sprites);
+// // Loop over every SVG and create a CSS class for it
+// @each $icon in $svgicons {
+//   .icon--#{$icon} {
+//     @include sprite(#{$icon});
+//     display: inline-block;
+//     height: rem-calc(30px);
+//     width: rem-calc(30px);
+//   }
+
+//   // Loop over every color in $c-palette and create a CSS class for icon color variants
+//   @each $name, $variantList in $c-palette {
+//     @each $variant in map-keys($variantList) {
+//       @if ($variant == 'base') {
+//         .icon--#{$icon}-#{"" + $name} {
+//           @include sprite(#{$icon}, (color: c($name)));
+//           display: inline-block;
+//           height: rem-calc(30px);
+//           width: rem-calc(30px);
+//         }
+//       } @else {
+//         .icon--#{$icon}-#{"" + $name}-#{$variant} {
+//           @include sprite(#{$icon}, (color: c($name, $variant)));
+//           display: inline-block;
+//           height: rem-calc(30px);
+//           width: rem-calc(30px);
+//         }
+//       }
+//     }
+//   }
+
+//   // Loop over every color in $theme-colors and create a CSS class for icon color variants
+//   @each $color in map_keys($theme-colors) {
+//     .icon--#{$icon}-#{"" + $color} {
+//       @include sprite(#{$icon}, (color: #{$color}) );
+//       display: inline-block;
+//       height: rem-calc(30px);
+//       width: rem-calc(30px);
+//     }
+//   }
+// }
+
+// // Loop over every color in $c-palette and create a CSS class to colorize it
+// @each $name, $variantList in $c-palette {
+//   @each $variant in map-keys($variantList) {
+//     @if ($variant == 'base') {
+//       .color-fill--#{"" + $name} {
+//         color: c($name);
+//       }
+//     } @else {
+//       .color-fill--#{"" + $name}-#{$variant} {
+//         color: c($name, $variant);
+//       }
+//     }
+//   }
+// }
+
+// // Loop over every color in $theme-colors and create a CSS class to colorize it
+// @each $color in map_keys($theme-colors) {
+//   .color-fill--#{"" + $color} {
+//     color: var(--#{$color});
+//   }
+// }

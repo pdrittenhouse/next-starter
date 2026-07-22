@@ -1,0 +1,20 @@
+// Custom styles for button group
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.button-group {
+
+    &.display-grid {}
+
+    &.display-group {}
+
+    &--wrapper {}
+
+    &--heading {}
+
+    &--title {}
+
+    &--description {}
+}

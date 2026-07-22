@@ -1,0 +1,589 @@
+// Custom styles for button
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+// Bootstrap button mixins are also available for styling:
+// @link https://github.com/twbs/bootstrap-sass/blob/881ce27c6b4101698ea849283933203e20861a33/assets/stylesheets/bootstrap/mixins/_buttons.scss
+// Alternative button mixin available in /non-printing/mixins/content-utilities.scss
+
+.button {
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  &:not(.navbar-toggler) { // Exclude nav toggle
+
+    // Bootstrap Button Overrides
+    &.btn {
+
+      &-block {
+        width: 100%;
+        display: block;
+      }
+
+      &-default {
+        @include button();
+
+        &.ghost {
+          //background-color: transparent;
+          //color: var(--button-bg);
+          //
+          //&:hover,
+          //&:focus {
+          //  color: var(--button-bg-hover);
+          //}
+        }
+      }
+
+      &-outline-default {
+        // @include button(
+        //   $bgcolor: transparent,
+        //   $hover-bg-color: var(--tertiary),
+        //   $border-top-color: var(--tertiary),
+        //   $border-bottom-color: var(--tertiary),
+        //   $border-left-color: var(--tertiary),
+        //   $border-right-color: var(--tertiary),
+        //   $hover-border-top-color: var(--tertiary),
+        //   $hover-border-bottom-color: var(--tertiary),
+        //   $hover-border-left-color: var(--tertiary),
+        //   $hover-border-right-color: var(--tertiary),
+        //   $color: var(--tertiary),
+        //   $hover-color: var(--white),
+        //   $padding: rem-calc(15px 24px),
+        //   $padding-hover: rem-calc(15px 24px),
+        // );
+      }
+
+      &-primary {
+        // @include button(
+        //   $bgcolor: var(--bs-primary),
+        //   $hover-bg-color: var(--bs-secondary),
+        //   $border-top-color: var(--bs-primary),
+        //   $border-bottom-color: var(--bs-primary),
+        //   $border-left-color: var(--bs-primary),
+        //   $border-right-color: var(--bs-primary),
+        //   $hover-border-top-color: var(--bs-secondary),
+        //   $hover-border-bottom-color: var(--bs-secondary),
+        //   $hover-border-left-color: var(--bs-secondary),
+        //   $hover-border-right-color: var(--bs-secondary),
+        //   $color: var(--bs-white),
+        //   $hover-color: var(--bs-white),
+        // );
+      }
+
+      &-outline-primary {
+        // @include button(
+        //   $bgcolor: var(--white),
+        //   $hover-bg-color: var(--primary),
+        //   $border-top-color: var(--primary),
+        //   $border-bottom-color: var(--primary),
+        //   $border-left-color: var(--primary),
+        //   $border-right-color: var(--primary),
+        //   $hover-border-top-color: var(--primary),
+        //   $hover-border-bottom-color: var(--primary),
+        //   $hover-border-left-color: var(--primary),
+        //   $hover-border-right-color: var(--primary),
+        //   $color: var(--primary),
+        //   $hover-color: var(--white),
+        //   $padding: rem-calc(15px 24px),
+        //   $padding-hover: rem-calc(15px 24px),
+        // );
+      }
+
+      &-secondary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--secondary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--secondary),
+        //  $border-bottom-color: var(--secondary),
+        //  $border-left-color: var(--secondary),
+        //  $border-right-color: var(--secondary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--secondary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--secondary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--secondary);
+        //    border-color: var(--secondary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-tertiary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--tertiary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--tertiary),
+        //  $border-bottom-color: var(--tertiary),
+        //  $border-left-color: var(--tertiary),
+        //  $border-right-color: var(--tertiary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--tertiary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--tertiary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--tertiary);
+        //    border-color: var(--tertiary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-quaternary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--quaternary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--quaternary),
+        //  $border-bottom-color: var(--quaternary),
+        //  $border-left-color: var(--quaternary),
+        //  $border-right-color: var(--quaternary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--quaternary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--quaternary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--quaternary);
+        //    border-color: var(--quaternary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-quinary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--quinary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--quinary),
+        //  $border-bottom-color: var(--quinary),
+        //  $border-left-color: var(--quinary),
+        //  $border-right-color: var(--quinary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--quinary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--quinary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--quinary);
+        //    border-color: var(--quinary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-senary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--senary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--senary),
+        //  $border-bottom-color: var(--senary),
+        //  $border-left-color: var(--senary),
+        //  $border-right-color: var(--senary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--senary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--senary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--senary);
+        //    border-color: var(--senary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-septenary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--septenary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--septenary),
+        //  $border-bottom-color: var(--septenary),
+        //  $border-left-color: var(--septenary),
+        //  $border-right-color: var(--septenary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--septenary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--septenary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--septenary);
+        //    border-color: var(--septenary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-octonary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--octonary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--octonary),
+        //  $border-bottom-color: var(--octonary),
+        //  $border-left-color: var(--octonary),
+        //  $border-right-color: var(--octonary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--octonary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--octonary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--octonary);
+        //    border-color: var(--octonary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-nonary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--nonary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--nonary),
+        //  $border-bottom-color: var(--nonary),
+        //  $border-left-color: var(--nonary),
+        //  $border-right-color: var(--nonary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--nonary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--nonary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--nonary);
+        //    border-color: var(--nonary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-denary {
+        //@include button-variant(c(white), c(black), c(black));
+        //@include button-size(rem-calc(20px), rem-calc(30px), rem-calc(18px), rem-calc(4px), rem-calc(4px));
+
+        //@include button(
+        //  $bgcolor: var(--denary),
+        //  $hover-bg-color: var(--white),
+        //  $border-top-color: var(--denary),
+        //  $border-bottom-color: var(--denary),
+        //  $border-left-color: var(--denary),
+        //  $border-right-color: var(--denary),
+        //  $hover-border-top-color: var(--white),
+        //  $hover-border-bottom-color: var(--white),
+        //  $hover-border-left-color: var(--white),
+        //  $hover-border-right-color: var(--white),
+        //  $color: var(--white),
+        //  $hover-color: var(--denary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--denary);
+        //
+        //  &:hover,
+        //  &:focus {
+        //    background-color: var(--denary);
+        //    border-color: var(--denary);
+        //    color: var(--white);
+        //  }
+        //}
+      }
+
+      &-white {
+        //@include button(
+        //  $bgcolor: var(--white),
+        //  $hover-bg-color: var(--light),
+        //  $border-top-color: var(--white),
+        //  $border-bottom-color: var(--white),
+        //  $border-left-color: var(--white),
+        //  $border-right-color: var(--white),
+        //  $hover-border-top-color: var(--light),
+        //  $hover-border-bottom-color: var(--light),
+        //  $hover-border-left-color: var(--light),
+        //  $hover-border-right-color: var(--light),
+        //  $color: var(--secondary),
+        //  $hover-color: var(--primary),
+        //);
+        //
+        //&.ghost {
+        //  background-color: transparent;
+        //  color: var(--white);
+        //
+        //  &:hover {
+        //    background-color: var(--white);
+        //    border-color: var(--white);
+        //    color: var(--dark);
+        //  }
+        //}
+      }
+
+      &-outline-white {
+        // @include button(
+        //   $bgcolor: transparent,
+        //   $hover-bg-color: var(--white),
+        //   $border-top-color: var(--white),
+        //   $border-bottom-color: var(--white),
+        //   $border-left-color: var(--white),
+        //   $border-right-color: var(--white),
+        //   $hover-border-top-color: var(--light),
+        //   $hover-border-bottom-color: var(--light),
+        //   $hover-border-left-color: var(--light),
+        //   $hover-border-right-color: var(-light),
+        //   $color: var(--white),
+        //   $hover-color: var(--dark),
+        //   $padding: rem-calc(15px 24px),
+        //   $padding-hover: rem-calc(15px 24px),
+        //   $border-top-left-radius: rem-calc(12px),
+        //   $border-top-right-radius: rem-calc(12px),
+        //   $border-bottom-left-radius: rem-calc(12px),
+        //   $border-bottom-right-radius: rem-calc(12px),
+        //   $border-top-left-radius-hover: rem-calc(12px),
+        //   $border-top-right-radius-hover: rem-calc(12px),
+        //   $border-bottom-left-radius-hover: rem-calc(12px),
+        //   $border-bottom-right-radius-hover: rem-calc(12px),
+        // );
+      }
+
+      &-success {}
+
+      &-danger {}
+
+      &-warning {}
+
+      &-info {}
+
+      &-light {
+        // @include button(
+        //   $bgcolor: var(--light),
+        //   $hover-bg-color: var(--white),
+        //   $border-top-color: var(--light),
+        //   $border-bottom-color: var(--light),
+        //   $border-left-color: var(--light),
+        //   $border-right-color: var(--light),
+        //   $hover-border-top-color: var(--white),
+        //   $hover-border-bottom-color: var(--white),
+        //   $hover-border-left-color: var(--white),
+        //   $hover-border-right-color: var(-white),
+        //   $color: var(--dark),
+        //   $hover-color: var(--black),
+        //   $padding: rem-calc(15px 24px),
+        //   $padding-hover: rem-calc(15px 24px),
+        //   $border-top-left-radius: rem-calc(12px),
+        //   $border-top-right-radius: rem-calc(12px),
+        //   $border-bottom-left-radius: rem-calc(12px),
+        //   $border-bottom-right-radius: rem-calc(12px),
+        //   $border-top-left-radius-hover: rem-calc(12px),
+        //   $border-top-right-radius-hover: rem-calc(12px),
+        //   $border-bottom-left-radius-hover: rem-calc(12px),
+        //   $border-bottom-right-radius-hover: rem-calc(12px),
+        // );
+      }
+
+      &-outline-light {
+        // @include button(
+        //   $bgcolor: transparent,
+        //   $hover-bg-color: var(--light),
+        //   $border-top-color: var(--light),
+        //   $border-bottom-color: var(--light),
+        //   $border-left-color: var(--light),
+        //   $border-right-color: var(--light),
+        //   $hover-border-top-color: var(--light),
+        //   $hover-border-bottom-color: var(--light),
+        //   $hover-border-left-color: var(--light),
+        //   $hover-border-right-color: var(--light),
+        //   $color: var(--light),
+        //   $hover-color: var(--dark),
+        //   $padding: rem-calc(15px 24px),
+        //   $padding-hover: rem-calc(15px 24px),
+        // );
+      }
+
+      &-dark {
+        // @include button(
+        //   $bgcolor: var(--dark),
+        //   $hover-bg-color: var(--black),
+        //   $border-top-color: var(--dark),
+        //   $border-bottom-color: var(--dark),
+        //   $border-left-color: var(--dark),
+        //   $border-right-color: var(--dark),
+        //   $hover-border-top-color: var(--black),
+        //   $hover-border-bottom-color: var(--black),
+        //   $hover-border-left-color: var(--black),
+        //   $hover-border-right-color: var(-black),
+        //   $color: var(--light),
+        //   $hover-color: var(--white),
+        //   $padding: rem-calc(15px 24px),
+        //   $padding-hover: rem-calc(15px 24px),
+        //   $border-top-left-radius: rem-calc(12px),
+        //   $border-top-right-radius: rem-calc(12px),
+        //   $border-bottom-left-radius: rem-calc(12px),
+        //   $border-bottom-right-radius: rem-calc(12px),
+        //   $border-top-left-radius-hover: rem-calc(12px),
+        //   $border-top-right-radius-hover: rem-calc(12px),
+        //   $border-bottom-left-radius-hover: rem-calc(12px),
+        //   $border-bottom-right-radius-hover: rem-calc(12px),
+        // );
+      }
+
+      &-outline-dark {
+        // @include button(
+        //   $bgcolor: transparent,
+        //   $hover-bg-color: var(--dark),
+        //   $border-top-color: var(--dark),
+        //   $border-bottom-color: var(--dark),
+        //   $border-left-color: var(--dark),
+        //   $border-right-color: var(--dark),
+        //   $hover-border-top-color: var(--dark),
+        //   $hover-border-bottom-color: var(--dark),
+        //   $hover-border-left-color: var(--dark),
+        //   $hover-border-right-color: var(--dark),
+        //   $color: var(--dark),
+        //   $hover-color: var(--light),
+        //   $padding: rem-calc(15px 24px),
+        //   $padding-hover: rem-calc(15px 24px),
+        // );
+      }
+
+      &-link {
+        padding: 0;
+        border: none;
+        background-color: transparent;
+      }
+    }
+
+  }
+
+  &-block { // [FIX FOR DEPRECATED BOOTSTRAP 4 FUNCTIONALITY]
+    display: block;
+    width: 100%;
+  }
+
+  &--label {
+    vertical-align: middle;
+  }
+
+  .svg {
+    vertical-align: middle;
+    transition: color $transition-duration $transition-timing-function;
+  }
+
+}
+
+ .buttons-group {
+   text-align: center;
+
+   &.vertical {
+
+     .button {
+       margin-bottom: 30px;
+
+       &:last-child {
+         margin-bottom: 0;
+       }
+     }
+   }
+
+   &:not(.vertical) {
+
+     .button {
+       margin-right: 30px;
+
+       &:last-child {
+         margin-right: 0;
+       }
+     }
+   }
+ }

@@ -1,0 +1,273 @@
+// Custom styles for flickity carousel
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.flickity-carousel {
+  padding: rem-calc(0 70px);
+  opacity: 0;
+  transition: opacity, $transition-duration $transition-timing-function;
+  will-change: opacity;
+
+  // Before Flickity initializes, hide all slides after the first so the
+  // container height matches the post-init single-row height (prevents CLS).
+  // The whole carousel is opacity:0 at this point so nothing is visible anyway.
+  &:not(.flickity-enabled) {
+    > .carousel-cell ~ .carousel-cell {
+      display: none;
+    }
+  }
+
+  &:after {
+    @include remove;
+    // Enable Flickity
+    content: 'flickity';
+  }
+
+  &.has-arrows {
+    padding: rem-calc(0 70px);
+  }
+
+  &.flickity-enabled {
+    opacity: 1;
+
+    + .button--row {
+      opacity: 1;
+    }
+  }
+
+  &.is-draggable {}
+
+  &--wrapper {
+    position: relative;
+
+    .button {
+
+      &:focus {
+        // outline: none;
+      }
+
+      &:hover {
+        cursor: pointer;
+        background-color: c(gray, light);
+      }
+
+      &--row {
+        margin-top: rem-calc(25px);
+        text-align: center;
+        transition: opacity $transition-duration $transition-timing-function;
+        will-change: opacity;
+        opacity: 0;
+
+        @include media-breakpoint-up(lg) {
+          margin-top: rem-calc(30px);
+        }
+
+        .button {
+          @include fontSize(0);
+          display: inline-block;
+          border: none;
+          border-radius: 50%;
+          width: rem-calc(8px);
+          height: rem-calc(8px);
+          margin: rem-calc(0 4px);
+          padding: 0;
+          background-color: c(gray, light);
+        }
+      }
+
+      &--previous,
+      &--next {
+        @extend %fa-icon;
+        @extend %fa-solid;
+        position: relative;
+        background-color: c(white);
+        border: 3px solid c(gray, dark);
+        color: c(gray, light);
+        transition-property: background-color, border-top-color, border-bottom-color, border-left-color, border-right-color;
+        transition-duration: $transition-duration;
+        transition-timing-function: $transition-timing-function;
+        will-change: background-color;
+        width: rem-calc(45px);
+        height: rem-calc(45px);
+        margin: 0;
+
+        &:before {
+          @include absolute-center(true, true, true);
+          @include font($fontAwesome);
+          @include fontSize(16px);
+          color: c(gray, light);
+          transition: color, opacity;
+          transition-duration: $transition-duration;
+          transition-timing-function: $transition-timing-function;
+          will-change: color, opacity;
+        }
+
+        &:hover {
+          background-color: c(gray, light);
+          border-color: c(gray, light);
+
+          &:before {
+            color: c(white);
+          }
+        }
+      }
+
+      &--previous {
+        margin-right: 20px;
+
+        &:before {
+          content: fa-content($var-arrow-left);
+        }
+      }
+
+      &--next {
+        margin-left: 20px;
+
+        &:before {
+          content: fa-content($var-arrow-right);
+        }
+      }
+
+      &.is-selected {
+        background-color: c(gray, dark);
+      }
+
+      &--group {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .flickity-page-dots {
+    @include absolute-center(true, false, true);
+    //bottom: rem-calc(-53.5px);
+    bottom: 0;
+    max-width: calc(100% - 200px);
+
+    .dot,
+    .flickity-page-dot {  
+      display: inline-block;
+      width: rem-calc(8px);
+      height: rem-calc(8px);
+      background-color: c(gray, light);
+      margin: rem-calc(0 4px);
+
+      &:before {
+        content: none;
+      }
+
+      &.is-selected {
+        background-color: c(gray, dark);
+      }
+    }
+  }
+
+  .flickity-prev-next-button {
+    background-color: c(white);
+    border: rem-calc(3px) solid c(gray, dark);
+    color: c(gray, dark);
+    transition-property: background-color, border-top-color, border-bottom-color, border-left-color, border-right-color, opacity;
+    transition-duration: $transition-duration;
+    transition-timing-function: $transition-timing-function;
+    will-change: background-color, border-top-color, border-bottom-color, border-left-color, border-right-color, opacity;
+    width: rem-calc(45px);
+    height: rem-calc(45px);
+    opacity: 1;
+
+    &:hover {
+      background-color: c(gray, light);
+      border-color: c(gray, light);
+
+      path {
+        fill: c(white);
+      }
+    }
+
+    &:disabled {
+      //opacity: 1;
+      opacity: 0;
+
+      .button--previous,
+      .button--next {
+        //opacity: .25;
+        opacity: 0;
+      }
+    }
+
+    path {
+      fill: c(gray, dark);
+      transition-property: fill $transition-duration $transition-timing-function;
+      will-change: fill;
+    }
+
+    &.previous {}
+
+    &.next {}
+  }
+
+  .carousel-cell {
+    width: 100%;
+
+    .flickity-cols-1 & {}
+
+    .flickity-cols-2 & {
+      width: calc(100% / 2);
+    }
+
+    .flickity-cols-3 & {
+      width: calc(100% / 3);
+    }
+
+    .flickity-cols-4 & {
+      width: calc(100% / 4);
+    }
+
+    .flickity-cols-5 & {
+      width: calc(100% / 5);
+    }
+
+    .flickity-cols-6 & {
+      width: calc(100% / 6);
+    }
+
+    &.is-selected {}
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  &.image-lightbox-slider {
+    margin: 0;
+    padding: 0;
+
+    .flickity-page-dots {}
+
+    .carousel-cell {
+      width: 100%;
+
+      &.is-selected {}
+    }
+  }
+
+  &.image-lightbox-control {
+    margin: 0;
+    padding: 0;
+
+    .flickity-page-dots {}
+
+    .carousel-cell {
+      width: 50%;
+      margin: rem-calc(0 22px);
+
+      @include media-breakpoint-up(lg) {
+
+      }
+
+      &.is-selected {}
+    }
+  }
+}

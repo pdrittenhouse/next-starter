@@ -1,0 +1,60 @@
+/**
+ * Traveling CTA Styles
+ * Fixed position call-to-action that appears on scroll
+ */
+
+.traveling-cta {
+  @include absolute-position('bottom', 'inside');
+  position: fixed;
+  background-color: var(--white);
+  text-align: center;
+  z-index: z(site-footer);
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  transition: opacity $transition-duration $transition-timing-function;
+  overflow: hidden;
+
+  @include media-breakpoint-up(lg) {
+    //@include remove;
+  }
+
+  &.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  > .container {
+
+    > .row {
+
+      > .col {}
+    }
+  }
+
+  &.stretch-ctas {
+
+    .traveling-cta--button {
+      @include flex(1 1 auto);
+    }
+  }
+
+  &--ctas-wrapper {
+    //padding: rem-calc(21px 0 10px);
+  }
+
+  &--ctas {
+    @include flexbox;
+    @include flex-flow(row nowrap);
+    @include justify-content(space-between);
+  }
+
+  &--border {
+    @include absolute-position('top', 'inside');
+    @include remove;
+  }
+
+  &--button {
+    @include flex(0 0 auto);
+  }
+}

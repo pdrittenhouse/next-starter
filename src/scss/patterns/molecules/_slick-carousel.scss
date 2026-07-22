@@ -1,0 +1,231 @@
+// Custom styles for slick carousel
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+// Vendor CSS now loaded with lib-slick-carousel-css bundle
+// @import '~slick-carousel/slick/slick.scss';
+// @import '~slick-carousel/slick/slick-theme.scss';
+
+.slick-carousel {
+  opacity: 0;
+  transition: opacity, $transition-duration $transition-timing-function;
+  will-change: opacity;
+  padding: rem-calc(0 70px);
+  margin-bottom: 0;
+
+  // Before Slick initializes, hide all slides after the first so the
+  // container height matches the post-init single-row height (prevents CLS).
+  // The whole carousel is opacity:0 at this point so nothing is visible anyway.
+  &:not(.slick-initialized) {
+    > div ~ div {
+      display: none;
+    }
+  }
+
+  &.slick-initialized {
+    opacity: 1;
+  }
+
+  &.slick-slider {}
+
+  &.slick-dotted {
+    margin-bottom: rem-calc(30px);
+
+    + .slick-carousel-controls {
+      @include flexbox;
+      @include flex-flow(row nowrap);
+      @include align-items(center);
+      @include justify-content(center);
+
+      .slick-arrow {
+        @include flex(0 0 auto);
+        position: relative;
+        top: auto;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        transform: none;
+        vertical-align: middle;
+
+        &.slick-prev {
+          @include order(0);
+        }
+
+        &.slick-next {
+          @include order(2);
+        }
+      }
+
+      .slick-dots {
+        @include flex(0 0 auto);
+        @include order(1);
+        margin: rem-calc(0 17px);
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0;
+      }
+    }
+  }
+
+  &-wrapper {
+    //margin-bottom: rem-calc(75px);
+    position: relative;
+    max-width: 100vw;
+    overflow-x: clip;
+
+    &.show-custom-controls {
+
+      .slick-carousel {
+        padding: 0;
+      }
+    }
+  }
+
+  &-controls {
+    //@include absolute-position('bottom', 'inside');
+    //bottom: rem-calc(-30px);
+    margin-top: rem-calc(30px);
+
+    &:empty {
+      @include remove;
+    }
+  }
+
+  &-controls .slick-arrow,
+  .slick-arrow {
+    @extend %fa-icon;
+    @extend %fa-solid;
+    background-color: c(white);
+    border: rem-calc(3px) solid c(gray, light);
+    border-radius: 50%;
+    width: rem-calc(45px);
+    height: rem-calc(45px);
+    transition-property: background-color, border-top-color, border-bottom-color, border-left-color, border-right-color, opacity;
+    transition-duration: $transition-duration;
+    transition-timing-function: $transition-timing-function;
+    will-change: background-color, border-top-color, border-bottom-color, border-left-color, border-right-color, opacity;
+    z-index: z(site-content);
+    opacity: 1;
+
+    &:before {
+      @include absolute-center(true, true, true);
+      @include font($fontAwesome);
+      @include fontSize(16px);
+      color: c(gray, light);
+      transition: color $transition-duration $transition-timing-function;
+      will-change: color;
+    }
+
+    &:hover {
+      background-color: c(gray, light);
+      border-color: c(gray, light);
+
+      &:before {
+        color: white;
+      }
+    }
+
+    &.slick-disabled {
+      opacity: 0;
+    }
+
+    &.slick-prev {
+      left: 0;
+
+      &:before {
+        @include fontSize(32px);
+        content: fa-content($var-arrow-left);
+      }
+    }
+
+    &.slick-next {
+      right: 0;
+
+      &:before {
+        @include fontSize(32px);
+        content: fa-content($var-arrow-right);
+      }
+    }
+  }
+
+  &-controls .slick-dots,
+  .slick-dots {
+    width: auto;
+    left: 0;
+    right: 0;
+    bottom: rem-calc(-45px);
+    z-index: z(site-content);
+
+    &:not(.nav) {
+
+      > li {
+
+        &:before {
+          content: none;
+        }
+      }
+    }
+
+    li {
+      margin: 0;
+
+      button {
+      
+        &:before {}
+      }
+
+      &.slick-active {
+
+        button {
+
+          &:before {
+            color: c(gray, dark);
+          }
+        }
+      }
+    }
+
+    button {
+
+      &:before {
+        @include fontSize(8px);
+        opacity: 1;
+        color: c(gray, light);
+        transition: color $transition-duration $transition-timing-function;
+        will-change: color;
+      }
+    }
+  }
+
+  .slick-list {}
+
+  .slick-track {}
+
+  .slick-slide {
+    height: auto;
+
+    &.slick-current {}
+    
+    &:not(.slick-current) {
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    &.slick-active {}
+  }
+
+  &.testimonial-slider {
+    max-width: rem-calc(981px);
+    margin: 0 auto;
+
+    .slick-slide {}
+  }
+}

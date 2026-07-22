@@ -1,0 +1,24 @@
+// Custom styles for progress
+
+// The non-printing variables, functions, and mixins of 00-protons/variables
+// are provided to this file via:
+//   webpack.config.js: sass-loader.data|includePaths
+
+.progress {
+
+  &--wrapper {}
+
+  &--container {}
+
+  &--bar { // HTML5 progress bars
+    display: block;
+  }
+
+  &--label {
+    display: block;
+  }
+
+  &-bar { // Bootstrap progress bars
+
+  }
+}
