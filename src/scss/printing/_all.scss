@@ -3,7 +3,15 @@
 @import "css-variables";
 @import "synced-css-variables";
 @import "elements";
-@import "button";
 @import "animations";
 @import "type";
+@import "sprites";
+@import "01-atoms/all";
+@import "02-molecules/all";
+@import "03-organisms/all";
+@import "04-templates/all";
+@import "05-pages/all";
+@import "utilities";
 @import "print";
+@import "components/all";
+@import "wordpress/all";

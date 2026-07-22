@@ -1,0 +1,53 @@
+.buttons {
+  --#{$prefix}btn-padding-x: #{$btn-padding-x};
+  --#{$prefix}btn-padding-y: #{$btn-padding-y};
+  --#{$prefix}btn-font-family: #{$btn-font-family};
+  @include rfs($btn-font-size, --#{$prefix}btn-font-size);
+  --#{$prefix}btn-font-weight: #{$btn-font-weight};
+  --#{$prefix}btn-line-height: #{$btn-line-height};
+  --#{$prefix}btn-color: #{$body-color};
+  --#{$prefix}btn-bg: transparent;
+  --#{$prefix}btn-border-width: #{$btn-border-width};
+  --#{$prefix}btn-border-color: transparent;
+  --#{$prefix}btn-border-radius: #{$btn-border-radius};
+  --#{$prefix}btn-hover-border-color: transparent;
+  --#{$prefix}btn-box-shadow: #{$btn-box-shadow};
+  --#{$prefix}btn-disabled-opacity: #{$btn-disabled-opacity};
+  --#{$prefix}btn-focus-box-shadow: 0 0 0 #{$btn-focus-width} rgba(var(--#{$prefix}btn-focus-shadow-rgb), .5);
+}
+
+.button {
+  &:hover,
+  &:focus { text-decoration: none; }
+
+  &:not(.navbar-toggler) {
+    &.btn {
+      &-block { width: 100%; display: block; }
+      &-default { @include button(); &.ghost {} }
+      &-primary   {} &-secondary  {} &-tertiary   {} &-quaternary {}
+      &-quinary   {} &-senary     {} &-septenary  {} &-octonary   {}
+      &-nonary    {} &-denary     {} &-white      {}
+      &-success   {} &-danger     {} &-warning    {} &-info       {}
+      &-light     {} &-dark       {} &-link       {}
+    }
+  }
+
+  &--label { vertical-align: middle; }
+
+  .svg {
+    vertical-align: middle;
+    transition: color $transition-duration $transition-timing-function;
+  }
+}
+
+.buttons-group {
+  text-align: center;
+
+  &.vertical {
+    .button { margin-bottom: 30px; &:last-child { margin-bottom: 0; } }
+  }
+
+  &:not(.vertical) {
+    .button { margin-right: 30px; &:last-child { margin-right: 0; } }
+  }
+}
