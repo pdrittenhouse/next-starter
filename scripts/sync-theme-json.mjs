@@ -89,13 +89,16 @@ if (env.TIMBERLAND_THEMES_DIR) {
   try {
     const res = await fetch(url);
     if (!res.ok) {
-      console.error(`[sync-theme-json] HTTP ${res.status} ${res.statusText} — aborting.`);
-      process.exit(1);
+      // HTTP failure (e.g. host blocks direct .json access) — warn and keep the
+      // committed _global-styles.scss rather than breaking the build.
+      // Proper fix: add a timberland/v1/theme-json REST endpoint in the framework.
+      console.warn(`[sync-theme-json] HTTP ${res.status} — could not fetch theme.json. Using committed _global-styles.scss as-is.`);
+      process.exit(0);
     }
     themeJson = await res.json();
   } catch (err) {
-    console.error('[sync-theme-json] Fetch failed: ' + err.message);
-    process.exit(1);
+    console.warn('[sync-theme-json] Fetch failed: ' + err.message + ' — using committed _global-styles.scss as-is.');
+    process.exit(0);
   }
 }
 
