@@ -51,6 +51,7 @@ export default async function RootLayout({
     query GetGlobalCss {
       customizerCss
       fontOptionsCss
+      globalStylesCss
       customizerSettings { customCss }
     }
   `;
@@ -58,10 +59,12 @@ export default async function RootLayout({
   const { data: cssData } = await fetchGraphQL<{
     customizerCss: string | null;
     fontOptionsCss: string | null;
+    globalStylesCss: string | null;
     customizerSettings: { customCss: string | null } | null;
   }>(print(GET_GLOBAL_CSS)).catch(() => ({ data: null })) as any;
 
   const globalCss = [
+    cssData?.globalStylesCss,
     cssData?.customizerCss,
     cssData?.fontOptionsCss,
     cssData?.customizerSettings?.customCss,

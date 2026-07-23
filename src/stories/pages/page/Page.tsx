@@ -18,7 +18,7 @@ import {
   GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
   GET_ALL_REUSABLE_BLOCKS,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
-  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS, GET_SCSS_UTILS, GET_PATTERN_STYLES,
+  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS, GET_GLOBAL_STYLES_CSS, GET_SCSS_UTILS, GET_PATTERN_STYLES,
   GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
   GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
   GET_ALL_GRAVITY_FORMS,
@@ -70,6 +70,7 @@ export const Page: React.FC = () => {
   const { loading: spritemapIconsLoading, error: spritemapIconsError, data: spritemapIconsData } = useQuery(GET_SPRITEMAP_ICONS)
   const { loading: customizerCssLoading, error: customizerCssError, data: customizerCssData } = useQuery(GET_CUSTOMIZER_CSS)
   const { loading: fontOptionsCssLoading, error: fontOptionsCssError, data: fontOptionsCssData } = useQuery(GET_FONT_OPTIONS_CSS)
+  const { loading: globalStylesCssLoading, error: globalStylesCssError, data: globalStylesCssData } = useQuery(GET_GLOBAL_STYLES_CSS)
   const { loading: scssUtilsLoading, error: scssUtilsError, data: scssUtilsData } = useQuery(GET_SCSS_UTILS)
   const { loading: patternStylesLoading, error: patternStylesError, data: patternStylesData } = useQuery(GET_PATTERN_STYLES)
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
@@ -528,6 +529,14 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Spritemap Icons</summary>
                       <pre>{JSON.stringify(spritemapIconsData.spritemapIcons, null, 2)}</pre>
+                    </details>
+                  )}
+                  {globalStylesCssLoading ? <p>Loading global styles CSS...</p> : globalStylesCssError ? (
+                    <p style={{color: 'red'}}>Global Styles CSS Error: {globalStylesCssError.message}</p>
+                  ) : globalStylesCssData && (
+                    <details>
+                      <summary>Global Styles CSS</summary>
+                      <pre>{globalStylesCssData.globalStylesCss}</pre>
                     </details>
                   )}
                   {customizerCssLoading ? <p>Loading customizer CSS...</p> : customizerCssError ? (

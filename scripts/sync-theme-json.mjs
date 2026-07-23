@@ -1,28 +1,23 @@
 #!/usr/bin/env node
 /**
- * Reads the active child theme's theme.json from the WordPress install and
- * generates src/scss/printing/wordpress/_global-styles.scss.
+ * Fetches compiled global-styles preset CSS from the Timberland REST endpoint
+ * and writes it to src/scss/printing/wordpress/_global-styles.scss.
  *
- * Generates:
- *   --wp--preset--color--* CSS custom properties (from settings.color.palette)
- *   --wp--preset--font-size--* CSS custom properties (from settings.typography.fontSizes)
- *   .has-{slug}-background-color / .has-{slug}-color / .has-{slug}-border-color utility classes
- *   .has-{slug}-font-size utility classes
+ * The endpoint (timberland/v1/global-styles) calls wp_get_global_stylesheet(['presets'])
+ * on the WP side, which generates the canonical CSS from theme.json:
+ *   --wp--preset--color--*  CSS custom properties
+ *   --wp--preset--font-size--* CSS custom properties
+ *   .has-*  utility classes (background-color, color, border-color, font-size)
  *
- * These mirror what WordPress outputs at runtime from theme.json.
- * Required in headless because WP's runtime CSS is not available.
+ * These mirror what WordPress outputs at runtime for traditional themes.
+ * Required in headless because WP's runtime CSS is not loaded in the Next.js app.
  *
  * Configuration (.env.local):
- *   TIMBERLAND_CHILD_SLUG  — child theme directory slug (e.g. natural-rose)
- *   TIMBERLAND_THEMES_DIR  — absolute path to wp-content/themes/ on disk (preferred;
- *                            avoids HTTP access which Local/nginx often blocks for .json)
- *                            e.g. /Users/you/Local Sites/my-site/app/public/wp-content/themes
- *   TIMBERLAND_API_URL     — WP install URL; used as fallback when TIMBERLAND_THEMES_DIR
- *                            is not set (fetches theme.json via HTTP)
+ *   TIMBERLAND_API_URL  — WP install URL (e.g. http://headless-test.local)
  *   SYNC_THEME_JSON=false  — skip this script
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
 import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -56,125 +51,49 @@ if (env.SYNC_THEME_JSON === 'false') {
   process.exit(0);
 }
 
-if (!env.TIMBERLAND_CHILD_SLUG) {
-  console.log('[sync-theme-json] TIMBERLAND_CHILD_SLUG not set — skipped. Add it to .env.local (e.g. TIMBERLAND_CHILD_SLUG=natural-rose).');
-  process.exit(0);
-}
-
-if (!env.TIMBERLAND_THEMES_DIR && !env.TIMBERLAND_API_URL) {
-  console.log('[sync-theme-json] Neither TIMBERLAND_THEMES_DIR nor TIMBERLAND_API_URL is set — skipped. Add one to .env.local to enable.');
+if (!env.TIMBERLAND_API_URL) {
+  console.log('[sync-theme-json] TIMBERLAND_API_URL not set — skipped. Add it to .env.local (e.g. TIMBERLAND_API_URL=http://my-site.local).');
   process.exit(0);
 }
 
 // ---------------------------------------------------------------------------
-// Read theme.json — filesystem preferred, HTTP fallback
-// Local nginx/Apache often blocks direct access to .json files in wp-content/themes/,
-// so TIMBERLAND_THEMES_DIR (absolute path to the themes directory) is the reliable option.
+// Fetch from timberland/v1/global-styles REST endpoint
 // ---------------------------------------------------------------------------
-let themeJson;
+const base = env.TIMBERLAND_API_URL.replace(/\/$/, '');
+const url  = `${base}/wp-json/timberland/v1/global-styles`;
 
-if (env.TIMBERLAND_THEMES_DIR) {
-  const fsPath = join(env.TIMBERLAND_THEMES_DIR, env.TIMBERLAND_CHILD_SLUG, 'theme.json');
-  console.log('[sync-theme-json] Reading ' + fsPath);
-  try {
-    themeJson = JSON.parse(readFileSync(fsPath, 'utf8'));
-  } catch (err) {
-    console.error('[sync-theme-json] Could not read theme.json from disk: ' + err.message);
-    process.exit(1);
-  }
-} else {
-  const base = env.TIMBERLAND_API_URL.replace(/\/$/, '');
-  const url  = `${base}/wp-content/themes/${env.TIMBERLAND_CHILD_SLUG}/theme.json`;
-  console.log('[sync-theme-json] Fetching ' + url);
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      // HTTP failure (e.g. host blocks direct .json access) — warn and keep the
-      // committed _global-styles.scss rather than breaking the build.
-      // Proper fix: add a timberland/v1/theme-json REST endpoint in the framework.
-      console.warn(`[sync-theme-json] HTTP ${res.status} — could not fetch theme.json. Using committed _global-styles.scss as-is.`);
-      process.exit(0);
-    }
-    themeJson = await res.json();
-  } catch (err) {
-    console.warn('[sync-theme-json] Fetch failed: ' + err.message + ' — using committed _global-styles.scss as-is.');
+console.log('[sync-theme-json] Fetching ' + url);
+
+let css;
+try {
+  const res = await fetch(url);
+  if (!res.ok) {
+    console.warn(`[sync-theme-json] HTTP ${res.status} from ${url} — using committed _global-styles.scss as-is.`);
     process.exit(0);
   }
-}
-
-// ---------------------------------------------------------------------------
-// Extract palette and font sizes
-// ---------------------------------------------------------------------------
-const palette   = themeJson?.settings?.color?.palette   ?? [];
-const fontSizes = themeJson?.settings?.typography?.fontSizes ?? [];
-
-if (palette.length === 0 && fontSizes.length === 0) {
-  console.log('[sync-theme-json] No color palette or font sizes found in theme.json — nothing to generate.');
+  const data = await res.json();
+  css = data?.css ?? '';
+} catch (err) {
+  console.warn('[sync-theme-json] Fetch failed: ' + err.message + ' — using committed _global-styles.scss as-is.');
   process.exit(0);
 }
 
-// ---------------------------------------------------------------------------
-// Generate SCSS
-// ---------------------------------------------------------------------------
-const lines = [
-  `// AUTO-GENERATED — run \`npm run sync-theme-json\` to update.`,
-  `// Source: ${env.TIMBERLAND_CHILD_SLUG}/theme.json`,
-  `// Mirrors CSS that WordPress generates at runtime from theme.json settings.`,
-  `// Required in headless because WP's runtime global-styles CSS is not loaded.`,
-  `//`,
-  `// Color palette entries: ${palette.length}`,
-  `// Font size entries:     ${fontSizes.length}`,
-  ``,
-];
-
-// CSS custom properties
-if (palette.length > 0 || fontSizes.length > 0) {
-  lines.push(`:root {`);
-
-  if (palette.length > 0) {
-    lines.push(`  // Color palette — mirrors theme.json settings.color.palette`);
-    for (const { slug, color } of palette) {
-      lines.push(`  --wp--preset--color--${slug}: ${color};`);
-    }
-  }
-
-  if (palette.length > 0 && fontSizes.length > 0) {
-    lines.push('');
-  }
-
-  if (fontSizes.length > 0) {
-    lines.push(`  // Font sizes — mirrors theme.json settings.typography.fontSizes`);
-    for (const { slug, size } of fontSizes) {
-      lines.push(`  --wp--preset--font-size--${slug}: ${size};`);
-    }
-  }
-
-  lines.push(`}`, ``);
-}
-
-// Color utility classes
-if (palette.length > 0) {
-  lines.push(`// Color utility classes — applied to blocks when a color is set in the editor`);
-  for (const { slug } of palette) {
-    lines.push(`// ${slug}`);
-    lines.push(`.has-${slug}-background-color { background-color: var(--wp--preset--color--${slug}) !important; }`);
-    lines.push(`.has-${slug}-color             { color: var(--wp--preset--color--${slug}) !important; }`);
-    lines.push(`.has-${slug}-border-color      { border-color: var(--wp--preset--color--${slug}) !important; }`);
-  }
-  lines.push('');
-}
-
-// Font size utility classes
-if (fontSizes.length > 0) {
-  lines.push(`// Font size utility classes`);
-  for (const { slug } of fontSizes) {
-    lines.push(`.has-${slug}-font-size { font-size: var(--wp--preset--font-size--${slug}) !important; }`);
-  }
-  lines.push('');
+if (!css) {
+  console.log('[sync-theme-json] Empty CSS returned — nothing to write.');
+  process.exit(0);
 }
 
 // ---------------------------------------------------------------------------
 // Write
 // ---------------------------------------------------------------------------
-writeFileSync(OUTPUT_FILE, lines.join('\n'), 'utf8');
-console.log(`[sync-theme-json] Wrote _global-styles.scss (${palette.length} colors, ${fontSizes.length} font sizes).`);
+const header = [
+  `// AUTO-GENERATED — run \`npm run sync-theme-json\` to update.`,
+  `// Source: ${url}`,
+  `// Generated by wp_get_global_stylesheet(['variables', 'presets']) — includes --wp--preset--*`,
+  `// CSS custom properties and .has-* utility classes from theme.json.`,
+  ``,
+  ``,
+].join('\n');
+
+writeFileSync(OUTPUT_FILE, header + css + '\n', 'utf8');
+console.log('[sync-theme-json] Wrote _global-styles.scss.');
