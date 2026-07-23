@@ -75,6 +75,7 @@ export const GET_ALL_PAGES = gql`
             clientId
             parentClientId
             renderedHtml
+            attributesJSON
           }
           seo {
             title

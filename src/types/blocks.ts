@@ -1,10 +1,4 @@
-export interface EditorBlock {
-  name: string;
-  clientId: string;
-  parentClientId: string | null;
-  renderedHtml: string;
-  attributesJSON?: string | null;
-}
+export type { WpEditorBlock as EditorBlock } from '@/lib/wp/types/common';
 
 export type BlockAttributes = Record<string, unknown>;
 

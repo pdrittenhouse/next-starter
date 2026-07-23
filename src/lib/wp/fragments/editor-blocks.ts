@@ -7,6 +7,7 @@ export const EDITOR_BLOCK_FIELDS = gql`
     clientId
     parentClientId
     renderedHtml
+    attributesJSON
   }
 `;
 
@@ -19,5 +20,6 @@ export const EDITOR_BLOCKS_SELECTION = `
     clientId
     parentClientId
     renderedHtml
+    attributesJSON
   }
 `;

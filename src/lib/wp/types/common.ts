@@ -54,6 +54,7 @@ export interface WpEditorBlock {
   clientId: string;
   parentClientId?: string;
   renderedHtml?: string;
+  attributesJSON?: string | null;
 }
 
 /** Per-content SEO data (Yoast/RankMath via custom resolver). */
