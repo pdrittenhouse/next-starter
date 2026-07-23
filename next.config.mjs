@@ -19,8 +19,8 @@ const nextConfig = {
     sassOptions: {
         // loadPaths is the Dart Sass / Turbopack key; includePaths was webpack/node-sass.
         // Both are kept so the config works if webpack mode is ever used.
-        loadPaths: [path.join(__dirname, 'src', 'scss')],
-        includePaths: [path.join(__dirname, 'src', 'scss')],
+        loadPaths: [path.join(__dirname, 'src', 'scss'), path.join(__dirname, 'node_modules')],
+        includePaths: [path.join(__dirname, 'src', 'scss'), path.join(__dirname, 'node_modules')],
         additionalData: '@use "variables" as *;\n',
         silenceDeprecations: ['legacy-js-api', 'global-builtin', 'import', 'if-function', 'color-functions'],
     },

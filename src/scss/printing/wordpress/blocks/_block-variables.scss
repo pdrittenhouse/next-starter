@@ -1,0 +1,10 @@
+// @wordpress/base-styles does not use !default, so its variables cannot be
+// overridden via @use ... with (). To shadow them, create local files at
+// src/scss/@wordpress/base-styles/_breakpoints.scss etc. — Sass checks
+// src/scss before node_modules (per loadPaths order) and uses the local copy.
+//
+// Example: src/scss/@wordpress/base-styles/_breakpoints.scss
+//   $break-huge:   1200px;  // Bootstrap $xl
+//   $break-large:  992px;   // Bootstrap $lg
+//   $break-medium: 768px;   // Bootstrap $md
+//   $break-small:  576px;   // Bootstrap $sm

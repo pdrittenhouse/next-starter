@@ -4,6 +4,7 @@ import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_ADJACENT_POSTS } from '@/lib/wp/queries';
 import { PageHeader } from './partials/page-header';
 import { Comments } from './partials/comments';
+import { BlockRenderer } from './partials/block-renderer';
 
 interface SingleTemplateProps {
   node: {
@@ -95,15 +96,17 @@ export async function SingleTemplate({ node }: SingleTemplateProps) {
           thumbnail={node.featuredImage?.node}
         />
 
-        {node.content && (
+        {(node.editorBlocks?.length || node.content) && (
           <section className="article-content">
             <div className="article-content--container">
               <div className="article-content--row">
                 <div className="article-content--column">
-                  <div
-                    className="article-body"
-                    dangerouslySetInnerHTML={{ __html: node.content }}
-                  />
+                  <div className="article-body">
+                    {node.editorBlocks?.length
+                      ? <BlockRenderer blocks={node.editorBlocks} />
+                      : <div dangerouslySetInnerHTML={{ __html: node.content ?? '' }} />
+                    }
+                  </div>
                 </div>
               </div>
             </div>
