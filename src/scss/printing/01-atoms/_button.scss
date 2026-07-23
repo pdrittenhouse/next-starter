@@ -1,3 +1,5 @@
+@use "../../variables" as *;
+
 .buttons {
   --#{$prefix}btn-padding-x: #{$btn-padding-x};
   --#{$prefix}btn-padding-y: #{$btn-padding-y};
