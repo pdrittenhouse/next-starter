@@ -1,61 +1,92 @@
-// Replicates CSS variables and utility classes that WordPress generates from theme.json.
-// WP outputs these at runtime; in headless they must be declared statically.
-// Mirrors natural-rose/theme.json — update both when theme.json changes.
+// AUTO-GENERATED — run `npm run sync-theme-json` to update.
+// Source: natural-rose/theme.json
+// Mirrors CSS that WordPress generates at runtime from theme.json settings.
+// Required in headless because WP's runtime global-styles CSS is not loaded.
 //
-// Color palette values reference existing CSS custom properties (set in _css-variables.scss),
-// so no SCSS variables are needed here — everything chains through CSS vars at runtime.
-
-// ---------------------------------------------------------------------------
-// Color palette — mirrors theme.json settings.color.palette slugs
-// ---------------------------------------------------------------------------
-
-$-color-slugs: (
-  'primary', 'secondary', 'tertiary', 'quaternary', 'quinary',
-  'senary', 'septenary', 'octonary', 'nonary', 'denary',
-  'light', 'dark', 'transparent'
-);
-
-// ---------------------------------------------------------------------------
-// Font sizes — mirrors theme.json settings.typography.fontSizes
-// Values use --paragraph-font-size which is defined in _css-variables.scss
-// ---------------------------------------------------------------------------
-
-$-font-sizes: (
-  'small':      'calc(var(--paragraph-font-size) * .75)',
-  'medium':     'calc(var(--paragraph-font-size) * .875)',
-  'regular':    'var(--paragraph-font-size)',
-  'extralarge': 'calc(var(--paragraph-font-size) * 1.5)',
-  'huge':       'calc(var(--paragraph-font-size) * 2.125)',
-);
-
-// ---------------------------------------------------------------------------
-// CSS custom properties
-// ---------------------------------------------------------------------------
+// Color palette entries: 13
+// Font size entries:     5
 
 :root {
-  @each $slug in $-color-slugs {
-    --wp--preset--color--#{$slug}: var(--#{$slug});
-  }
+  // Color palette — mirrors theme.json settings.color.palette
+  --wp--preset--color--primary: var(--primary);
+  --wp--preset--color--secondary: var(--secondary);
+  --wp--preset--color--tertiary: var(--tertiary);
+  --wp--preset--color--quaternary: var(--quaternary);
+  --wp--preset--color--quinary: var(--quinary);
+  --wp--preset--color--senary: var(--senary);
+  --wp--preset--color--septenary: var(--septenary);
+  --wp--preset--color--octonary: var(--octonary);
+  --wp--preset--color--nonary: var(--nonary);
+  --wp--preset--color--denary: var(--denary);
+  --wp--preset--color--light: var(--light);
+  --wp--preset--color--dark: var(--dark);
+  --wp--preset--color--transparent: var(--transparent);
 
-  @each $slug, $size in $-font-sizes {
-    --wp--preset--font-size--#{$slug}: #{$size};
-  }
+  // Font sizes — mirrors theme.json settings.typography.fontSizes
+  --wp--preset--font-size--small: calc(var(--paragraph-font-size) * .75);
+  --wp--preset--font-size--medium: calc(var(--paragraph-font-size) * .875);
+  --wp--preset--font-size--regular: var(--paragraph-font-size);
+  --wp--preset--font-size--extralarge: calc(var(--paragraph-font-size) * 1.5);
+  --wp--preset--font-size--huge: calc(var(--paragraph-font-size) * 2.125);
 }
 
-// ---------------------------------------------------------------------------
 // Color utility classes — applied to blocks when a color is set in the editor
-// ---------------------------------------------------------------------------
+// primary
+.has-primary-background-color { background-color: var(--wp--preset--color--primary) !important; }
+.has-primary-color             { color: var(--wp--preset--color--primary) !important; }
+.has-primary-border-color      { border-color: var(--wp--preset--color--primary) !important; }
+// secondary
+.has-secondary-background-color { background-color: var(--wp--preset--color--secondary) !important; }
+.has-secondary-color             { color: var(--wp--preset--color--secondary) !important; }
+.has-secondary-border-color      { border-color: var(--wp--preset--color--secondary) !important; }
+// tertiary
+.has-tertiary-background-color { background-color: var(--wp--preset--color--tertiary) !important; }
+.has-tertiary-color             { color: var(--wp--preset--color--tertiary) !important; }
+.has-tertiary-border-color      { border-color: var(--wp--preset--color--tertiary) !important; }
+// quaternary
+.has-quaternary-background-color { background-color: var(--wp--preset--color--quaternary) !important; }
+.has-quaternary-color             { color: var(--wp--preset--color--quaternary) !important; }
+.has-quaternary-border-color      { border-color: var(--wp--preset--color--quaternary) !important; }
+// quinary
+.has-quinary-background-color { background-color: var(--wp--preset--color--quinary) !important; }
+.has-quinary-color             { color: var(--wp--preset--color--quinary) !important; }
+.has-quinary-border-color      { border-color: var(--wp--preset--color--quinary) !important; }
+// senary
+.has-senary-background-color { background-color: var(--wp--preset--color--senary) !important; }
+.has-senary-color             { color: var(--wp--preset--color--senary) !important; }
+.has-senary-border-color      { border-color: var(--wp--preset--color--senary) !important; }
+// septenary
+.has-septenary-background-color { background-color: var(--wp--preset--color--septenary) !important; }
+.has-septenary-color             { color: var(--wp--preset--color--septenary) !important; }
+.has-septenary-border-color      { border-color: var(--wp--preset--color--septenary) !important; }
+// octonary
+.has-octonary-background-color { background-color: var(--wp--preset--color--octonary) !important; }
+.has-octonary-color             { color: var(--wp--preset--color--octonary) !important; }
+.has-octonary-border-color      { border-color: var(--wp--preset--color--octonary) !important; }
+// nonary
+.has-nonary-background-color { background-color: var(--wp--preset--color--nonary) !important; }
+.has-nonary-color             { color: var(--wp--preset--color--nonary) !important; }
+.has-nonary-border-color      { border-color: var(--wp--preset--color--nonary) !important; }
+// denary
+.has-denary-background-color { background-color: var(--wp--preset--color--denary) !important; }
+.has-denary-color             { color: var(--wp--preset--color--denary) !important; }
+.has-denary-border-color      { border-color: var(--wp--preset--color--denary) !important; }
+// light
+.has-light-background-color { background-color: var(--wp--preset--color--light) !important; }
+.has-light-color             { color: var(--wp--preset--color--light) !important; }
+.has-light-border-color      { border-color: var(--wp--preset--color--light) !important; }
+// dark
+.has-dark-background-color { background-color: var(--wp--preset--color--dark) !important; }
+.has-dark-color             { color: var(--wp--preset--color--dark) !important; }
+.has-dark-border-color      { border-color: var(--wp--preset--color--dark) !important; }
+// transparent
+.has-transparent-background-color { background-color: var(--wp--preset--color--transparent) !important; }
+.has-transparent-color             { color: var(--wp--preset--color--transparent) !important; }
+.has-transparent-border-color      { border-color: var(--wp--preset--color--transparent) !important; }
 
-@each $slug in $-color-slugs {
-  .has-#{$slug}-background-color { background-color: var(--wp--preset--color--#{$slug}) !important; }
-  .has-#{$slug}-color             { color: var(--wp--preset--color--#{$slug}) !important; }
-  .has-#{$slug}-border-color      { border-color: var(--wp--preset--color--#{$slug}) !important; }
-}
-
-// ---------------------------------------------------------------------------
 // Font size utility classes
-// ---------------------------------------------------------------------------
-
-@each $slug, $_ in $-font-sizes {
-  .has-#{$slug}-font-size { font-size: var(--wp--preset--font-size--#{$slug}) !important; }
-}
+.has-small-font-size { font-size: var(--wp--preset--font-size--small) !important; }
+.has-medium-font-size { font-size: var(--wp--preset--font-size--medium) !important; }
+.has-regular-font-size { font-size: var(--wp--preset--font-size--regular) !important; }
+.has-extralarge-font-size { font-size: var(--wp--preset--font-size--extralarge) !important; }
+.has-huge-font-size { font-size: var(--wp--preset--font-size--huge) !important; }

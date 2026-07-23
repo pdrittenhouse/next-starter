@@ -13,9 +13,13 @@
  * Required in headless because WP's runtime CSS is not available.
  *
  * Configuration (.env.local):
- *   TIMBERLAND_API_URL   — WP install URL (also used by other sync scripts)
- *   TIMBERLAND_CHILD_SLUG — child theme directory slug (e.g. natural-rose)
- *   SYNC_THEME_JSON=false — skip this script
+ *   TIMBERLAND_CHILD_SLUG  — child theme directory slug (e.g. natural-rose)
+ *   TIMBERLAND_THEMES_DIR  — absolute path to wp-content/themes/ on disk (preferred;
+ *                            avoids HTTP access which Local/nginx often blocks for .json)
+ *                            e.g. /Users/you/Local Sites/my-site/app/public/wp-content/themes
+ *   TIMBERLAND_API_URL     — WP install URL; used as fallback when TIMBERLAND_THEMES_DIR
+ *                            is not set (fetches theme.json via HTTP)
+ *   SYNC_THEME_JSON=false  — skip this script
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'fs';
@@ -52,35 +56,47 @@ if (env.SYNC_THEME_JSON === 'false') {
   process.exit(0);
 }
 
-if (!env.TIMBERLAND_API_URL) {
-  console.log('[sync-theme-json] TIMBERLAND_API_URL not set — skipped. Add it to .env.local to enable.');
-  process.exit(0);
-}
-
 if (!env.TIMBERLAND_CHILD_SLUG) {
   console.log('[sync-theme-json] TIMBERLAND_CHILD_SLUG not set — skipped. Add it to .env.local (e.g. TIMBERLAND_CHILD_SLUG=natural-rose).');
   process.exit(0);
 }
 
-// ---------------------------------------------------------------------------
-// Fetch
-// ---------------------------------------------------------------------------
-const base = env.TIMBERLAND_API_URL.replace(/\/$/, '');
-const url  = `${base}/wp-content/themes/${env.TIMBERLAND_CHILD_SLUG}/theme.json`;
+if (!env.TIMBERLAND_THEMES_DIR && !env.TIMBERLAND_API_URL) {
+  console.log('[sync-theme-json] Neither TIMBERLAND_THEMES_DIR nor TIMBERLAND_API_URL is set — skipped. Add one to .env.local to enable.');
+  process.exit(0);
+}
 
-console.log('[sync-theme-json] Fetching ' + url);
-
+// ---------------------------------------------------------------------------
+// Read theme.json — filesystem preferred, HTTP fallback
+// Local nginx/Apache often blocks direct access to .json files in wp-content/themes/,
+// so TIMBERLAND_THEMES_DIR (absolute path to the themes directory) is the reliable option.
+// ---------------------------------------------------------------------------
 let themeJson;
-try {
-  const res = await fetch(url);
-  if (!res.ok) {
-    console.error(`[sync-theme-json] HTTP ${res.status} ${res.statusText} — aborting.`);
+
+if (env.TIMBERLAND_THEMES_DIR) {
+  const fsPath = join(env.TIMBERLAND_THEMES_DIR, env.TIMBERLAND_CHILD_SLUG, 'theme.json');
+  console.log('[sync-theme-json] Reading ' + fsPath);
+  try {
+    themeJson = JSON.parse(readFileSync(fsPath, 'utf8'));
+  } catch (err) {
+    console.error('[sync-theme-json] Could not read theme.json from disk: ' + err.message);
     process.exit(1);
   }
-  themeJson = await res.json();
-} catch (err) {
-  console.error('[sync-theme-json] Fetch failed: ' + err.message);
-  process.exit(1);
+} else {
+  const base = env.TIMBERLAND_API_URL.replace(/\/$/, '');
+  const url  = `${base}/wp-content/themes/${env.TIMBERLAND_CHILD_SLUG}/theme.json`;
+  console.log('[sync-theme-json] Fetching ' + url);
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error(`[sync-theme-json] HTTP ${res.status} ${res.statusText} — aborting.`);
+      process.exit(1);
+    }
+    themeJson = await res.json();
+  } catch (err) {
+    console.error('[sync-theme-json] Fetch failed: ' + err.message);
+    process.exit(1);
+  }
 }
 
 // ---------------------------------------------------------------------------
