@@ -34,7 +34,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
-const OUT          = join(root, 'src', 'scss', 'non-printing', '_synced.generated.scss');
+const OUT          = join(root, 'src', 'scss', '_synced.generated.scss');
 const OUT_PRINTING = join(root, 'src', 'scss', 'printing', '_synced-css-variables.scss');
 
 // Bootstrap scalar variables. Always written — null if WP theme doesn't set them.

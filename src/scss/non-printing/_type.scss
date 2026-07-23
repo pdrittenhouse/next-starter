@@ -6,7 +6,7 @@
 // TODO: Add @font-face generation
 // @link: https://github.com/jonathantneal/postcss-font-magician
 
-@use "synced.generated" as s;
+@use "./synced.generated" as s;
 
 $baseFontSize: 16px;
 

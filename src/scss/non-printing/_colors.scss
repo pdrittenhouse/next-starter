@@ -24,7 +24,7 @@
 // Color Names: http://chir.ag/projects/name-that-color
 //
 
-@use "synced.generated" as s;
+@use "./synced.generated" as s;
 
 // Local fallback palette — project-specific colors always present.
 // Synced colors from WP are merged on top; local-only entries (e.g. guardsman-red) are preserved.

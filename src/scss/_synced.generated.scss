@@ -1,0 +1,188 @@
+// AUTO-GENERATED — do not edit manually.
+// Source: http://headless-test.local/wp-json/timberland/v1/design-tokens
+// Run `npm run sync-tokens` to refresh.
+//
+// Scalar and map tokens are always written.
+// null = WP theme uses Bootstrap default; consumer files if() fall back to their own value.
+
+// --- Bootstrap scalar tokens ---
+$line-height-base: 1.4 !default;
+$h1-font-size: 74px !default;
+$h2-font-size: 52.66666672px !default;
+$h3-font-size: 48.66666672px !default;
+$h4-font-size: 43.333328px !default;
+$h5-font-size: 22.6666672px !default;
+$h6-font-size: 18px !default;
+$font-family-base: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$headings-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$link-color: rgb(0, 0, 0) !default;
+$link-hover-color: rgb(255, 102, 0) !default;
+$btn-border-radius: 0 !default;
+$body-bg: rgb(255, 255, 255) !default;
+$body-color: rgb(0, 0, 0) !default;
+$font-size-base: 16px !default;
+$font-size-lg: 20px !default;
+$font-size-sm: 14px !default;
+
+// --- Font stack tokens ---
+$font-stack-serif: Georgia, Times, "Times New Roman", serif !default;
+$font-stack-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-stack-base: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-stack-headings: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-stack-monospace: Courier, monospace !default;
+$font-stack-code: Courier, monospace !default;
+$font-stack-buttons: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+// --- Font weight tokens ---
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-bold: 700 !default;
+
+// --- Synced map tokens ---
+$grid-breakpoints: (
+  "xs": 0,
+  "sm": 18.75rem,
+  "md": 33.75rem,
+  "lg": 48rem,
+  "xl": 64rem,
+  "xxl": 75rem,
+  "xxxl": 90rem,
+  "xxxxl": 111.25rem,
+  "xxxxxl": 150rem,
+) !default;
+$container-max-widths: (
+  "sm": 23.25em,
+  "md": 30em,
+  "lg": 45em,
+  "xl": 56.25em,
+  "xxl": 67.5em,
+  "xxxl": 80em,
+  "xxxxl": 93.75em,
+  "xxxxxl": 131.25em,
+) !default;
+$spacers: (
+  0: 0,
+  1: 0.125rem,
+  2: 0.25rem,
+  3: 0.5rem,
+  4: 0.625rem,
+  5: 0.75rem,
+  6: 1rem,
+  7: 1.25rem,
+  8: 1.5rem,
+  9: 1.75rem,
+  10: 2rem,
+  11: 2.25rem,
+  12: 2.5rem,
+  13: 2.75rem,
+  14: 3rem,
+  15: 4rem,
+  16: 5rem,
+  17: 6rem,
+  18: 7rem,
+  19: 8rem,
+  20: 9rem,
+  21: 10rem,
+  22: 11rem,
+  23: 12rem,
+  24: 18rem,
+  25: 20rem,
+  26: 24rem,
+  27: 26rem,
+  28: 28rem,
+  29: 30rem,
+  30: 32rem,
+  31: 34rem,
+  32: 36rem,
+  33: 38rem,
+  34: 40rem,
+  35: 50rem,
+  36: 60rem,
+  37: 70rem,
+  38: 80rem,
+  39: 90rem,
+  40: 100rem,
+) !default;
+$theme-colors: (
+  "primary": rgb(254, 93, 4),
+  "secondary": rgb(0, 157, 196),
+  "tertiary": rgb(58, 55, 49),
+  "quaternary": rgb(181, 3, 53),
+  "quinary": rgb(255, 102, 0),
+  "senary": rgb(181, 3, 53),
+  "septenary": rgb(0, 157, 196),
+  "octonary": rgb(58, 55, 49),
+  "nonary": rgb(181, 3, 53),
+  "denary": rgb(255, 102, 0),
+  "success": rgb(144, 238, 144),
+  "info": rgb(255, 255, 0),
+  "warning": rgb(255, 192, 203),
+  "danger": rgb(255, 0, 0),
+  "light": rgb(236, 236, 236),
+  "dark": rgb(128, 128, 128),
+  "white": rgb(255, 255, 255),
+  "black": rgb(0, 0, 0),
+  "gray": rgb(129, 129, 129),
+  "gray-dark": rgb(128, 128, 128),
+  "gray-light": rgb(137, 137, 137),
+  "gray-ultralight": rgb(236, 236, 236),
+  "blaze-orange": rgb(255, 102, 0),
+  "burnt-orange": rgb(204, 85, 0),
+  "california": rgb(254, 93, 4),
+  "merlin": rgb(58, 55, 49),
+  "pacific-blue": rgb(0, 157, 196),
+  "shiraz": rgb(181, 3, 53),
+) !default;
+$c-palette: (
+  "white": (
+    "base": rgb(255, 255, 255),
+  ),
+  "black": (
+    "base": rgb(0, 0, 0),
+  ),
+  "gray": (
+    "base": rgb(129, 129, 129),
+    "dark": rgb(128, 128, 128),
+    "light": rgb(137, 137, 137),
+    "ultralight": rgb(236, 236, 236),
+  ),
+  "blaze-orange": (
+    "base": rgb(255, 102, 0),
+  ),
+  "burnt-orange": (
+    "base": rgb(204, 85, 0),
+  ),
+  "california": (
+    "base": rgb(254, 93, 4),
+  ),
+  "merlin": (
+    "base": rgb(58, 55, 49),
+  ),
+  "pacific-blue": (
+    "base": rgb(0, 157, 196),
+  ),
+  "shiraz": (
+    "base": rgb(181, 3, 53),
+  ),
+) !default;
+$z-indexes: (
+  "toast",
+  "modal",
+  "modal-backdrop",
+  "skip-nav",
+  "alert",
+  "dropdown",
+  "site-nav",
+  "site-header",
+  "site-overlay",
+  "site-notifications",
+  "dropdown-backdrop",
+  "site-content",
+  "prefooter",
+  "site-footer",
+) !default;
+
+// --- Transition duration tokens ---
+$transition-short: 200ms !default;
+$transition-medium: 500ms !default;
+$transition-long: 600ms !default;

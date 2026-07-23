@@ -1,5 +1,5 @@
 // Transitions
-@use "synced.generated" as s;
+@use "./synced.generated" as s;
 
 $global-transition-properties: var(--global-transition-properties);
 $transition-duration:           var(--global-transition-duration);
