@@ -122,6 +122,57 @@ apolloClient: {
 
 export default preview;
 
+// ---------------------------------------------------------------------------
+// WordPress CSS loader — injects globalStylesCss + customizerCss + fontOptionsCss
+// into the story iframe head once per session. Uses a raw fetch (not Apollo) so
+// it works independently of the MockedProvider setup.
+// ---------------------------------------------------------------------------
+
+export const loaders = [
+  async () => {
+    if (typeof document === 'undefined') return {};
+    if (document.getElementById('storybook-wp-css')) return {};
+
+    const graphqlUrl = process.env.NEXT_PUBLIC_WP_GRAPHQL_URL;
+    if (!graphqlUrl) return {};
+
+    try {
+      const res = await fetch(graphqlUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `{ globalStylesCss customizerCss fontOptionsCss customizerSettings { customCss } }`,
+        }),
+      });
+      const { data } = await res.json() as {
+        data?: {
+          globalStylesCss?: string;
+          customizerCss?: string;
+          fontOptionsCss?: string;
+          customizerSettings?: { customCss?: string };
+        };
+      };
+      const css = [
+        data?.globalStylesCss,
+        data?.customizerCss,
+        data?.fontOptionsCss,
+        data?.customizerSettings?.customCss,
+      ].filter(Boolean).join('\n');
+
+      if (css) {
+        const style = document.createElement('style');
+        style.id = 'storybook-wp-css';
+        style.textContent = css;
+        document.head.appendChild(style);
+      }
+    } catch {
+      // WP not reachable — offline dev or CI build; proceed without WP CSS
+    }
+
+    return {};
+  },
+];
+
 export const decorators: Decorator[] = [
   ApolloDecorator,
   withThemeByDataAttribute({

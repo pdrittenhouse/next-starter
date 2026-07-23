@@ -14,7 +14,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prestorybook": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-theme-json.mjs",
     "storybook": "storybook dev -p 6006",
+    "prebuild-storybook": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-theme-json.mjs",
     "build-storybook": "storybook build"
   },
   "dependencies": {
