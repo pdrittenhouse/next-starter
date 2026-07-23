@@ -1,0 +1,16 @@
+// Shadow file: aligns @wordpress/base-styles breakpoints with Bootstrap 5 breakpoints.
+// Sass resolves loadPaths in order — src/scss appears before node_modules — so this file
+// takes precedence over the package source without !default overrides being needed.
+//
+// Bootstrap 5: sm=576, md=768, lg=992, xl=1200, xxl=1400
+// WP original:  small=600, medium=782, large=960, xlarge=1080, wide=1280, huge=1440
+
+$break-xhuge:    1920px; // no Bootstrap equivalent
+$break-huge:     1400px; // Bootstrap $xxl
+$break-wide:     1200px; // Bootstrap $xl
+$break-xlarge:   1200px; // Bootstrap $xl
+$break-large:     992px; // Bootstrap $lg
+$break-medium:    768px; // Bootstrap $md
+$break-small:     576px; // Bootstrap $sm
+$break-mobile:    480px; // no Bootstrap equivalent
+$break-zoomed-in: 280px; // no Bootstrap equivalent

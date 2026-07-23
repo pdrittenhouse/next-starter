@@ -1,11 +1,7 @@
 import type { ComponentType } from 'react';
+import type { EditorBlock } from '@/types/blocks';
 
-export interface EditorBlock {
-  name: string;
-  clientId: string;
-  parentClientId: string | null;
-  renderedHtml: string;
-}
+export type { EditorBlock };
 
 type BlockComponent = ComponentType<{ block: EditorBlock }>;
 

@@ -168,6 +168,7 @@ const buildContentQuery = (pluralName: string, customFields: string[], interface
               clientId
               parentClientId
               renderedHtml
+              attributesJSON
             }
             seo {
               title

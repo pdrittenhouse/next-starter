@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_ADJACENT_POSTS } from '@/lib/wp/queries';
+import type { EditorBlock } from '@/types/blocks';
 import { PageHeader } from './partials/page-header';
 import { Comments } from './partials/comments';
 import { BlockRenderer } from './partials/block-renderer';
@@ -46,12 +47,7 @@ interface SingleTemplateProps {
       edges: { node: { id: string; name: string; slug: string; taxonomyName: string; uri: string } }[];
     } | null;
     commentStatus?: string;
-    editorBlocks?: {
-      name: string;
-      clientId: string;
-      parentClientId: string | null;
-      renderedHtml: string;
-    }[];
+    editorBlocks?: EditorBlock[];
   };
 }
 

@@ -83,6 +83,7 @@ export const GET_NODE_BY_URI = gql`
           clientId
           parentClientId
           renderedHtml
+          attributesJSON
         }
         seo {
           title
@@ -188,6 +189,7 @@ export const GET_NODE_BY_URI = gql`
           clientId
           parentClientId
           renderedHtml
+          attributesJSON
         }
         seo {
           title

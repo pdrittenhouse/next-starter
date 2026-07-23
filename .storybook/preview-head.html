@@ -1,0 +1,21 @@
+<!-- Adobe Fonts (Typekit) — mirrors app/layout.tsx font loading.
+     @storybook/nextjs substitutes %NEXT_PUBLIC_TYPEKIT_ID% at startup from .env.local.
+     If the variable is not set, the sentinel check below prevents the script from running. -->
+<link rel="preconnect" href="https://use.typekit.net" crossorigin="anonymous" />
+<link rel="preconnect" href="https://p.typekit.net" crossorigin="anonymous" />
+<script>
+  (function () {
+    var typekitId = '%NEXT_PUBLIC_TYPEKIT_ID%';
+    // Guard: if substitution didn't happen (var unset), typekitId stays as the
+    // literal placeholder string — skip loading rather than requesting a bad URL.
+    if (!typekitId || typekitId === '%NEXT_PUBLIC_TYPEKIT_ID%') return;
+    var tk = document.createElement('script');
+    var s = document.scripts[0];
+    tk.src = 'https://use.typekit.net/' + typekitId + '.js';
+    tk.async = true;
+    tk.onload = function () {
+      try { Typekit.load({ async: true }); } catch (e) {}
+    };
+    s.parentNode.insertBefore(tk, s);
+  })();
+</script>

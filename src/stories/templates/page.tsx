@@ -1,3 +1,4 @@
+import type { EditorBlock } from '@/types/blocks';
 import { PageHeader } from './partials/page-header';
 import { BlockRenderer } from './partials/block-renderer';
 
@@ -50,12 +51,7 @@ interface PageTemplateProps {
         sizes?: string;
       };
     } | null;
-    editorBlocks?: {
-      name: string;
-      clientId: string;
-      parentClientId: string | null;
-      renderedHtml: string;
-    }[];
+    editorBlocks?: EditorBlock[];
   };
 }
 

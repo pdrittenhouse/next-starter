@@ -11,6 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import '../src/scss/global.scss';
 import '../src/stories/storybook.scss';
+import '@phosphor-icons/web/regular';
 import { allSettingsData, generalSettingsData, readingSettingsData, discussionSettingsData, writingSettingsData } from '../src/stories/data/settings-data';
 import { usersData } from '../src/stories/data/users-data';
 import { allCategoriesData, categoryBySlugData } from '../src/stories/data/categories-data';

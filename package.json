@@ -20,6 +20,12 @@
     "@apollo/client": "^3.9.5",
     "@eslint/eslintrc": "^3.3.6",
     "@fortawesome/fontawesome-free": "^7.3.0",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-regular-svg-icons": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/react-fontawesome": "^3.5.0",
+    "@phosphor-icons/react": "^2.1.10",
     "@phosphor-icons/web": "^2.1.2",
     "@wordpress/base-styles": "^11.0.0",
     "@wordpress/block-library": "^10.2.0",
@@ -29,6 +35,7 @@
     "next": "^16.2.10",
     "react": "^18",
     "react-bootstrap": "^2.10.1",
+    "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^18"
   },
   "devDependencies": {
