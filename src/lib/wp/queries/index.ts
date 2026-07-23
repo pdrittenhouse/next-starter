@@ -38,6 +38,8 @@ export { GET_DESIGN_TOKENS } from './design-tokens';
 export { GET_SPRITEMAP_ICONS } from './spritemap-icons';
 export { GET_CUSTOMIZER_CSS } from './customizer-css';
 export { GET_FONT_OPTIONS_CSS } from './font-options-css';
+export { GET_SCSS_UTILS } from './scss-utils';
+export { GET_PATTERN_STYLES } from './pattern-styles';
 export { GET_THEME_GENERAL_OPTIONS, GET_HEADER_OPTIONS, GET_FOOTER_OPTIONS, GET_MENU_WIDGET_OPTIONS } from './acf-options';
 
 // Themes & Assets

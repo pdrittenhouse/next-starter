@@ -18,7 +18,7 @@ import {
   GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
   GET_ALL_REUSABLE_BLOCKS,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
-  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS,
+  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS, GET_SCSS_UTILS, GET_PATTERN_STYLES,
   GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
   GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
   GET_ALL_GRAVITY_FORMS,
@@ -70,6 +70,8 @@ export const Page: React.FC = () => {
   const { loading: spritemapIconsLoading, error: spritemapIconsError, data: spritemapIconsData } = useQuery(GET_SPRITEMAP_ICONS)
   const { loading: customizerCssLoading, error: customizerCssError, data: customizerCssData } = useQuery(GET_CUSTOMIZER_CSS)
   const { loading: fontOptionsCssLoading, error: fontOptionsCssError, data: fontOptionsCssData } = useQuery(GET_FONT_OPTIONS_CSS)
+  const { loading: scssUtilsLoading, error: scssUtilsError, data: scssUtilsData } = useQuery(GET_SCSS_UTILS)
+  const { loading: patternStylesLoading, error: patternStylesError, data: patternStylesData } = useQuery(GET_PATTERN_STYLES)
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
@@ -542,6 +544,28 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Font Options CSS</summary>
                       <pre>{fontOptionsCssData.fontOptionsCss}</pre>
+                    </details>
+                  )}
+                  {scssUtilsLoading ? <p>Loading SCSS utils...</p> : scssUtilsError ? (
+                    <p style={{color: 'red'}}>SCSS Utils Error: {scssUtilsError.message}</p>
+                  ) : scssUtilsData && (
+                    <details>
+                      <summary>SCSS Utils ({scssUtilsData.scssUtils?.functions?.length ?? 0} functions, {scssUtilsData.scssUtils?.mixins?.length ?? 0} mixins)</summary>
+                      <pre>{JSON.stringify({
+                        functions: scssUtilsData.scssUtils?.functions?.map((f: any) => f.name),
+                        mixins: scssUtilsData.scssUtils?.mixins?.map((m: any) => m.name),
+                      }, null, 2)}</pre>
+                    </details>
+                  )}
+                  {patternStylesLoading ? <p>Loading pattern styles...</p> : patternStylesError ? (
+                    <p style={{color: 'red'}}>Pattern Styles Error: {patternStylesError.message}</p>
+                  ) : patternStylesData && (
+                    <details>
+                      <summary>Pattern Styles ({patternStylesData.patternStyles?.patterns?.length ?? 0} patterns, {patternStylesData.patternStyles?.blocks?.length ?? 0} block mappings)</summary>
+                      <pre>{JSON.stringify({
+                        patterns: patternStylesData.patternStyles?.patterns?.map((p: any) => `${p.level}/${p.name}`),
+                        blocks: patternStylesData.patternStyles?.blocks,
+                      }, null, 2)}</pre>
                     </details>
                   )}
                   {schemaLoading ? <p>Loading theme options...</p> : schemaData && (
