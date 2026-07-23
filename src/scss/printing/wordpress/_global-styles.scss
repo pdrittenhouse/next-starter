@@ -1,0 +1,61 @@
+// Replicates CSS variables and utility classes that WordPress generates from theme.json.
+// WP outputs these at runtime; in headless they must be declared statically.
+// Mirrors natural-rose/theme.json — update both when theme.json changes.
+//
+// Color palette values reference existing CSS custom properties (set in _css-variables.scss),
+// so no SCSS variables are needed here — everything chains through CSS vars at runtime.
+
+// ---------------------------------------------------------------------------
+// Color palette — mirrors theme.json settings.color.palette slugs
+// ---------------------------------------------------------------------------
+
+$-color-slugs: (
+  'primary', 'secondary', 'tertiary', 'quaternary', 'quinary',
+  'senary', 'septenary', 'octonary', 'nonary', 'denary',
+  'light', 'dark', 'transparent'
+);
+
+// ---------------------------------------------------------------------------
+// Font sizes — mirrors theme.json settings.typography.fontSizes
+// Values use --paragraph-font-size which is defined in _css-variables.scss
+// ---------------------------------------------------------------------------
+
+$-font-sizes: (
+  'small':      'calc(var(--paragraph-font-size) * .75)',
+  'medium':     'calc(var(--paragraph-font-size) * .875)',
+  'regular':    'var(--paragraph-font-size)',
+  'extralarge': 'calc(var(--paragraph-font-size) * 1.5)',
+  'huge':       'calc(var(--paragraph-font-size) * 2.125)',
+);
+
+// ---------------------------------------------------------------------------
+// CSS custom properties
+// ---------------------------------------------------------------------------
+
+:root {
+  @each $slug in $-color-slugs {
+    --wp--preset--color--#{$slug}: var(--#{$slug});
+  }
+
+  @each $slug, $size in $-font-sizes {
+    --wp--preset--font-size--#{$slug}: #{$size};
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Color utility classes — applied to blocks when a color is set in the editor
+// ---------------------------------------------------------------------------
+
+@each $slug in $-color-slugs {
+  .has-#{$slug}-background-color { background-color: var(--wp--preset--color--#{$slug}) !important; }
+  .has-#{$slug}-color             { color: var(--wp--preset--color--#{$slug}) !important; }
+  .has-#{$slug}-border-color      { border-color: var(--wp--preset--color--#{$slug}) !important; }
+}
+
+// ---------------------------------------------------------------------------
+// Font size utility classes
+// ---------------------------------------------------------------------------
+
+@each $slug, $_ in $-font-sizes {
+  .has-#{$slug}-font-size { font-size: var(--wp--preset--font-size--#{$slug}) !important; }
+}
