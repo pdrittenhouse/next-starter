@@ -73,7 +73,7 @@ export const Page: React.FC = () => {
   const { loading: globalStylesCssLoading, error: globalStylesCssError, data: globalStylesCssData } = useQuery(GET_GLOBAL_STYLES_CSS)
   const { loading: scssUtilsLoading, error: scssUtilsError, data: scssUtilsData } = useQuery(GET_SCSS_UTILS)
   const { loading: patternStylesLoading, error: patternStylesError, data: patternStylesData } = useQuery(GET_PATTERN_STYLES)
-  const { loading: templatePatternsLoading, error: templatePatternsError, data: templatePatternsData } = useQuery(GET_TEMPLATE_PATTERNS)
+  const { loading: templatePatternsLoading, error: templatePatternsError, data: templatePatternsData } = useQuery(GET_TEMPLATE_PATTERNS, { fetchPolicy: 'no-cache' })
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
