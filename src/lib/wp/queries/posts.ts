@@ -1,4 +1,4 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const POST_FIELDS = gql`
   fragment PostFields on Post {
@@ -82,6 +82,7 @@ export const GET_ALL_POSTS = gql`
             clientId
             parentClientId
             renderedHtml
+            attributesJSON
           }
           seo {
             title

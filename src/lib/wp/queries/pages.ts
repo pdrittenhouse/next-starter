@@ -1,4 +1,4 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const PAGE_FIELDS = gql`
   fragment PageFields on Page {

@@ -3,15 +3,17 @@ import type { EditorBlock } from '@/types/blocks';
 
 export type { EditorBlock };
 
-type BlockComponent = ComponentType<{ block: EditorBlock }>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BlockComponent = ComponentType<{ block: any }>;
 
 // Register headless components here as the component library grows.
 // key: WP block name   e.g. 'core/image', 'acf/hero'
-// value: React component that accepts { block: EditorBlock }
-const BLOCK_MAP: Record<string, BlockComponent> = {
-  // 'core/image': CoreImage,
-  // 'acf/hero': Hero,
-};
+// value: React component that accepts { block }
+//
+// core/* blocks not in this map fall through to dangerouslySetInnerHTML using
+// renderedHtml — they pick up styles from @wordpress/block-library imported via
+// src/scss/printing/wordpress/blocks/wp-core/_image.scss (and peer files).
+const BLOCK_MAP: Record<string, BlockComponent> = {};
 
 interface BlockRendererProps {
   blocks: EditorBlock[];
@@ -34,7 +36,7 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
         return (
           <div
             key={block.clientId}
-            dangerouslySetInnerHTML={{ __html: block.renderedHtml }}
+            dangerouslySetInnerHTML={{ __html: block.renderedHtml ?? '' }}
           />
         );
       })}
