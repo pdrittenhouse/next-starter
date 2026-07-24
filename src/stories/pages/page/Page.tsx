@@ -597,6 +597,16 @@ export const Page: React.FC = () => {
                           null, 2
                         )}</pre>
                       </details>
+                      <details>
+                        <summary>Template Patterns — Include Trees ({templatePatternsData.templatePatterns?.templates?.length ?? 0} templates)</summary>
+                        <pre>{JSON.stringify(
+                          templatePatternsData.templatePatterns?.templates?.map((t: any) => ({
+                            key: t.key,
+                            tree: t.tree,
+                          })),
+                          null, 2
+                        )}</pre>
+                      </details>
                     </>
                   )}
                   {schemaLoading ? <p>Loading theme options...</p> : schemaData && (
