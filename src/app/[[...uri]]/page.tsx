@@ -12,7 +12,9 @@ import {
   GET_ALL_PAGE_URIS,
   GET_READING_SETTINGS,
   GET_FRONT_PAGE_BY_ID,
+  GET_TEMPLATE_PATTERNS,
 } from '@/lib/wp/queries';
+import type { TimberlandPatternManifest } from '@/lib/wp/types/template-manifest';
 import { checkRedirects } from '@/lib/wp/utils';
 import { SingleTemplate } from '@/stories/templates/single';
 import { PageTemplate } from '@/stories/templates/page';
@@ -22,6 +24,7 @@ import { ArchiveTemplate } from '@/stories/templates/archive';
 import { AuthorTemplate } from '@/stories/templates/author';
 import { SearchTemplate } from '@/stories/templates/search';
 import { DateArchiveTemplate } from '@/stories/templates/date-archive';
+import { TemplateRenderer } from '@/stories/templates/partials/template-renderer';
 
 interface PageProps {
   params: Promise<{ uri?: string[] }>;
@@ -66,6 +69,34 @@ const getNodeByUri = cache(async (uri: string) => {
     console.error('[routing] GraphQL errors for URI:', uri, realErrors);
   }
   return data?.nodeByUri ?? null;
+});
+
+// Maps the resolved template name (from resolveTemplate()) to the manifest key
+// used in the TemplateManifestPlugin output (webpack entry name).
+const TEMPLATE_MANIFEST_KEYS: Record<string, string> = {
+  'page': 'pages/page',
+  'front-page': 'pages/front-page',
+  'single': 'pages/single',
+  'archive': 'pages/archive',
+  'home': 'pages/home',
+  'author': 'pages/author',
+  'search': 'pages/search',
+};
+
+/**
+ * Fetch the template patterns manifest (version, patterns, per-template trees).
+ * Cached per render via React cache() — shared across getTemplatePatterns calls
+ * in the same render tree without a second GraphQL round-trip.
+ */
+const getTemplatePatterns = cache(async (): Promise<TimberlandPatternManifest | null> => {
+  try {
+    const { data } = await fetchGraphQL<{ templatePatterns: TimberlandPatternManifest }>(
+      print(GET_TEMPLATE_PATTERNS),
+    );
+    return data?.templatePatterns ?? null;
+  } catch {
+    return null;
+  }
 });
 
 /**
@@ -215,6 +246,22 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
   }
 
   const template = resolveTemplate(node, isHomepage, false);
+
+  // Attempt to resolve a manifest tree for this template so TemplateRenderer
+  // can drive the layout. Falls back to the static template components when
+  // no manifest entry exists (manifest not built, unknown template key, etc.).
+  const manifestKey = template ? TEMPLATE_MANIFEST_KEYS[template] : undefined;
+  const manifest = manifestKey ? await getTemplatePatterns() : null;
+  const manifestEntry = manifest?.templates?.find(t => t.key === manifestKey);
+  const tree = manifestEntry?.tree ?? null;
+
+  // When a manifest tree is available, TemplateRenderer handles the layout.
+  // It renders registered PATTERN_MAP components and places BlockRenderer
+  // at the `content` slot. Unregistered patterns are silently skipped until
+  // headless components are built for them.
+  if (tree?.length && node.editorBlocks) {
+    return <TemplateRenderer tree={tree} editorBlocks={node.editorBlocks} />;
+  }
 
   switch (template) {
     case 'front-page':

@@ -4,3 +4,4 @@ export * from './settings';
 export * from './navigation';
 export * from './woocommerce';
 export * from './gravity-forms';
+export * from './template-manifest';
