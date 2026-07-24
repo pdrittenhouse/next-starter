@@ -1,19 +1,11 @@
 import type { ComponentType } from 'react';
 import type { EditorBlock } from '@/types/blocks';
+import { BLOCK_MAP } from '@/lib/registries/BLOCK_MAP';
 
 export type { EditorBlock };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BlockComponent = ComponentType<{ block: any }>;
-
-// Register headless components here as the component library grows.
-// key: WP block name   e.g. 'core/image', 'acf/hero'
-// value: React component that accepts { block }
-//
-// core/* blocks not in this map fall through to dangerouslySetInnerHTML using
-// renderedHtml — they pick up styles from @wordpress/block-library imported via
-// src/scss/printing/wordpress/blocks/wp-core/_image.scss (and peer files).
-const BLOCK_MAP: Record<string, BlockComponent> = {};
 
 interface BlockRendererProps {
   blocks: EditorBlock[];
