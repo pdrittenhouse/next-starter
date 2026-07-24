@@ -21,6 +21,38 @@ export const GET_TEMPLATE_PATTERNS = gql`
           level
           source
         }
+        tree {
+          type
+          slug
+          name
+          source
+          level
+          file
+          children {
+            type
+            slug
+            name
+            source
+            level
+            file
+            children {
+              type
+              slug
+              name
+              source
+              level
+              file
+              children {
+                type
+                slug
+                name
+                source
+                level
+                file
+              }
+            }
+          }
+        }
       }
     }
   }
