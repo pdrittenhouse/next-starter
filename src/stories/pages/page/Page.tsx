@@ -18,7 +18,7 @@ import {
   GET_ALL_PLUGINS, GET_ALL_POST_FORMATS, GET_VIEWER, GET_ALL_USER_ROLES,
   GET_ALL_REUSABLE_BLOCKS,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
-  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS, GET_GLOBAL_STYLES_CSS, GET_SCSS_UTILS, GET_PATTERN_STYLES,
+  GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS, GET_GLOBAL_STYLES_CSS, GET_SCSS_UTILS, GET_PATTERN_STYLES, GET_TEMPLATE_PATTERNS,
   GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
   GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
   GET_ALL_GRAVITY_FORMS,
@@ -73,6 +73,7 @@ export const Page: React.FC = () => {
   const { loading: globalStylesCssLoading, error: globalStylesCssError, data: globalStylesCssData } = useQuery(GET_GLOBAL_STYLES_CSS)
   const { loading: scssUtilsLoading, error: scssUtilsError, data: scssUtilsData } = useQuery(GET_SCSS_UTILS)
   const { loading: patternStylesLoading, error: patternStylesError, data: patternStylesData } = useQuery(GET_PATTERN_STYLES)
+  const { loading: templatePatternsLoading, error: templatePatternsError, data: templatePatternsData } = useQuery(GET_TEMPLATE_PATTERNS)
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
@@ -576,6 +577,27 @@ export const Page: React.FC = () => {
                         blocks: patternStylesData.patternStyles?.blocks,
                       }, null, 2)}</pre>
                     </details>
+                  )}
+                  {templatePatternsLoading ? <p>Loading template patterns...</p> : templatePatternsError ? (
+                    <p style={{color: 'red'}}>Template Patterns Error: {templatePatternsError.message}</p>
+                  ) : templatePatternsData && (
+                    <>
+                      <details>
+                        <summary>Template Patterns — Flat Registry ({templatePatternsData.templatePatterns?.patterns?.length ?? 0} patterns)</summary>
+                        <pre>{JSON.stringify(templatePatternsData.templatePatterns?.patterns, null, 2)}</pre>
+                      </details>
+                      <details>
+                        <summary>Template Patterns — Per-Template Breakdown ({templatePatternsData.templatePatterns?.templates?.length ?? 0} templates)</summary>
+                        <pre>{JSON.stringify(
+                          templatePatternsData.templatePatterns?.templates?.map((t: any) => ({
+                            key: t.key,
+                            file: t.file,
+                            patterns: t.patterns?.map((p: any) => p.slug),
+                          })),
+                          null, 2
+                        )}</pre>
+                      </details>
+                    </>
                   )}
                   {schemaLoading ? <p>Loading theme options...</p> : schemaData && (
                     schemaData.__schema?.queryType?.fields
