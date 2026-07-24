@@ -54,8 +54,15 @@ const getNodeByUri = cache(async (uri: string) => {
     print(GET_NODE_BY_URI),
     { uri },
   );
-  if (errors?.length) {
-    console.error('[routing] GraphQL errors for URI:', uri, errors);
+  // Filter WPGraphQL schema validation warnings (e.g. reusableBlock type mismatch
+  // after WP 6.3 renamed Reusable Blocks → Synced Patterns). These are schema
+  // definition errors that WPGraphQL attaches to every response; they don't affect
+  // the returned data and should be fixed by updating WPGraphQL on the WP side.
+  const realErrors = errors?.filter(
+    (e) => !e.message.includes('is a non-existent Type in the Schema'),
+  );
+  if (realErrors?.length) {
+    console.error('[routing] GraphQL errors for URI:', uri, realErrors);
   }
   return data?.nodeByUri ?? null;
 });
@@ -148,6 +155,19 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
   const dateArchive = parseDateArchiveUri(uriSegments);
   if (dateArchive) {
     return <DateArchiveTemplate {...dateArchive} />;
+  }
+
+  // Short-circuit paths that can never be WordPress content — static assets,
+  // WP server paths, and browser auto-requests. Avoids expensive GraphQL calls
+  // for things like /favicon.ico, /wp-content/uploads/..., /.well-known/...
+  if (uriSegments) {
+    const first = uriSegments[0];
+    const last = uriSegments[uriSegments.length - 1];
+    const staticPrefixes = ['wp-content', 'wp-admin', 'wp-includes', 'wp-json', 'wp-cron.php', '.well-known'];
+    const staticExtension = /\.(ico|png|jpg|jpeg|gif|webp|svg|css|js|map|txt|xml|json|woff|woff2|ttf|eot|pdf|zip)$/i;
+    if (staticPrefixes.includes(first) || staticExtension.test(last)) {
+      notFound();
+    }
   }
 
   const wpBaseUrl = process.env.NEXT_PUBLIC_WP_GRAPHQL_URL?.replace(/\/graphql$/, '') ?? '';
