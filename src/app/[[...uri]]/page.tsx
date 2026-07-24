@@ -11,6 +11,7 @@ import {
   GET_ALL_POST_URIS,
   GET_ALL_PAGE_URIS,
   GET_READING_SETTINGS,
+  GET_FRONT_PAGE_BY_ID,
 } from '@/lib/wp/queries';
 import { checkRedirects } from '@/lib/wp/utils';
 import { SingleTemplate } from '@/stories/templates/single';
@@ -182,8 +183,18 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       getNodeByUri(uri),
     ]);
     if (settings.showOnFront === 'page' && settings.pageOnFront) {
-      // Static front page — fall through to template switch with the page node.
-      node = homeNode;
+      // Static front page. nodeByUri('/') should return it, but WPGraphQL Smart Cache
+      // can serve a stale null for '/' after the reading settings change. Fall back to
+      // fetching the front page directly by database ID.
+      if (homeNode) {
+        node = homeNode;
+      } else {
+        const { data } = await fetchGraphQL<{ page: any }>(
+          print(GET_FRONT_PAGE_BY_ID),
+          { id: String(settings.pageOnFront) },
+        );
+        node = data?.page ?? null;
+      }
     } else {
       // Blog posts index (showOnFront='posts') — home.php equivalent.
       return <HomeTemplate />;
@@ -278,6 +289,18 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     return {
       title: `Search results for "${query ?? ''}"`,
     };
+  }
+
+  // Mirror the static-path early exit from the page component — avoids a slow
+  // GraphQL call for paths that can never have WP metadata.
+  if (uriSegments) {
+    const first = uriSegments[0];
+    const last = uriSegments[uriSegments.length - 1];
+    const staticPrefixes = ['wp-content', 'wp-admin', 'wp-includes', 'wp-json', 'wp-cron.php', '.well-known'];
+    const staticExtension = /\.(ico|png|jpg|jpeg|gif|webp|svg|css|js|map|txt|xml|json|woff|woff2|ttf|eot|pdf|zip)$/i;
+    if (staticPrefixes.includes(first) || staticExtension.test(last)) {
+      return {};
+    }
   }
 
   const dateArchive = parseDateArchiveUri(uriSegments);

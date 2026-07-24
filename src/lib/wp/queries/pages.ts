@@ -282,4 +282,124 @@ export const GET_PAGES_PAGINATED = gql`
   }
 `;
 
+/**
+ * Fetch the static front page by its database ID.
+ * Used as a fallback when nodeByUri('/') returns null (e.g. WPGraphQL Smart Cache
+ * has a stale null entry for '/') but readingSettings.pageOnFront is set.
+ * Returns the same Page shape as the ... on Page fragment in GET_NODE_BY_URI.
+ */
+export const GET_FRONT_PAGE_BY_ID = gql`
+  query GetFrontPageById($id: ID!) {
+    page(id: $id, idType: DATABASE_ID) {
+      __typename
+      id
+      uri
+      databaseId
+      title
+      slug
+      date
+      modified
+      status
+      content
+      menuOrder
+      template {
+        templateName
+      }
+      parent {
+        node {
+          id
+          slug
+          uri
+          ... on Page {
+            title
+          }
+        }
+      }
+      children {
+        edges {
+          node {
+            id
+            slug
+            uri
+            ... on Page {
+              title
+            }
+          }
+        }
+      }
+      author {
+        node {
+          id
+          name
+          slug
+          avatar {
+            url
+            height
+            width
+          }
+        }
+      }
+      featuredImage {
+        node {
+          id
+          sourceUrl
+          altText
+          caption
+          srcSet
+          sizes
+        }
+      }
+      editorBlocks {
+        name
+        clientId
+        parentClientId
+        renderedHtml
+        attributesJSON
+      }
+      seo {
+        title
+        description
+        canonicalUrl
+        ogTitle
+        ogDescription
+        ogImage
+        ogType
+        twitterTitle
+        twitterDescription
+        twitterImage
+        twitterCard
+        robots
+        schema
+        breadcrumbs {
+          label
+          url
+          isCurrentPage
+        }
+      }
+      settingsPageOptions {
+        headerPosition
+        hidePageHeader
+        hideFeaturedImage
+        hidePageTitle
+        hideSidebar
+        leftSidebar
+        hideTravelingCta
+        headerAlertMessage
+        removeHeaderContainer
+        removeContentContainer
+        removeFooterContainer
+        pageClasses
+        pageSeoDescription
+        pageSeoOgImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
+        pageSeoNoindex
+      }
+    }
+  }
+`;
+
 export default GET_ALL_PAGES;
