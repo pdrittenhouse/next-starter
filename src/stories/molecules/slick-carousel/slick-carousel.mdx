@@ -1,0 +1,85 @@
+import { SlickCarousel } from './SlickCarousel';
+
+# SlickCarousel
+
+Slick carousel — mirrors the theme's Pattern Lab `timberland/slick-carousel` pattern. Renders static markup with `data-*` attributes; Slick JS initialises each slider at runtime by reading those attributes.
+
+## Usage
+
+```jsx
+<SlickCarousel
+  slides={[<img src="/slide1.jpg" alt="" />, <img src="/slide2.jpg" alt="" />]}
+  dots
+  infinite
+  slidesToShow={1}
+  slidesToScroll={1}
+/>
+
+// 3-up with auto-play
+<SlickCarousel
+  slides={slides}
+  slidesToShow={3}
+  slidesToScroll={1}
+  autoplay
+  autoplaySpeed={3000}
+  pauseOnHover
+  dots
+/>
+
+// Center mode
+<SlickCarousel
+  slides={slides}
+  centerMode
+  centerPadding="60px"
+  slidesToShow={3}
+/>
+```
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `slides` | `ReactNode[]` | `[]` | Slide content |
+| `id` | `string` | auto | HTML id on the inner slider element |
+| `customControls` | `boolean` | — | Expose `.slick-carousel-controls` div for custom UI |
+| `adaptiveHeight` | `boolean` | — | Adapt height to tallest visible slide |
+| `autoplay` | `boolean` | — | Enable auto-play |
+| `autoplaySpeed` | `number` | `3000` | Auto-play interval in ms |
+| `arrows` | `boolean` | `true` | Show built-in prev/next arrows |
+| `asNavFor` | `string` | — | Selector of a nav slider to sync |
+| `centerMode` | `boolean` | — | Centered view with partial adjacent slides |
+| `centerPadding` | `string` | `'50px'` | Side padding in center mode |
+| `dots` | `boolean` | — | Show dot indicators |
+| `fade` | `boolean` | — | Fade transition |
+| `infinite` | `boolean` | — | Infinite loop |
+| `initialSlide` | `number` | `0` | Starting slide index |
+| `rows` | `number` | `1` | Grid rows per slide group |
+| `slidesPerRow` | `number` | `1` | Slides per grid row |
+| `slidesToShow` | `number` | `1` | Slides visible at once |
+| `slidesToScroll` | `number` | `1` | Slides scrolled per action |
+| `speed` | `number` | `300` | Animation speed in ms |
+| `variableWidth` | `boolean` | — | Variable-width slides |
+| `vertical` | `boolean` | — | Vertical slide mode |
+| `verticalSwiping` | `boolean` | — | Vertical swipe |
+| `rtl` | `boolean` | — | Right-to-left direction |
+| `responsive` | `SlickResponsiveBreakpoint[]` | — | Responsive breakpoint overrides |
+| `draggable` | `boolean` | — | Enable mouse dragging |
+| `edgeFriction` | `number` | `0.15` | Edge resistance on non-infinite sliders |
+| `focusOnSelect` | `boolean` | — | Focus on click |
+| `pauseOnFocus` | `boolean` | — | Pause auto-play on focus |
+| `pauseOnHover` | `boolean` | — | Pause auto-play on hover |
+| `pauseOnDotsHover` | `boolean` | — | Pause when hovering dots |
+| `swipe` | `boolean` | — | Touch/swipe support |
+| `swipeToSlide` | `boolean` | — | Drag directly to any slide |
+| `touchMove` | `boolean` | — | Touch slide motion |
+| `touchThreshold` | `number` | `5` | Touch swipe threshold |
+| `easing` | `string` | `'linear'` | jQuery easing function |
+| `cssEase` | `string` | `'linear'` | CSS3 easing |
+| `className` | `string` | — | Additional CSS classes on the wrapper |
+
+## Notes
+
+- All Slick options are serialised as `data-*` attributes on the `.slick-carousel-wrapper` element. Slick JS reads them at initialisation.
+- The component does **not** import or initialise Slick — JS initialisation is handled globally by the theme.
+- `customControls` adds `show-custom-controls` to the wrapper and renders an empty `.slick-carousel-controls` div for your theme JS to populate with custom prev/next buttons.
+- For responsive breakpoints, pass an array of `{ breakpoint, settings }` objects; they are JSON-serialised into the `data-responsive` attribute.

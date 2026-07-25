@@ -1,0 +1,72 @@
+import { FlickityCarousel } from './FlickityCarousel';
+
+# FlickityCarousel
+
+Flickity carousel — mirrors the theme's Pattern Lab `timberland/flickity-carousel` pattern. Renders static markup with `data-*` attributes; Flickity JS initialises each carousel at runtime by reading those attributes.
+
+## Usage
+
+```jsx
+<FlickityCarousel
+  slides={[<img src="/slide1.jpg" alt="Slide 1" />, <img src="/slide2.jpg" alt="Slide 2" />]}
+  wrapAround
+  prevNextButtons
+  pageDots
+/>
+
+// Auto-playing with custom controls
+<FlickityCarousel
+  slides={slides}
+  autoPlay={3000}
+  pauseAutoPlayOnHover
+  showControls
+  wrapAround
+/>
+
+// Multi-column layout
+<FlickityCarousel
+  slides={slides}
+  columns={3}
+  contain
+  prevNextButtons
+/>
+```
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `slides` | `ReactNode[]` | `[]` | Slide content — each item wrapped in `.carousel-cell` |
+| `id` | `string` | auto | HTML id on the carousel element |
+| `columns` | `1–6` | — | Adds `flickity-cols-{n}` class for CSS column sizing |
+| `showControls` | `boolean` | — | Render custom prev/next/dot buttons below the track |
+| `draggable` | `boolean` | — | Enable drag/flick |
+| `freeScroll` | `boolean` | — | Free scroll without snapping |
+| `wrapAround` | `boolean` | — | Infinite wrap-around |
+| `groupCells` | `boolean` | — | Group cells into slides |
+| `autoPlay` | `boolean \| number` | — | Auto-play interval in ms |
+| `pauseAutoPlayOnHover` | `boolean` | — | Pause auto-play on mouse hover |
+| `fullscreen` | `boolean` | — | Enable fullscreen button |
+| `fade` | `boolean` | — | Fade transition instead of slide |
+| `adaptiveHeight` | `boolean` | — | Height adapts to selected slide |
+| `asNavFor` | `string` | — | Selector to sync as nav for another carousel |
+| `cellSelector` | `string` | `'.carousel-cell'` | CSS selector for cell elements |
+| `initialIndex` | `number` | — | Zero-based starting cell |
+| `setGallerySize` | `boolean` | `true` | Set height from tallest cell |
+| `cellAlign` | `'left' \| 'center' \| 'right'` | `'left'` | Cell alignment |
+| `contain` | `boolean` | — | Prevent excess scroll at ends |
+| `rightToLeft` | `boolean` | — | Right-to-left layout |
+| `prevNextButtons` | `boolean` | — | Show built-in prev/next arrows |
+| `pageDots` | `boolean` | — | Show page dot indicators |
+| `dragThreshold` | `number` | `3` | Pixels before drag begins |
+| `selectedAttraction` | `number` | `0.025` | Attraction to selected cell |
+| `friction` | `number` | `0.28` | Slider friction |
+| `freeScrollFriction` | `number` | `0.075` | Friction in free-scroll mode |
+| `percentPosition` | `boolean` | — | Use percent-based positioning |
+| `className` | `string` | — | Additional CSS classes on the wrapper |
+
+## Notes
+
+- All Flickity options are serialised as `data-*` attributes on the `.flickity-carousel` element. Flickity JS reads them at `DOMContentLoaded`.
+- The component does **not** import or initialise Flickity — JS initialisation is handled globally by the theme's webpack bundle.
+- `showControls` renders a static custom UI (prev / slide-number buttons / next) that your theme JS can wire up via the `.button--previous` / `.button--next` / `.button--group-cells` selectors.
