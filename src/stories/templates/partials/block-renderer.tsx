@@ -1,11 +1,7 @@
-import type { ComponentType } from 'react';
 import type { EditorBlock } from '@/types/blocks';
 import { BLOCK_MAP } from '@/lib/registries/BLOCK_MAP';
 
 export type { EditorBlock };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type BlockComponent = ComponentType<{ block: any }>;
 
 interface BlockRendererProps {
   blocks: EditorBlock[];
@@ -23,7 +19,11 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
       {topLevel.map(block => {
         const Component = BLOCK_MAP[block.name];
         if (Component) {
-          return <Component key={block.clientId} block={block} />;
+          // Cast to any: TypeScript doesn't yet model async server components
+          // as valid JSX element types, but Next.js App Router supports them.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const Comp = Component as any;
+          return <Comp key={block.clientId} block={block} />;
         }
         return (
           <div
