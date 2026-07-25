@@ -1,9 +1,22 @@
 /** @type {import('next').NextConfig} */
 import { fileURLToPath } from 'url';
-import path from "path";
-import { dirname } from 'path';
+import { readFileSync, existsSync } from 'fs';
+import path, { dirname, join } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// ESM modules can evaluate before Next.js injects .env files into process.env.
+// In production, env vars are real process vars so this block is a no-op.
+// In dev, we read .env.local directly to ensure vars are available for config.
+const envLocalPath = join(__dirname, '.env.local');
+if (existsSync(envLocalPath)) {
+  for (const line of readFileSync(envLocalPath, 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
+    if (m && process.env[m[1]] === undefined) {
+      process.env[m[1]] = m[2].replace(/^(['"`])([\s\S]*)\1$/, '$2');
+    }
+  }
+}
 
 // Derive the WordPress hostname for Next.js image optimization.
 // Falls back to 'localhost' if the env var is missing or malformed.
@@ -26,10 +39,13 @@ const nextConfig = {
     },
     images: {
         remotePatterns: [
-            // WordPress media — supports both http (local) and https (production).
-            { protocol: 'http',  hostname: wpHostname, port: '', pathname: '/**' },
-            { protocol: 'https', hostname: wpHostname, port: '', pathname: '/**' },
+            { protocol: 'http',  hostname: wpHostname, pathname: '/**' },
+            { protocol: 'https', hostname: wpHostname, pathname: '/**' },
         ],
+        // Local dev WP sites resolve to loopback IPs. This flag is gated on
+        // dev so it never opens SSRF risk in production where WP is on a real
+        // public IP.
+        dangerouslyAllowLocalIP: process.env.NODE_ENV === 'development',
     },
 };
 
