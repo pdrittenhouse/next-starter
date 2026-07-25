@@ -1,0 +1,140 @@
+import { SocialNav } from './SocialNav';
+
+# SocialNav
+
+SocialNav organism — mirrors the theme's Pattern Lab `timberland/social-nav` pattern. Renders a horizontal or vertical list of social media icon links with Bootstrap Icons or Font Awesome support, label/icon visibility toggles, and per-icon color theming.
+
+Bootstrap Icons CSS is loaded globally via `src/scss/printing/libs/_bootstrap-icons.scss`. Font Awesome is loaded via `src/scss/printing/libs/_font-awesome.scss`. No additional imports are needed in the component.
+
+Global styles live at `src/scss/patterns/organisms/_social-nav.scss`.
+
+## Usage
+
+```jsx
+// Horizontal with Bootstrap Icons
+<SocialNav
+  navDirection="horizontal"
+  bulletIconSize="1.25rem"
+  items={[
+    { url: 'https://twitter.com', label: 'Twitter', icon: 'bi bi-twitter-x', target: '_blank' },
+    { url: 'https://facebook.com', label: 'Facebook', icon: 'bi bi-facebook', target: '_blank' },
+    { url: 'https://instagram.com', label: 'Instagram', icon: 'bi bi-instagram', target: '_blank' },
+  ]}
+/>
+
+// Icon-only with custom colors
+<SocialNav
+  hideLabels
+  customColors
+  bulletIconSize="1.5rem"
+  items={[
+    { url: 'https://twitter.com', label: 'Twitter', icon: 'bi bi-twitter-x', target: '_blank', iconColor: 'dark' },
+    { url: 'https://facebook.com', label: 'Facebook', icon: 'bi bi-facebook', target: '_blank', iconColor: 'primary' },
+  ]}
+/>
+
+// Vertical stacked with labels and icons
+<SocialNav
+  navDirection="vertical"
+  bulletIconSize="1.25rem"
+  items={[
+    { url: 'https://linkedin.com/in/example', label: 'LinkedIn', icon: 'bi bi-linkedin', target: '_blank' },
+    { url: 'https://github.com/example', label: 'GitHub', icon: 'bi bi-github', target: '_blank' },
+  ]}
+/>
+
+// Font Awesome icons (auto-detected from class string)
+<SocialNav
+  hideLabels
+  bulletIconSize="1.5rem"
+  items={[
+    { url: 'https://twitter.com', label: 'Twitter', icon: 'fab fa-twitter', target: '_blank' },
+    { url: 'https://facebook.com', label: 'Facebook', icon: 'fab fa-facebook', target: '_blank' },
+  ]}
+/>
+```
+
+## Icon detection
+
+Icons are detected automatically from the class string passed in `item.icon`:
+
+| Class string pattern | Detected as | Rendered as |
+| --- | --- | --- |
+| `fab fa-*`, `fas fa-*`, `far fa-*`, `fal fa-*`, `fad fa-*` | Font Awesome | `<span class="icon"><i class="fab fa-…"/></span>` |
+| `bi bi-*` or any string containing the word `bi` | Bootstrap Icons | `<span class="icon"><i class="bi bi-…"/></span>` |
+| Any other string | SVG placeholder | `<span class="svg svg--colorable …"/>` |
+
+## Variants
+
+| Variant | Key Props | Description |
+| --- | --- | --- |
+| Default (horizontal) | `navDirection="horizontal"` | Flex row of icon + label links |
+| Vertical | `navDirection="vertical"` | Stacked column of icon + label links |
+| Icon only | `hideLabels` | Labels visually hidden; accessible via `aria-label`/`title` |
+| Text only | `hideIcons` | Icons hidden; label text only |
+| Custom colors | `customColors`, `item.iconColor` | Per-icon `text-{color}` / `color-fill--{color}` tokens |
+| Icon after | `bulletIconPosition="after"` | Global icon position after each label |
+
+## HTML output
+
+The component mirrors the Twig template rendered via `@molecules/list`:
+
+```html
+<div
+  class="bullet-icons bullet-icons--before list list-type--unordered nav-direction-horizontal social-nav"
+  data-pattern="timberland/social-nav"
+>
+  <span class="list-item list-item--item-1 social-nav-item">
+    <span class="icon" style="font-size: 1.25rem">
+      <i class="bi bi-twitter-x" aria-hidden="true"></i>
+    </span>
+    <a
+      href="https://twitter.com"
+      class="social-nav-link"
+      target="_blank"
+      title="Twitter"
+      aria-label="Twitter"
+      style="padding-top: 1.25rem; min-width: 1.25rem;"
+    >
+      <span class="label">Twitter</span>
+    </a>
+  </span>
+  <!-- … more items -->
+</div>
+```
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `SocialNavItem[]` | `[]` | Social link items (see SocialNavItem shape below) |
+| `navDirection` | `'horizontal' \| 'vertical'` | `'horizontal'` | Layout direction |
+| `hideLabels` | `boolean` | `false` | Hide label text visually; adds `hide-labels` class |
+| `hideIcons` | `boolean` | `false` | Hide all icons; adds `hide-icons` class |
+| `customColors` | `boolean` | `false` | Enable per-icon color tokens; adds `custom-colors` class |
+| `bulletIconPosition` | `'before' \| 'after'` | `'before'` | Global icon position for all items |
+| `bulletIconSize` | `string` | — | CSS size value (e.g. `'1.5rem'`) — sets `font-size` on icon spans and `padding-top`/`min-width` on anchors |
+| `navId` | `string` | — | HTML `id` for the container |
+| `navClasses` | `string[]` | `[]` | Additional class names for the container (array) |
+| `otherClasses` | `string` | — | Additional class string for the container |
+
+### SocialNavItem shape
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `url` | `string` | — | Link `href` |
+| `label` | `string` | — | Visible label text (also fallback for `title`/`aria-label`) |
+| `title` | `string` | `label` | `title` attribute on the `<a>` element |
+| `target` | `string` | `'_self'` | Link target (`'_blank'` for external social networks) |
+| `icon` | `string` | — | Icon class string — Bootstrap Icons, Font Awesome, or SVG name |
+| `iconColor` | `string` | — | Color token — maps to `text-{color}` (BI/SVG) or `color-fill--{color}` (FA) |
+| `iconPosition` | `'before' \| 'after'` | parent `bulletIconPosition` | Per-item icon position override |
+| `itemClasses` | `string[]` | — | Additional class names for the item `<span>` (array) |
+| `itemOtherClasses` | `string` | — | Additional class string for the item `<span>` |
+
+## Notes
+
+- All class strings on the container and each item are sorted alphabetically, mirroring the Twig `sort | join | trim` filter chain.
+- Labels are always rendered in the DOM as `<span class="label">` — `hideLabels` hides them via CSS, keeping them accessible to screen readers.
+- `bulletIconSize` sets `padding-top` and `min-width` on the anchor element, reproducing the Twig template's inline style injection for icon alignment.
+- The component does **not** import Bootstrap JS. All interactive behaviour (if any) relies on Bootstrap's global JS bundle loaded in the theme.

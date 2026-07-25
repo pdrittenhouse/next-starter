@@ -94,12 +94,7 @@ export const Page: React.FC = () => {
   return (
     <main className={styles.main}>
       <article>
-        <Header
-            user={user}
-            onLogin={() => setUser({ name: 'Kenneth Folk' })}
-            onLogout={() => setUser(undefined)}
-            onCreateAccount={() => setUser({ name: 'Kenneth Folk' })}
-        />
+        <Header />
 
         <section className={styles.descriptionWrapper}>
           <Container>

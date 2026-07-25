@@ -1,0 +1,116 @@
+import { Table } from './Table';
+
+# Table
+
+Table atom — mirrors the theme's Pattern Lab `timberland/table` pattern. Renders a standard HTML table with full Bootstrap 5 modifier support, optional caption, and explicit `<thead>`, `<tbody>`, and `<tfoot>` sections.
+
+## Usage
+
+```jsx
+// Minimal — thead + tbody
+<Table
+  thead={{ rows: [{ cells: [{ content: 'Name', element: 'th', scope: 'col' }] }] }}
+  tbody={{ rows: [{ cells: [{ content: 'Jordan Reyes' }] }] }}
+/>
+
+// Striped, hoverable, with caption
+<Table
+  striped
+  hover
+  caption="Q3 staffing snapshot"
+  captionTop
+  thead={{ rows: [headerRow] }}
+  tbody={{ rows: bodyRows }}
+  tfoot={{ rows: [footerRow] }}
+/>
+
+// Responsive wrapper
+<Table responsive="md" thead={{ rows: [headerRow] }} tbody={{ rows: bodyRows }} />
+
+// Shorthand rows (implicit tbody, no thead)
+<Table rows={bodyRows} />
+
+// Border spacing
+<Table bordered borderCollapse={false} borderSpacing={4} tbody={{ rows: bodyRows }} />
+```
+
+## Variants
+
+| Variant | Prop | Description |
+| --- | --- | --- |
+| Striped | `striped` | Alternating row backgrounds via `table-striped` |
+| Hover | `hover` | Row highlight on cursor over via `table-hover` |
+| Bordered | `bordered` | Borders on all four sides of every cell |
+| Borderless | `borderless` | Removes all cell borders |
+| Small | `small` | Halves cell padding for a denser layout (`table-sm`) |
+| Color variant | `variant` | Applies `table-{variant}` background tint |
+| Responsive | `responsive` | Wraps in a horizontally-scrollable div |
+| Caption top | `captionTop` | Positions caption above the table |
+| Border separate | `borderCollapse={false}` | Sets `border-collapse: separate` with optional pixel spacing |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `tableClasses` | `string[]` | — | Additional class names on the `<table>` element |
+| `tableId` | `string` | — | HTML `id` — also adds `table-id--{id}` BEM modifier class |
+| `className` | `string` | — | Extra class string (maps to `table_other_classes`) |
+| `striped` | `boolean` | — | Adds `table-striped` |
+| `hover` | `boolean` | — | Adds `table-hover` |
+| `active` | `boolean` | — | Adds `table-active` |
+| `bordered` | `boolean` | — | Adds `table-bordered` |
+| `borderless` | `boolean` | — | Adds `table-borderless` |
+| `small` | `boolean` | — | Adds `table-sm` |
+| `variant` | `TableVariant` | — | Adds `table-{variant}` color class |
+| `responsive` | `boolean \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | — | Wraps table in `div.table-responsive[-{bp}]` |
+| `verticalAlign` | `'top' \| 'middle' \| 'bottom'` | — | Adds `align-{value}` to the table for all cells |
+| `borderCollapse` | `boolean` | — | `true` → collapse (inline style); `false` → separate (class + inline style) |
+| `borderSpacing` | `number` | — | Pixel gap between separated borders; only applied when `borderCollapse` is `false` |
+| `caption` | `string` | — | Caption text |
+| `captionClasses` | `string[]` | — | Additional classes on `<caption>` |
+| `captionOtherClasses` | `string` | — | Extra class string on `<caption>` |
+| `captionTop` | `boolean` | — | Adds `caption-top` to position caption above the table |
+| `thead` | `TableSectionConfig` | — | Header section — renders `<thead>` |
+| `tbody` | `TableSectionConfig` | — | Body section — renders `<tbody>` |
+| `tfoot` | `TableSectionConfig` | — | Footer section — renders `<tfoot>` |
+| `rows` | `TableRowData[]` | — | Shorthand rows; wrapped in implicit `<tbody>` when `tbody` is omitted |
+
+### TableSectionConfig
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `rows` | `TableRowData[]` | Array of row objects for this section |
+| `classes` | `string[]` | Additional classes on the section element |
+| `otherClasses` | `string` | Extra class string on the section element |
+
+### TableRowData
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `cells` | `TableCellData[]` | Array of cell objects |
+| `rowClasses` | `string[]` | Additional classes on `<tr>` |
+| `rowOtherClasses` | `string` | Extra class string on `<tr>` |
+
+### TableCellData
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `content` | `React.ReactNode` | — | Cell content |
+| `element` | `'th' \| 'td'` | `'td'` | Rendered element |
+| `cellClasses` | `string[]` | — | Additional classes on the cell |
+| `cellOtherClasses` | `string` | — | Extra class string on the cell |
+| `colspan` | `number` | — | HTML `colspan` attribute |
+| `rowspan` | `number` | — | HTML `rowspan` attribute |
+| `scope` | `string` | — | HTML `scope` attribute — only applied when `element` is `'th'` |
+| `headers` | `string` | — | HTML `headers` attribute |
+| `verticalAlign` | `'top' \| 'middle' \| 'bottom'` | — | Adds `align-{value}` to the individual cell |
+| `styles` | `string[]` | — | Raw CSS declaration strings, e.g. `['color: red', 'font-weight: bold']` |
+
+## Notes
+
+- Every `<tr>` automatically receives a `table-row--row-{n}` class (1-based index within its section). Every cell receives `table-cell--cell-{n}` and `table-cell--row-{n}` classes for targeted styling.
+- The `scope` prop on a cell is silently ignored when `element` is `'td'`, matching the Twig template behavior.
+- `borderCollapse={false}` applies both a `table-border-separate` class (maps to the custom SCSS utility) and an inline `border-collapse: separate` style. `borderSpacing` further adds a `table-border-spacing-{n}` class and inline `border-spacing: {n}px`. The SCSS at `src/scss/patterns/atoms/_table.scss` generates these utility classes for values 1–20 and 25, 30, 40, 50.
+- The `rows` shorthand prop is equivalent to passing `tbody: { rows }`. If both `rows` and `tbody` are provided, `tbody` takes precedence and `rows` is ignored.
+- The component returns `null` when no rows are present in any section — matching the Twig `{% if rows or thead or tbody or tfoot %}` guard.
+- When `responsive` is `true` the wrapper receives `data-pattern="timberland/table"` in addition to the inner `<table>`, matching the Twig output.

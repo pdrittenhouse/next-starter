@@ -1,0 +1,211 @@
+// Social Nav organism styles — Next.js printing layer.
+// Source pattern: src/scss/patterns/organisms/_social-nav.scss (Timberland/Twig).
+// This file re-implements the same class structure with plain CSS / Bootstrap
+// utilities so it compiles without Timberland-specific Sass mixins.
+
+.social-nav {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: var(--social-nav-flex-align, center);
+  gap: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  background-color: var(--social-nav-bg, transparent);
+
+  // ── Item ──────────────────────────────────────────────────────────────────
+
+  &-item {
+    display: inline-flex;
+    align-items: center;
+    text-align: center;
+    flex: 0 0 auto;
+    margin: 0 calc(var(--social-nav-item-spacing, 0.25rem) * 0.5);
+    width: var(--social-nav-item-width, auto);
+    height: var(--social-nav-item-height, auto);
+    background-color: var(--social-nav-item-bg, transparent);
+    border-radius: var(--social-nav-item-border-radius, 0);
+    border: var(--social-nav-item-border-width, 0) var(--social-nav-item-border-style, solid) var(--social-nav-item-border-color, transparent);
+    transition: background-color 0.2s ease;
+    will-change: background-color;
+    vertical-align: middle;
+
+    &:hover,
+    &:focus {
+      background-color: var(--social-nav-item-bg-hover, transparent);
+
+      .icon,
+      .svg--icon,
+      svg {
+        transition: color 0.2s ease;
+        color: var(--social-nav-item-hover, inherit);
+      }
+    }
+  }
+
+  // ── Icon/SVG pointer-events ───────────────────────────────────────────────
+
+  .icon,
+  .svg--icon {
+    pointer-events: none;
+  }
+
+  // ── Default icon color (overridden by .custom-colors) ─────────────────────
+
+  &:not(.custom-colors) {
+    .social-nav-item {
+      .icon,
+      .svg--icon,
+      svg {
+        color: var(--social-nav-item, inherit);
+      }
+
+      &:hover,
+      &:focus {
+        .icon,
+        .svg--icon,
+        svg {
+          color: var(--social-nav-item-hover, inherit);
+        }
+      }
+    }
+  }
+
+  // ── Link ──────────────────────────────────────────────────────────────────
+
+  &-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 700;
+    position: relative;
+    color: var(--social-nav-item, inherit);
+    min-height: 100%;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      color: var(--social-nav-item-hover, inherit);
+    }
+  }
+
+  .label {
+    // Rendered but may be hidden by .hide-labels
+  }
+
+  // ── Directions ────────────────────────────────────────────────────────────
+
+  &.nav-direction-horizontal {
+    .social-nav-item {
+      flex-direction: column;
+    }
+
+    // Icon above/below text in horizontal mode
+    &.bullet-icons--before,
+    &.bullet-icons--after {
+      width: auto;
+      padding: 0;
+      text-align: inherit;
+
+      > .social-nav-item {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+
+        > .icon,
+        > .svg--icon {
+          position: static;
+          transform: none;
+        }
+
+        .social-nav-link {
+          padding-top: 0 !important; // override inline style from Twig template
+        }
+      }
+    }
+  }
+
+  &.nav-direction-vertical {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .social-nav-item {
+      flex-direction: row;
+      margin-bottom: var(--social-nav-item-spacing, 0.5rem);
+    }
+
+    // Icon left/right of text in vertical mode
+    &.bullet-icons--before,
+    &.bullet-icons--after {
+      > .social-nav-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5em;
+
+        > .icon,
+        > .svg--icon {
+          position: static;
+          transform: none;
+        }
+
+        .social-nav-link {
+          padding-top: 0 !important;
+        }
+      }
+    }
+
+    // Push icon after text in vertical icon-after mode
+    &.bullet-icons--after {
+      > .social-nav-item {
+        > .icon,
+        > .svg--icon {
+          order: 1;
+        }
+      }
+    }
+  }
+
+  // ── Visibility modifiers ──────────────────────────────────────────────────
+
+  &.hide-labels {
+    .social-nav-item {
+      position: relative;
+    }
+
+    .label {
+      // Visually hidden — accessible to screen readers via aria-label/title on <a>
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  }
+
+  &.hide-icons {
+    > .social-nav-item {
+      > .icon,
+      .icon,
+      > .svg,
+      .svg,
+      > .svg--icon,
+      .svg--icon {
+        display: none;
+      }
+    }
+
+    .social-nav-link {
+      padding-top: 0;
+    }
+  }
+}

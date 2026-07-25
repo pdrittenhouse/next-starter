@@ -1,0 +1,224 @@
+import { CardGrid } from './CardGrid';
+
+# CardGrid
+
+CardGrid organism — mirrors the `timberland/card-grid` Pattern Lab pattern at
+`03-organisms/card-grid/_card-grid.tpl.twig`.
+
+Renders an array of **Card** organisms inside a responsive grid wrapper. Four layout
+strategies are supported via the `type` prop. Cards can carry images, icons, labels,
+titles, body copy, CTA buttons, and footers — with support for fully-linked cards,
+color backgrounds, flip-card effects, and vertical-offset staggering.
+
+## Usage
+
+```jsx
+// Minimal — 3-column grid with card data
+<CardGrid
+  type="grid"
+  columns={3}
+  cards={[
+    {
+      card_title: 'Article One',
+      card_text: 'Summary copy goes here.',
+      card_image: { src: '/images/photo.jpg', alt: 'Photo', width: 800, height: 500 },
+      card_image_location: 'top',
+      card_button: { label: 'Read More', variant: 'primary', href: '/article-1', as: 'a' },
+    },
+  ]}
+/>
+
+// With grid title and placecard fill
+<CardGrid
+  card_grid_title="Latest Articles"
+  type="grid"
+  columns={3}
+  placecard
+  cards={[...fiveCards]}
+/>
+
+// Bootstrap row layout
+<CardGrid type="row" columns={3} cards={[...threeCards]} />
+
+// Fully linked cards (entire card surface is <a>)
+<CardGrid
+  columns={3}
+  cards={cards.map(c => ({ ...c, card_linked: true }))}
+/>
+```
+
+## Layout types
+
+| `type` | Inner element classes | Description |
+| --- | --- | --- |
+| `'grid'` | `card-grid grid-cols-{n}` | Custom flex-grid (default). Pairs with `grid-cols-*` SCSS rules. |
+| `'row'` | `card-row row row-cols-{n}` | Bootstrap responsive row. Cards have equal height via flexbox. |
+| `'group'` | `card-group` | Bootstrap card-group: flush side-by-side, equal height, no gutter. |
+| `'deck'` | `card-deck` | Bootstrap card-deck (BS4 legacy). Prefer `'grid'` for Bootstrap 5. |
+
+## Columns modifier classes
+
+When `type="grid"`, the `columns` prop appends `grid-cols-{n}` to the inner element.
+The theme's `_card-grid.scss` provides flex-grid rules for 2–6 columns.
+
+When `type="row"`, the `columns` prop appends `row-cols-{n}` — a Bootstrap utility
+that sets equal column widths via CSS Custom Properties.
+
+## Placecard fill
+
+When `placecard=true` and `columns >= 2`, the component appends `columns - 2` invisible
+`<span class="placecard">` elements after the last card. These fill empty cells in the
+final flex row, preventing the last card from stretching to fill the remaining width.
+
+## Vertical offset stagger
+
+`vertical_offset="left"` | `"right"` combined with `singlerow=true` staggers cards
+vertically. The SCSS applies progressive `margin-top` overrides per nth-child so cards
+step down (left) or step up (right) across the row.
+
+## Props
+
+### `CardGridProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `type` | `'grid' \| 'row' \| 'group' \| 'deck'` | `'grid'` | Layout strategy for the inner grid element |
+| `card_grid_title` | `string` | — | Optional `<h2>` heading above the grid |
+| `columns` | `2 \| 3 \| 4 \| 5 \| 6` | — | Number of columns |
+| `placecard` | `boolean` | `false` | Append invisible fill spans to the last flex row |
+| `singlerow` | `boolean` | `false` | Lock the grid to one horizontal row |
+| `mobilecolumns` | `boolean` | `false` | Preserve columns on mobile (no stacking) |
+| `vertical_offset` | `'left' \| 'right'` | — | Vertical stagger direction |
+| `cards` | `CardProps[]` | `[]` | Array of card data objects |
+| `className` | `string` | — | Additional classes on the outer `.card-grid-wrapper` |
+| `gridClassName` | `string` | — | Additional classes on the inner grid `<div>` |
+
+### `CardProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `card_element` | `'div' \| 'article' \| 'section'` | `'div'` | Semantic root element (overridden to `<a>` when `card_linked`) |
+| `card_width` | `25 \| 50 \| 75` | — | Fixed percentage width (`w-25`, `w-50`, `w-75`) |
+| `card_background` | `string` | — | Bootstrap bg-color suffix (e.g. `'primary'`) |
+| `card_border` | `string` | — | Bootstrap border-color suffix |
+| `no_border` | `boolean` | `false` | Remove the card border |
+| `inherit_color` | `boolean` | `false` | Reset text colors to inherit from parent |
+| `text_alignment` | `'start' \| 'center' \| 'end'` | — | Bootstrap text-alignment suffix |
+| `text_color` | `string` | — | Bootstrap text-color suffix |
+| `card_header` | `string` | — | Static text in the card header bar |
+| `card_label` | `string` | — | Category label beside the icon |
+| `card_icon` | `CardIconProps` | — | Icon font class object rendered in the card lead |
+| `card_image_location` | `'top' \| 'bottom'` | — | Render the image in the header (top) or footer (bottom) |
+| `card_image` | `CardImageProps` | — | Image data passed to the Image atom |
+| `background_image` | `string` | — | CSS `background-image` URL applied as inline style |
+| `card_image_overlay` | `boolean` | `false` | Overlay body content on the image |
+| `card_image_overlay_text` | `string` | — | Text shown in the image overlay band |
+| `card_title` | `string` | — | `<h4 class="card-title">` |
+| `card_subtitle` | `string` | — | `<h6 class="card-subtitle">` |
+| `card_text` | `string` | — | Body copy (HTML allowed; rendered via `dangerouslySetInnerHTML`) |
+| `no_body_padding` | `boolean` | `false` | Remove padding from the card body |
+| `card_button` | `ButtonProps` | — | CTA button rendered via the Button atom |
+| `card_linked` | `boolean` | `false` | Make the entire card a clickable `<a>` link |
+| `card_link` | `string` | — | URL for linked card or inline text link |
+| `card_link_target` | `'_self' \| '_blank' \| '_parent' \| '_top'` | `'_self'` | Link target |
+| `card_link_text` | `string` | — | Visible text for the inline card link |
+| `no_header_padding` | `boolean` | `false` | Remove padding from the card header |
+| `no_footer_padding` | `boolean` | `false` | Remove padding from the card footer |
+| `card_footer` | `string` | — | Footer content (HTML allowed; rendered via `dangerouslySetInnerHTML`) |
+| `flip_card` | `boolean` | `false` | Enable 3-D flip-card (adds `.flip-card` and a `.back` face) |
+| `back_background_image` | `string` | — | Back-face background-image URL (flip card only) |
+| `card_id` | `string` | — | HTML `id` attribute on the card root |
+| `className` | `string` | — | Additional class names on the card root element |
+
+### `CardImageProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` | `string` | — | Image source URL (required) |
+| `alt` | `string` | — | Alt text — use `''` for decorative images |
+| `variant` | `ImageVariant` | `'primary'` | Image atom rendering variant |
+| `width` | `number` | — | Explicit width in pixels |
+| `height` | `number` | — | Explicit height in pixels |
+| `sizes` | `string` | — | Responsive `sizes` attribute |
+| `loading` | `'lazy' \| 'eager'` | `'lazy'` | Native lazy loading |
+| `className` | `string` | — | Additional classes on the Image atom root |
+
+### `CardIconProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `className` | `string` | — | Icon font class string (e.g. `'bi bi-rocket'`) |
+| `ariaLabel` | `string` | — | Accessible label; omit for decorative icons |
+
+## HTML Structure
+
+```html
+<div class="card-grid-wrapper" data-pattern="timberland/card-grid">
+  <!-- optional -->
+  <h2 class="card-grid--title">Grid Title</h2>
+
+  <div class="card-grid grid-cols-3">
+
+    <!-- repeated for each card -->
+    <div class="card has-img" data-pattern="timberland/card">
+      <div class="card-wrapper">
+        <div class="front">
+          <div class="card-content-wrapper-outer">
+            <div class="card-content-wrapper-inner">
+
+              <!-- header: icon, label, image-top -->
+              <div class="card-header">
+                <div class="card-lead">
+                  <div class="card-icon"><span class="card-icon-el bi bi-rocket"></span></div>
+                  <span class="card-label">Category</span>
+                </div>
+                <div class="card-image">
+                  <!-- Image atom -->
+                </div>
+              </div>
+
+              <!-- body: title, subtitle, text, link, button -->
+              <div class="card-content">
+                <div class="card-intro">
+                  <h4 class="card-title">Title</h4>
+                  <h6 class="card-subtitle">Subtitle</h6>
+                </div>
+                <div class="card-body">
+                  <div class="card-text">Body copy…</div>
+                  <a href="#" class="card-link">Read More</a>
+                  <!-- Button atom -->
+                </div>
+              </div>
+
+              <!-- footer: text, image-bottom -->
+              <div class="card-footer">
+                <div class="card-footer-content">Footer content</div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- flip_card back face (omitted unless flip_card=true) -->
+      </div>
+    </div>
+
+    <!-- placecard fill spans (omitted unless placecard=true) -->
+    <span class="placecard" aria-hidden="true"></span>
+
+  </div>
+</div>
+```
+
+## Notes
+
+- The `<div class="card-header">` slot is suppressed entirely when no `card_icon`,
+  `card_label`, `card_header`, or `card_image_location="top"` is provided.
+- The `<div class="card-footer">` slot is suppressed when neither `card_footer` nor
+  a bottom image is present.
+- `card_text` and `card_footer` accept raw HTML strings and are rendered with
+  `dangerouslySetInnerHTML` — sanitize values from untrusted sources before passing them.
+- When `card_linked=true`, the card root is rendered as `<a>` with an accessible
+  `aria-label` derived from `card_title`.
+- Flip-card CSS animation is not included in this module; global theme styles at
+  `src/scss/patterns/organisms/_card.scss` handle the `.flip-card` transform.
+- Global SCSS lives at `src/scss/patterns/organisms/_card-grid.scss`.

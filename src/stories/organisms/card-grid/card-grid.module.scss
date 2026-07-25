@@ -1,0 +1,201 @@
+// CardGrid organism — scoped CSS module
+//
+// Global structural styles for this organism live at:
+//   src/scss/patterns/organisms/_card-grid.scss
+//
+// This module provides only the CSS Custom Property overrides and scoped
+// adjustments needed to support CardGrid.tsx story previews in Storybook.
+// For production flex-grid mixins (flex-grid(), media-breakpoint-up(), etc.)
+// edit the global SCSS file above.
+
+// ---------------------------------------------------------------------------
+// Card grid wrapper
+// ---------------------------------------------------------------------------
+
+.cardGridWrapper {
+  // Storybook preview breathing room
+  padding: var(--bs-gutter-x, 1.5rem) 0;
+}
+
+// ---------------------------------------------------------------------------
+// Grid layout — grid-cols-* (mirrors the flex-grid mixin output)
+//
+// In production the `flex-grid()` SCSS mixin generates these rules.
+// These module-scoped rules provide a CSS Grid equivalent for Storybook
+// previews that do not run the full webpack/sass-loader pipeline.
+// ---------------------------------------------------------------------------
+
+:global(.card-grid) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.875rem; // 30px — matches the $gutter value used in the flex-grid mixin
+
+  > :global(.card),
+  > :global(.placecard) {
+    flex: 1 1 100%; // stacked on xs by default
+  }
+
+  // 2-column grid
+  &:global(.grid-cols-2) {
+    > :global(.card),
+    > :global(.placecard) {
+      @media (min-width: 768px) {
+        flex: 1 1 calc(50% - 0.9375rem);
+        max-width: calc(50% - 0.9375rem);
+      }
+    }
+  }
+
+  // 3-column grid
+  &:global(.grid-cols-3) {
+    > :global(.card),
+    > :global(.placecard) {
+      @media (min-width: 768px) {
+        flex: 1 1 calc(50% - 0.9375rem);
+        max-width: calc(50% - 0.9375rem);
+      }
+
+      @media (min-width: 992px) {
+        flex: 1 1 calc(33.333% - 1.25rem);
+        max-width: calc(33.333% - 1.25rem);
+      }
+    }
+  }
+
+  // 4-column grid
+  &:global(.grid-cols-4) {
+    > :global(.card),
+    > :global(.placecard) {
+      @media (min-width: 768px) {
+        flex: 1 1 calc(50% - 0.9375rem);
+        max-width: calc(50% - 0.9375rem);
+      }
+
+      @media (min-width: 1200px) {
+        flex: 1 1 calc(25% - 1.40625rem);
+        max-width: calc(25% - 1.40625rem);
+      }
+    }
+  }
+
+  // 5-column grid
+  &:global(.grid-cols-5) {
+    > :global(.card),
+    > :global(.placecard) {
+      @media (min-width: 768px) {
+        flex: 1 1 calc(50% - 0.9375rem);
+        max-width: calc(50% - 0.9375rem);
+      }
+
+      @media (min-width: 1200px) {
+        flex: 1 1 calc(20% - 1.5rem);
+        max-width: calc(20% - 1.5rem);
+      }
+    }
+  }
+
+  // 6-column grid
+  &:global(.grid-cols-6) {
+    > :global(.card),
+    > :global(.placecard) {
+      @media (min-width: 576px) {
+        flex: 1 1 calc(50% - 0.9375rem);
+        max-width: calc(50% - 0.9375rem);
+      }
+
+      @media (min-width: 1400px) {
+        flex: 1 1 calc(16.666% - 1.5625rem);
+        max-width: calc(16.666% - 1.5625rem);
+      }
+    }
+  }
+
+  // Single-row lock — prevent wrapping beyond first row
+  &:global(.single-row) {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  // Mobile columns — 2-up from xs (overrides default stacked layout)
+  &:global(.mobile-columns) {
+    > :global(.card),
+    > :global(.placecard) {
+      flex: 1 1 calc(50% - 0.9375rem);
+      max-width: calc(50% - 0.9375rem);
+    }
+  }
+
+  // Placecard: invisible flex spacer, no visual height
+  :global(.placecard) {
+    height: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    overflow: hidden;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Grid title
+// ---------------------------------------------------------------------------
+
+:global(.card-grid--title) {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+// ---------------------------------------------------------------------------
+// Vertical offset (mirrors Twig _card-grid.scss stagger logic)
+// ---------------------------------------------------------------------------
+
+:global(.card-grid.vertical-offset) {
+
+  // Left stagger: first card is lowest, last is highest
+  &:global(.vertical-offset-left) {
+    &:global(.grid-cols-2) > :global(.card) {
+      @media (min-width: 768px) {
+        &:nth-of-type(1) { margin-top: 1rem !important; }
+      }
+    }
+
+    &:global(.grid-cols-3) > :global(.card) {
+      @media (min-width: 992px) {
+        &:nth-of-type(1) { margin-top: 2rem !important; }
+        &:nth-of-type(2) { margin-top: 1rem !important; }
+      }
+    }
+
+    &:global(.grid-cols-4) > :global(.card) {
+      @media (min-width: 1200px) {
+        &:nth-of-type(1) { margin-top: 3rem !important; }
+        &:nth-of-type(2) { margin-top: 2rem !important; }
+        &:nth-of-type(3) { margin-top: 1rem !important; }
+      }
+    }
+  }
+
+  // Right stagger: last card is lowest, first is highest
+  &:global(.vertical-offset-right) {
+    &:global(.grid-cols-2) > :global(.card) {
+      @media (min-width: 768px) {
+        &:nth-of-type(2) { margin-top: 1rem !important; }
+      }
+    }
+
+    &:global(.grid-cols-3) > :global(.card) {
+      @media (min-width: 992px) {
+        &:nth-of-type(2) { margin-top: 1rem !important; }
+        &:nth-of-type(3) { margin-top: 2rem !important; }
+      }
+    }
+
+    &:global(.grid-cols-4) > :global(.card) {
+      @media (min-width: 1200px) {
+        &:nth-of-type(2) { margin-top: 1rem !important; }
+        &:nth-of-type(3) { margin-top: 2rem !important; }
+        &:nth-of-type(4) { margin-top: 3rem !important; }
+      }
+    }
+  }
+}

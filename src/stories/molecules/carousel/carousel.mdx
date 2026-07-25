@@ -1,0 +1,110 @@
+import { Carousel } from './Carousel';
+
+# Carousel
+
+Carousel molecule — mirrors the theme's Pattern Lab `timberland/carousel` pattern (`02-molecules/carousel/_carousel.tpl.twig`).
+
+Composes the **Image** atom for slide images and the **Button** atom for indicator dots and prev/next controls. Bootstrap's carousel JS is expected to be loaded globally; the component only emits static HTML and `data-bs-*` attributes.
+
+## Usage
+
+```jsx
+import { Carousel } from '@/stories/molecules/carousel/Carousel';
+
+// Basic carousel with arrows and indicators
+<Carousel
+  slides={[
+    {
+      image: { src: '/images/slide-1.jpg', alt: 'First slide', width: 1200, height: 600 },
+      label: 'Slide One',
+      caption: 'Introductory text for the first slide.',
+      active: true,
+    },
+    {
+      image: { src: '/images/slide-2.jpg', alt: 'Second slide', width: 1200, height: 600 },
+      label: 'Slide Two',
+      caption: 'Introductory text for the second slide.',
+    },
+  ]}
+/>
+
+// Autoplay with crossfade transition
+<Carousel
+  crossfade
+  ride="carousel"
+  interval={5000}
+  slides={[...]}
+/>
+
+// Dark controls for light-toned images
+<Carousel dark slides={[...]} />
+
+// No controls — purely decorative banner rotation
+<Carousel arrows={false} indicators={false} ride="carousel" slides={[...]} />
+```
+
+## Variants
+
+| Variant | Props | Description |
+| --- | --- | --- |
+| Default | — | Slide transition, arrows + indicators visible |
+| Crossfade | `crossfade={true}` | Fade transition between slides |
+| Dark controls | `dark={true}` | Darker arrows/indicators for light-toned images |
+| Autoplay | `ride="carousel"` + `interval={ms}` | Auto-cycles on page load |
+| No controls | `arrows={false}` `indicators={false}` | Hides all interactive chrome |
+
+## Props
+
+### CarouselProps
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `slides` | `ImageSlide[]` | **required** | Ordered array of slide objects |
+| `carouselId` | `string` | auto | Explicit element ID. Auto-generated with `useId()` if omitted |
+| `carouselClasses` | `string[]` | `[]` | Additional CSS classes as an array (merged with base classes) |
+| `carouselOtherClasses` | `string` | — | Additional CSS classes as a string (appended last) |
+| `className` | `string` | — | Convenience shorthand for extra classes |
+| `arrows` | `boolean` | `true` | Show prev/next arrow controls |
+| `indicators` | `boolean` | `true` | Show slide indicator dots |
+| `crossfade` | `boolean` | `false` | Fade transition instead of slide |
+| `touch` | `boolean` | — | Control touch-swipe on touchscreen devices |
+| `dark` | `boolean` | `false` | Apply `carousel-dark` variant |
+| `interval` | `number \| 'false'` | — | Auto-cycle delay in ms; `'false'` disables auto-cycling |
+| `keyboard` | `boolean` | — | Respond to keyboard events |
+| `pause` | `'hover' \| 'false'` | — | `'hover'` pauses on mouseenter; `'false'` disables pause |
+| `ride` | `boolean \| 'carousel'` | — | `'carousel'` autoplays on load; `true` autoplays after first interaction |
+| `wrap` | `boolean` | — | `true` cycles continuously; `false` stops at last slide |
+
+### ImageSlide
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `image` | `SlideImage` | — | Image props for this slide (see SlideImage below) |
+| `label` | `string` | — | Slide heading — renders as `<h5 class="carousel--label">` |
+| `caption` | `string` | — | Slide caption — renders as `<p class="carousel--caption">` |
+| `active` | `boolean` | — | Mark this slide as the initially visible slide |
+| `delay` | `number` | — | Per-slide auto-cycle interval override in ms |
+
+### SlideImage
+
+Extends all `ImageProps` from the Image atom (except `className`):
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `src` | `string` | Image source URL |
+| `alt` | `string` | Alt text — required for accessibility |
+| `variant` | `ImageVariant` | Image rendering variant (defaults to `'primary'`) |
+| `width` | `number` | Width in px |
+| `height` | `number` | Height in px |
+| `sizes` | `string` | Responsive sizes hint |
+| `loading` | `'lazy' \| 'eager'` | Native lazy loading (defaults to `'lazy'`) |
+| `fetchPriority` | `'high' \| 'low' \| 'auto'` | Fetch priority; use `'high'` for LCP slides |
+| `imageOtherClasses` | `string` | Extra CSS classes on the image element (`image_other_classes` in Twig) |
+
+## Notes
+
+- Mark exactly **one** slide with `active: true`. Without it the carousel has no visible initial state.
+- For the LCP image (typically slide 0), set `fetchPriority="high"` and `loading="eager"` on its `image` to avoid a layout shift penalty.
+- Bootstrap's carousel JS uses `data-bs-target` (set automatically from the carousel's resolved ID) to link indicator dots and controls to their parent carousel. No manual wiring is required.
+- `interval` and `slide.delay` accept milliseconds as a number or the string `'false'` to match Bootstrap's JS API convention.
+- Global styles live in `src/scss/patterns/molecules/_carousel.scss`. The CSS module (`carousel.module.scss`) is intentionally minimal — add only module-scoped overrides there.

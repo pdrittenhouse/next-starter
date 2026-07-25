@@ -1,0 +1,98 @@
+import { Alert } from './Alert';
+
+# Alert
+
+Alert atom — mirrors the theme's Pattern Lab `timberland/alert` pattern. Wraps Bootstrap 5 alert markup with typed props for status color, ARIA semantics, dismiss behavior, and optional link and secondary footer content.
+
+## Usage
+
+```jsx
+// Minimal — title only
+<Alert alertTitle="Your changes have been saved." />
+
+// With primary body text
+<Alert
+  alertTitle="Heads up!"
+  alertPrimary="This action will permanently delete the selected records."
+/>
+
+// With footer paragraph
+<Alert
+  alertTitle="Before you continue"
+  alertPrimary="Completing this step will submit your application for review."
+  alertSecondary="Allow 3–5 business days for a response."
+/>
+
+// With a link on the title
+<Alert
+  status="info"
+  alertTitle="Update available — click to learn more."
+  alertPrimary="Version 4.2.0 includes security patches."
+  alertLink="#release-notes"
+/>
+
+// Error alert (role="alert" for immediate screen-reader announcement)
+<Alert
+  status="danger"
+  alertType="error"
+  alertTitle="Unable to process your request."
+  alertPrimary="The server returned a 500 error."
+/>
+
+// Dismissable
+<Alert
+  status="success"
+  alertTitle="Payment confirmed."
+  alertPrimary="A receipt has been sent to your email."
+  dismissable
+/>
+
+// Centered with bottom close button
+<Alert
+  status="warning"
+  alertType="warning"
+  alertTitle="Scheduled maintenance"
+  alertPrimary="The system will be unavailable on Sunday from 2:00–4:00 AM UTC."
+  alertTextAlign="center"
+  dismissable
+  closePosition="bottom"
+/>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| `info` | Default informational alert (blue) |
+| `success` | Confirmation of a successful action (green) |
+| `warning` | Non-critical caution (yellow) |
+| `danger` | Error or destructive action (red) |
+| `primary` | Brand-primary color |
+| `secondary` | Muted secondary color |
+| `light` | Low-contrast light background |
+| `dark` | High-contrast dark background |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `status` | `AlertStatus` | `'info'` | Bootstrap color variant; maps to `alert-{status}` |
+| `alertType` | `'status' \| 'warning' \| 'error'` | `'status'` | ARIA semantic type — `'error'` renders `role="alert"`; all other values render `aria-live="polite"` |
+| `alertTitle` | `string` | — | Heading text; renders as `<h2>` when body content is present, `<p>` when it is the sole element |
+| `alertPrimary` | `string` | — | Primary body paragraph |
+| `alertSecondary` | `string` | — | Footer paragraph, preceded by a horizontal rule |
+| `alertLink` | `string` | — | URL applied to the title (or primary paragraph when no title is set) |
+| `dismissable` | `boolean` | `false` | Renders a dismiss button with `data-bs-dismiss="alert"` |
+| `closePosition` | `'top' \| 'bottom'` | `'top'` | Position of the dismiss button relative to the alert body |
+| `alertTextAlign` | `'start' \| 'center' \| 'end'` | — | Bootstrap 5 text alignment class (`text-start`, `text-center`, `text-end`) |
+| `className` | `string` | — | Additional CSS class names appended to the wrapper |
+| `additionalContent` | `React.ReactNode` | — | Slotted content rendered in the header block (before the title) and in the footer block (after the secondary paragraph). Mirrors the Twig `additional_content` variable. |
+
+## Notes
+
+- When `alertTitle` is the only content element (no `alertPrimary`, `alertSecondary`, or `additionalContent`), the wrapper receives `d-flex` and the title renders as a `<p class="alert-text">` rather than an `<h2>`. The same applies when `alertPrimary` is the sole element.
+- `alertLink` attaches to the **title** when `alertTitle` is set. When only `alertPrimary` is present, the link wraps the primary paragraph instead.
+- `alertType` is separate from `status`. `status` controls the Bootstrap color class; `alertType` controls whether the alert announces immediately (`role="alert"`) or politely (`aria-live="polite"`). For error alerts, use both `status="danger"` and `alertType="error"`.
+- The dismiss button uses Bootstrap's `data-bs-dismiss="alert"` attribute, which requires Bootstrap JS (or the Bootstrap bundle) to be loaded. In a Next.js project this is typically imported in `_app.tsx` or `layout.tsx`.
+- `additionalContent` is rendered twice — once in the header slot (after the top dismiss button, before the title) and once in the footer slot (after `alertSecondary`, before the bottom dismiss button). This mirrors the Twig pattern's behavior where `additional_content` fills both blocks.
+- Bootstrap 5 removed `text-left` and `text-right`; use `alertTextAlign="start"` and `alertTextAlign="end"` instead.

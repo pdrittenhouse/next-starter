@@ -1,0 +1,183 @@
+import { List } from './List';
+
+# List
+
+List molecule — mirrors the theme's Pattern Lab `timberland/list` pattern at
+`src/design-system/patterns/02-molecules/list/_list.tpl.twig`.
+
+Renders a `<ul>` or `<ol>` with optional icon bullets, configurable icon positions,
+per-item overrides, and recursive nested list support. Class names are merged and
+alphabetically sorted to produce deterministic output matching the Twig template.
+
+## Usage
+
+```jsx
+// Plain unordered list
+<List
+  listId="features"
+  items={[
+    { itemText: 'Design tokens shared via npm' },
+    { itemText: 'Pattern-matched Twig templates' },
+    { itemText: 'Bootstrap 5 utility classes' },
+  ]}
+/>
+
+// Ordered list
+<List
+  parentElement="ol"
+  listId="steps"
+  items={[
+    { itemText: 'npm install' },
+    { itemText: 'cp .env.example .env.local' },
+    { itemText: 'npm run dev' },
+  ]}
+/>
+
+// Icon bullets — Font Awesome, icons before text
+<List
+  listId="checklist"
+  bulletIcons
+  bulletIconPosition="before"
+  bulletIconSize="1rem"
+  items={[
+    { itemText: 'Unlimited bandwidth', itemIcon: 'fas fa-check', iconColor: 'success' },
+    { itemText: '24/7 support',        itemIcon: 'fas fa-check', iconColor: 'success' },
+  ]}
+/>
+
+// Icons after text
+<List
+  listId="links"
+  bulletIcons
+  bulletIconPosition="after"
+  items={[
+    { itemText: 'Documentation', itemIcon: 'fas fa-arrow-right', iconColor: 'primary' },
+  ]}
+/>
+
+// Per-item icon control (no global bulletIconPosition)
+<List
+  listId="status"
+  items={[
+    { itemText: 'Included',  itemIcon: 'fas fa-check-circle', iconPosition: 'before', iconColor: 'success' },
+    { itemText: 'Excluded',  itemIcon: 'fas fa-times-circle', iconPosition: 'before', iconColor: 'danger' },
+  ]}
+/>
+
+// Nested list
+<List
+  listId="nav"
+  items={[
+    {
+      itemText: 'Frontend',
+      items: [{ itemText: 'Next.js' }, { itemText: 'TypeScript' }],
+    },
+  ]}
+/>
+```
+
+## Icon types
+
+Two icon types are detected automatically from the `itemIcon` string:
+
+| Icon type | Detection | Rendered HTML |
+| --- | --- | --- |
+| **Font Awesome** | Class string contains `fab`, `fad`, `fal`, `far`, or `fas` (with optional `fa-` prefix pattern) | `<span class="icon"><i class="fas fa-check color-fill--success"></i></span>` |
+| **SVG** | Any other non-empty string | `<span class="svg svg--colorable text-{color}"></span>` — requires a sprite system for content |
+
+SVG icons render a span wrapper whose CSS classes (`svg`, `svg--colorable`, `text-{color}`)
+match the Svg atom's inline output for CSS targeting. Actual SVG content requires an external
+sprite system or inline SVG markup provided via a custom render prop.
+
+## Icon position logic
+
+The `bulletIconPosition` prop on the parent **overrides** per-item `iconPosition`:
+
+| `bulletIconPosition` | `item.iconPosition` | Icon shown before | Icon shown after |
+| --- | --- | --- | --- |
+| `'before'` | any | Yes | No |
+| `'after'` | any | No | Yes |
+| _(not set)_ | `'before'` (default) | Yes | No |
+| _(not set)_ | `'after'` | No | Yes |
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | Plain `<ul>` with `list-type--unordered` class |
+| Ordered | `<ol>` with `list-type--ordered` class |
+| Icon Bullets | `bullet-icons` class + icon rendered via `itemIcon` per item |
+| Icon Before | `bullet-icons--before` class, icons positioned before text |
+| Icon After | `bullet-icons--after` class, icons positioned after text |
+| Nested | Recursive `List` render for items with a `.items` array |
+
+## Props
+
+### ListProps
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `parentElement` | `'ul' \| 'ol'` | `'ul'` | HTML element for the list container. Drives `list-type--ordered` vs `list-type--unordered`. |
+| `parentClasses` | `string[]` | — | Extra classes merged into the sorted class string (array). |
+| `parentOtherClasses` | `string` | — | Extra classes merged into the sorted class string (string). |
+| `listId` | `string` | — | HTML `id` attribute. Adds `list-id--{id}` CSS class when provided. |
+| `bulletIcons` | `boolean` | `false` | Replace native list markers with icons. Adds `bullet-icons` class. |
+| `bulletIconPosition` | `'before' \| 'after'` | — | Global icon position. Adds `bullet-icons--before` or `bullet-icons--after` class. Overrides per-item `iconPosition`. |
+| `bulletIconSize` | `string` | — | Global icon size (e.g. `'1.25rem'`). Overrides per-item `iconWidth`/`iconHeight`. |
+| `items` | `ListItem[]` | — | Array of list items. Renders nothing when empty or omitted. |
+
+### ListItem
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `itemText` | `ReactNode` | — | Item text or rich content. |
+| `itemElement` | `string` | `'li'` | HTML element for this item. |
+| `itemIcon` | `string` | — | Font Awesome class string or SVG icon name. |
+| `iconPosition` | `'before' \| 'after'` | `'before'` | Per-item icon position. Overridden by parent `bulletIconPosition`. |
+| `iconColor` | `string` | — | Maps to `color-fill--{color}` (FA) or `text-{color}` (SVG). |
+| `iconWidth` | `string` | `'1em'` | Icon width. Overridden by parent `bulletIconSize`. |
+| `iconHeight` | `string` | `'1em'` | Icon height. Overridden by parent `bulletIconSize`. Drives `line-height` on the `<li>`. |
+| `iconStyles` | `React.CSSProperties` | — | Additional inline styles for the icon element. |
+| `itemClasses` | `string[]` | — | Extra classes merged into the sorted item class string (array). |
+| `itemOtherClasses` | `string` | — | Extra classes merged into the sorted item class string (string). |
+| `itemOtherAttributes` | `React.HTMLAttributes<HTMLElement>` | — | Additional HTML attributes spread onto the item element. |
+| `items` | `ListItem[]` | — | Nested list items — triggers recursive rendering. |
+| `parentElement` | `'ul' \| 'ol'` | `'ul'` | Container element for the nested list. |
+| `listId` | `string` | — | ID for the nested list element. |
+| `bulletIcons` | `boolean` | — | Enable icon bullets on the nested list. |
+| `bulletIconPosition` | `'before' \| 'after'` | — | Global icon position for the nested list. |
+| `bulletIconSize` | `string` | — | Global icon size for the nested list. |
+| `parentClasses` | `string[]` | — | Extra classes for the nested list container (array). |
+| `parentOtherClasses` | `string` | — | Extra classes for the nested list container (string). |
+
+## CSS class output
+
+The molecule always adds these classes to the container element:
+
+```
+list  list-id--{id}  list-type--{ordered|unordered}
+```
+
+When `bulletIcons` is `true`:
+
+```
+bullet-icons  bullet-icons--before   (or --after)
+```
+
+Each `<li>` always receives:
+
+```
+list-item  list-item--item-{n}
+```
+
+All classes are alphabetically sorted before joining, matching the Twig `| sort` filter.
+
+## Notes
+
+- The `data-pattern="timberland/list"` attribute is always present on the container element —
+  it matches Twig template output and enables global CSS targeting.
+- Global SCSS lives at `src/scss/patterns/molecules/_list.scss` and provides
+  `.list-type--ordered`, `.list-type--unordered`, `.bullet-icons`, `.bullet-icons--before`,
+  and `.bullet-icons--after` styles.
+- Font Awesome and icon fonts must be loaded globally; the component does not import them.
+- SVG icons by name require a sprite sheet or inline SVG delivery system outside this component.

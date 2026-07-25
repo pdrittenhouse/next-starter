@@ -1,0 +1,8 @@
+// Branding molecule — CSS Module (local overrides only).
+//
+// Global styles for .branding and all BEM elements are in:
+//   src/scss/patterns/molecules/_branding.scss
+//
+// Add CSS Module classes here only if a local scoped style is needed
+// that cannot live in the global sheet (e.g. a Storybook-specific wrapper).
+// Reference them in Branding.tsx via `import styles from './branding.module.scss'`.

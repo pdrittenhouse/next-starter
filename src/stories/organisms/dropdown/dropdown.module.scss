@@ -1,0 +1,29 @@
+// Dropdown organism — CSS Module (local classes only).
+//
+// Global styles for this component live in:
+//   src/scss/patterns/organisms/_dropdown.scss
+//
+// That file is compiled into the global stylesheet via webpack/Next.js
+// and targets the following selectors produced by Dropdown.tsx:
+//
+//   [data-pattern="timberland/dropdown"]   component root (div or btn-group wrapper)
+//
+// Bootstrap 5 native classes used by this component:
+//   .dropdown              standard wrapper (direction: down)
+//   .dropup                wrapper when direction="up"
+//   .dropstart             wrapper when direction="left"
+//   .dropend               wrapper when direction="right"
+//   .btn-group             wrapper when buttonGroup=true
+//   .btn-group-sm          size modifier when buttonGroupSize="sm"
+//   .btn-group-lg          size modifier when buttonGroupSize="lg"
+//   .dropdown-toggle       toggle button (added by Button atom via data-bs-toggle)
+//   .dropdown-menu         <ul> menu element
+//   .dropdown-menu-dark    dark variant applied when dark=true
+//   .dropdown-menu-end     right-aligned menu when menuAlign="end"
+//   .show                  dynamically added by Bootstrap JS when menu is open
+//   .dropdown-item         standard menu item (anchors and buttons)
+//   .dropdown-header       section heading (h1–h6 items)
+//   .dropdown-divider      horizontal rule separator (<hr> items)
+//
+// Add local (scoped) overrides here only when a module-scoped class is
+// needed — e.g. a layout wrapper specific to a single page consumer.

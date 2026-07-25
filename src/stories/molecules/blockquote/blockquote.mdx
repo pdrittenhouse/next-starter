@@ -1,0 +1,112 @@
+import { Blockquote } from './Blockquote';
+
+# Blockquote
+
+Blockquote molecule — mirrors the `timberland/blockquote` Pattern Lab pattern at
+`02-molecules/blockquote/_blockquote.tpl.twig`.
+
+Renders a semantic `<blockquote>` element with an optional `<q>` text body and a `<cite>`
+attribution block. The citation can appear **before** or **after** the quote and optionally
+includes an author image via the Image atom.
+
+## Usage
+
+```jsx
+// Minimal — quote only
+<Blockquote quote="Stay hungry, stay foolish." />
+
+// Default — citation below the quote
+<Blockquote
+  quote="The only way to do great work is to love what you do."
+  citation="Steve Jobs"
+/>
+
+// Citation above the quote
+<Blockquote
+  quote="Simplicity is the ultimate sophistication."
+  citation="Leonardo da Vinci"
+  citationPosition="before"
+/>
+
+// With citation image and attribution link
+<Blockquote
+  quote="Design is not just what it looks like and feels like. Design is how it works."
+  citation="Steve Jobs, Co-founder of Apple"
+  citationImage={{
+    src: '/images/author.jpg',
+    alt: 'Author portrait',
+    width: 64,
+    height: 64,
+  }}
+  citationLink="https://en.wikiquote.org/wiki/Steve_Jobs"
+/>
+```
+
+## Variants
+
+| Variant | `citationPosition` | Wrapper class | Description |
+| --- | --- | --- | --- |
+| Default | `'after'` | `citation-bottom` | Citation appears below the quote (default) |
+| Citation Before | `'before'` | `citation-top` | Citation appears above the quote |
+| With Image | `'after'` or `'before'` | — | Citation includes an author image via the Image atom |
+| No Citation | — | `citation-bottom` | Only `<q>` is rendered; `<cite>` is omitted |
+
+## Props
+
+### `BlockquoteProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `quote` | `string` | — | Blockquote text rendered inside a `<q>` element |
+| `citation` | `string` | — | Citation text rendered inside a `<cite>` element |
+| `citationImage` | `CitationImageProps` | — | Author image rendered via the Image atom |
+| `citationPosition` | `'before' \| 'after'` | `'after'` | Where the `<cite>` renders relative to `<q>` |
+| `citationLink` | `string` | — | URL for the native `cite=""` attribute on `<blockquote>` |
+| `className` | `string` | — | Additional CSS class names added to the `<blockquote>` element |
+
+### `CitationImageProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` | `string` | — | Image source URL (required) |
+| `alt` | `string` | — | Alt text — required; use `''` for decorative images |
+| `variant` | `ImageVariant` | `'primary'` | Image atom rendering variant |
+| `width` | `number` | — | Explicit width in pixels |
+| `height` | `number` | — | Explicit height in pixels |
+| `sizes` | `string` | — | Responsive sizes attribute |
+| `loading` | `'lazy' \| 'eager'` | `'lazy'` | Native lazy loading |
+| `className` | `string` | — | Additional classes appended after `citation-image` |
+
+## HTML Structure
+
+```html
+<!-- citationPosition="after" (default) -->
+<blockquote
+  class="blockquote citation-bottom"
+  cite="[citationLink]"
+  data-pattern="timberland/blockquote"
+>
+  <q>Quote text</q>
+  <cite>
+    <span class="cite-img"><!-- Image atom --></span>
+    <span class="cite-txt">Citation text</span>
+  </cite>
+</blockquote>
+
+<!-- citationPosition="before" -->
+<blockquote class="blockquote citation-top" data-pattern="timberland/blockquote">
+  <cite>
+    <span class="cite-img"><!-- Image atom --></span>
+    <span class="cite-txt">Citation text</span>
+  </cite>
+  <q>Quote text</q>
+</blockquote>
+```
+
+## Notes
+
+- The `<cite>` element is omitted entirely when `citation` is not provided.
+- The `<span class="cite-img">` wrapper is omitted when `citationImage.src` is absent.
+- The `citation-image` class is always applied to the Image atom's root element; pass
+  `citationImage.className` to append additional classes.
+- Global SCSS lives at `src/scss/patterns/molecules/_blockquote.scss`.

@@ -1,0 +1,92 @@
+import { Progress } from './Progress';
+
+# Progress
+
+Progress atom — mirrors the theme's Pattern Lab `timberland/progress` pattern. Renders either Bootstrap 5 styled progress bars or native HTML5 `<progress>` elements, controlled by the `bootstrapProgress` prop.
+
+## Usage
+
+```jsx
+// Bootstrap progress bar (default)
+<Progress progressBars={[{ progressBarValue: 60 }]} />
+
+// Bootstrap with contextual color and label
+<Progress
+  progressBars={[{ progressBarValue: 75, color: 'success', progressBarLabel: '75%' }]}
+/>
+
+// Bootstrap striped + animated
+<Progress
+  progressBars={[{ progressBarValue: 50, color: 'primary', striped: true, animate: true }]}
+/>
+
+// Bootstrap stacked bars
+<Progress
+  progressBars={[
+    { progressBarValue: 20, color: 'success' },
+    { progressBarValue: 40, color: 'warning' },
+    { progressBarValue: 15, color: 'danger' },
+  ]}
+/>
+
+// Native HTML5 progress element with label
+<Progress
+  bootstrapProgress={false}
+  progressBars={[{
+    progressBarId: 'upload-progress',
+    progressBarLabel: 'Upload progress',
+    progressBarValue: 70,
+    progressBarMax: 100,
+    showLabel: true,
+  }]}
+/>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Bootstrap (default) | `bootstrapProgress={true}` — renders `.progress` wrapper with `.progress-bar` children; supports colors, stripes, and stacking |
+| HTML5 | `bootstrapProgress={false}` — renders `.progress--container` + `.progress--label` + native `<progress>` element per bar |
+
+## Props
+
+### ProgressProps
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `bootstrapProgress` | `boolean` | `true` | When `true` renders Bootstrap bars; when `false` renders native HTML5 `<progress>` elements |
+| `progressBars` | `ProgressBarConfig[]` | `[]` | Array of bar configuration objects |
+| `progressWrapperClasses` | `string[]` | `[]` | Additional classes on the `.progress--wrapper` element |
+| `progressWrapperOtherClasses` | `string` | — | Extra string classes on the wrapper (maps to Twig `progress_wrapper_other_classes`) |
+| `progressClasses` | `string[]` | `[]` | Additional classes on the inner container (`.progress` or `.progress--container`) |
+| `progressOtherClasses` | `string` | — | Extra string classes on the inner container |
+| `height` | `string` | — | Inline height on the Bootstrap `.progress` wrapper or each HTML5 `.progress--container` (e.g. `'20px'`) |
+| `className` | `string` | — | Additional class names on the outermost wrapper |
+
+### ProgressBarConfig
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `progressBarId` | `string` | auto | Unique ID for the bar element. Always supply one for correct accessibility linkage in HTML5 mode |
+| `progressBarValue` | `number` | `0` | Current progress value |
+| `progressBarMin` | `number` | `0` | Minimum value (Bootstrap mode — sets `aria-valuemin`) |
+| `progressBarMax` | `number` | `100` | Maximum value (`max` attribute / `aria-valuemax`) |
+| `progressBarLabel` | `string` | — | Label text — rendered inside Bootstrap bar or in a `<label>` for HTML5 |
+| `progressBarText` | `string` | — | Fallback text inside `<progress>` for browsers that don't support the element (HTML5 mode only) |
+| `progressBarClasses` | `string[]` | — | Additional classes on the bar element |
+| `progressBarOtherClasses` | `string` | — | Extra string classes on the bar element |
+| `color` | `string` | — | Bootstrap contextual color token — produces `bg-{color}` (Bootstrap mode only) |
+| `striped` | `boolean` | `false` | Adds `progress-bar-striped` (Bootstrap mode only) |
+| `animate` | `boolean` | `false` | Adds `progress-bar-animated` — has no effect unless `striped` is also `true` (Bootstrap mode only) |
+| `width` | `string` | — | Inline width on the `<progress>` element (HTML5 mode only, e.g. `'100%'`) |
+| `height` | `string` | — | Inline height on the `<progress>` element (HTML5 mode only) |
+| `showLabel` | `boolean` | `false` | Renders a `<label>` element linked to the `<progress>` (HTML5 mode only) |
+
+## Notes
+
+- In **Bootstrap mode** all bars share a single `.progress` wrapper div, producing stacked bars when multiple bars are provided. The `width` and `height` bar-level props are ignored in this mode; bar width is always derived from `progressBarValue` as a percentage.
+- In **HTML5 mode** each bar gets its own `.progress--container` wrapper. `aria-labelledby` is always set on the `<progress>` element, pointing to `{id}-label`, so an invisible label connection exists even when `showLabel` is `false`.
+- Always provide `progressBarId` for HTML5 mode. When omitted the component falls back to `progressBar_{index}`, which collides if multiple Progress components appear on the same page without explicit IDs.
+- The `animate` prop only applies when `striped` is also `true`, matching Bootstrap 5 behavior where `progress-bar-animated` without `progress-bar-striped` has no visual effect.
+- Global SCSS lives at `src/scss/patterns/atoms/_progress.scss`. The BEM modifier classes (`progress--wrapper`, `progress--container`, `progress--bar`, `progress--label`) are defined there.

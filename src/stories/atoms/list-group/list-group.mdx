@@ -1,0 +1,103 @@
+import { ListGroup } from './ListGroup';
+
+# ListGroup
+
+ListGroup atom — mirrors the theme's Pattern Lab `timberland/list-group` pattern. Renders a Bootstrap 5 list group with full support for flush, horizontal, contextual color variants, active/disabled states, and action items (anchors or buttons).
+
+## Usage
+
+```jsx
+// Default (unordered list)
+<ListGroup
+  items={[
+    { itemContent: 'Apples' },
+    { itemContent: 'Bananas' },
+    { itemContent: 'Cherries' },
+  ]}
+/>
+
+// Flush — removes outer borders and rounded corners
+<ListGroup listGroupFlush items={[...]} />
+
+// Horizontal
+<ListGroup listGroupHorizontal items={[...]} />
+
+// Action links — use div root, itemElement="a"
+<ListGroup
+  listGroupElement="div"
+  itemElement="a"
+  items={[
+    { itemContent: 'Dashboard', itemElement: 'a', itemOtherAttributes: { href: '#' } },
+    { itemContent: 'Settings', itemElement: 'a', itemOtherAttributes: { href: '#' }, itemActive: true },
+    { itemContent: 'Billing', itemElement: 'a', itemOtherAttributes: { href: '#' }, itemDisabled: true },
+  ]}
+/>
+
+// Action buttons
+<ListGroup
+  listGroupElement="div"
+  itemElement="button"
+  items={[
+    { itemContent: 'Save draft', itemElement: 'button' },
+    { itemContent: 'Publish', itemElement: 'button' },
+  ]}
+/>
+
+// Contextual color variants
+<ListGroup
+  items={[
+    { itemContent: 'Success', contextualClass: 'success' },
+    { itemContent: 'Danger', contextualClass: 'danger' },
+    { itemContent: 'Warning', contextualClass: 'warning' },
+  ]}
+/>
+
+// Custom slot content via children
+<ListGroup listGroupElement="ul">
+  <li className="list-group-item active">Custom item</li>
+</ListGroup>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | Standard `<ul>` list group with `list-group-item` children |
+| Flush | `list-group-flush` removes outer borders and rounded corners — suits cards/panels with edge-to-edge content |
+| Horizontal | `list-group-horizontal` lays items out side by side |
+| Action (links) | `itemElement="a"` adds `list-group-item-action` for hover/focus states; root should be `div` |
+| Action (buttons) | `itemElement="button"` adds `list-group-item-action`; each button receives `type="button"` |
+| Contextual | `contextualClass` tints items using Bootstrap's `list-group-item-{variant}` modifier |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `listGroupElement` | `'ul' \| 'ol' \| 'div'` | `'ul'` | Root HTML element |
+| `listGroupFlush` | `boolean` | `false` | Removes outer borders and border-radius |
+| `listGroupHorizontal` | `boolean` | `false` | Displays items side by side |
+| `listGroupClasses` | `string[]` | — | Additional class names for the root element |
+| `listGroupOtherClasses` | `string` | — | Additional class string for the root element |
+| `itemElement` | `ListGroupItemElement` | `'li'` | Default element for each item; `'a'` or `'button'` also adds `list-group-item-action` to all items |
+| `items` | `ListGroupItem[]` | `[]` | Array of item descriptors (see ListGroupItem below) |
+| `children` | `ReactNode` | — | Overrides `items` rendering — use for fully custom item markup |
+
+### ListGroupItem shape
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `itemContent` | `ReactNode` | — | Item content |
+| `itemElement` | `ListGroupItemElement` | `itemElement` prop | Per-item element override |
+| `itemActive` | `boolean` | `false` | Adds `active` class |
+| `itemDisabled` | `boolean` | `false` | Adds `disabled` class |
+| `contextualClass` | `ContextualVariant` | — | Adds `list-group-item-{variant}` class |
+| `itemClasses` | `string[]` | — | Additional class names for the item |
+| `itemOtherClasses` | `string` | — | Additional class string for the item |
+| `itemOtherAttributes` | `React.HTMLAttributes<HTMLElement>` | — | Spread onto the item element (e.g. `href`, `onClick`) |
+
+## Notes
+
+- When `listGroupElement="div"` and `itemElement="a"` or `"button"`, the `list-group-item-action` class is added to every item, enabling Bootstrap's hover/active/focus action styles.
+- Button items automatically receive `type="button"` — this prevents accidental form submission when a list group appears inside a `<form>`.
+- Pass `children` instead of `items` to render fully custom item markup while still getting the correct root element and BEM classes on the wrapper.
+- The `items` array `key` falls back to array index — provide stable keys by wrapping items in a parent component if the list reorders dynamically.

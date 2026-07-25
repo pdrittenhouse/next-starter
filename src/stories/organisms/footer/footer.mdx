@@ -1,0 +1,84 @@
+import { Canvas, Controls, Meta, Story } from '@storybook/blocks';
+import * as FooterStories from './Footer.stories';
+
+<Meta of={FooterStories} />
+
+# Footer
+
+The Footer organism mirrors the `timberland/footer` Pattern Lab pattern (`03-organisms/footer/_footer.tpl.twig`). It renders the full site footer shell with five independently-optional layout regions.
+
+## Regions
+
+| Region | Prop(s) | Twig block |
+|---|---|---|
+| Pre-footer band | `additionalContent` | `additional_content` |
+| Navigation | `brand`, `ctaButton`, `footerNav`, `socialNav`, `showSearch` | `footer_brand`, `footer_cta`, `footer_nav`, `social_nav`, `footer_search` |
+| Info | `contactInfo`, `disclaimer`, `attribution` | `contact_info`, `disclaimer`, `attribution` |
+| Meta | `utilitiesNav`, `copyright` | `utilities`, `copyright` |
+| Post-footer band | `postFooterContent` | `post_footer_content` |
+
+Every region is **fully optional** — omit a prop and its corresponding DOM section is not emitted at all. This means a minimal footer (copyright only) produces no unnecessary markup.
+
+## Default — full footer
+
+<Canvas of={FooterStories.Default} />
+<Controls of={FooterStories.Default} />
+
+## Minimal — copyright only
+
+Useful for landing pages, checkout flows, or logged-in app shells where navigation would be distracting.
+
+<Canvas of={FooterStories.Minimal} />
+
+## Branding only
+
+Logo and copyright with no navigation columns — typical for microsite or campaign pages.
+
+<Canvas of={FooterStories.BrandingOnly} />
+
+## With search form
+
+Pass `showSearch={true}` to reveal the built-in `footer-search` form. Wire `onSearch` to handle the submitted query string in your application layer.
+
+<Canvas of={FooterStories.WithSearch} />
+
+## Pre-footer and post-footer bands
+
+`additionalContent` renders above the main content area (e.g. a newsletter sign-up or promotional banner). `postFooterContent` renders below it (e.g. a legal note or technology attribution). Both accept arbitrary React nodes.
+
+<Canvas of={FooterStories.WithPrePostBands} />
+
+## Info region — disclaimer and attribution
+
+The info region renders up to three columns: a `List` molecule for contact info, a disclaimer block, and an attribution block.
+
+<Canvas of={FooterStories.WithAttribution} />
+
+## Footer nav with dropdowns
+
+The `footerNav` prop forwards directly to the `Nav` molecule, so nested dropdown sub-menus work exactly as they do in the standalone `Nav` story.
+
+<Canvas of={FooterStories.WithDropdownNav} />
+
+## CSS classes
+
+The root `<footer>` always receives the `site-footer` class. Pass additional classes via the `otherClasses` prop — they are merged with `site-footer`, de-duplicated, and sorted (mirroring the Twig `merge | sort | trim` pipeline).
+
+```jsx
+<Footer otherClasses="footer--dark footer--compact" />
+// renders: class="footer--compact footer--dark site-footer"
+```
+
+## Twig mapping
+
+| Twig variable | React prop |
+|---|---|
+| `footer_id` | `id` |
+| `footer_other_classes` | `otherClasses` |
+| `brand.*` | `brand` (spread onto `<Branding />`) |
+| `cta_button.*` | `ctaButton` (spread onto `<Button />`) |
+| `footer_nav.*` | `footerNav` (spread onto `<Nav />`) |
+| `social_nav.*` | `socialNav` (React node slot) |
+| `contact_info.*` | `contactInfo` (spread onto `<List />`) |
+| `copyright` | `copyright` |
+| `user_nav.*` | `utilitiesNav` (spread onto `<Nav />`) |

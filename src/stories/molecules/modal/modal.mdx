@@ -1,0 +1,151 @@
+import { Modal } from './Modal';
+
+# Modal
+
+Modal molecule — mirrors the theme's Pattern Lab `timberland/modal` pattern.
+
+Renders a Bootstrap 5 modal dialog with an optional trigger button. All interactivity (open/close/backdrop behaviour) is handled by Bootstrap JS, which is loaded globally by the theme. The component outputs static HTML with `data-bs-*` attributes.
+
+A unique modal ID is generated automatically via React 18's `useId()` when no explicit `modalId` prop is provided. The ID is used for `aria-labelledby` and the trigger button's `data-bs-target`.
+
+## Usage
+
+```jsx
+// Minimal — title, body content, trigger button
+<Modal
+  modalTitle="Confirm your action"
+  modalContent={<p>This action cannot be undone.</p>}
+  showModalFooterClose
+/>
+
+// Large, centered modal with footer content
+<Modal
+  modalTitle="Terms of service"
+  modalSize="lg"
+  modalCenter
+  modalContent={<p>Please read all terms before accepting.</p>}
+  modalFooter={<p className="text-muted small mb-0">Last updated July 2026.</p>}
+  showModalFooterClose
+  modalCloseFooter={{ label: 'I accept', variant: 'primary' }}
+  modalButton={{ label: 'View terms', variant: 'link' }}
+/>
+
+// Static backdrop — must be dismissed via button
+<Modal
+  modalTitle="Required reading"
+  backdrop
+  backdropStatic
+  modalContent={<p>You must acknowledge this message.</p>}
+  showModalFooterClose
+  modalCloseFooter={{ label: 'Acknowledged', variant: 'primary' }}
+/>
+
+// Fullscreen below lg breakpoint
+<Modal
+  modalTitle="Fullscreen on mobile"
+  modalFullscreen
+  modalFullscreenBreakpoint="lg"
+  modalContent={<p>Expands to fullscreen below the lg breakpoint.</p>}
+  showModalFooterClose
+/>
+
+// Dark theme
+<Modal
+  modalTitle="Dark modal"
+  backgroundColor="dark"
+  textColor="white"
+  modalContent={<p>Styled with Bootstrap utility classes.</p>}
+  modalCloseHeaderButton={{ whiteClose: true }}
+  showModalFooterClose
+  modalCloseFooter={{ label: 'Close', variant: 'light' }}
+  modalButton={{ label: 'Open dark modal', variant: 'dark' }}
+/>
+
+// No trigger button — open programmatically
+<Modal
+  modalId="my-custom-modal"
+  modalTitle="Programmatic open"
+  modalContent={<p>Opened without the built-in trigger button.</p>}
+  showModalButton={false}
+  showModalFooterClose
+/>
+```
+
+## Variants
+
+| Variant | Props | Description |
+| --- | --- | --- |
+| Default | — | Standard dialog with header title and X close button |
+| Small | `modalSize="sm"` | 300 px max-width dialog |
+| Large | `modalSize="lg"` | 800 px max-width dialog |
+| Centered | `modalCenter` | Vertically centered in the viewport |
+| Fullscreen | `modalFullscreen` | Covers the entire viewport |
+| Fullscreen (breakpoint) | `modalFullscreen` + `modalFullscreenBreakpoint` | Fullscreen below the specified breakpoint |
+| Static backdrop | `backdrop` + `backdropStatic` | Clicking outside or pressing Esc does not close the modal |
+| No animation | `animate={false}` | Modal appears instantly without the CSS fade |
+| Dark | `backgroundColor="dark"` + `textColor="white"` | Dark content area via Bootstrap utilities |
+| No trigger | `showModalButton={false}` | Omits the built-in trigger button |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `modalId` | `string` | auto | Unique modal identifier. Used for `id`, `aria-labelledby`, and the trigger's `data-bs-target`. Auto-generated with `useId()` when omitted. |
+| `animate` | `boolean` | `true` | Adds `fade` class to the modal for a CSS transition on open/close. |
+| `backdrop` | `boolean` | `true` | Renders a backdrop overlay. Sets `data-bs-backdrop="true"` (or `"false"`). |
+| `backdropStatic` | `boolean` | `false` | Prevents closing on backdrop click or Esc. Sets `data-bs-backdrop="static"`. Requires `backdrop=true`. |
+| `backdropColor` | `string` | — | Bootstrap color utility for the backdrop element (`bg-{color}`). |
+| `backgroundColor` | `string` | — | Bootstrap background color for `.modal-content` (`bg-{color}`). |
+| `textColor` | `string` | — | Bootstrap text color applied to the title, body, and header (`text-{color}`). |
+| `modalCenter` | `boolean` | `false` | Vertically centers the dialog with `modal-dialog-centered`. |
+| `modalSize` | `'sm' \| 'lg'` | — | Dialog size variant. |
+| `modalFullscreen` | `boolean` | `false` | Fullscreen dialog (`modal-fullscreen`). |
+| `modalFullscreenBreakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | — | Fullscreen below this breakpoint (`modal-fullscreen-{bp}-down`). Requires `modalFullscreen=true`. |
+| `modalTitle` | `string` | — | Header title rendered as `<h5 class="modal-title">`. Also sets `aria-labelledby`. |
+| `modalCloseHeader` | `boolean` | `true` | Renders a Bootstrap `btn-close` (X icon) in the header. |
+| `modalCloseHeaderButton` | `ModalCloseButtonConfig` | — | Header close button config (white icon variant, extra classes). |
+| `modalContent` | `React.ReactNode` | — | Content rendered in the `.modal-body`. |
+| `modalFooter` | `React.ReactNode` | — | Content rendered inside `.modal-footer-content`. |
+| `showModalFooterClose` | `boolean` | `false` | Renders a dismiss button in `.modal-actions` inside the footer. |
+| `modalCloseFooter` | `ModalCloseButtonConfig` | — | Footer close button config (label, variant, size, outline). |
+| `showModalButton` | `boolean` | `true` | Renders a trigger button before the `.modal` element. |
+| `modalButton` | `ModalTriggerButtonConfig` | — | Trigger button config (label, variant, size, outline, etc.). |
+| `className` | `string` | — | Additional CSS classes for `.modal`. |
+| `modalDialogClassName` | `string` | — | Additional CSS classes for `.modal-dialog`. |
+| `modalContentClassName` | `string` | — | Additional CSS classes for `.modal-content`. |
+| `modalTitleClassName` | `string` | — | Additional CSS classes for `.modal-title`. |
+| `modalBodyClassName` | `string` | — | Additional CSS classes for `.modal-body`. |
+
+### ModalTriggerButtonConfig
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Open Modal'` | Button label text. |
+| `variant` | `ButtonVariant` | `'primary'` | Bootstrap color variant. |
+| `size` | `'sm' \| 'lg'` | — | Button size. |
+| `outline` | `boolean` | `false` | Outline style. |
+| `block` | `boolean` | `false` | Full-width block button. |
+| `disabled` | `boolean` | `false` | Disabled state. |
+| `id` | `string` | — | HTML id attribute. |
+| `className` | `string` | — | Additional CSS classes. |
+| `nowrap` | `boolean` | `false` | Prevent text wrapping. |
+
+### ModalCloseButtonConfig
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `label` | `string` | `'Close'` (footer) | Button label. Header close button uses the Bootstrap X icon and ignores this field unless `whiteClose` is also set. |
+| `variant` | `ButtonVariant` | `'secondary'` (footer) | Bootstrap color variant for the footer dismiss button. |
+| `size` | `'sm' \| 'lg'` | — | Button size (footer only). |
+| `outline` | `boolean` | `false` | Outline style (footer only). |
+| `disabled` | `boolean` | `false` | Disabled state. |
+| `whiteClose` | `boolean` | `false` | Apply `btn-close-white` to the header X icon (use on dark backgrounds). |
+| `className` | `string` | — | Additional CSS classes. |
+
+## Notes
+
+- The component is a Client Component (`'use client'`) because it uses `useId()` for deterministic ID generation. If you supply `modalId` explicitly the generated ID is not used, but the client boundary is still required.
+- The trigger button's `data-bs-toggle="modal"` and `data-bs-target="#modalId"` are set automatically — do not pass these manually to `modalButton`.
+- For dialogs that must be dismissed by the user (e.g. cookie consent, required acknowledgements), use `backdrop` + `backdropStatic`. Ensure the modal always has at least one dismiss path (header close or footer button) so keyboard users are not trapped.
+- The `textColor` prop applies the same text color to the modal title, modal header, and modal body. If you need independent control, use `modalTitleClassName`, `modalBodyClassName`, or `modalContentClassName` with Bootstrap utilities.
+- Bootstrap 5 requires the trigger button to be rendered in the same document as the modal element. The built-in `showModalButton` renders the trigger immediately before the `.modal` div inside a `.modal-pattern-wrapper` (`display: contents`) wrapper.

@@ -1,0 +1,126 @@
+import { Testimonial } from './Testimonial';
+
+# Testimonial
+
+Testimonial molecule — mirrors the `timberland/testimonial` Pattern Lab pattern at
+`02-molecules/testimonial/_testimonial.tpl.twig`.
+
+Renders a styled testimonial block with an optional author image, heading title, pullquote
+(with decorative Font Awesome quote icons), author name, and organizational descriptor.
+A two-column CSS grid layout activates at the `md` breakpoint when an image is present.
+
+## Usage
+
+```jsx
+// Minimal — quote and attribution only
+<Testimonial
+  quote="Working with this team transformed our digital presence."
+  author="Sarah Mitchell"
+  descriptor="VP of Marketing, Acme Corporation"
+/>
+
+// With author image (triggers two-column grid at md breakpoint)
+<Testimonial
+  image={{
+    src: '/images/author.jpg',
+    alt: 'Sarah Mitchell headshot',
+    width: 400,
+    height: 500,
+  }}
+  quote="Working with this team transformed our digital presence."
+  author="Sarah Mitchell"
+  descriptor="VP of Marketing, Acme Corporation"
+/>
+
+// Full — image, title, quote, and attribution
+<Testimonial
+  image={{
+    src: '/images/author.jpg',
+    alt: 'James Okafor headshot',
+    width: 400,
+    height: 500,
+  }}
+  title="A Game-Changing Partnership"
+  quote="From the very first meeting it was clear we were in expert hands."
+  author="James Okafor"
+  descriptor="Chief Technology Officer, NovaTech"
+/>
+
+// Quote only — all optional fields omitted
+<Testimonial
+  quote="Five stars — I would recommend this to any organization."
+/>
+```
+
+## Variants
+
+| Variant | Props set | Description |
+| --- | --- | --- |
+| Default | `quote`, `author`, `descriptor` | Text-only testimonial, no image |
+| With Image | `image` + any text props | Author portrait; two-column grid at `md` |
+| With Title | `title` + `image` + text props | Adds a named heading above the quote |
+| Quote Only | `quote` only | Bare quote; meta and figure are suppressed |
+
+## Props
+
+### `TestimonialProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `image` | `TestimonialImageProps` | — | Image object passed to the Image atom |
+| `title` | `string` | — | Heading rendered as `<h2 class="testimonial-title">` |
+| `quote` | `string` | — | Quote text rendered inside `<blockquote class="testimonial-quote">` |
+| `author` | `string` | — | Author name rendered as `<span class="testimonial-author">` |
+| `descriptor` | `string` | — | Author organization rendered as `<span class="testimonial-descriptor">` |
+| `className` | `string` | — | Additional CSS class names appended to the root `<div>` |
+
+### `TestimonialImageProps`
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `src` | `string` | — | Image source URL (required) |
+| `alt` | `string` | — | Alt text — required; use `''` for decorative images |
+| `variant` | `ImageVariant` | `'primary'` | Image atom rendering variant |
+| `width` | `number` | — | Explicit width in pixels |
+| `height` | `number` | — | Explicit height in pixels |
+| `sizes` | `string` | — | Responsive sizes attribute |
+| `loading` | `'lazy' \| 'eager'` | `'lazy'` | Native lazy loading |
+| `className` | `string` | — | Additional classes appended to the Image atom root element |
+
+## HTML Structure
+
+```html
+<div class="testimonial" data-pattern="timberland/testimonial">
+  <!-- only when image.src is provided -->
+  <figure class="testimonial-image">
+    <!-- Image atom -->
+  </figure>
+
+  <div class="testimonial-body">
+    <!-- only when title is provided -->
+    <h2 class="testimonial-title">Title text</h2>
+
+    <!-- only when quote is provided -->
+    <blockquote class="testimonial-quote">
+      <i class="fas fa-quote-left" aria-hidden="true"></i>
+      Quote text
+      <i class="fas fa-quote-right" aria-hidden="true"></i>
+    </blockquote>
+
+    <!-- only when author or descriptor is provided -->
+    <div class="testimonial-meta">
+      <span class="testimonial-author">Author Name</span>
+      <span class="testimonial-descriptor">Organization</span>
+    </div>
+  </div>
+</div>
+```
+
+## Notes
+
+- The `<figure class="testimonial-image">` element is omitted entirely when `image` is not provided.
+- The `<h2 class="testimonial-title">` element is omitted when `title` is not provided.
+- The `<blockquote class="testimonial-quote">` element is omitted when `quote` is not provided.
+- The `<div class="testimonial-meta">` wrapper is omitted when neither `author` nor `descriptor` is provided.
+- Font Awesome icons (`fa-quote-left`, `fa-quote-right`) are loaded globally by the theme — no local import is needed.
+- Global SCSS lives at `src/scss/patterns/molecules/_testimonial.scss`.

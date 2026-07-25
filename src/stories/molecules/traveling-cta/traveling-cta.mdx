@@ -1,0 +1,165 @@
+import { TravelingCta } from './TravelingCta';
+
+# TravelingCta
+
+The **TravelingCta** molecule renders a fixed-position call-to-action bar that
+appears at the bottom of the viewport when a user scrolls past the page header.
+It contains an array of CTA buttons and supports flexible layout, visibility
+control, container wrapping, and per-button inline styling.
+
+It maps 1:1 to the Pattern Lab Twig template at:
+`patterns/02-molecules/traveling-cta/_traveling-cta.tpl.twig`
+
+---
+
+## Usage
+
+```jsx
+// Minimal — two stretched CTAs
+<TravelingCta
+  travelingCtas={[
+    { label: 'Call Us Today', variant: 'primary', href: 'tel:+18005551234', as: 'a' },
+    { label: 'Get a Free Quote', variant: 'secondary', href: '#quote', as: 'a' },
+  ]}
+/>
+
+// Centered buttons in a constrained container
+<TravelingCta
+  includeContainer
+  autoWidth
+  alignment={[{ alignment: 'center' }]}
+  travelingCtas={[
+    { label: 'Schedule a Demo', variant: 'primary', size: 'lg', href: '#demo', as: 'a' },
+    { label: 'View Pricing', variant: 'outline-secondary', size: 'lg', href: '#pricing', as: 'a' },
+  ]}
+/>
+
+// Hidden on mobile (visible lg+)
+<TravelingCta
+  hideOn="mobile"
+  travelingCtas={[
+    { label: 'Start Free Trial', variant: 'primary', href: '#', as: 'a' },
+  ]}
+/>
+
+// Suppressed entirely (renders null)
+<TravelingCta hideOn="both" travelingCtas={[...]} />
+
+// Custom background + border via sectionStyle
+<TravelingCta
+  sectionStyle={{ backgroundColor: '#1a1a2e', borderTop: '3px solid #e94560' }}
+  wrapperStyle={{ padding: '12px 16px' }}
+  travelingCtas={[...]}
+/>
+```
+
+---
+
+## Variants
+
+| Variant | Key Props | Notes |
+| --- | --- | --- |
+| Default | — | Buttons stretch to fill bar (`stretch-ctas`) |
+| Auto-width | `autoWidth` | Buttons take their natural width |
+| With Container | `includeContainer` | Wraps in Bootstrap `container` + `row` |
+| Fluid Container | `includeContainer` + `fullWidth` | Uses `container-fluid` |
+| Hidden on Mobile | `hideOn="mobile"` | Adds `d-none d-lg-block` |
+| Hidden on Desktop | `hideOn="desktop"` | Adds `d-lg-none` |
+| Suppressed | `hideOn="both"` | Returns `null`; nothing renders |
+| Reversed Order | `reverseOrder` | Array rendered in reverse |
+| Aligned | `alignment` | `justify-content[-bp]-{value}` on ctas div |
+| Custom Styles | `sectionStyle` / `wrapperStyle` | Inline CSS on section and wrapper |
+
+---
+
+## Props
+
+| Name | Type | Default | Twig Variable | Description |
+| --- | --- | --- | --- | --- |
+| `hideOn` | `'mobile' \| 'desktop' \| 'both'` | — | `hide_traveling_cta` | Hide on mobile, desktop, or suppress entirely |
+| `includeContainer` | `boolean` | `false` | `include_tcta_container` | Wrap CTAs in Bootstrap container + row |
+| `fullWidth` | `boolean` | `false` | `tcta_full_width` | Use `container-fluid` when `includeContainer` is true |
+| `autoWidth` | `boolean` | `false` | `tcta_auto_width` | Natural button widths; removes `stretch-ctas` class |
+| `bgThemeColor` | `string` | — | `tcta_bg_color.bg_theme_color` | Bootstrap palette bg class suffix (`bg-{value}`) |
+| `sectionStyle` | `React.CSSProperties` | — | `tcta_bg_color`, `tcta_border`, `tcta_border_radius` | Inline styles on the `<section>` element |
+| `wrapperStyle` | `React.CSSProperties` | — | `tcta_padding` | Inline styles on the CTA wrapper div |
+| `alignment` | `TravelingCtaAlignment[]` | — | `tcta_alignment.hor_align` | Flex justify-content rules, optionally breakpoint-scoped |
+| `reverseOrder` | `boolean` | `false` | `tcta_reverse_order` | Reverse the `travelingCtas` array before render |
+| `containerBreakpoint` | `string` | — | `container_breakpoint` | Responsive container suffix (e.g. `'lg'` → `container-lg`) |
+| `maxWidthFluidContainer` | `boolean` | `false` | `fields.max_width_fluid_container` | Adds `max-width-fluid-container` to a fluid container |
+| `travelingCtas` | `TravelingCtaItem[]` | — | `traveling_ctas` | Array of CTA button configurations |
+| `className` | `string` | — | — | Extra CSS class names on the root `<section>` |
+
+### `TravelingCtaItem` sub-props
+
+`TravelingCtaItem` extends [ButtonProps](?path=/docs/design-system-atoms-button--docs) with
+the following extra fields:
+
+| Name | Type | Twig Variable | Description |
+| --- | --- | --- | --- |
+| `inlineStyle` | `React.CSSProperties` | `button_style_string` | Computed inline styles for this button (bg-color, padding, border, font-size, etc.) |
+| `bgThemeColor` | `string` | `background_color.bg_theme_color` | Bootstrap palette bg class suffix on the button (`bg-{value}`) |
+| `textThemeColor` | `string` | `text_color.theme_color` | Bootstrap palette text-color class suffix (`text-{value}`) |
+| `display` | `string` | `display.display` | Display utility class applied when `block` is false |
+
+### `TravelingCtaAlignment` sub-props
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `breakpoint` | `string` (optional) | Bootstrap breakpoint key (e.g. `'lg'`). Omit for all sizes. |
+| `alignment` | `string` | Flex alignment value (`'center'`, `'start'`, `'end'`, `'between'`, `'around'`). |
+
+---
+
+## HTML Output
+
+The component produces this structure (with `includeContainer: false`, two CTAs):
+
+```html
+<section
+  class="traveling-cta [bg-{color}] [stretch-ctas] [d-none d-lg-block] [d-lg-none]"
+  style="…"
+  data-pattern="timberland/traveling-cta"
+>
+  <div class="traveling-cta--border">
+    <span class="bg bg1"></span>
+    <span class="bg bg2"></span>
+    <span class="bg bg3"></span>
+    <span class="bg bg4"></span>
+  </div>
+
+  <!-- if includeContainer -->
+  <div class="container[-breakpoint] | container-fluid [max-width-fluid-container]">
+    <div class="row">
+  <!-- end if -->
+
+  <div class="traveling-cta--ctas-wrapper [col]" style="padding: …">
+    <div class="traveling-cta--ctas [justify-content-*]">
+      <button class="traveling-cta--button btn btn-primary">…</button>
+      <button class="traveling-cta--button btn btn-secondary">…</button>
+    </div>
+  </div>
+
+  <!-- if includeContainer -->
+    </div>
+  </div>
+  <!-- end if -->
+
+</section>
+```
+
+---
+
+## Global SCSS
+
+Component styles live in:
+`src/scss/patterns/molecules/_traveling-cta.scss`
+
+Key rules:
+
+- `.traveling-cta` — `position: fixed`; bottom of viewport; hidden by default (`opacity: 0`).
+  Add `.show` to reveal it (`opacity: 1`, `pointer-events: all`).
+- `.traveling-cta.stretch-ctas .traveling-cta--button` — `flex: 1 1 auto` (buttons fill bar).
+- `.traveling-cta--button` — `flex: 0 0 auto` (natural size when `autoWidth` is true).
+- `.traveling-cta--ctas` — `display: flex; flex-flow: row nowrap; justify-content: space-between`.
+- `.traveling-cta--border` — decorative top-border element (hidden by default via `@include remove`).

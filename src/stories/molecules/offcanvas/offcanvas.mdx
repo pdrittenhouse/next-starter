@@ -1,0 +1,111 @@
+import { Offcanvas } from './Offcanvas';
+
+# Offcanvas
+
+Offcanvas molecule — a Bootstrap 5 off-canvas panel paired with a trigger button. Mirrors the Pattern Lab template at `02-molecules/offcanvas/_offcanvas.tpl.twig`.
+
+Bootstrap JS is loaded globally in the theme. This component renders only the required static HTML and `data-bs-*` attributes; no client-side JS is imported here.
+
+## Usage
+
+```tsx
+// Minimal — trigger button + panel with title and close button
+<Offcanvas
+  button={{ variant: 'primary', label: 'Open Menu' }}
+  title="Navigation"
+  content={<nav>…</nav>}
+  closeButton="close"
+/>
+
+// Slide in from the right
+<Offcanvas
+  button={{ variant: 'secondary', label: 'Open Sidebar' }}
+  title="Sidebar"
+  content="Sidebar content goes here."
+  closeButton="close"
+  placement="right"
+/>
+
+// Dark panel, no backdrop, body scroll enabled
+<Offcanvas
+  button={{ variant: 'dark', label: 'Open Panel' }}
+  title="Dark Panel"
+  content="Panel content."
+  closeButton="white"
+  backgroundColor="dark"
+  textColor="white"
+  backdrop={false}
+  scroll={true}
+/>
+
+// Responsive — panel is always visible at lg and above
+<Offcanvas
+  button={{ variant: 'primary', label: 'Open' }}
+  title="Navigation"
+  content="Always visible on desktop."
+  breakpoint="lg"
+/>
+```
+
+## Variants
+
+| Story | Placement | Backdrop | Scroll | Colors |
+|---|---|---|---|---|
+| Default | left | yes | no | — |
+| FromRight | right | yes | no | — |
+| DarkPanel | left | yes | no | bg-dark / text-white |
+| ScrollableNoBackdrop | left | no | yes | — |
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `offcanvasId` | `string` | auto | Explicit ID for the panel. Stable across renders when provided. |
+| `wrapperClasses` | `string` | — | Extra classes on the outer wrapper `<div>`. |
+| `offcanvasClasses` | `string` | — | Extra classes on the offcanvas panel `<div>`. |
+| `button` | `ButtonProps` | — | Props forwarded to the trigger Button atom. Omit to hide trigger. |
+| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | — | Panel is always-visible at or above this width. |
+| `placement` | `'left' \| 'right' \| 'top' \| 'bottom'` | `'left'` | Which edge the panel enters from. |
+| `backdrop` | `boolean` | `true` | Show a background backdrop. |
+| `scroll` | `boolean` | `false` | Allow page scroll while panel is open. |
+| `title` | `string` | — | Heading text in the panel header. |
+| `content` | `ReactNode` | — | Body content for the panel. |
+| `backgroundColor` | `string` | — | Bootstrap color utility (e.g. `'dark'`, `'primary'`). |
+| `textColor` | `string` | — | Bootstrap color utility (e.g. `'white'`, `'dark'`). |
+| `closeButton` | `'close' \| 'white'` | — | Adds a close button to the header (`'white'` for dark backgrounds). |
+
+## HTML structure
+
+```html
+<div class="offcanvas-wrapper" data-pattern="timberland/offcanvas">
+
+  <!-- Trigger button -->
+  <button
+    class="button btn btn-primary"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#offcanvas_{id}"
+    aria-controls="offcanvas_{id}"
+  >
+    Open Menu
+  </button>
+
+  <!-- Panel -->
+  <div
+    class="offcanvas offcanvas-start"
+    id="offcanvas_{id}"
+    aria-labelledby="offcanvas_{id}_label"
+    data-bs-backdrop="true"
+    data-bs-scroll="false"
+    tabindex="-1"
+  >
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvas_{id}_label">Navigation</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- content -->
+    </div>
+  </div>
+
+</div>
+```

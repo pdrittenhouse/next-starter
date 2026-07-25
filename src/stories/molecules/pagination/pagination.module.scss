@@ -1,0 +1,19 @@
+// Pagination molecule — CSS Module
+//
+// Global pagination styles live in:
+//   src/scss/patterns/molecules/_pagination.scss
+//
+// That file is compiled into the theme's global stylesheet via webpack/sass-loader
+// and applies the Bootstrap `.pagination`, `.page-item`, `.page-link`,
+// `.pagination-sm`, and `.pagination-lg` utility classes, as well as the
+// custom `.btn.prev` and `.btn.next` icon-button variants defined in the theme.
+//
+// Add module-scoped overrides here only when you need to target a specific
+// instance of Pagination without affecting the global class cascade.
+
+// Example — centre-align a story-level variant:
+// .centeredPagination {
+//   :global(.pagination) {
+//     justify-content: center;
+//   }
+// }

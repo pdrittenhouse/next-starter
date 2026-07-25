@@ -1,0 +1,205 @@
+import { Tabs } from './Tabs';
+
+# Tabs
+
+Tabs molecule — mirrors the Timberland Pattern Lab pattern at
+`src/design-system/patterns/02-molecules/tabs/_tabs.tpl.twig`.
+
+Supports two rendering modes:
+
+- **bootstrap** (default) — Bootstrap 5 `nav-tabs` / `nav-pills` with `tab-content` panels.
+  Composes the **Button atom** (`@/stories/atoms/button/Button`) for each tab trigger.
+  Bootstrap JS handles show/hide via `data-bs-*` attributes loaded globally in the theme.
+- **jquery** — Responsive-tabs plugin markup (`ul.tabs > li.tabs__tab > a`) for projects
+  that use the jQuery responsive-tabs library.
+
+---
+
+## Usage
+
+```tsx
+import { Tabs } from '@/stories/molecules/tabs/Tabs';
+
+// Basic Bootstrap tabs — three panels, first active by default
+<Tabs
+  tabs={[
+    { title: 'Overview',  content: <p>Overview content.</p>  },
+    { title: 'Features',  content: <p>Features content.</p>  },
+    { title: 'Pricing',   content: <p>Pricing content.</p>   },
+  ]}
+/>
+
+// Pills (nav-pills style)
+<Tabs
+  navPills
+  tabs={[...]}
+/>
+
+// Equal-width fill
+<Tabs
+  fillJustify="fill"
+  tabs={[...]}
+/>
+
+// Vertical layout
+<Tabs
+  vertical
+  tabs={[...]}
+/>
+
+// jQuery responsive-tabs
+<Tabs
+  tabsType="jquery"
+  tabs={[...]}
+/>
+
+// Explicit ID (for multiple tab groups on one page)
+<Tabs
+  id="product-tabs"
+  tabs={[...]}
+/>
+```
+
+---
+
+## Variants
+
+| Variant | Props | Description |
+| --- | --- | --- |
+| Default | — | Bootstrap underline tabs; first panel active on load. |
+| Pills | `navPills` | Bootstrap pill-style nav buttons (`.nav-pills`). |
+| Filled | `fillJustify="fill"` | Equal-width tabs spanning the full nav bar (`.nav-fill`). |
+| Justified | `fillJustify="justified"` | Fully justified equal-width tabs (`.nav-justified`). |
+| Vertical | `vertical` | Side-by-side nav and panel layout. |
+| jQuery | `tabsType="jquery"` | Responsive-tabs plugin markup for mobile accordion collapse. |
+
+---
+
+## TabsProps
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `tabs` | `TabItem[]` | — | **Required.** Array of tab objects. Maps to `tabs`. |
+| `tabsType` | `'bootstrap' \| 'jquery'` | `'bootstrap'` | Tabs library / markup mode. Maps to `tabs_type`. |
+| `navPills` | `boolean` | `false` | Use `.nav-pills` instead of `.nav-tabs`. Maps to `nav_pills`. |
+| `fillJustify` | `'fill' \| 'justified'` | — | Add `.nav-fill` or `.nav-justified` to the nav. Maps to `fill_justify`. |
+| `id` | `string` | auto | Explicit wrapper element id. Auto-generated via `useId()` when omitted. Maps to `tabs_id`. |
+| `classes` | `string[]` | `[]` | Additional CSS classes for the wrapper. Maps to `tabs_classes`. |
+| `otherClasses` | `string` | — | Additional plain-string classes for the wrapper. Maps to `tabs_other_classes`. |
+| `otherStyles` | `string` | — | Additional inline style string for the wrapper. Maps to `tabs_other_styles`. |
+| `otherAttributes` | `Record<string, string>` | — | Additional HTML attributes for the wrapper. Maps to `tabs_other_attributes`. |
+| `vertical` | `boolean` | `false` | Vertical side-nav layout. Maps to `vertical`. |
+
+### jQuery-only options
+
+These props only apply when `tabsType="jquery"`. They map directly to the
+responsive-tabs plugin `data-*` attributes.
+
+| Prop | Type | data-* attribute |
+| --- | --- | --- |
+| `collapsible` | `string` | `data-collapsible` |
+| `startCollapsed` | `string` | `data-startcollapsed` |
+| `disabledTabs` | `string` | `data-disabledtabs` |
+| `activeTab` | `number` | `data-activetab` |
+| `accordionTabElement` | `string` | `data-accordiontabelement` |
+| `setHash` | `string` | `data-sethash` |
+| `rotate` | `string` | `data-rotate` |
+| `event` | `string` | `data-event` |
+| `animation` | `string` | `data-animation` |
+| `animationQueue` | `string` | `data-animationqueue` |
+| `duration` | `number` | `data-duration` |
+| `fluidHeight` | `string` | `data-fluidheight` |
+| `scrollToAccordion` | `string` | `data-scrolltoaccordion` |
+| `scrollToAccordionOnLoad` | `string` | `data-scrolltoaccordiononload` |
+| `scrollToAccordionOffset` | `string` | `data-scrolltoaccordionoffset` |
+
+---
+
+## TabItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | — | **Required.** Tab button label text. Maps to `tab.label`. |
+| `content` | `ReactNode` | — | **Required.** Tab panel body content. Maps to `tab.content`. |
+| `id` | `string` | auto | Stable key used to generate aria IDs. |
+| `hideLabel` | `boolean` | `false` | Visually hide the label text (icon-only tab). Maps to `tab.hide_label`. |
+| `ariaLabel` | `string` | — | Accessible label override for the tab button. Maps to `tab.aria_label`. |
+
+---
+
+## HTML output
+
+### Bootstrap tabs
+
+The rendered HTML matches the Twig template structure exactly:
+
+```html
+<div
+  id="tabs_<uid>"
+  class="tabs-wrapper bootstrap"
+  data-pattern="timberland/tabs"
+>
+  <nav>
+    <div class="nav nav-tabs" role="tablist">
+      <button
+        id="tabs_<uid>--tab-1-link"
+        class="button btn btn-primary nav-link active"
+        type="button"
+        role="tab"
+        data-bs-toggle="tab"
+        data-bs-target="#tabs_<uid>--tab-1"
+        aria-controls="tabs_<uid>--tab-1"
+        aria-selected="true"
+      >
+        <span class="button--label">Tab One</span>
+      </button>
+      <!-- additional tab buttons... -->
+    </div>
+  </nav>
+  <div class="tab-content">
+    <div
+      id="tabs_<uid>--tab-1"
+      class="tab-pane fade show active"
+      role="tabpanel"
+      aria-labelledby="tabs_<uid>--tab-1-link"
+    >
+      <div class="tab-pane-inner">Panel content</div>
+    </div>
+    <!-- additional panels... -->
+  </div>
+</div>
+```
+
+### jQuery tabs
+
+```html
+<div
+  id="tabs_<uid>"
+  class="tabs-wrapper jquery"
+  data-pattern="timberland/tabs"
+>
+  <ul class="tabs clearfix" role="tablist">
+    <li class="tabs__tab" role="presentation">
+      <a
+        href="#tabs_<uid>--tab-1"
+        id="tabs_<uid>--tab-1-link"
+        class="tabs__tab-link"
+        role="tab"
+        aria-controls="tabs_<uid>--tab-1"
+        aria-selected="true"
+        tabindex="0"
+      >Tab One</a>
+    </li>
+    <!-- additional list items... -->
+  </ul>
+  <div
+    id="tabs_<uid>--tab-1"
+    class="tabs__content-wrapper show active"
+    role="tabpanel"
+    aria-labelledby="tabs_<uid>--tab-1-link"
+  >
+    <div class="tabs__content">Panel content</div>
+  </div>
+  <!-- additional panels... -->
+</div>
+```

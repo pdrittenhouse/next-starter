@@ -1,27 +1,217 @@
 import { Header } from './Header';
 
-# Header Component
+# Header
 
-Header component for the application.
+Header organism — mirrors the Timberland Pattern Lab pattern `timberland/header`.
+
+Full Bootstrap 5 site header with an optional alert bar, branding slot,
+hamburger mobile toggle, primary & secondary Nav slots, a CTA Button,
+social nav slot, optional search form, and an additional content slot.
+Bootstrap JS handles `data-bs-toggle="collapse"` at runtime via globally
+loaded Bootstrap scripts; this component supplies only `data-bs-*` attributes.
 
 ## Usage
 
 ```jsx
+import { Header } from '@/stories/organisms/header/Header';
+import { Branding } from '@/stories/molecules/branding/Branding';
+
+// Minimal — logo + primary nav + CTA
 <Header
-  user={{ name: 'John Doe' }}
-  onLogin={() => console.log('Login clicked')}
-  onLogout={() => console.log('Logout clicked')}
-  onCreateAccount={() => console.log('Create Account clicked')}
+  navbarBreakpoint="lg"
+  brand={{
+    url: '/',
+    logoImgSrc: '/logo.png',
+    width: 200,
+    height: 60,
+    siteName: 'Natural Rose',
+    hideSiteSlogan: true,
+  }}
+  primaryNav={{
+    navbarId: 'primaryNav',
+    navbarAriaLabel: 'Primary navigation',
+    items: [
+      { url: '/about', title: 'About' },
+      { url: '/services', title: 'Services' },
+      { url: '/contact', title: 'Contact' },
+    ],
+  }}
+  primaryNavCta={{
+    variant: 'primary',
+    as: 'a',
+    href: '/shop',
+    label: 'Shop Now',
+    size: 'sm',
+  }}
+/>
+
+// With alert bar
+<Header
+  alertContent="Free shipping on orders over $50 — use code BLOOM25."
+  brand={{ url: '/', logoSvgInline: svgString, siteName: 'Natural Rose' }}
+  primaryNav={{ navbarId: 'primaryNav', items: [...] }}
+/>
+
+// Search enabled
+<Header
+  showSearch
+  brand={{ url: '/', logoImgSrc: '/logo.png', width: 200, height: 60 }}
+  primaryNav={{ navbarId: 'primaryNav', items: [...] }}
 />
 ```
 
+## Slots
+
+Slot props accept `React.ReactNode` so any element can be placed in them
+without requiring new props on the interface.
+
+| Prop | Location in HTML | Notes |
+| --- | --- | --- |
+| `alertContent` | `site-header--alert > … > site-header--column` | Omitted when absent |
+| `navTopContent` | `site-header--nav-top > site-header--row` | Always rendered (empty when absent) |
+| `brand` | `site-header--branding` | `BrandingProps` forwarded to Branding molecule |
+| `secondaryNav` | `site-header--secondary-nav` | `NavProps` forwarded to Nav molecule |
+| `socialNavContent` | `site-header--social-nav` | Inside secondary nav column |
+| `primaryNav` | `site-header--primary-nav` | `NavProps` forwarded to Nav molecule |
+| `primaryNavCta` | `site-header--primary-nav` (after nav) | `ButtonProps` forwarded to Button atom |
+| `showSearch` | `site-header--search` | Renders an inline search `<form>` when `true` |
+| `additionalContent` | Below main navbar row | Omitted when absent |
+
 ## Props
 
-```jsx
-| Name             | Type                   | Default     | Description                           |
-| ---------------- | ---------------------- | ----------- | ------------------------------------- |
-| `user`           | `{ name: string }`     | `undefined` | User object containing user details. |
-| `onLogin`        | `() => void`           | `undefined` | Click handler for the Login button.   |
-| `onLogout`       | `() => void`           | `undefined` | Click handler for the Logout button.  |
-| `onCreateAccount`| `() => void`           | `undefined` | Click handler for the Sign Up button. |
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `navbarBreakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'lg'` | Bootstrap navbar expand breakpoint (`navbar-expand-{bp}`). |
+| `headerId` | `string` | `'siteHeader'` | `id` attribute on the `<header>` element. |
+| `backgroundImage` | `string` | — | URL for an inline `background-image` style on the header. |
+| `otherClasses` | `string \| string[]` | — | Extra class names appended to the `<header>` element. |
+| `alertContent` | `React.ReactNode` | — | Alert bar content. The block is omitted when this is absent. |
+| `alertOtherClasses` | `string \| string[]` | — | Extra class names on the alert bar wrapper. |
+| `navTopContent` | `React.ReactNode` | — | Content inside the `site-header--nav-top` row. |
+| `brand` | `BrandingProps` | — | Props forwarded to the Branding molecule. |
+| `navbarTogglerClasses` | `string \| string[]` | — | Extra class names on the hamburger toggler button. |
+| `primaryNav` | `NavProps` | — | Props forwarded to the primary Nav molecule. |
+| `secondaryNav` | `NavProps` | — | Props forwarded to the secondary Nav molecule. |
+| `primaryNavCta` | `ButtonProps` | — | Props forwarded to a Button rendered after the primary nav. |
+| `socialNavContent` | `React.ReactNode` | — | Content inside the `site-header--social-nav` div. |
+| `showSearch` | `boolean` | `false` | Render the inline search form. |
+| `additionalContent` | `React.ReactNode` | — | Content in the additional-content slot below the navbar row. |
+
+## HTML Structure
+
+```html
+<header
+  class="navbar navbar-expand-lg site-header"
+  role="banner"
+  id="siteHeader"
+  data-pattern="timberland/header"
+>
+  <div class="site-header--wrapper">
+
+    <!-- Alert bar — only rendered when alertContent is set -->
+    <div class="site-header--alert">
+      <div class="site-header--container">
+        <div class="site-header--row">
+          <div class="site-header--column"><!-- alertContent --></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nav top row — always rendered; empty when navTopContent is absent -->
+    <div class="site-header--nav-top">
+      <div class="site-header--row"><!-- navTopContent --></div>
+    </div>
+
+    <!-- Main content -->
+    <div class="site-header--content">
+      <div class="site-header--container">
+        <div class="site-header--row">
+
+          <!-- Branding -->
+          <div class="site-header--branding">
+            <!-- <Branding> -->
+          </div>
+
+          <!-- Navigation column -->
+          <div class="site-header--navigation">
+
+            <!-- Hamburger toggler -->
+            <button
+              type="button"
+              id="navToggle"
+              class="navbar-toggler collapsed hamburger hamburger--collapse"
+              data-bs-toggle="collapse"
+              data-bs-target="#siteNav"
+              aria-controls="siteNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+              </span>
+            </button>
+
+            <div class="site-header--row">
+              <div class="collapse navbar-collapse" id="siteNav">
+                <div class="site-header--navbar-wrapper">
+                  <div class="site-header--row">
+
+                    <!-- Secondary nav + social -->
+                    <div class="site-header--secondary-nav">
+                      <!-- <Nav> (secondary) -->
+                      <div class="site-header--social-nav">
+                        <!-- socialNavContent -->
+                      </div>
+                    </div>
+
+                    <!-- Primary nav + CTA -->
+                    <div class="site-header--primary-nav">
+                      <!-- <Nav> (primary) -->
+                      <!-- <Button> (CTA) -->
+                    </div>
+
+                    <!-- Search form -->
+                    <div class="site-header--search">
+                      <!-- <form> — only when showSearch is true -->
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- /site-header--navigation -->
+
+        </div>
+      </div>
+    </div>
+    <!-- /site-header--content -->
+
+    <!-- Additional content — only rendered when additionalContent is set -->
+    <div class="site-header--container">
+      <div class="site-header--row">
+        <div class="site-header--column"><!-- additionalContent --></div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /site-header--wrapper -->
+</header>
 ```
+
+## Notes
+
+- The class list on the `<header>` element is sorted alphabetically to match the
+  Twig template's `sort` filter behaviour (`navbar navbar-expand-lg site-header`).
+- The hamburger toggler uses the `hamburger` / `hamburger--collapse` classes from
+  the [hamburgers](https://jonsuh.com/hamburgers/) library which the Timberland
+  framework bundles. Replace with Bootstrap's default toggler markup if the library
+  is not available.
+- `navbarBreakpoint` is also forwarded to both the `primaryNav` and `secondaryNav`
+  Nav molecules as their default `navbarBreakpoint` unless the molecule prop
+  overrides it explicitly.
+- Global styles for `.site-header` and its BEM elements live in
+  `src/scss/patterns/organisms/_header.scss`.
+- The search form renders a plain SVG search icon inline. Swap for the project's SVG
+  atom or an icon library sprite when available.

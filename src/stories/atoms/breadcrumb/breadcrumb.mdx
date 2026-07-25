@@ -1,0 +1,80 @@
+import { Breadcrumb } from './Breadcrumb';
+
+# Breadcrumb
+
+Breadcrumb atom — mirrors the theme's Pattern Lab `timberland/breadcrumb` pattern. Renders an accessible `<nav>` containing an ordered list of trail items. The last item is always treated as the current page and receives `aria-current="page"`. Supports custom dividers via the Bootstrap 5 CSS variable `--bs-breadcrumb-divider`.
+
+## Usage
+
+```jsx
+// Default — three-level trail
+<Breadcrumb
+  items={[
+    { text: 'Home', url: '/' },
+    { text: 'Blog', url: '/blog' },
+    { text: 'Getting Started', url: '/blog/getting-started' },
+  ]}
+/>
+
+// Custom divider
+<Breadcrumb
+  items={[
+    { text: 'Home', url: '/' },
+    { text: 'Resources', url: '/resources' },
+    { text: 'Documentation', url: '/resources/docs' },
+  ]}
+  divider=">"
+/>
+
+// With a label prefix on the current item
+<Breadcrumb
+  items={[
+    { text: 'Home', url: '/' },
+    { text: 'News', url: '/news' },
+    { text: 'Annual Report 2024', url: '/news/annual-report-2024' },
+  ]}
+  label="Current:"
+/>
+
+// Additional Bootstrap utility classes on the <ol>
+<Breadcrumb
+  items={[
+    { text: 'Home', url: '/' },
+    { text: 'Events', url: '/events' },
+    { text: 'Conference 2025', url: '/events/conference-2025' },
+  ]}
+  className="bg-light p-2 rounded"
+/>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | Standard trail with slash divider (Bootstrap default) |
+| Custom divider | Any character passed to `divider` sets `--bs-breadcrumb-divider` on the `<nav>` |
+| With label | `label` prepends a prefix string to the current/last item |
+| Single item | Only the current page — renders one `<li>` with no anchor |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `BreadcrumbItem[]` | — | Ordered trail items. Last entry is the current page. |
+| `divider` | `string` | — | Custom divider character; sets `--bs-breadcrumb-divider` on the `<nav>` |
+| `label` | `string` | — | Prefix text prepended (with trailing space) to the current item's text |
+| `className` | `string` | — | Additional CSS class names appended to the `<ol>` element |
+| `listStyle` | `React.CSSProperties` | — | Inline styles applied to the `<ol>` element |
+
+### BreadcrumbItem
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `text` | `string` | Display text for the breadcrumb entry |
+| `url` | `string` | Href for the anchor; unused on the last (current) item |
+
+## Notes
+
+- The `url` of the last item is never rendered as a link — it is kept in the data for completeness but the current page is always a plain `<li>`.
+- The `divider` value is wrapped in single quotes when injected into the CSS variable (e.g., `divider=">"` becomes `--bs-breadcrumb-divider: '>'`). Pass the bare character, not a quoted string.
+- `data-pattern="timberland/breadcrumb"` is always present on the `<nav>` to match the Twig template output used by the design system's pattern library.

@@ -1,0 +1,11 @@
+// Offcanvas molecule — local (CSS Module) classes only.
+//
+// Global styles for this molecule live in:
+//   src/scss/patterns/molecules/_offcanvas.scss
+//
+// That file is compiled into the global stylesheet and provides the
+// base .offcanvas, .offcanvas-wrapper, .offcanvas-header, .offcanvas-body,
+// and .offcanvas-title rules (Bootstrap 5 utilities included via the theme).
+//
+// Add module-scoped overrides below only when you need styles that must
+// not leak outside this component instance.

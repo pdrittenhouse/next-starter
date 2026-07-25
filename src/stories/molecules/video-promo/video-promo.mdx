@@ -1,0 +1,167 @@
+import { VideoPromo } from './VideoPromo';
+
+# VideoPromo
+
+The **VideoPromo** molecule renders a promotional section that can combine an optional
+text header (title, subtitle, intro copy), a video player (HTML5 native or embedded via
+YouTube / Vimeo / iframe), and a strip of CTA buttons.
+
+It maps 1:1 to the Pattern Lab Twig template at:
+`patterns/02-molecules/video-promo/_video-promo.tpl.twig`
+
+---
+
+## Usage
+
+```jsx
+// Minimal — HTML5 video with play-button overlay
+<VideoPromo
+  video={{
+    source: '/videos/demo.mp4',
+    poster: '/images/demo-poster.jpg',
+    controls: true,
+    muted: true,
+  }}
+/>
+
+// Full header + YouTube embed + CTAs
+<VideoPromo
+  title="Why Choose Us"
+  subtitle="Trusted by thousands of teams"
+  intro="<p>Watch the two-minute overview and see why teams love the platform.</p>"
+  bgColor="dark"
+  titleColor="white"
+  subtitleColor="white"
+  introColor="white"
+  video={{
+    format: 'youtube',
+    source: 'https://www.youtube.com/watch?v=VIDEOID',
+    controls: true,
+    fullscreen: true,
+  }}
+  ctas={[
+    { label: 'Start Free Trial', variant: 'primary', size: 'lg', href: '/signup' },
+    { label: 'View Pricing',     variant: 'secondary', size: 'lg', href: '/pricing' },
+  ]}
+/>
+
+// CTAs only (no video)
+<VideoPromo
+  title="Ready to Get Started?"
+  bgColor="primary"
+  titleColor="white"
+  ctas={[
+    { label: 'Sign Up Free',    variant: 'light',         size: 'lg', href: '#' },
+    { label: 'See All Features', variant: 'outline-light', size: 'lg', href: '#' },
+  ]}
+/>
+```
+
+---
+
+## Variants
+
+| Variant | Key Props | Notes |
+| --- | --- | --- |
+| Default | `video.source` (no `format`) | HTML5 `<video>` with circular play-button overlay |
+| YouTube Embed | `video.format: 'youtube'` | Embedded player; no play-button overlay |
+| Vimeo Embed | `video.format: 'vimeo'` | Embedded Vimeo player |
+| With Header | `title`, `subtitle`, `intro` | Text block above the video |
+| With CTAs | `ctas` array | Button strip below the video; each button gets an arrow-right icon |
+| CTAs Only | `ctas` (no `video`) | Promotional strip without a video |
+| Colored Background | `bgColor` | Bootstrap `bg-{color}` applied to header and body |
+| Colored Text | `titleColor`, `subtitleColor`, `introColor` | Bootstrap `text-{color}` utilities |
+
+---
+
+## Props
+
+| Name | Type | Default | Twig Variable | Description |
+| --- | --- | --- | --- | --- |
+| `className` | `string` | — | `video_promo_other_classes` | Extra CSS class names appended to the root element |
+| `bgColor` | `string` | — | `video_promo_bg_color` | Bootstrap bg-{color} applied to header and body (e.g. `'dark'`) |
+| `title` | `string` | — | `video_promo_title` | Section heading rendered as `<h2 class="video-promo--title">` |
+| `titleColor` | `string` | — | `video_promo_title_color` | Bootstrap text-{color} for the title (e.g. `'white'`) |
+| `subtitle` | `string` | — | `video_promo_subtitle` | Sub-heading rendered as `<h3 class="video-promo--subtitle">` |
+| `subtitleColor` | `string` | — | `video_promo_subtitle_color` | Bootstrap text-{color} for the subtitle |
+| `intro` | `string` | — | `video_promo_intro` | Body copy (raw HTML) in `<div class="video-promo--intro">` |
+| `introColor` | `string` | — | `video_promo_intro_color` | Bootstrap text-{color} for the intro block |
+| `video` | `VideoProps` | — | `video_promo_video`, `video_promo_video_format`, etc. | Video atom props; see table below |
+| `ctas` | `ButtonProps[]` | — | `video_promo_ctas` | CTA buttons; each receives an arrow-right icon automatically |
+
+### `video` sub-props (VideoProps)
+
+See the [Video atom](?path=/docs/design-system-atoms-video--docs) for the full prop list.
+
+| Prop | Twig Variable | Notes |
+| --- | --- | --- |
+| `source` | `video_promo_video` | Video URL (mp4, YouTube, Vimeo, or iframe) |
+| `format` | `video_promo_video_format` | `'youtube'` \| `'vimeo'` \| `'iframe'` or omit for HTML5 |
+| `poster` | `video_promo_poster` | Poster image URL (HTML5 video only) |
+| `autoplay` | `video_promo_autoplay` | Autoplay flag |
+| `loop` | `video_promo_loop` | Loop playback |
+| `fullscreen` | `video_promo_fullscreen` | Allow fullscreen |
+| `controls` | `video_promo_controls` | Show player controls |
+| `info` | `video_promo_info` | Show YouTube info bar |
+| `muted` | `video_promo_muted` | Mute audio |
+| `playsinline` | `video_promo_playsinline` | Play inline on mobile |
+| `aspectRatio` | `aspect_ratio` (hardcoded `'wide'`) | Defaults to `'wide'` (16:9) |
+| `width` | `width` (hardcoded `''`) | Defaults to `''` (100% parent) |
+
+When `format` is omitted (HTML5 native), a circular play-button overlay is rendered
+over the video — mirroring the Twig `{% if video_promo_video_format == false %}` branch.
+
+### `ctas` items (ButtonProps)
+
+See the [Button atom](?path=/docs/design-system-atoms-button--docs) for the full prop list.
+Each CTA button automatically receives an arrow-right SVG icon as its right slot, matching
+the Twig `{% block right %}` embed block. Key props: `label`, `variant`, `size`, `href`,
+`outline`, `disabled`.
+
+---
+
+## HTML Output
+
+```html
+<div class="video-promo" data-pattern="timberland/video-promo">
+
+  <!-- Header — rendered when title, subtitle, or intro is set -->
+  <div class="video-promo--header [bg-{bgColor}]">
+    <div class="video-promo--container">
+      <div class="video-promo--row">
+        <div class="video-promo--content">
+          <h2 class="video-promo--title [text-{titleColor}]">…</h2>
+          <h3 class="video-promo--subtitle [text-{subtitleColor}]">…</h3>
+          <div class="video-promo--intro [text-{introColor}]">…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Body — rendered when video.source or ctas is set -->
+  <div class="video-promo--body [bg-{bgColor}]">
+
+    <!-- Video block -->
+    <div class="video-promo--content">
+      <div class="video-promo--video">
+        <!-- Play overlay — HTML5 video only (no format) -->
+        <button class="button btn btn-link video-promo--play">…</button>
+        <!-- Video atom -->
+        <div class="video wide" data-pattern="timberland/video">…</div>
+      </div>
+    </div>
+
+    <!-- CTAs block -->
+    <div class="video-promo--content">
+      <div class="video-promo--promos">
+        <button class="button btn btn-primary">
+          <span class="button--label">Start Free Trial</span>
+          <svg><!-- arrow-right --></svg>
+        </button>
+        <!-- additional cta buttons… -->
+      </div>
+    </div>
+
+  </div>
+</div>
+```

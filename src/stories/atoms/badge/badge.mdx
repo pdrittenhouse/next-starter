@@ -1,0 +1,62 @@
+import { Badge } from './Badge';
+
+# Badge
+
+Badge atom — mirrors the theme's Pattern Lab `timberland/badge` pattern. Renders a Bootstrap 5 badge as a `<span>` or `<a>` element with color variant, optional pill shape, and a consistent `data-pattern` attribute for CSS targeting.
+
+## Usage
+
+```jsx
+// Default span badge
+<Badge text="New" />
+
+// Specific color
+<Badge color="success" text="Active" />
+
+// Pill shape
+<Badge color="primary" pill text="Featured" />
+
+// Linked badge — renders an <a> element
+<Badge element="a" href="/category/news" color="secondary" text="News" />
+
+// Linked pill
+<Badge element="a" href="#" color="primary" pill text="View all" />
+
+// With slotted children (overrides text prop)
+<Badge color="info"><strong>3</strong> items</Badge>
+
+// Additional class names
+<Badge color="dark" className="ms-2" text="Archived" />
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| `primary` | Brand primary color — default |
+| `secondary` | Muted secondary color |
+| `success` | Positive / active states |
+| `danger` | Error or destructive states |
+| `warning` | Caution or pending states |
+| `info` | Informational or draft states |
+| `light` | Low-contrast light background |
+| `dark` | High-contrast dark background |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `element` | `'span' \| 'a'` | `'span'` | HTML element type. Use `'a'` together with `href` for linked badges. |
+| `pill` | `boolean` | `false` | Applies Bootstrap 5 `rounded-pill` class for a capsule shape. |
+| `color` | `BadgeColor` | `'primary'` | Background color variant — maps to `bg-{color}` Bootstrap utility. |
+| `href` | `string` | — | URL for linked badges. Only meaningful when `element="a"`. |
+| `text` | `string` | — | Badge display text. Overridden by `children` when both are provided. |
+| `children` | `ReactNode` | — | Slotted content — takes precedence over `text`. |
+| `className` | `string` | — | Additional CSS class names appended after Bootstrap utility classes. |
+
+## Notes
+
+- The Twig pattern's `badge_pill` variable used the Bootstrap 4 class `badge-pill`. This component uses the Bootstrap 5 equivalent `rounded-pill`.
+- When `children` and `text` are both supplied, `children` wins. Use `text` for simple string badges and `children` when you need mixed content (e.g. an icon alongside text).
+- For `element="a"` always provide `href`. Omitting it renders an `<a>` without an href, which is technically valid but degrades keyboard accessibility.
+- The `data-pattern="timberland/badge"` attribute is always present — it matches the Twig template output and enables global CSS targeting.

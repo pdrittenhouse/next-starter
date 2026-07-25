@@ -1,0 +1,181 @@
+import React from 'react';
+
+export type AlertStatus =
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'primary'
+  | 'secondary'
+  | 'light'
+  | 'dark';
+
+export interface AlertProps {
+  /** Bootstrap color variant — maps to `alert-{status}`. Defaults to 'info'. */
+  status?: AlertStatus;
+  /**
+   * Semantic type — controls the ARIA live region attribute.
+   * 'error' → role="alert" (interrupts immediately); all other values → aria-live="polite".
+   * Maps to the Twig `type` variable.
+   */
+  alertType?: 'status' | 'warning' | 'error';
+  /** Heading text. Renders as <h2> when body content is present, <p> when the title is the sole element. */
+  alertTitle?: string;
+  /** Primary body paragraph. */
+  alertPrimary?: string;
+  /** Secondary footer paragraph, preceded by a horizontal rule. */
+  alertSecondary?: string;
+  /** URL applied to the title (or primary paragraph when no title is set). */
+  alertLink?: string;
+  /** Renders a dismiss button using Bootstrap's data-bs-dismiss="alert". */
+  dismissable?: boolean;
+  /** Position of the dismiss button. Defaults to 'top'. */
+  closePosition?: 'top' | 'bottom';
+  /**
+   * Text alignment helper class. Maps to Bootstrap `text-{start|center|end}`.
+   * Note: Bootstrap 5 removed text-left/right; use 'start' and 'end' instead.
+   */
+  alertTextAlign?: 'start' | 'center' | 'end';
+  /** Additional CSS class names — maps to `alert_other_classes` in the Twig pattern. */
+  className?: string;
+  /**
+   * Slotted content rendered in both the header block (after the top close button, before the
+   * title) and the footer block (after the secondary paragraph, before the bottom close button).
+   * Mirrors the Twig pattern's `additional_content` variable, which fills both
+   * `additional_header_content` and `additional_footer_content` blocks.
+   */
+  additionalContent?: React.ReactNode;
+}
+
+export function Alert({
+  status = 'info',
+  alertType = 'status',
+  alertTitle,
+  alertPrimary,
+  alertSecondary,
+  alertLink,
+  dismissable = false,
+  closePosition = 'top',
+  alertTextAlign,
+  className,
+  additionalContent,
+}: AlertProps) {
+  // d-flex is applied only when the alert has a single content element with no
+  // additional slotted content. The `!additionalContent` mirrors Twig's `additional_content != true`.
+  const dFlex =
+    !additionalContent &&
+    ((!!alertTitle && !alertPrimary && !alertSecondary) ||
+      (!!alertPrimary && !alertTitle && !alertSecondary));
+
+  // The top close button gets d-inline-block when the alert has exactly one content element.
+  const closeIsSingle =
+    (!!alertTitle && !alertPrimary && !alertSecondary) ||
+    (!!alertPrimary && !alertTitle && !alertSecondary);
+
+  const alertClasses = [
+    'mb-0',
+    'alert',
+    `alert-${status}`,
+    dismissable ? 'alert-dismissible' : null,
+    dismissable ? `close-${closePosition}` : null,
+    'fade',
+    'show',
+    alertTextAlign ? `text-${alertTextAlign}` : null,
+    dFlex ? 'd-flex' : null,
+    className ?? null,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const ariaProps =
+    alertType === 'error'
+      ? { role: 'alert' as const }
+      : { 'aria-live': 'polite' as const };
+
+  const hasBodyContent = !!alertPrimary || !!alertSecondary;
+
+  return (
+    <div className={alertClasses} {...ariaProps} data-pattern="timberland/alert">
+      {dismissable && closePosition === 'top' && (
+        <a
+          href="#"
+          role="button"
+          className={['close', closeIsSingle ? 'd-inline-block' : null]
+            .filter(Boolean)
+            .join(' ')}
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </a>
+      )}
+
+      {additionalContent}
+
+      {alertTitle &&
+        (hasBodyContent ? (
+          <h2 className="alert-heading">
+            {alertLink ? (
+              <a href={alertLink} className="alert-link">
+                {alertTitle}
+              </a>
+            ) : (
+              alertTitle
+            )}
+          </h2>
+        ) : (
+          <p className="alert-text mb-0 d-inline-block w-100">
+            {alertLink ? (
+              <a href={alertLink} className="alert-link">
+                {alertTitle}
+              </a>
+            ) : (
+              alertTitle
+            )}
+          </p>
+        ))}
+
+      {alertPrimary && (
+        <p
+          className={[
+            'alert-text',
+            !alertSecondary ? 'mb-0' : null,
+            !alertTitle && !alertSecondary ? 'd-inline-block' : null,
+            !alertTitle && !alertSecondary ? 'w-100' : null,
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {alertLink && !alertTitle ? (
+            <a href={alertLink} className="alert-link">
+              {alertPrimary}
+            </a>
+          ) : (
+            alertPrimary
+          )}
+        </p>
+      )}
+
+      {alertSecondary && (
+        <>
+          <hr />
+          <p className="mb-0">{alertSecondary}</p>
+        </>
+      )}
+
+      {additionalContent}
+
+      {dismissable && closePosition === 'bottom' && (
+        <a
+          href="#"
+          role="button"
+          className="close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </a>
+      )}
+    </div>
+  );
+}

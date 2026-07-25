@@ -1,0 +1,134 @@
+import { Accordion } from './Accordion';
+
+# Accordion
+
+Accordion molecule — mirrors the Timberland Pattern Lab pattern at
+`src/design-system/patterns/02-molecules/accordion/_accordion.tpl.twig`.
+
+Each panel trigger is composed from the **Button atom** (`@/stories/atoms/button/Button`).
+Bootstrap 5's Collapse plugin handles show/hide via `data-bs-*` attributes that are wired up
+at render time; no extra JavaScript import is needed — Bootstrap is loaded globally by the theme.
+
+---
+
+## Usage
+
+```tsx
+import { Accordion } from '@/stories/molecules/accordion/Accordion';
+
+// Basic — two items, first open
+<Accordion
+  items={[
+    {
+      button: { label: 'What is this?' },
+      active: true,
+      content: 'This is an accordion panel body.',
+    },
+    {
+      button: { label: 'How does it work?' },
+      content: 'Bootstrap collapse handles show/hide.',
+    },
+  ]}
+/>
+
+// Flush (edge-to-edge)
+<Accordion
+  flush
+  items={[...]}
+/>
+
+// Independent panels (always-open mode)
+<Accordion
+  items={[
+    { button: { label: 'Panel A' }, alwaysOpen: true, content: '...' },
+    { button: { label: 'Panel B' }, alwaysOpen: true, content: '...' },
+  ]}
+/>
+
+// Custom header element + explicit accordion id
+<Accordion
+  id="faq-accordion"
+  items={[
+    {
+      button: { label: 'Question one?' },
+      headerElement: 'h3',
+      content: 'Answer one.',
+    },
+  ]}
+/>
+```
+
+---
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | Standard accordion; only one panel open at a time. |
+| Flush | Removes outer border and rounded corners (`accordion-flush`). |
+| Always Open | Each panel is independent — multiple panels can be open simultaneously. |
+
+---
+
+## AccordionProps
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `items` | `AccordionItem[]` | — | **Required.** Array of accordion item objects. |
+| `flush` | `boolean` | `false` | Edge-to-edge variant — removes background, borders, and rounded corners. Maps to `accordion_flush`. |
+| `id` | `string` | auto | Explicit HTML id for the wrapper. Auto-generated via `useId()` when omitted. Maps to `accordion_id`. |
+| `classes` | `string[]` | `[]` | Additional CSS class names for the wrapper. Maps to `accordion_classes`. |
+| `otherClasses` | `string` | — | Additional plain-string classes for the wrapper. Maps to `accordion_other_classes`. |
+| `otherAttributes` | `Record<string, string>` | — | Additional HTML attributes for the wrapper. Maps to `accordion_other_attributes`. |
+
+---
+
+## AccordionItem
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `button` | `Omit<ButtonProps, 'toggle' \| 'target' \| 'expanded' \| 'controls'>` | — | **Required.** Button atom props for the panel trigger. `toggle`, `target`, `expanded`, and `controls` are set automatically. Maps to `item.button.*`. |
+| `content` | `ReactNode` | — | **Required.** Panel body content. Maps to `item.content`. |
+| `active` | `boolean` | `false` | Open this panel on initial render. Maps to `item_active`. |
+| `alwaysOpen` | `boolean` | `false` | Omit `data-bs-parent` so the panel stays open independently. Maps to `item.always_open`. |
+| `headerElement` | `'h1' \| 'h2' \| … \| 'h6'` | `'h2'` | HTML element for the accordion header. Maps to `item.accordion_header_element`. |
+| `itemClasses` | `string[]` | `[]` | Additional CSS classes for the `accordion-item` wrapper. Maps to `item.accordion_item_classes`. |
+| `itemOtherClasses` | `string` | — | Additional plain-string classes for the item wrapper. Maps to `item.accordion_item_other_classes`. |
+| `itemId` | `string` | — | Explicit HTML id for the item wrapper. Maps to `item.accordion_item_id`. |
+
+---
+
+## HTML output
+
+The rendered HTML matches the Twig template structure exactly:
+
+```html
+<div
+  class="accordion"
+  id="accordion_<uid>"
+  data-pattern="timberland/accordion"
+>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="accordionHeader_<uid>">
+      <button
+        class="accordion-button button btn btn-primary"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapse_<uid>"
+        aria-expanded="true"
+        aria-controls="collapse_<uid>"
+      >
+        <span class="button--label">Panel title</span>
+      </button>
+    </h2>
+    <div
+      id="collapse_<uid>"
+      class="accordion-collapse collapse show"
+      aria-labelledby="accordionHeader_<uid>"
+      data-bs-parent="#accordion_<uid>"
+    >
+      <div class="accordion-body">Panel content</div>
+    </div>
+  </div>
+</div>
+```

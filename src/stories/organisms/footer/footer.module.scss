@@ -1,0 +1,58 @@
+// ---------------------------------------------------------------------------
+// Footer organism — footer.module.scss
+//
+// Scoped styles for the Footer organism. Global BEM classes
+// (site-footer, site-footer--*, copyright) are handled by the theme's
+// global stylesheet. This module covers only component-specific overrides
+// and the built-in search form widget.
+// ---------------------------------------------------------------------------
+
+// ---- Search form ----------------------------------------------------------
+
+.footerSearch {
+  // Resets any default fieldset chrome
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+}
+
+.footerSearchInner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+
+  // Text input takes all remaining width
+  :global(.form-control) {
+    flex: 1 1 auto;
+    min-width: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.searchSubmit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem 0.75rem;
+  line-height: 1;
+  border: 1px solid;
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: var(--bs-border-radius, 0.375rem);
+  border-bottom-right-radius: var(--bs-border-radius, 0.375rem);
+
+  svg {
+    display: block;
+    pointer-events: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}

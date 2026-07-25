@@ -1,0 +1,181 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import * as CollapseStories from './Collapse.stories';
+
+<Meta of={CollapseStories} />
+
+# Collapse
+
+The **Collapse** organism composes a `ButtonGroup` molecule and one or more Bootstrap
+collapse panels into a single unit. It mirrors the Pattern Lab Twig template at
+`03-organisms/collapse/_collapse.tpl.twig` and produces identical HTML class structure.
+
+A shared collapse ID is auto-generated at render time (via React's `useId`) so that
+buttons and panels are wired together with zero configuration. Pass explicit `target`
+on buttons and `collapseId` on panels to create multiple independent targets.
+
+---
+
+## Usage
+
+```tsx
+import { Collapse } from '@/stories/organisms/collapse/Collapse';
+
+// Single button, single panel (auto-wired)
+<Collapse
+  buttonGroupDisplayGrid={false}
+  buttons={[
+    { variant: 'primary', label: 'Toggle Content' },
+  ]}
+  content={[
+    { content: 'Hidden content revealed on toggle.' },
+  ]}
+/>
+
+// Multiple independent panels (explicit IDs)
+<Collapse
+  buttonGroupDisplay="block"
+  buttonGroupDisplayGrid={true}
+  buttonGroupGap={2}
+  buttons={[
+    { variant: 'outline-primary', label: 'Panel A', target: '#panel-a', toggle: 'collapse', controls: 'panel-a' },
+    { variant: 'outline-primary', label: 'Panel B', target: '#panel-b', toggle: 'collapse', controls: 'panel-b' },
+  ]}
+  content={[
+    { collapseId: 'panel-a', content: 'Content for panel A.' },
+    { collapseId: 'panel-b', content: 'Content for panel B.' },
+  ]}
+/>
+
+// Panel with background/text color
+<Collapse
+  buttonGroupDisplayGrid={false}
+  buttons={[{ variant: 'dark', label: 'Reveal' }]}
+  content={[
+    {
+      backgroundColor: 'dark',
+      textColor: 'white',
+      content: 'Dark-themed panel content.',
+    },
+  ]}
+/>
+```
+
+---
+
+## Stories
+
+<Canvas of={CollapseStories.Default} />
+<Canvas of={CollapseStories.MultipleButtons} />
+<Canvas of={CollapseStories.MultipleIndependentPanels} />
+<Canvas of={CollapseStories.WithBackground} />
+<Canvas of={CollapseStories.LargeButtons} />
+<Canvas of={CollapseStories.BlockGrid} />
+
+---
+
+## Controls
+
+<Controls />
+
+---
+
+## Variants
+
+| Story | Description |
+|---|---|
+| Default | Single button auto-wired to a single panel via generated ID |
+| Multiple Buttons, One Panel | Two buttons sharing the same auto-generated collapse target |
+| Multiple Independent Panels | Each button has an explicit `target`; each panel has a matching `collapseId` |
+| With Background Color | Panel styled with `bg-dark` and `text-white` utilities |
+| Large Button Size | `buttonGroupSize="lg"` applied to the button group |
+| Block Grid Layout | `buttonGroupDisplayGrid={true}` for a full-width stacked layout |
+
+---
+
+## Props
+
+### `CollapseProps`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `buttonGroupDisplay` | `WrapperDisplay` | `'inline-block'` | Bootstrap d-* class on the ButtonGroup wrapper |
+| `buttonGroupSize` | `'sm' \| 'lg'` | — | `btn-group-sm` / `btn-group-lg` size variant |
+| `buttonGroupDisplayGrid` | `boolean \| null` | `true` | `true` → d-grid block layout; `false` → inline btn-group |
+| `buttonGroupLabel` | `string` | — | `aria-label` for the button group element |
+| `buttonGroupGap` | `string \| number` | — | Bootstrap gap-* spacer (e.g. `2` → `gap-2`) |
+| `buttonGroupBreakpoints` | `Record<string, string>` | — | Responsive display overrides, e.g. `{ sm: 'flex' }` |
+| `buttonGroupVertical` | `boolean` | `false` | Stack buttons with `btn-group-vertical` |
+| `buttonGroupClassName` | `string` | — | Extra classes for the button group div |
+| `buttons` | `ButtonProps[]` | **required** | Button atom props; `toggle`, `target`, and `controls` default to collapse values |
+| `content` | `CollapseItem[]` | **required** | Collapse panel items |
+| `className` | `string` | — | Extra classes for the outer `.collapse--container` element |
+
+### `CollapseItem`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `collapseId` | `string` | shared ID | Explicit HTML id for this panel; omit to share the component-generated ID |
+| `content` | `ReactNode` | **required** | Content rendered inside `.collapse--inner` |
+| `backgroundColor` | `string` | — | Bootstrap `bg-*` color utility (e.g. `'light'`, `'primary'`) |
+| `textColor` | `string` | — | Bootstrap `text-*` color utility (e.g. `'white'`, `'dark'`) |
+| `className` | `string` | — | Extra classes for the `.collapse` element |
+
+---
+
+## HTML Output
+
+```html
+<!-- Single button, single panel (auto-wired) -->
+<div class="collapse--container" data-pattern="timberland/collapse">
+
+  <!-- ButtonGroup with wrapperClassName="collapse--controls" -->
+  <div class="button-group--wrapper d-inline-block collapse--controls" data-pattern="timberland/button-group">
+    <div class="button-group display-group btn-group" role="group">
+      <button
+        type="button"
+        class="button btn btn-primary"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapse_r0"
+        aria-expanded="false"
+        aria-controls="collapse_r0"
+      >
+        <span class="button--label">Toggle Content</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="collapse--content">
+    <div class="collapse--wrapper">
+      <div class="collapse p-3" id="collapse_r0">
+        <div class="collapse--inner">
+          Hidden content revealed on toggle.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+```
+
+---
+
+## Twig → TypeScript variable map
+
+| Twig variable | TypeScript prop | Notes |
+|---|---|---|
+| `button_group_display` | `buttonGroupDisplay` | Applied as Bootstrap d-* class to the ButtonGroup wrapper |
+| `button_group_size` | `buttonGroupSize` | `btn-group-sm` / `btn-group-lg` |
+| `button_group_display_grid` | `buttonGroupDisplayGrid` | `true` → d-grid; `false` → btn-group |
+| `button_group_label` | `buttonGroupLabel` | `aria-label` on the group |
+| `button_group_gap` | `buttonGroupGap` | `gap-*` spacer |
+| `button_group_breakpoints` | `buttonGroupBreakpoints` | Responsive d-{bp}-{display} classes |
+| `button_group_vertical` | `buttonGroupVertical` | `btn-group-vertical` |
+| `button_group_other_classes` | `buttonGroupClassName` | Extra group classes |
+| `buttons[n].button_target` | `buttons[n].target` | `data-bs-target`; defaults to `#<id>` |
+| `buttons[n].button_link` | `buttons[n].href` | Anchor `href`; not injected by default |
+| `content[n].collapse_id` | `content[n].collapseId` | Panel `id`; defaults to shared generated ID |
+| `content[n].collapse_content` | `content[n].content` | Panel inner content |
+| `content[n].background_color` | `content[n].backgroundColor` | `bg-*` utility |
+| `content[n].text_color` | `content[n].textColor` | `text-*` utility |
+| `content[n].collapse_other_classes` | `content[n].className` | Extra `.collapse` classes |
+| `collapse_container_other_classes` | `className` | Extra `.collapse--container` classes |

@@ -1,0 +1,115 @@
+import { Branding } from './Branding';
+
+# Branding
+
+Branding molecule — mirrors the Timberland Pattern Lab pattern `timberland/branding`.
+
+Renders the site identity block: a logo (inline SVG, CSS background-image, or standard `<img>`),
+an optional site name heading, and an optional slogan. The logo and site name link to `url` when
+provided; otherwise they render as non-interactive `<span>` elements.
+
+## Usage
+
+```jsx
+// Standard image logo with site name + slogan
+<Branding
+  url="/"
+  logoImgSrc="/path/to/logo.png"
+  width={200}
+  height={60}
+  siteName="Natural Rose"
+  siteSlogan="Grown with care, delivered with love"
+/>
+
+// Inline SVG logo (logo fills the currentColor of the surrounding context)
+<Branding
+  url="/"
+  logoSvgInline={svgMarkupString}
+  siteName="Natural Rose"
+/>
+
+// CSS background-image logo
+<Branding
+  url="/"
+  logoBgImgSrc="/path/to/logo.png"
+  width={200}
+  height={60}
+  siteName="Natural Rose"
+/>
+
+// Logo only — name and slogan hidden
+<Branding
+  url="/"
+  logoImgSrc="/path/to/logo.png"
+  width={200}
+  height={60}
+  hideSiteName
+  hideSiteSlogan
+/>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default (`logoImgSrc`) | Standard `<img>` logo via the Image atom. No extra class on wrapper. |
+| SVG Inline (`logoSvgInline`) | Inline SVG injected via `dangerouslySetInnerHTML`. Adds `logo-type--svg` to wrapper. |
+| Background Image (`logoBgImgSrc`) | CSS `background-image` div via the Image atom `variant="bg"`. Adds `logo-type--bg` to wrapper. |
+| Text Only | No logo prop — logo block renders empty. Name + slogan still display. |
+| Logo Only | `hideSiteName` + `hideSiteSlogan` set to `true`. |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `url` | `string` | — | Href for the logo and name links. When absent both render as `<span>` elements. |
+| `logoSvgInline` | `string` | — | Raw SVG markup string. Rendered inside a `<span role="img">`. Takes precedence over other logo props. |
+| `logoBgImgSrc` | `string` | — | URL for a CSS background-image logo. Used when `logoSvgInline` is absent. |
+| `logoImgSrc` | `string` | — | URL for a standard `<img>` logo. Lowest logo priority. |
+| `width` | `number` | — | Logo width in pixels. Passed to the Image atom. |
+| `height` | `number` | — | Logo height in pixels. Passed to the Image atom. |
+| `siteName` | `string` | — | Site name text rendered in a heading element. |
+| `hideSiteName` | `boolean` | `false` | Suppress the site name element even when `siteName` is set. |
+| `siteSlogan` | `string` | — | Site slogan / tagline text. |
+| `hideSiteSlogan` | `boolean` | `false` | Suppress the slogan element even when `siteSlogan` is set. |
+| `nameElement` | `'h1' \| 'h2' \| … \| 'span' \| 'p'` | `'h1'` | HTML element for the site name heading. Downgrade when the page already has an `<h1>`. |
+| `target` | `string` | `'_self'` | Link target attribute. Only applied when `url` is provided. |
+| `colorOriginal` | `boolean` | `false` | Preserve the SVG's original colours. Only relevant for `logoSvgInline`. |
+| `otherClasses` | `string \| string[]` | — | Extra CSS class names appended to the root wrapper. |
+| `otherStyles` | `React.CSSProperties` | — | Additional inline styles on the root wrapper `<div>`. |
+
+## HTML Structure
+
+```html
+<!-- logo-type--svg | logo-type--bg class added when relevant -->
+<div class="branding [logo-type--*]" data-pattern="timberland/branding">
+
+  <div class="branding--site-logo">
+    <!-- <a> when url is set; <span> otherwise -->
+    <a href="/" title="Site Name" rel="home" aria-label="Site Name">
+      <!-- one of: inline SVG span | Image bg div | next/image img -->
+    </a>
+  </div>
+
+  <!-- rendered when siteName is set and hideSiteName !== true -->
+  <h1 class="branding--site-name">
+    <a href="/" title="Home" rel="home" aria-label="Site Name">Site Name</a>
+  </h1>
+
+  <!-- rendered when siteSlogan is set and hideSiteSlogan !== true -->
+  <p class="lead branding--site-slogan">Slogan text</p>
+
+</div>
+```
+
+## Notes
+
+- The class list on the root `<div>` is sorted alphabetically to match the Twig template's
+  `sort` filter behaviour.
+- The `logoSvgInline` prop accepts a full SVG string (including the `<svg>` opening tag).
+  Make sure the markup is trusted — this renders via `dangerouslySetInnerHTML`.
+- When `logoSvgInline` is absent and `logoBgImgSrc` is absent, the `logoImgSrc` path is
+  used. If none of the three logo props are provided, the `branding--site-logo` block renders
+  with an empty link — consider supplying at least one logo prop.
+- Global styles for `.branding` and its BEM elements are in
+  `src/scss/patterns/molecules/_branding.scss`.

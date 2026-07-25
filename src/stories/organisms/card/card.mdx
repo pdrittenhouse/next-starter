@@ -1,0 +1,252 @@
+import { Card } from './Card';
+
+# Card
+
+Card organism — mirrors the theme's Pattern Lab `timberland/card` pattern at
+`src/design-system/patterns/03-organisms/card/_card.tpl.twig`.
+
+Renders the full Bootstrap 5 card HTML structure, including a header lead area (icon + label),
+top/bottom card images, title/subtitle, body text, inline links, Button and List atom/molecule
+composition, footer content, full-card link wrapping, and 3D flip-card faces.
+
+Global card styles live at `src/scss/patterns/organisms/_card.scss`.
+
+## Usage
+
+```jsx
+// Basic card
+<Card
+  title="Getting Started"
+  subtitle="A headless WordPress framework"
+  text="Timberland is a component-driven WordPress theme framework."
+  button={{ variant: 'primary', label: 'Read the docs', href: '#' }}
+/>
+
+// Card with top image
+<Card
+  image={{ src: '/card.jpg', alt: 'Card image', width: 800, height: 450 }}
+  imageLocation="top"
+  label="Tutorial"
+  title="Bootstrap 5 Integration"
+  text="All Bootstrap 5 utility classes are available globally."
+/>
+
+// Full-card link
+<Card
+  linked
+  link="/article/slug"
+  linkTarget="_self"
+  title="Migrating to Headless WordPress"
+  text="Learn how Timberland enables headless migration while preserving Pattern Lab parity."
+/>
+
+// Colored background
+<Card
+  background="primary"
+  textColor="white"
+  inheritColor
+  title="Pro Plan"
+  text="Everything included."
+  button={{ variant: 'light', label: 'Get started', href: '#' }}
+/>
+
+// Card with List molecule
+<Card
+  icon="bi bi-check-circle-fill"
+  label="What's included"
+  title="Pro Plan"
+  list={{
+    bulletIcons: true,
+    bulletIconPosition: 'before',
+    items: [
+      { itemText: 'Unlimited projects', itemIcon: 'fas fa-check', iconColor: 'success' },
+      { itemText: 'Priority support',   itemIcon: 'fas fa-check', iconColor: 'success' },
+    ],
+  }}
+/>
+
+// Flip card
+<Card
+  flipCard
+  backgroundImage="/front.jpg"
+  backBackgroundImage="/back.jpg"
+  backContent="Hover to reveal back content."
+/>
+```
+
+## HTML structure
+
+```html
+<!-- Standard card (div wrapper) -->
+<div class="card" data-pattern="timberland/card">
+  <div class="card-wrapper">
+    <div class="front">
+      <div class="card-content-wrapper-outer">
+        <div class="card-content-wrapper-inner">
+
+          <!-- card-header: icon, label, header text, or top image -->
+          <div class="card-header">
+            <div class="card-lead">
+              <div class="card-icon"><span class="bi bi-star-fill"></span></div>
+              <span class="card-label">Featured</span>
+            </div>
+            <div class="card-image"><!-- Image atom --></div>
+          </div>
+
+          <!-- card-content: title, subtitle, body -->
+          <div class="card-content">
+            <div class="card-intro">
+              <h4 class="card-title">Title</h4>
+              <h6 class="card-subtitle">Subtitle</h6>
+            </div>
+            <div class="card-body">
+              <div class="card-text">Body text</div>
+              <a href="#" class="card-link">Link text</a>
+              <!-- Button atom -->
+              <!-- List molecule -->
+            </div>
+          </div>
+
+          <!-- card-footer: footer text + bottom image -->
+          <div class="card-footer">
+            <div class="card-footer-content">Footer text</div>
+            <div class="card-image"><!-- Image atom --></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Flip card back face (only when flipCard=true) -->
+    <div class="back">
+      <div class="card-content-wrapper-outer">
+        <div class="card-content-wrapper-inner">
+          <div class="card-back-content">Back content</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Linked card (<a> wrapper) -->
+<a href="/path" class="card card--linked" data-pattern="timberland/card" aria-label="Read more about Title">
+  ...
+</a>
+```
+
+## Class output
+
+The card wrapper always receives the `card` class. Additional classes are built and
+**alphabetically sorted** (matching the Twig `| sort | join | trim` chain):
+
+| Condition | Class(es) added |
+| --- | --- |
+| Always | `card` |
+| `width={25\|50\|75}` | `w-25`, `w-50`, `w-75` |
+| `cols="col-md-4"` | `col-md-4` (pass-through) |
+| `textAlignment="center"` | `text-center` |
+| `textColor="white"` | `text-white` |
+| `background="primary"` | `bg-primary` |
+| `border="danger"` | `border border-danger` |
+| `linked={true}` | `card--linked` |
+| `imageOverlay={true}` | `has-image-overlay` |
+| `imageOverlayText` is set | `has-overlay-text` |
+| `backgroundImage` or `backBackgroundImage` | `has-bg-img` |
+| `flipCard={true}` | `flip-card` |
+| `image.src` is set | `has-img` |
+| `noBorder={true}` | `no-border` |
+
+## Variants
+
+| Variant | Key props |
+| --- | --- |
+| Default | `title`, `text`, `button` |
+| With Image Top | `image`, `imageLocation="top"` |
+| With Image Bottom | `image`, `imageLocation="bottom"` |
+| With Label + Icon | `icon`, `label` |
+| Linked | `linked={true}`, `link` |
+| Color | `background`, `textColor`, `inheritColor` |
+| Bordered | `border` |
+| With List | `list` (List molecule props) |
+| With Footer | `footer` |
+| Image Overlay Text | `imageOverlayText` |
+| Fixed Width | `width={25\|50\|75}` |
+| No Border | `noBorder={true}` |
+| Flip Card | `flipCard={true}`, `backContent` |
+
+## Props
+
+### CardProps
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | — | HTML id attribute on the card wrapper. Maps to `card_id`. |
+| `element` | `'div' \| 'article' \| 'section'` | `'div'` | Wrapper element tag. Overridden to `'a'` when `linked` is true. Maps to `card_element`. |
+| `patternSlug` | `string` | `'timberland/card'` | `data-pattern` attribute value. Maps to `card_pattern_slug`. |
+| `width` | `25 \| 50 \| 75` | — | Bootstrap `w-{n}` width class percentage. Maps to `card_width`. |
+| `cols` | `string` | — | Bootstrap col class(es) (e.g. `'col-md-4'`). Maps to `card_cols`. |
+| `background` | `CardBackground` | — | Background color variant. Adds `bg-{color}`. Maps to `card_background`. |
+| `border` | `CardBorder` | — | Border color variant. Adds `border border-{color}`. Maps to `card_border`. |
+| `textAlignment` | `CardTextAlignment` | — | Text alignment. Adds `text-{alignment}`. Maps to `text_alignment`. |
+| `textColor` | `CardTextColor` | — | Text color variant. Adds `text-{color}`. Maps to `text_color`. |
+| `noBorder` | `boolean` | `false` | Remove card border. Adds `no-border`. Maps to `no_border`. |
+| `inheritColor` | `boolean` | `false` | Reset label/title/subtitle/text colors to inherit. Maps to `inherit_color`. |
+| `backgroundImage` | `string` | — | CSS background-image URL. Applied as inline style. Adds `has-bg-img`. Maps to `background_image`. |
+| `icon` | `CardIconProps \| string` | — | Header lead icon. String = class name; object = structured icon. Maps to `card_icon`. |
+| `label` | `string` | — | Label / category text in header lead. Maps to `card_label`. |
+| `header` | `string` | — | Header text; also a conditional flag to show `.card-header`. Maps to `card_header`. |
+| `noHeaderPadding` | `boolean` | `false` | Remove `.card-header` padding. Maps to `no_header_padding`. |
+| `image` | `ImageProps` | — | Image atom props. Rendered at top or bottom based on `imageLocation`. Maps to `card_image`. |
+| `imageLocation` | `'top' \| 'bottom'` | — | Image position. Maps to `card_image_location`. |
+| `imageOverlay` | `boolean` | `false` | Overlay card body on image. Adds `has-image-overlay`. Maps to `card_image_overlay`. |
+| `imageOverlayText` | `string` | — | Text overlay on image. Adds `has-overlay-text`. Maps to `card_image_overlay_text`. |
+| `title` | `string` | — | Card title `<h4 class="card-title">`. Maps to `card_title`. |
+| `subtitle` | `string` | — | Card subtitle `<h6 class="card-subtitle">`. Maps to `card_subtitle`. |
+| `text` | `ReactNode` | — | Card body text or rich content in `.card-text`. Maps to `card_text`. |
+| `noBodyPadding` | `boolean` | `false` | Remove body padding. Maps to `no_body_padding`. |
+| `link` | `string` | — | URL for the card link (full-card or inline). Maps to `card_link`. |
+| `linkText` | `string` | — | Display text for the inline card-link anchor. Maps to `card_link_text`. |
+| `linkTarget` | `CardLinkTarget` | — | Link target attribute. Maps to `card_link_target`. |
+| `linked` | `boolean` | `false` | Wrap entire card in `<a>`. Adds `card--linked`. Maps to `card_linked`. |
+| `button` | `ButtonProps` | — | Button atom props rendered in the card body. Maps to `card_button`. |
+| `list` | `ListProps` | — | List molecule props rendered in the card body. Maps to `card_list`. |
+| `footer` | `ReactNode` | — | Footer content inside `.card-footer-content`. Maps to `card_footer`. |
+| `noFooterPadding` | `boolean` | `false` | Remove `.card-footer` padding. Maps to `no_footer_padding`. |
+| `flipCard` | `boolean` | `false` | Enable 3D flip-card structure. Adds `flip-card`. Maps to `flip_card`. |
+| `backBackgroundImage` | `string` | — | Background image for the flip back face. Adds `has-bg-img`. Maps to `back_background_image`. |
+| `backContent` | `ReactNode` | — | Content for `.card-back-content` on the back face. Maps to `back` block. |
+| `className` | `string` | — | Additional CSS classes on the card wrapper. Maps to `card_other_classes`. |
+
+### CardIconProps
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | — | Icon identifier or class name (e.g. `'bi bi-star'`). Required. |
+| `fill` | `string` | — | SVG fill color. Applied as inline `fill` style. |
+| `width` | `number` | — | Icon width in pixels. |
+| `height` | `number` | — | Icon height in pixels. |
+| `svgClasses` | `string` | — | Additional CSS classes on the SVG wrapper span. |
+
+## CSS notes
+
+All card visual styles are defined in `src/scss/patterns/organisms/_card.scss` and are applied
+via global Bootstrap-compatible class names. The module's SCSS file is a stub that references this
+location.
+
+The flip-card variant uses CSS 3D transforms (`preserve-3d`, `rotateY`, `perspective`) defined in
+the global SCSS — no JavaScript is required for the hover interaction. The `.front` and `.back`
+faces use `backface-visibility: hidden` and `will-change: transform`.
+
+## Notes
+
+- The `data-pattern="timberland/card"` attribute is always present on the wrapper element,
+  matching the Twig template output and enabling global CSS targeting.
+- Class names are alphabetically sorted before joining, matching the Twig `| sort` filter.
+- When `linked` is true, the card wrapper becomes an `<a>` element with `aria-label` set to
+  `"Read more about {title}"` when a title is provided — matching the Twig ARIA attribute.
+- The `image` prop uses the `Image` atom (`@/stories/atoms/image/Image`), which handles
+  `next/image` optimization, aspect-ratio wrappers, and background image variants.
+- The `button` prop spreads all `ButtonProps` onto the `Button` atom, including tooltip,
+  popover, toggle, and ARIA attributes.
+- The `list` prop spreads all `ListProps` onto the `List` molecule, including icon bullets,
+  nested lists, and per-item overrides.

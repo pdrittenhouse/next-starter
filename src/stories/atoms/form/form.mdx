@@ -1,0 +1,76 @@
+import { Form } from './Form';
+
+# Form
+
+Form atom — mirrors the theme's Pattern Lab `timberland/form` pattern. Renders the `<form>` shell with an optional heading/intro header block, slotted children for field content, and an optional footer. It is **not** a form builder — compose field components as children.
+
+## Usage
+
+```jsx
+// Minimal — no heading, children render directly inside the form
+<Form action="/submit" method="post">
+  {/* field components go here */}
+</Form>
+
+// With heading
+<Form action="/contact" method="post" heading="Contact Us">
+  {/* fields */}
+</Form>
+
+// With heading + intro
+<Form action="/quote" method="post" heading="Request a Quote" intro="We'll respond within one business day.">
+  {/* fields */}
+</Form>
+
+// With footer
+<Form action="/newsletter" method="post" heading="Stay in Touch" footer="Unsubscribe at any time.">
+  {/* fields */}
+</Form>
+
+// File upload — enctype only applies when method="post"
+<Form action="/upload" method="post" enctype="multipart/form-data" heading="Upload Resume">
+  {/* file input */}
+</Form>
+
+// Disable browser-native validation (use with custom JS validation)
+<Form action="/submit" method="post" noValidate heading="Custom Validation">
+  {/* fields */}
+</Form>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | Bare form shell with no heading or footer |
+| With Heading | Renders `<header>` with `<h2 class="form-title">` |
+| With Heading + Intro | Renders `<header>` with both `form-title` and `form-intro` |
+| With Footer | Appends a `<footer>` element after children |
+| File Upload | Sets `enctype="multipart/form-data"` for file inputs |
+| No Native Validation | Adds `novalidate` for JS-driven validation flows |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | — | `name` attribute on the `<form>` element |
+| `id` | `string` | — | `id` attribute on the `<form>` element |
+| `charset` | `string` | — | Maps to `accept-charset` — character encodings for form submission |
+| `action` | `string` | — | URL that processes the form data |
+| `autocomplete` | `boolean` | `false` | `true` → `autocomplete="on"`, `false` → `autocomplete="off"` |
+| `method` | `'get' \| 'post'` | — | HTTP method for submission |
+| `enctype` | `string` | — | Encoding type — only written to DOM when `method="post"` |
+| `noValidate` | `boolean` | — | Suppresses browser-native validation on submit |
+| `target` | `'_blank' \| '_self' \| '_parent' \| '_top'` | — | Where to display the response |
+| `heading` | `string` | — | Renders as `<h2 class="form-title">` inside a `<header>` block |
+| `intro` | `React.ReactNode` | — | Renders as `<div class="form-intro">` below the heading |
+| `children` | `React.ReactNode` | — | Form fields and controls — maps to the `form_content` Twig block |
+| `footer` | `React.ReactNode` | — | Rendered inside a `<footer>` element at the end of the form |
+| `className` | `string` | — | Additional CSS class names appended to `form` |
+
+## Notes
+
+- `enctype` is silently ignored unless `method="post"`. This matches the HTML spec and the Twig template's `{{ enctype and method == 'post' ? … }}` guard.
+- The `<header>` block is only rendered when at least one of `heading` or `intro` is truthy. An empty `<header>` is never emitted.
+- `autocomplete` defaults to `false` (outputs `autocomplete="off"`), matching the Twig default behavior where a falsy value still writes the attribute.
+- Global styles live in `src/scss/patterns/atoms/_form.scss`. The `.form-title` and `.form-intro` classes are defined there.

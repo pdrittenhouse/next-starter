@@ -1,0 +1,57 @@
+import { Figure } from './Figure';
+
+# Figure
+
+Figure atom — mirrors the theme's Pattern Lab `timberland/figure` pattern. Wraps slotted content in a semantic `<figure>` element with an optional `<figcaption>` that can appear before or after the content block.
+
+## Usage
+
+```jsx
+// Default (caption after content)
+<Figure caption="A view of the Timberland forest at dusk.">
+  <img src="/path/to/image.jpg" alt="Forest at dusk" />
+</Figure>
+
+// Caption before content
+<Figure caption="Fig. 1 — Annual growth rings." captionPosition="before">
+  <img src="/path/to/diagram.jpg" alt="Tree cross-section showing growth rings" />
+</Figure>
+
+// No caption — content only
+<Figure>
+  <img src="/path/to/image.jpg" alt="Decorative forest scene" />
+</Figure>
+
+// With additional CSS classes
+<Figure
+  caption="Sunrise over the ridge."
+  figureClasses={['figure--highlighted']}
+  figureOtherClasses="mb-4"
+>
+  <img src="/path/to/image.jpg" alt="Sunrise" />
+</Figure>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Caption after (default) | `<figcaption>` renders after the content block |
+| Caption before | `<figcaption>` renders before the content block |
+| No caption | `caption` is omitted; only the slotted content is rendered |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `caption` | `string` | — | Caption text rendered inside `<figcaption>` |
+| `captionPosition` | `'before' \| 'after'` | `'after'` | Where the caption appears relative to the content block |
+| `figureClasses` | `string[]` | — | Additional class names as an array — maps to `figure_classes` in the Twig pattern |
+| `figureOtherClasses` | `string` | — | Additional class names as a string — maps to `figure_other_classes` in the Twig pattern |
+| `children` | `React.ReactNode` | — | Slotted content — mirrors the Twig `content` block |
+
+## Notes
+
+- Classes from `figureClasses` and `figureOtherClasses` are sorted alphabetically before joining, matching the Twig template's `| sort` filter applied to `figure_classes`.
+- The `figure` base class is always present on the root `<figure>` element and cannot be removed.
+- `captionPosition` only has an effect when `caption` is provided. If `caption` is empty or undefined, no `<figcaption>` is rendered regardless of `captionPosition`.

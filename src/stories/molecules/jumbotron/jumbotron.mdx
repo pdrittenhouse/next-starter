@@ -1,0 +1,138 @@
+import { Jumbotron } from './Jumbotron';
+
+# Jumbotron
+
+The **Jumbotron** molecule renders a full-width hero section featuring a primary
+heading, optional subtitle, body copy, an optional CSS background image, an optional
+inline side image, and a CTA button.
+
+It maps 1:1 to the Pattern Lab Twig template at:
+`patterns/02-molecules/jumbotron/_jumbotron.tpl.twig`
+
+---
+
+## Usage
+
+```jsx
+// Minimal — title only
+<Jumbotron title="Welcome" />
+
+// With body copy and CTA
+<Jumbotron
+  title="Welcome to Our Platform"
+  subtitle="Everything you need, all in one place"
+  text="<p>Discover a powerful set of tools.</p>"
+  cta={{ label: 'Get Started', href: '/start' }}
+/>
+
+// CSS background image
+<Jumbotron
+  title="Adventure Awaits"
+  bgImage="/hero.jpg"
+  cta={{ label: 'Explore', variant: 'light', size: 'lg', href: '#' }}
+/>
+
+// With inline side image (image renders on the right by default)
+<Jumbotron
+  title="Meet Our Team"
+  image={{ src: '/team.jpg', alt: 'Team photo', width: 600, height: 400 }}
+  cta={{ label: 'Learn More', variant: 'secondary', href: '#' }}
+/>
+
+// Image on the left
+<Jumbotron
+  title="Built for Scale"
+  image={{ src: '/infra.jpg', alt: 'Infrastructure', width: 600, height: 400 }}
+  imageLeft
+  cta={{ label: 'View Docs', href: '#' }}
+/>
+
+// Fluid container (no rounded corners, edge-to-edge)
+<Jumbotron title="Full Width" fluid />
+
+// Remove container + row wrappers entirely
+<Jumbotron title="Full Bleed" removeContainer />
+
+// Vertically centered content
+<Jumbotron title="Centered" verticalCenter />
+
+// With eyebrow label
+<Jumbotron label="New Feature" title="Smart Workflows" />
+```
+
+---
+
+## Variants
+
+| Variant | Key Props | Notes |
+| --- | --- | --- |
+| Default | — | `container` + `row` wrapper |
+| Fluid | `fluid` | Switches to `container-fluid` |
+| No Container | `removeContainer` | Omits container and row entirely |
+| Vertical Center | `verticalCenter` | Adds `vertical-center` class; CSS aligns rows |
+| With Inline Image | `image` | Adds `has-image` class; image column on right (lg+) |
+| Image Left | `image` + `imageLeft` | Image column ordered left via `image-left` class |
+| Background Image | `bgImage` | Sets inline `background-image` CSS on root element |
+| With Eyebrow Label | `label` | `<span class="jumbotron--label">` above title |
+
+---
+
+## Props
+
+| Name | Type | Default | Twig Variable | Description |
+| --- | --- | --- | --- | --- |
+| `id` | `string` | — | `id` | HTML id attribute on the root element |
+| `fluid` | `boolean` | `false` | `jumbotron_fluid` | Use `container-fluid` instead of `container` |
+| `removeContainer` | `boolean` | `false` | `remove_container` | Omit container and row divs entirely |
+| `verticalCenter` | `boolean` | `false` | `vertical_center` | Vertically center content on desktop |
+| `imageLeft` | `boolean` | `false` | `image_left` | Order the image column to the left |
+| `containerBreakpoint` | `string` | — | `container_breakpoint` | Responsive container suffix (e.g. `'lg'` → `container-lg`) |
+| `maxWidthFluidContainer` | `boolean` | `false` | `max_width_fluid_container` | Adds `max-width-fluid-container` class to a fluid container |
+| `label` | `string` | — | `jumbotron_label` | Eyebrow label rendered as `<span class="jumbotron--label">` |
+| `title` | `string` | — | `jumbotron_title` | Primary heading rendered as `<h1 class="jumbotron--title">` |
+| `subtitle` | `string` | — | `jumbotron_subtitle` | Secondary heading rendered as `<h2 class="jumbotron--subtitle">` |
+| `text` | `string` | — | `jumbotron_text` | Body copy (raw HTML) rendered inside `<div class="jumbotron--text">` |
+| `bgImage` | `string` | — | `jumbotron_bg_image` | URL applied as `background-image` inline style on root |
+| `image` | `ImageProps` | — | `jumbotron_image.*` | Inline side image; all Image atom props accepted |
+| `cta` | `ButtonProps` | — | `button_*` | CTA button; all Button atom props accepted |
+| `className` | `string` | — | `jumbotron_other_classes` | Extra CSS class names appended to the root element |
+
+### `image` sub-props (ImageProps)
+
+See the [Image atom](?path=/docs/design-system-atoms-image--docs) for the full prop list.
+Key props: `src`, `alt`, `width`, `height`, `variant`, `sizes`, `loading`, `fetchPriority`.
+
+### `cta` sub-props (ButtonProps)
+
+See the [Button atom](?path=/docs/design-system-atoms-button--docs) for the full prop list.
+Key props: `label`, `variant`, `size`, `href`, `outline`, `disabled`, `toggle`.
+
+---
+
+## HTML Output
+
+The component produces this structure (with `removeContainer: false`):
+
+```html
+<div
+  class="jumbotron [has-image] [image-left] [no-container] [vertical-center]"
+  style="background-image: url(...);"
+  data-pattern="timberland/jumbotron"
+>
+  <span class="bg bg-top"></span>
+  <div class="container">
+    <div class="row">
+      <!-- if image prop -->
+      <div class="jumbotron--image"><!-- Image atom --></div>
+      <div class="jumbotron--content">
+        <!-- if label --><span class="jumbotron--label">…</span>
+        <!-- if title --><h1 class="jumbotron--title">…</h1>
+        <!-- if subtitle --><h2 class="jumbotron--subtitle">…</h2>
+        <!-- if text --><div class="jumbotron--text">…</div>
+        <!-- if cta --><button class="button btn btn-primary">…</button>
+      </div>
+    </div>
+  </div>
+  <span class="bg bg-bottom"></span>
+</div>
+```

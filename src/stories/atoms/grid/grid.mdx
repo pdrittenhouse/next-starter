@@ -1,0 +1,69 @@
+import { Grid } from './Grid';
+
+# Grid
+
+Grid atom — mirrors the theme's Pattern Lab `timberland/grid` pattern. Renders a Bootstrap `.row` / `.col.col-first` wrapper and optionally adds container classes to the root element.
+
+The grid is the outer shell for page-level and section-level layouts. If this grid is the very outermost wrapper of a page, the implementor is responsible for wrapping it in a `.container` div — or use the `container` / `containerFluid` props to apply that class directly to the grid root.
+
+## Usage
+
+```jsx
+// Bare grid (no container class — caller manages the outer container)
+<Grid>
+  <p>Column 1 content</p>
+</Grid>
+
+// Fixed-width centered container
+<Grid container>
+  <p>Centered content</p>
+</Grid>
+
+// Full-width fluid container
+<Grid containerFluid>
+  <p>Full-width content</p>
+</Grid>
+
+// Fluid below md, fixed above (Bootstrap responsive container)
+<Grid container containerBreakpoint="md">
+  <p>Responsive container</p>
+</Grid>
+
+// Fluid with max-width cap
+<Grid containerFluid maxWidthFluidContainer>
+  <p>Full-bleed with max-width</p>
+</Grid>
+
+// Additional class names
+<Grid container className="my-section">
+  <p>Section content</p>
+</Grid>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | No container class — grid root is unstyled; outer container is caller's responsibility |
+| `container` | Adds Bootstrap `.container` for a fixed-max-width centered layout |
+| `containerFluid` | Adds Bootstrap `.container-fluid` for a full-width layout with gutters |
+| `container` + `containerBreakpoint` | Adds `.container-{breakpoint}` — fluid below the breakpoint, fixed above |
+| `containerFluid` + `maxWidthFluidContainer` | Adds both `.container-fluid` and `.max-width-fluid-container` |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `container` | `boolean` | `false` | Adds Bootstrap `.container` class to the root element |
+| `containerFluid` | `boolean` | `false` | Adds Bootstrap `.container-fluid`. Takes precedence over `container` when both are true |
+| `containerBreakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | — | Breakpoint suffix appended to `.container-{breakpoint}`. Only applied when `container` is true and `containerFluid` is false |
+| `maxWidthFluidContainer` | `boolean` | `false` | Adds `.max-width-fluid-container` — only effective when `containerFluid` is true |
+| `className` | `string` | — | Additional CSS class names appended to the root element |
+| `children` | `React.ReactNode` | — | Content rendered inside `.col.col-first` — maps to the `column_1` Twig block |
+
+## Notes
+
+- The `.col-first` class on the inner column is part of the Twig pattern's BEM output and is always present.
+- `containerFluid` takes precedence over `container` — if both are passed, only `.container-fluid` is applied.
+- `maxWidthFluidContainer` has no effect unless `containerFluid` is also true. It is silently ignored otherwise.
+- `data-pattern="timberland/grid"` is always rendered on the root element to match the Twig template's output exactly.

@@ -1,0 +1,278 @@
+import { Meta, Canvas, Controls, Story } from '@storybook/blocks';
+import * as ToastStories from './Toast.stories';
+
+<Meta of={ToastStories} />
+
+# Toast
+
+The **Toast** organism renders positioned Bootstrap 5 notification toasts. It
+mirrors the Pattern Lab Twig template at
+`03-organisms/toast/_toast.tpl.twig` and produces identical HTML class
+structure.
+
+Each toast can carry an icon, image thumbnail, title, meta timestamp, body
+content, and an optional close button. An optional controls area renders trigger
+buttons above the container so viewers can re-show toasts from Storybook.
+
+---
+
+## Usage
+
+```tsx
+import { Toast } from '@/stories/organisms/toast/Toast';
+
+// Single toast, bottom-right (defaults)
+<Toast
+  toasts={[
+    {
+      title: 'Saved',
+      meta: 'Just now',
+      toastCloseButton: 'close',
+      toastContent: 'Your changes have been saved.',
+      autohide: false,
+      toastDisplay: 'show',
+    },
+  ]}
+/>
+
+// Success toast with trigger button
+<Toast
+  verticalPosition="bottom"
+  horizontalPosition="right"
+  toasts={[
+    {
+      title: 'Success',
+      icon: { name: 'check-circle-fill' },
+      toastCloseButton: 'white',
+      toastContent: 'Profile updated successfully.',
+      autohide: false,
+      toastDisplay: 'show',
+      backgroundColor: 'success',
+      textColor: 'white',
+      headerBackgroundColor: 'success',
+      headerTextColor: 'white',
+      button: { variant: 'success', label: 'Show Toast' },
+    },
+  ]}
+/>
+
+// Auto-dismissing toast with custom delay
+<Toast
+  toasts={[
+    {
+      title: 'Auto-dismiss',
+      toastContent: 'This disappears in 3 seconds.',
+      autohide: true,
+      delay: 3000,
+      toastDisplay: 'show',
+    },
+  ]}
+/>
+```
+
+---
+
+## Stories
+
+<Canvas of={ToastStories.Default} />
+<Canvas of={ToastStories.Success} />
+<Canvas of={ToastStories.Error} />
+<Canvas of={ToastStories.Warning} />
+<Canvas of={ToastStories.Info} />
+<Canvas of={ToastStories.WithImage} />
+<Canvas of={ToastStories.AutohideWithDelay} />
+<Canvas of={ToastStories.MultipleToasts} />
+<Canvas of={ToastStories.NoControls} />
+<Canvas of={ToastStories.BottomLeft} />
+<Canvas of={ToastStories.MiddleCenter} />
+
+---
+
+## Controls
+
+<Controls />
+
+---
+
+## Variants
+
+| Story | Description |
+|---|---|
+| Default | Single toast, bottom-right |
+| Top Center | Positioned at top-center with translate-middle-x |
+| Success | `bg-success text-white` header and body |
+| Error | `bg-danger text-white` with warning icon |
+| Warning | `bg-warning` with exclamation icon |
+| Info | `bg-info text-white` with info icon |
+| With Image | Thumbnail image in the toast header |
+| Autohide (3 s delay) | `data-bs-autohide` + `data-bs-delay="3000"` |
+| Multiple Toasts | Three stacked toasts with separate trigger buttons |
+| No Controls | Toasts without trigger buttons |
+| Bottom Left | `bottom-0 start-0` positioning |
+| Middle Center | `top-50 start-50 translate-middle` positioning |
+
+---
+
+## Props
+
+### `ToastProps`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `toastWrapperId` | `string` | — | `id` on the outer wrapper element |
+| `toastWrapperClassName` | `string` | — | Extra classes for the outer wrapper |
+| `toastContainerClassName` | `string` | — | Extra classes for the `toast-container` div |
+| `verticalPosition` | `'top' \| 'bottom' \| 'middle'` | `'bottom'` | Vertical placement |
+| `horizontalPosition` | `'left' \| 'right' \| 'center'` | `'right'` | Horizontal placement |
+| `buttonGroupDisplay` | `WrapperDisplay` | `'inline-block'` | Display utility for the controls ButtonGroup |
+| `buttonGroupSize` | `'sm' \| 'lg'` | — | Size for the controls ButtonGroup |
+| `buttonGroupDisplayGrid` | `boolean` | — | Grid layout for the controls ButtonGroup |
+| `buttonGroupLabel` | `string` | — | `aria-label` for the controls ButtonGroup |
+| `buttonGroupGap` | `string \| number` | — | Gap spacer for the controls ButtonGroup |
+| `buttonGroupClassName` | `string` | — | Extra classes for the controls ButtonGroup |
+| `toasts` | `ToastItem[]` | `[]` | Array of toast notification objects |
+| `className` | `string` | — | Extra class on the root wrapper element |
+
+### `ToastItem`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `toastId` | `string` | auto | Explicit `id` for the toast element |
+| `autohide` | `boolean` | `true` | Auto-hide the toast; `false` → `data-bs-autohide="false"` |
+| `animation` | `boolean` | `true` | CSS fade transition; `false` → `data-bs-animation="false"` |
+| `delay` | `number` | — | Auto-hide delay in ms (`data-bs-delay`) |
+| `toastDisplay` | `'show' \| 'hide'` | — | Initial visibility class |
+| `toastClassName` | `string` | — | Extra classes for the toast element |
+| `backgroundColor` | `string` | — | Bootstrap `bg-*` suffix, e.g. `'success'` |
+| `textColor` | `string` | — | Bootstrap `text-*` suffix, e.g. `'white'` |
+| `headerBackgroundColor` | `string` | — | Bootstrap `bg-*` suffix for the header |
+| `headerTextColor` | `string` | — | Bootstrap `text-*` suffix for the header |
+| `icon` | `ToastIconProps` | — | Bootstrap Icon to display in the header |
+| `image` | `ImageProps` | — | Image thumbnail to display in the header |
+| `title` | `string` | — | Bold title text in the header |
+| `meta` | `string` | — | Small meta text (e.g. timestamp) in the header |
+| `toastCloseButton` | `'close' \| 'white'` | — | Close button style; `'white'` uses the inverted variant |
+| `toastContent` | `React.ReactNode` | — | Body content of the toast |
+| `button` | `ButtonProps` | — | Trigger button wired to `data-bs-toggle="toast"` |
+
+### `ToastIconProps`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `name` | `string` | **required** | Bootstrap Icon name, e.g. `'info-circle'` |
+| `className` | `string` | — | Extra classes for the `<i>` element |
+
+---
+
+## HTML Output
+
+```html
+<div
+  class="toast-wrapper"
+  data-pattern="timberland/toast"
+  aria-live="polite"
+  aria-atomic="true"
+>
+  <!-- controls: only rendered when toasts supply a `button` prop -->
+  <div class="toast--controls">
+    <div class="button-group--wrapper d-inline-block" data-pattern="timberland/button-group">
+      <div class="button-group display-grid d-grid" role="group">
+        <button
+          type="button"
+          class="button btn btn-primary"
+          data-bs-toggle="toast"
+          data-bs-target="#toast-id"
+          aria-controls="toast-id"
+        >
+          <span class="button--label">Show Toast</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- toast container: position-fixed with placement classes -->
+  <div class="toast-container position-fixed p-3 bottom-0 end-0">
+    <div
+      class="toast show"
+      id="toast-id"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+      data-bs-autohide="false"
+    >
+      <div class="toast-header">
+        <!-- optional: <i class="toast-icon me-2 bi bi-check-circle-fill"> -->
+        <!-- optional: <img class="toast--image me-2 ..."> -->
+        <strong class="toast--title me-auto">Notification</strong>
+        <small class="toast--meta">Just now</small>
+        <button type="button" class="btn-close" aria-label="Close" data-bs-dismiss="toast"></button>
+      </div>
+      <div class="toast-body">
+        Your changes have been saved successfully.
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+---
+
+## Positioning
+
+The `verticalPosition` and `horizontalPosition` props map to Bootstrap utility
+classes on the `toast-container` element:
+
+| `verticalPosition` | Class |
+|---|---|
+| `top` | `top-0` |
+| `bottom` | `bottom-0` |
+| `middle` | `top-50` |
+
+| `horizontalPosition` | Class |
+|---|---|
+| `left` | `start-0` |
+| `right` | `end-0` |
+| `center` | `start-50` |
+
+A `translate-middle*` class is automatically added when needed:
+
+| Condition | Transform class |
+|---|---|
+| `middle` + non-center | `translate-middle-y` |
+| non-middle + `center` | `translate-middle-x` |
+| `middle` + `center` | `translate-middle` |
+
+---
+
+## Twig → TypeScript variable map
+
+| Twig variable | TypeScript prop | Notes |
+|---|---|---|
+| `toast_wrapper_id` | `toastWrapperId` | |
+| `toast_wrapper_other_classes` | `toastWrapperClassName` | |
+| `toast_container_other_classes` | `toastContainerClassName` | |
+| `vertical_position` | `verticalPosition` | |
+| `horizontal_position` | `horizontalPosition` | |
+| `button_group_display` | `buttonGroupDisplay` | |
+| `button_group_size` | `buttonGroupSize` | |
+| `button_group_display_grid` | `buttonGroupDisplayGrid` | |
+| `button_group_label` | `buttonGroupLabel` | |
+| `button_group_gap` | `buttonGroupGap` | |
+| `button_group_other_classes` | `buttonGroupClassName` | |
+| `toast.toast_id` | `toasts[n].toastId` | |
+| `toast.autohide` | `toasts[n].autohide` | |
+| `toast.animation` | `toasts[n].animation` | |
+| `toast.delay` | `toasts[n].delay` | |
+| `toast.toast_display` | `toasts[n].toastDisplay` | |
+| `toast.toast_other_classes` | `toasts[n].toastClassName` | |
+| `toast.background_color` | `toasts[n].backgroundColor` | |
+| `toast.text_color` | `toasts[n].textColor` | |
+| `toast.header_background_color` | `toasts[n].headerBackgroundColor` | |
+| `toast.header_text_color` | `toasts[n].headerTextColor` | |
+| `toast.icon` | `toasts[n].icon` | Rendered as Bootstrap Icon `<i>` |
+| `toast.image` | `toasts[n].image` | Passed to Image atom |
+| `toast.title` | `toasts[n].title` | |
+| `toast.meta` | `toasts[n].meta` | |
+| `toast.toast_close_button` | `toasts[n].toastCloseButton` | |
+| `toast.toast_content` | `toasts[n].toastContent` | |
+| `toast.button` | `toasts[n].button` | Trigger button for controls area |

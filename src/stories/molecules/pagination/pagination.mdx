@@ -1,0 +1,135 @@
+import { Pagination } from './Pagination';
+
+# Pagination
+
+Pagination molecule — mirrors the Timberland Pattern Lab pattern at
+`src/design-system/patterns/02-molecules/pagination/_pagination.tpl.twig`.
+
+Produces a Bootstrap 5 `<nav>` + `<ul class="pagination">` landmark with Previous/Next
+controls and a configurable array of numbered page links. The component is standalone —
+it composes no atom sub-components. Global styles live in
+`src/scss/patterns/molecules/_pagination.scss`.
+
+---
+
+## Usage
+
+```tsx
+import { Pagination } from '@/stories/molecules/pagination/Pagination';
+
+// Basic — text labels on Prev/Next controls
+<Pagination
+  title="Blog page navigation"
+  prevLink="/blog?page=1"
+  nextLink="/blog?page=3"
+  pageItems={[
+    { title: '1', link: '/blog?page=1' },
+    { title: '2', link: '/blog?page=2', active: true },
+    { title: '3', link: '/blog?page=3' },
+  ]}
+/>
+
+// With chevron icons (Previous/Next label becomes sr-only)
+<Pagination
+  title="Article page navigation"
+  pageIcon
+  prevLink="/articles?page=1"
+  nextLink="/articles?page=3"
+  pageItems={[
+    { title: '1', link: '/articles?page=1' },
+    { title: '2', link: '/articles?page=2', active: true },
+    { title: '3', link: '/articles?page=3' },
+  ]}
+/>
+
+// Small size modifier
+<Pagination
+  title="News page navigation"
+  size="sm"
+  pageItems={[...]}
+/>
+
+// Large size modifier
+<Pagination
+  title="Portfolio page navigation"
+  size="lg"
+  pageIcon
+  pageItems={[...]}
+/>
+```
+
+---
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | Standard pagination with visible "Previous" / "Next" text labels. |
+| With Icons | Replaces visible label text with `«`/`»` chevrons; label becomes `sr-only`. |
+| Small | Adds `pagination-sm` to reduce the component size. |
+| Large | Adds `pagination-lg` to increase the component size. |
+
+---
+
+## PaginationProps
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | `'Page navigation'` | Accessible label for the `<nav>` landmark. Maps to `pagination_title`. |
+| `size` | `'sm' \| 'lg'` | — | Size modifier; appends `pagination-sm` or `pagination-lg`. Maps to `pagination_size`. |
+| `pageIcon` | `boolean` | `false` | Render `«`/`»` icons inside Prev/Next anchors; label becomes `sr-only`. Maps to `page_icon`. |
+| `pageItems` | `PageItem[]` | `[]` | Array of page-number link objects. Maps to `page_items`. |
+| `prevLink` | `string` | `'#'` | URL for the Previous control. Maps to `prev_link`. |
+| `nextLink` | `string` | `'#'` | URL for the Next control. Maps to `next_link`. |
+| `otherClasses` | `string` | — | Additional classes appended to the `<ul>`. Maps to `pagination_other_classes`. |
+
+---
+
+## PageItem
+
+| Prop | Type | Required | Description |
+| --- | --- | --- | --- |
+| `title` | `string` | Yes | Display text for the page link. Maps to `item.title`. |
+| `link` | `string` | Yes | URL for the page anchor. Maps to `item.link`. |
+| `active` | `boolean` | No | Marks the current page; adds `active` class and `aria-current="page"`. Maps to `item.active`. |
+
+---
+
+## HTML output
+
+The rendered HTML matches the Twig template structure exactly:
+
+```html
+<nav aria-label="Blog page navigation" data-pattern="timberland/pagination">
+  <ul class="pagination">
+
+    <li class="page-item btn prev">
+      <a class="page-link" href="/blog?page=1" aria-label="Previous">
+        <!-- pageIcon=true: -->
+        <span aria-hidden="true">«</span>
+        <span class="sr-only">Previous</span>
+        <!-- pageIcon=false: -->
+        <span class="button-label">Previous</span>
+      </a>
+    </li>
+
+    <li class="page-item">
+      <a class="page-link" href="/blog?page=1">1</a>
+    </li>
+    <li class="page-item active">
+      <a class="page-link" href="/blog?page=2" aria-current="page">2</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="/blog?page=3">3</a>
+    </li>
+
+    <li class="page-item btn next">
+      <a class="page-link" href="/blog?page=3" aria-label="Next">
+        <span aria-hidden="true">»</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>
+```

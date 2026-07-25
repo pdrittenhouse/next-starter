@@ -1,0 +1,133 @@
+import { Video } from './Video';
+
+# Video
+
+Video atom — mirrors the theme's Pattern Lab `timberland/video` pattern. Renders either a native HTML5 `<video>` element or an iframe embed for YouTube, Vimeo, or a generic URL. BEM class names, embed URL parameters, and HTML structure match the Twig template output 1:1.
+
+## Usage
+
+```jsx
+// HTML5 video with controls
+<Video source="/media/promo.mp4" controls />
+
+// HTML5 with multiple format fallbacks
+<Video
+  source="/media/promo.mp4"
+  oggSource="/media/promo.ogg"
+  webmSource="/media/promo.webm"
+  controls
+/>
+
+// HTML5 background video (autoplay requires muted in most browsers)
+<Video
+  source="/media/bg-loop.mp4"
+  autoplay
+  loop
+  muted
+  playsinline
+/>
+
+// HTML5 with closed captions
+<Video
+  source="/media/promo.mp4"
+  controls
+  closedCaptions
+  ccSrc="/captions/promo-en.vtt"
+  ccLabel="English"
+  ccLang="en-us"
+  ccDefault
+/>
+
+// YouTube embed (any watch/embed/youtu.be URL)
+<Video
+  format="youtube"
+  source="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  title="Product Overview"
+  controls
+  fullscreen
+  modestbranding
+  aspectRatio="wide"
+/>
+
+// Vimeo embed (pass the player.vimeo.com embed URL)
+<Video
+  format="vimeo"
+  source="https://player.vimeo.com/video/76979871"
+  title="Brand Story"
+  controls
+  fullscreen
+  byline={false}
+  portrait={false}
+  showTitle={false}
+/>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| HTML5 (default) | Native `<video>` element with mp4 source and optional ogg/webm/3gp/flv fallbacks |
+| YouTube | iframe embed built from a watch/embed/youtu.be URL; srcdoc thumbnail injected when autoplay is off |
+| Vimeo | iframe embed using the player.vimeo.com URL; Vimeo API params appended |
+| Generic iframe | iframe using the source URL verbatim; same embed param building as YouTube |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | `string` | — | Wrapper element `id` attribute |
+| `title` | `string` | — | Heading text rendered above the video in an `h2.video-title` |
+| `format` | `'youtube' \| 'vimeo' \| 'iframe'` | — | Embed format. Omit for HTML5 `<video>` |
+| `source` | `string` | — | Primary video URL (YouTube/Vimeo/iframe: embed URL; HTML5: mp4 URL) |
+| `oggSource` | `string` | — | OGG source URL for HTML5 fallback |
+| `webmSource` | `string` | — | WebM source URL for HTML5 fallback |
+| `flvSource` | `string` | — | FLV source URL rendered inside `<object><embed>` for legacy browsers |
+| `threegpSource` | `string` | — | 3GP source URL for mobile HTML5 fallback |
+| `autoplay` | `boolean` | `false` | Autoplay. Adds `has-autoplay` class. Must pair with `muted` in most browsers |
+| `loop` | `boolean` | `false` | Loop playback |
+| `muted` | `boolean` | `false` | Mute audio |
+| `playsinline` | `boolean` | `false` | Play inline without going fullscreen on iOS |
+| `fullscreen` | `boolean` | `false` | Allow fullscreen; adds `allowFullScreen` to the iframe |
+| `controls` | `boolean` | `false` | Show player controls. Adds `has-controls` class |
+| `info` | `boolean` | `false` | Show YouTube info bar (showinfo param) |
+| `aspectRatio` | `string` | — | `'wide'` → class `wide` (16:9). Any other string → class `aspect-ratio--{value}` |
+| `width` | `string` | — | Inline CSS width for the wrapper (e.g. `'640px'`, `'100%'`) |
+| `poster` | `string` | — | Poster image URL for HTML5 video |
+| `suggested` | `boolean` | `false` | Show suggested videos after YouTube playback. `false` adds `hide-suggested` class |
+| `related` | `boolean` | `false` | Restrict YouTube related videos to same channel (rel param) |
+| `color` | `string` | — | Player control color. YouTube: `'red'` or `'white'`. Vimeo: hex without `#` |
+| `closedCaptions` | `boolean` | `false` | Enable closed captions |
+| `ccSrc` | `string` | — | Caption track URL (HTML5 `<track src>`) |
+| `ccLabel` | `string` | `'English'` | Caption track label |
+| `ccLang` | `string` | `'en-us'` | BCP 47 language code for the caption track |
+| `ccDefault` | `boolean` | `false` | Mark caption track as default |
+| `background` | `boolean` | `false` | Background video mode (Vimeo) |
+| `disableKeyboard` | `boolean` | `false` | Disable keyboard controls in the player |
+| `preload` | `'none' \| 'auto' \| 'meta'` | — | HTML5 video preload hint |
+| `modestbranding` | `boolean` | `false` | Reduce YouTube branding in the player chrome |
+| `playlist` | `string` | — | Comma-separated video IDs to play after the main video (YouTube) |
+| `list` | `string` | — | YouTube playlist ID |
+| `listType` | `'playlist' \| 'user_uploads'` | — | YouTube playlist type |
+| `origin` | `string` | — | Site domain forwarded to YouTube for JS API postMessage |
+| `quality` | `VideoQuality` | — | Vimeo video quality (e.g. `'720p'`, `'1080p'`) |
+| `byline` | `boolean` | `false` | Show author byline in the Vimeo player |
+| `dnt` | `boolean` | `false` | Opt out of Vimeo analytics tracking |
+| `portrait` | `boolean` | `false` | Show author portrait in the Vimeo player |
+| `speed` | `boolean` | `false` | Show speed controls in the Vimeo preferences menu |
+| `showTitle` | `boolean` | `false` | Show video title in the Vimeo player chrome |
+| `transparent` | `boolean` | `false` | Enable Vimeo player transparency |
+| `start` | `number` | — | Start time offset in seconds |
+| `end` | `number` | — | End time in seconds (YouTube embed param; HTML5 uses `#t=` fragment) |
+| `ivLoadPolicy` | `boolean` | `false` | Show YouTube annotations (iv_load_policy=1) |
+| `className` | `string` | — | Additional CSS class names appended to the wrapper |
+| `children` | `React.ReactNode` | — | Slotted content rendered after `.video-responsive` |
+
+## Notes
+
+- **YouTube URL extraction**: `source` can be any YouTube URL format (`/watch?v=`, `/embed/`, `youtu.be/`). The component extracts the video ID and builds a clean embed URL.
+- **YouTube srcdoc thumbnail**: When `autoplay` is false, the iframe receives an `srcDoc` attribute with an inline HTML thumbnail (fetched from `img.youtube.com`) plus a play button. Clicking the thumbnail loads the actual embed. This avoids an unnecessary network request until the user intends to play.
+- **Muted autoplay**: Browser autoplay policies require `muted` when `autoplay` is true. The component passes both `mute` (YouTube) and `muted` (Vimeo) URL params simultaneously so each platform sees its own param.
+- **Vimeo source URL**: Pass the full `https://player.vimeo.com/video/{id}` embed URL as `source`. A Vimeo video page URL (vimeo.com/{id}) will not receive the correct API params since no ID extraction is performed for Vimeo.
+- **`suggested` vs `related`**: `suggested` controls the CSS `hide-suggested` class (client-side overlay behavior); `related` maps to the YouTube `rel` URL param (platform behavior).
+- **HTML5 start/end**: `start` and `end` are appended as a `#t={start},{end}` media fragment to all `<source>` `src` attributes. This is part of the HTML Media Fragment URI specification and browser support varies.
+- **Keyboard controls**: `disableKeyboard` maps to `disablekb=1` for YouTube and `keyboard=0` for Vimeo (Vimeo inverts the param name).

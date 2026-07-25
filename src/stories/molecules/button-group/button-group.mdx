@@ -1,0 +1,188 @@
+import { Meta, Canvas, Controls, Story } from '@storybook/blocks';
+import * as ButtonGroupStories from './ButtonGroup.stories';
+
+<Meta of={ButtonGroupStories} />
+
+# ButtonGroup
+
+The **ButtonGroup** molecule composes one or more Bootstrap button groups inside
+a configurable wrapper. It mirrors the Pattern Lab Twig template at
+`02-molecules/button-group/_button-group.tpl.twig` and produces identical HTML
+class structure.
+
+---
+
+## Usage
+
+```tsx
+import { ButtonGroup } from '@/stories/molecules/button-group/ButtonGroup';
+
+// Default: a single d-grid block group
+<ButtonGroup
+  groups={[
+    {
+      label: 'Primary actions',
+      buttons: [
+        { variant: 'primary', label: 'Save' },
+        { variant: 'secondary', label: 'Preview' },
+      ],
+    },
+  ]}
+/>
+
+// Toolbar: multiple inline groups side by side
+<ButtonGroup
+  toolbar
+  toolbarLabel="Document toolbar"
+  wrapperDisplay="block"
+  groups={[
+    {
+      label: 'Style',
+      buttons: [
+        { variant: 'outline-secondary', label: 'Bold' },
+        { variant: 'outline-secondary', label: 'Italic' },
+      ],
+    },
+    {
+      label: 'Actions',
+      className: 'ms-2',
+      buttons: [
+        { variant: 'outline-primary', label: 'Save' },
+      ],
+    },
+  ]}
+/>
+
+// Vertical: stacked btn-group-vertical
+<ButtonGroup
+  vertical
+  wrapperDisplay="inline-flex"
+  groups={[
+    {
+      displayGrid: false,
+      buttons: [
+        { variant: 'primary', label: 'Dashboard' },
+        { variant: 'secondary', label: 'Settings' },
+      ],
+    },
+  ]}
+/>
+```
+
+---
+
+## Stories
+
+<Canvas of={ButtonGroupStories.Default} />
+<Canvas of={ButtonGroupStories.Toolbar} />
+<Canvas of={ButtonGroupStories.Vertical} />
+<Canvas of={ButtonGroupStories.WithHeading} />
+
+---
+
+## Controls
+
+<Controls />
+
+---
+
+## Variants
+
+| Story | Description |
+|---|---|
+| Default | Single d-grid block group (default displayGrid=true) |
+| Inline Group | Single btn-group inline layout (displayGrid=false) |
+| Toolbar | Multiple inline groups inside a btn-toolbar wrapper |
+| Vertical | btn-group-vertical stacked layout |
+| With Heading | Title + description rendered above the groups |
+| Large Size | btn-group-lg applied to all groups |
+| Small Size | btn-group-sm applied to all groups |
+
+---
+
+## Props
+
+### `ButtonGroupProps`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `wrapperDisplay` | `WrapperDisplay` | `'inline-block'` | Bootstrap d-* class applied to the outer wrapper |
+| `title` | `string` | — | Heading title above the groups |
+| `description` | `string` | — | Description below the title |
+| `toolbar` | `boolean` | `false` | Wrap groups in a `btn-toolbar`; forces `displayGrid: false` on all groups |
+| `toolbarLabel` | `string` | — | `aria-label` for the toolbar element |
+| `size` | `'sm' \| 'lg'` | — | `btn-group-sm` / `btn-group-lg` applied to all groups |
+| `vertical` | `boolean` | `false` | Use `btn-group-vertical` on all groups |
+| `wrapperClassName` | `string` | — | Extra classes for the outer wrapper div |
+| `toolbarClassName` | `string` | — | Extra classes for the toolbar div |
+| `groups` | `ButtonGroupItem[]` | **required** | Array of button group objects |
+
+### `ButtonGroupItem`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `displayGrid` | `boolean \| null` | `true` | `true` → `d-grid display-grid`; `false` → `btn-group display-group` |
+| `breakpoints` | `Record<string, string>` | — | Responsive display overrides, e.g. `{ sm: 'flex' }` → `d-sm-flex`. Only applied when `displayGrid` is true |
+| `gap` | `string \| number` | — | Bootstrap gap spacer (`gap-{n}`) |
+| `label` | `string` | — | `aria-label` for the group `role="group"` element |
+| `className` | `string` | — | Extra classes for the group div |
+| `buttons` | `ButtonProps[]` | **required** | Button atom props for each button in this group |
+
+---
+
+## HTML Output
+
+```html
+<!-- wrapperDisplay="inline-block" (default), no toolbar -->
+<div class="button-group--wrapper d-inline-block" data-pattern="timberland/button-group">
+
+  <!-- heading (only rendered when title or description is provided) -->
+  <div class="button-group--heading">
+    <h2 class="button-group--title">Quick Actions</h2>
+    <div class="button-group--description">...</div>
+  </div>
+
+  <!-- each group in groups[] -->
+  <div class="button-group display-grid d-grid gap-2 btn-group-lg" role="group" aria-label="...">
+    <!-- Button atoms -->
+  </div>
+
+</div>
+
+<!-- toolbar=true -->
+<div class="button-group--wrapper d-block" data-pattern="timberland/button-group">
+  <div class="btn-toolbar" role="toolbar" aria-label="Document toolbar">
+
+    <div class="button-group display-group btn-group" role="group" aria-label="Style">
+      <!-- buttons -->
+    </div>
+
+    <div class="button-group display-group btn-group ms-2" role="group" aria-label="Actions">
+      <!-- buttons -->
+    </div>
+
+  </div>
+</div>
+```
+
+---
+
+## Twig → TypeScript variable map
+
+| Twig variable | TypeScript prop | Notes |
+|---|---|---|
+| `button_group_wrapper_display` | `wrapperDisplay` | |
+| `button_group_title` | `title` | |
+| `button_group_description` | `description` | |
+| `button_group_toolbar` | `toolbar` | |
+| `button_group_toolbar_label` | `toolbarLabel` | |
+| `button_group_size` | `size` | |
+| `button_group_vertical` | `vertical` | |
+| `button_group_wrapper_classes` / `button_group_wrapper_other_classes` | `wrapperClassName` | |
+| `button_group_toolbar_classes` / `button_group_toolbar_other_classes` | `toolbarClassName` | |
+| `button_groups[n].button_group_display_grid` | `groups[n].displayGrid` | |
+| `button_groups[n].button_group_breakpoints` | `groups[n].breakpoints` | |
+| `button_groups[n].button_group_gap` | `groups[n].gap` | |
+| `button_groups[n].button_group_label` | `groups[n].label` | |
+| `button_groups[n].button_group_classes` / `button_group_other_classes` | `groups[n].className` | |
+| `button_groups[n].buttons` | `groups[n].buttons` | Passed directly to Button atom |

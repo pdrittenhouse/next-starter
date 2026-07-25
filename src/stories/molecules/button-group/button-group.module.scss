@@ -1,0 +1,18 @@
+// ButtonGroup molecule — CSS Module (local classes only).
+//
+// Global styles for this component live in:
+//   src/scss/patterns/molecules/_button-group.scss
+//
+// That file is compiled into the global stylesheet via webpack/Next.js
+// and targets the following BEM selectors produced by ButtonGroup.tsx:
+//
+//   .button-group--wrapper   outer wrapper div
+//   .button-group--heading   title + description container
+//   .button-group--title     <h2> heading
+//   .button-group--description  description div
+//   .button-group            per-group div (when not vertical)
+//   .display-grid            modifier: d-grid layout variant
+//   .display-group           modifier: btn-group inline variant
+//
+// Add local (scoped) overrides here only when a module-scoped class is
+// needed — e.g. a wrapper variant specific to a single consumer.

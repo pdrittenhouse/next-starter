@@ -1,0 +1,56 @@
+import { Spinner } from './Spinner';
+
+# Spinner
+
+Spinner atom — mirrors the theme's Pattern Lab `timberland/spinner` pattern. Renders a Bootstrap 5 loading indicator (`spinner-border` or `spinner-grow`) with an optional accessible label, contextual color, and size controls.
+
+## Usage
+
+```jsx
+// Default border spinner with accessible label
+<Spinner spinnerLabel="Loading..." />
+
+// Grow style
+<Spinner spinnerStyle="grow" spinnerLabel="Loading..." />
+
+// Contextual color
+<Spinner spinnerColor="primary" spinnerLabel="Loading..." />
+
+// Small size
+<Spinner spinnerSmall spinnerLabel="Loading..." />
+
+// Custom dimensions
+<Spinner width="4rem" height="4rem" spinnerColor="success" spinnerLabel="Loading results..." />
+
+// Slotted label override
+<Spinner>
+  <span className="visually-hidden">Fetching your data</span>
+</Spinner>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| `border` | Animated ring that spins — the default style |
+| `grow` | Circle that fades in and out (pulse effect) |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `spinnerStyle` | `'border' \| 'grow'` | `'border'` | Bootstrap spinner animation style |
+| `spinnerColor` | `string` | — | Bootstrap contextual color token applied as `text-{color}` |
+| `spinnerSmall` | `boolean` | `false` | Applies the small size variant (`spinner-border-sm` / `spinner-grow-sm`) |
+| `width` | `string` | — | Inline width override — any valid CSS value (e.g. `'3rem'`) |
+| `height` | `string` | — | Inline height override — any valid CSS value |
+| `spinnerLabel` | `string` | — | Accessible label rendered inside a `visually-hidden` span |
+| `children` | `React.ReactNode` | — | Slot override for the label block; replaces the default visually-hidden span |
+| `className` | `string` | — | Additional CSS class names |
+
+## Notes
+
+- Always provide either `spinnerLabel` or `children` so screen readers announce the loading state. An unlabeled spinner is only appropriate when surrounding context makes the purpose unambiguous.
+- `children` takes precedence over `spinnerLabel` — if both are supplied, `children` renders and `spinnerLabel` is ignored.
+- `spinnerColor` accepts any Bootstrap 5 text-color token (`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`). Custom values are forwarded verbatim as `text-{value}`.
+- `width` and `height` map to an inline `style` attribute, matching the Twig pattern's behavior. Use them only when the Bootstrap size variants are insufficient.

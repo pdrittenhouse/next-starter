@@ -1,0 +1,151 @@
+import { Nav } from './Nav';
+
+# Nav
+
+Nav molecule — mirrors the theme's Pattern Lab `timberland/nav` pattern. Renders a Bootstrap 5 `<nav>` with a recursive list of navigation items, full dropdown menu support (including multi-level nesting and mega menus), hover-dropdown CSS injection, and all Bootstrap layout modifiers (tabs, pills, fill, justified).
+
+Bootstrap JS is loaded globally in the theme; this component emits only `data-bs-*` attributes and does **not** import Bootstrap JS.
+
+## Usage
+
+```jsx
+// Flat navigation
+<Nav
+  navbarId="primaryNav"
+  navbarBreakpoint="lg"
+  navbarAriaLabel="Main navigation"
+  items={[
+    { url: '/', title: 'Home' },
+    { url: '/about', title: 'About' },
+    { url: '/contact', title: 'Contact' },
+  ]}
+/>
+
+// With dropdowns
+<Nav
+  navbarBreakpoint="lg"
+  items={[
+    { url: '/', title: 'Home' },
+    {
+      url: '#',
+      title: 'Services',
+      navId: 'services',
+      items: [
+        { url: '/services/web', title: 'Web Design' },
+        { url: '/services/dev', title: 'Development' },
+      ],
+    },
+  ]}
+/>
+
+// Hover-based dropdowns (injects responsive <style>)
+<Nav
+  hoverDropdown
+  navbarBreakpoint="lg"
+  items={[...]}
+/>
+
+// Tab layout
+<Nav
+  navTabs
+  items={[
+    { url: '#overview', title: 'Overview' },
+    { url: '#specs', title: 'Specifications' },
+  ]}
+/>
+
+// Mega menu
+<Nav
+  containerRelativeMenu
+  items={[
+    {
+      url: '#',
+      title: 'Solutions',
+      linkId: 'solutions-link',
+      megaMenu: {
+        enabled: true,
+        content: '<div class="container">...</div>',
+      },
+    },
+  ]}
+/>
+```
+
+## Variants
+
+| Variant | Key Props | Description |
+| --- | --- | --- |
+| Default (flat) | `items` | Flat list of nav links, horizontal at `navbarBreakpoint` |
+| Dropdown | `items[].items` | Items with `items` arrays render Bootstrap dropdowns |
+| Multi-level dropdown | Nested `items[].items` | Recursive nesting renders `.dropdown-submenu` at depth > 1 |
+| Hover dropdown | `hoverDropdown`, `navbarBreakpoint` | Injects `<style>` for CSS hover menus |
+| Mega menu | `items[].megaMenu` | Full-width panel with arbitrary HTML content |
+| Nav tabs | `navTabs` | Adds `nav-tabs` class for tab-styled links |
+| Nav pills | `navPills` | Adds `nav-pills` class for pill-styled links |
+| Fill | `navFill` | Adds `nav-fill` — items share all available width |
+| Justified | `navJustified` | Adds `nav-justified` — items each get equal width |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `navbarId` | `string` | `'navbarNav'` | HTML `id` for the `<nav>` wrapper |
+| `navbarClasses` | `string[]` | `[]` | Additional class names for the `<nav>` wrapper |
+| `navbarOtherClasses` | `string` | — | Additional class string for the `<nav>` wrapper |
+| `navbarAriaLabel` | `string` | — | `aria-label` on the `<nav>` element |
+| `hoverDropdown` | `boolean` | `false` | Inject responsive CSS for hover-based dropdowns |
+| `navbarBreakpoint` | `string` | — | Bootstrap expand breakpoint (`sm`, `md`, `lg`, `xl`, `xxl`, `none`) |
+| `navTabs` | `boolean` | `false` | Apply `nav-tabs` Bootstrap class |
+| `navPills` | `boolean` | `false` | Apply `nav-pills` Bootstrap class |
+| `navFill` | `boolean` | `false` | Apply `nav-fill` Bootstrap class |
+| `navJustified` | `boolean` | `false` | Apply `nav-justified` Bootstrap class |
+| `navElement` | `string` | `'ul'` | HTML element for the nav list (`ul`, `ol`, `div`) |
+| `navId` | `string` | — | HTML `id` for the nav list element |
+| `items` | `NavItem[]` | `[]` | Navigation items (see NavItem shape below) |
+| `relativeMegaMenu` | `boolean` | `false` | Apply `nav-item-relative-mega-menu` layout class |
+| `containerRelativeMenu` | `boolean` | `false` | Apply `container-relative-menu` layout class |
+| `toggleOpenMenus` | `boolean` | `false` | Apply `toggle-open-menus` behaviour class |
+
+### NavItem shape
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `url` | `string` | — | `href` for the nav link |
+| `title` | `string` | — | Visible label text (also `aria-label` on the `<a>`) |
+| `items` | `NavItem[]` | — | Child items — triggers Bootstrap dropdown markup |
+| `linkId` | `string` | — | HTML `id` applied to the `<a>` element |
+| `linkClasses` | `string[]` | — | Additional class names for the `<a>` element |
+| `linkOtherClasses` | `string` | — | Additional class string for the `<a>` element |
+| `linkTarget` | `string` | — | `target` attribute for the `<a>` element |
+| `itemElement` | `string` | `'li'` | HTML element for the list item wrapper |
+| `itemClasses` | `string[]` | — | Additional class names for the list item |
+| `itemOtherClasses` | `string` | — | Additional class string for the list item |
+| `navId` | `string` | `'navItem'` | Base ID prefix used when computing dropdown toggle target IDs |
+| `description` | `string` | — | Optional description rendered as `<span class="item-description">` |
+| `hideDropdownIcon` | `boolean` | `false` | Suppress dropdown caret — adds `hide-dropdown-icon` class |
+| `megaMenu` | `NavMegaMenu` | — | Mega menu configuration (see below) |
+| `icon` | `NavItemIcon` | — | Icon slot config (see below) |
+| `navbarBreakpoint` | `string` | — | Override breakpoint for the nested sub-menu |
+| `navElement` | `string` | `'ul'` | HTML element for the nested sub-menu list |
+
+### NavMegaMenu shape
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `enabled` | `boolean` | Activate the mega menu panel |
+| `content` | `string` | Raw HTML string rendered via `dangerouslySetInnerHTML` inside `.mega-menu-panel` |
+
+### NavItemIcon shape
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `enabled` | `boolean` | Show the icon slot |
+| `position` | `'before' \| 'after'` | Render icon before or after the label |
+
+## Notes
+
+- The component generates a stable unique ID (via React 18 `useId()`) per instance, applied as `navbar-{uid}` on the wrapper class and used for dropdown toggle target IDs.
+- Bootstrap JS is expected globally in the theme — the component does not import Bootstrap JS. All interactive behaviour relies on `data-bs-toggle="dropdown"` and related attributes.
+- When `hoverDropdown` is `true`, a `<style>` block is injected using responsive media queries scoped to the instance UID. Pass `navbarBreakpoint` to control the breakpoint value used in those queries.
+- Mega menu `content` is rendered with `dangerouslySetInnerHTML`. Ensure the HTML is server-side sanitised before passing it as a prop.
+- Dropdown toggle target IDs follow the pattern `{item.navId ?? 'navItem'}_toggle--{topLevelIndex}{-depth}`. Items in the same nav instance with the same `navId` and position will share IDs — use distinct `navId` values on dropdown items to avoid conflicts.

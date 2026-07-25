@@ -1,0 +1,226 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import * as DropdownStories from './Dropdown.stories';
+
+<Meta of={DropdownStories} />
+
+# Dropdown
+
+The **Dropdown** organism composes a Bootstrap 5 toggle button and positioned menu. It mirrors the Pattern Lab Twig template at
+`03-organisms/dropdown/_dropdown.tpl.twig` and produces identical HTML class structure.
+
+Menu items can be anchor links (default), button elements, section headings (`h1`–`h6` → `dropdown-header`), or horizontal-rule dividers (`hr` → `dropdown-divider`), matching the full Twig item loop.
+
+---
+
+## Usage
+
+```tsx
+import { Dropdown } from '@/stories/organisms/dropdown/Dropdown';
+
+// Basic dropdown
+<Dropdown
+  button={{ variant: 'primary', label: 'Actions' }}
+  items={[
+    { text: 'View profile', link: '/profile' },
+    { text: 'Edit settings', link: '/settings' },
+    { element: 'hr' },
+    { text: 'Sign out', link: '/logout' },
+  ]}
+/>
+
+// With section headers and dividers
+<Dropdown
+  button={{ variant: 'secondary', label: 'User menu' }}
+  items={[
+    { element: 'h6', text: 'Account' },
+    { text: 'Profile', link: '/profile' },
+    { text: 'Billing', link: '/billing' },
+    { element: 'hr' },
+    { text: 'Sign out', link: '/logout' },
+  ]}
+/>
+
+// Dark, right-aligned, dropup
+<Dropdown
+  button={{ variant: 'dark', label: 'Open up' }}
+  direction="up"
+  dark
+  menuAlign="end"
+  items={[
+    { text: 'Option one', link: '#' },
+    { text: 'Option two', link: '#' },
+  ]}
+/>
+
+// Button group mode (btn-group wrapper)
+<Dropdown
+  button={{ variant: 'success', label: 'Publish' }}
+  buttonGroup
+  items={[
+    { text: 'Publish now', link: '#' },
+    { text: 'Schedule…', link: '#' },
+    { text: 'Save as draft', link: '#' },
+  ]}
+/>
+
+// Button items (JS actions, no navigation)
+<Dropdown
+  button={{ variant: 'primary', label: 'Choose action' }}
+  items={[
+    { element: 'h6', text: 'Operations' },
+    { element: 'button', text: 'Save' },
+    { element: 'button', text: 'Delete', className: 'text-danger' },
+  ]}
+/>
+```
+
+---
+
+## Stories
+
+<Canvas of={DropdownStories.Default} />
+<Canvas of={DropdownStories.WithDividersAndHeader} />
+<Canvas of={DropdownStories.DarkMenu} />
+<Canvas of={DropdownStories.DirectionUp} />
+<Canvas of={DropdownStories.MenuAlignEnd} />
+<Canvas of={DropdownStories.ButtonItems} />
+<Canvas of={DropdownStories.ButtonGroupMode} />
+
+---
+
+## Controls
+
+<Controls />
+
+---
+
+## Variants
+
+| Story | Description |
+|---|---|
+| Default | Basic anchor-item dropdown with a divider |
+| With Dividers & Header | Two headed sections separated by dividers |
+| Dark Menu | `dropdown-menu-dark` applied to the menu |
+| Direction: Up | `dropup` — menu opens above the button |
+| Direction: Right | `dropend` — menu opens to the right |
+| Menu Aligned End | `dropdown-menu-end` — right-aligned menu |
+| Button Items | `<button type="button">` items for JS actions |
+| Outline Button | `outline` prop on the trigger button |
+| Small Button | `size: "sm"` on the trigger button |
+| Button Group Mode | `btn-group` wrapper instead of plain div |
+| Auto-Close: Inside | `data-bs-auto-close="inside"` |
+| With Offset | Custom `offsetX` / `offsetY` values |
+| Colored Menu | `bg-*` + `text-*` utilities on the menu |
+| Disabled Toggle | Disabled toggle button |
+
+---
+
+## Props
+
+### `DropdownProps`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `button` | `ButtonProps` | **required** | Props for the toggle button (`toggle` is always forced to `'dropdown'`) |
+| `items` | `DropdownItem[]` | **required** | Items to render inside the dropdown menu |
+| `direction` | `'down' \| 'up' \| 'left' \| 'right'` | `'down'` | Direction the menu opens; maps to `dropup` / `dropstart` / `dropend` |
+| `className` | `string` | — | Extra classes on the wrapper element |
+| `menuClassName` | `string` | — | Extra classes on the `<ul>` menu element |
+| `dark` | `boolean` | `false` | Adds `dropdown-menu-dark` to the menu |
+| `backgroundColor` | `string` | — | Bootstrap `bg-*` utility on the menu (e.g. `'primary'`) |
+| `textColor` | `string` | — | Bootstrap `text-*` utility on the menu (e.g. `'white'`) |
+| `menuAlign` | `'start' \| 'end'` | `'start'` | `'end'` → `dropdown-menu-end` (right-aligned) |
+| `offsetX` | `number` | `0` | Horizontal pixel offset (`data-bs-offset`) |
+| `offsetY` | `number` | `0` | Vertical pixel offset (`data-bs-offset`) |
+| `reference` | `boolean` | `false` | Adds `data-bs-reference="parent"` to the toggle button |
+| `autoClose` | `'true' \| 'false' \| 'inside' \| 'outside'` | — | `data-bs-auto-close` value on the toggle button |
+| `buttonGroup` | `boolean` | `false` | Wraps button + menu in `btn-group` instead of `<div class="dropdown">` |
+| `buttonGroupDisplay` | `WrapperDisplay` | `'inline-block'` | `d-*` utility on the btn-group wrapper (only when `buttonGroup: true`) |
+| `buttonGroupSize` | `'sm' \| 'lg'` | — | `btn-group-sm` / `btn-group-lg` (only when `buttonGroup: true`) |
+
+### `DropdownItem`
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `element` | `'a' \| 'button' \| 'h1'–'h6' \| 'hr'` | `'a'` | Element to render: anchor, button, heading, or divider |
+| `link` | `string` | `'#'` | `href` applied only when `element` is `'a'` |
+| `text` | `React.ReactNode` | — | Visible item content (not applied to `<hr>`) |
+| `id` | `string` | — | Optional `id` attribute on the item element |
+| `className` | `string` | — | Extra classes on the item element |
+
+---
+
+## HTML Output
+
+```html
+<!-- direction="down" (default), no buttonGroup -->
+<div class="dropdown" data-pattern="timberland/dropdown">
+  <button
+    class="button btn btn-primary dropdown-toggle"
+    type="button"
+    id="dropdown_r0"
+    data-bs-toggle="dropdown"
+    data-bs-offset="0,0"
+    aria-expanded="false"
+  >
+    <span class="button--label">Actions</span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown_r0">
+    <li><a class="dropdown-item" href="/profile">View profile</a></li>
+    <li><a class="dropdown-item" href="/settings">Edit settings</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+  </ul>
+</div>
+
+<!-- direction="up", dark, menuAlign="end" -->
+<div class="dropup dropdown" data-pattern="timberland/dropdown">
+  <button class="... dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+  <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+    <!-- items -->
+  </ul>
+</div>
+
+<!-- buttonGroup=true, direction="right", buttonGroupSize="sm" -->
+<div class="btn-group dropend btn-group-sm d-inline-block" data-pattern="timberland/dropdown">
+  <button class="... dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">...</button>
+  <ul class="dropdown-menu">
+    <!-- items -->
+  </ul>
+</div>
+
+<!-- Items: heading, anchor, button, divider -->
+<ul class="dropdown-menu">
+  <li><h6 class="dropdown-header">Account</h6></li>
+  <li><a class="dropdown-item" href="/profile">Profile</a></li>
+  <li><button type="button" class="dropdown-item">Save</button></li>
+  <li><hr class="dropdown-divider"></li>
+</ul>
+```
+
+---
+
+## Twig → TypeScript variable map
+
+| Twig variable | TypeScript prop | Notes |
+|---|---|---|
+| `button` (object) | `button` | Full `ButtonProps` object; `button_toggle` is always forced to `'dropdown'` |
+| `direction` | `direction` | `'up'` → `dropup`, `'left'` → `dropstart`, `'right'` → `dropend` |
+| `dropdown_other_classes` | `className` | |
+| `dropdown_menu_other_classes` | `menuClassName` | |
+| `dark` | `dark` | |
+| `background_color` | `backgroundColor` | Produces `bg-{value}` |
+| `text_color` | `textColor` | Produces `text-{value}` |
+| `dropdown_menu_align` (`'right'`) | `menuAlign` (`'end'`) | Twig uses `'right'`; React uses Bootstrap 5 `'end'` |
+| `offset_x` | `offsetX` | |
+| `offset_y` | `offsetY` | |
+| `reference` | `reference` | |
+| `auto_close` | `autoClose` | |
+| `button_group` | `buttonGroup` | |
+| `button_group_display` | `buttonGroupDisplay` | |
+| `button_group_size` | `buttonGroupSize` | |
+| `dropdown_items[n].dropdown_item_element` | `items[n].element` | |
+| `dropdown_items[n].dropdown_item_link` | `items[n].link` | |
+| `dropdown_items[n].dropdown_item_text` | `items[n].text` | |
+| `dropdown_items[n].dropdown_item_id` | `items[n].id` | |
+| `dropdown_items[n].dropdown_item_other_classes` | `items[n].className` | |

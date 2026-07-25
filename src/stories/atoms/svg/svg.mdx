@@ -1,0 +1,71 @@
+import { Svg } from './Svg';
+
+# Svg
+
+Svg atom — mirrors the theme's Pattern Lab `timberland/svg` pattern. Embeds SVG graphics in three ways: inline (a `<span>` wrapper around an SVG React element), object (external file via `<object>`), and picture (`<picture>` with an SVG `<source>` and optional raster fallback).
+
+By default, `svg--colorable` is applied so all path fills inherit `currentColor`, making the icon respond to Bootstrap text-colour utilities via the `fill` prop.
+
+## Usage
+
+```jsx
+// Inline — pass the SVG element as children (e.g. from @svgr/webpack)
+import CircleIcon from '@/icons/circle.svg';
+
+<Svg>
+  <CircleIcon />
+</Svg>
+
+// Inline with Bootstrap fill colour
+<Svg fill="primary">
+  <StarIcon />
+</Svg>
+
+// Inline preserving the SVG's own colours
+<Svg colorOriginal>
+  <LogoIcon />
+</Svg>
+
+// Object — loads an external SVG file
+<Svg type="object" path="/icons/logo.svg" />
+
+// Object with fallback for unsupported browsers
+<Svg type="object" path="/icons/logo.svg" fallback="/icons/logo.png" alt="Logo" />
+
+// Picture — SVG source with raster fallback
+<Svg type="picture" path="/icons/logo.svg" fallback="/icons/logo.png" alt="Logo" />
+
+// Icon modifier (30px fixed width)
+<Svg className="svg--icon">
+  <CheckIcon />
+</Svg>
+```
+
+## Variants
+
+| Variant | Output | Use case |
+| --- | --- | --- |
+| `inline` (default) | `<span>` wrapping an SVG React element | Inline icons from an SVG sprite system or `@svgr/webpack` imports |
+| `object` | `<object type="image/svg+xml" data="...">` | External SVG files; supports fallback image child |
+| `picture` | `<picture>` with `<source type="image/svg+xml">` | SVG with an explicit raster fallback via `<img>` |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `path` | `string` | — | SVG file path. Used as `data` for object type, `srcSet` for picture type. Not used for inline. |
+| `type` | `SvgType` | `'inline'` | Rendering type — `'inline'`, `'object'`, or `'picture'`. |
+| `colorOriginal` | `boolean` | `false` | Preserve the SVG's original fill colours. When false, `svg--colorable` is added so fills inherit `currentColor`. |
+| `fallback` | `string` | — | Path to a fallback image. Rendered as `<img>` inside object or picture types. |
+| `alt` | `string` | `''` | Alt text for the fallback image. |
+| `fill` | `string` | — | Bootstrap text-colour name (e.g. `'primary'`) applied as `text-{fill}`. Works with `svg--colorable` to tint fills via `currentColor`. |
+| `className` | `string` | — | Additional CSS class names — maps to `svg_other_classes` in the Twig pattern. |
+| `children` | `React.ReactNode` | — | SVG element content for the `inline` rendering type. |
+
+## Notes
+
+- For inline SVGs, pass a React SVG component as `children`. The recommended approach is `@svgr/webpack`, which turns `.svg` files into React components: `import CheckIcon from '@/icons/check.svg'`. The `<span>` wrapper is what receives the BEM classes and `data-pattern` attribute — not the SVG element itself.
+- `svg--colorable` works by setting `color: currentColor; fill: currentColor` on all SVG child elements via the `svg-elements()` mixin. This means fills respond to Bootstrap `text-*` utilities and `color` inheritance from parent elements.
+- `svg--icon` (via `className`) applies a 30px fixed width with `display: inline-block`, matching icon button usage. For Phosphor or Bootstrap Icons inline SVGs, the global SCSS also provides `.svg-inline--ph` and `.svg-inline--bi` classes that mirror FontAwesome's `svg-inline--fa` sizing.
+- The `object` type renders fallback content inside the `<object>` element for browsers that cannot display the SVG. The IE 8 conditional comment from the Twig pattern is not reproduced — use `fallback` for modern browser fallback.
+- The `picture` type is appropriate when you need explicit control over the fallback image format. Both `path` and `fallback` must be provided to get the full `<source>` + `<img>` output.

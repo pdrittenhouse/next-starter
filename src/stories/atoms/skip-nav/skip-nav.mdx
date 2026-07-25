@@ -1,0 +1,52 @@
+import { SkipNav } from './SkipNav';
+
+# SkipNav
+
+SkipNav atom — mirrors the theme's Pattern Lab `timberland/skip-nav` pattern. Renders an off-screen anchor that becomes visible on keyboard focus, allowing users who navigate by keyboard to bypass the main navigation and jump directly to page content.
+
+## Usage
+
+```jsx
+// Default
+<SkipNav />
+
+// Custom link text
+<SkipNav text="Skip to primary content" />
+
+// Custom target anchor
+<SkipNav href="#main" />
+
+// Additional classes
+<SkipNav skipNavClasses={['my-skip-nav']} className="fw-bold" />
+
+// Children override the text prop
+<SkipNav>
+  <span>Skip to main content</span>
+</SkipNav>
+```
+
+## Variants
+
+| Variant | Description |
+| --- | --- |
+| Default | Off-screen link with `#content` target and default label |
+| Custom Text | Override label for non-standard landmark copy |
+| Custom Target | Point to a different anchor id on the page |
+| With Extra Classes | Merge additional classes via `skipNavClasses` / `className` props |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `text` | `string` | `'Skip to main content'` | Link text — maps to `text` in the Twig pattern |
+| `skipNavClasses` | `string[]` | — | Additional class names as an array — maps to `skip_nav_classes` |
+| `className` | `string` | — | Additional class names as a string — maps to `skip_nav_other_classes` |
+| `children` | `React.ReactNode` | — | Slot content — overrides `text` when provided; maps to the `skip_nav_content` block |
+| `href` | `string` | `'#content'` | Link target anchor |
+
+## Notes
+
+- The component always applies `skip-nav` and `screen-reader-text` as base classes. The SCSS positions the element off-screen (`top: -1000px; left: -1000px`) and restores it to `top: 0; left: 0` on `:focus` / `:hover` / `:active`.
+- Place this as the first focusable element in the page `<body>` so keyboard users encounter it before any navigation.
+- The rendered `<a>` includes `data-pattern="timberland/skip-nav"` to match the Twig template output and allow pattern-level querying.
+- `children` takes precedence over `text`. Use `children` when the slot content requires markup (e.g. a `<span>` for icon + text), and `text` for plain strings.
