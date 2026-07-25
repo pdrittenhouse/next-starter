@@ -1,0 +1,63 @@
+import { Image } from './Image';
+
+# Image
+
+Image atom — mirrors the theme's Pattern Lab `timberland/image` pattern. Wraps `next/image` with consistent BEM class names and supports four rendering variants.
+
+## Usage
+
+```jsx
+// Primary (explicit dimensions — preferred)
+<Image src="/path/to/image.jpg" alt="Description" width={800} height={600} />
+
+// Picture (identical output to primary, different CSS class)
+<Image variant="picture" src="/path/to/image.jpg" alt="Description" width={800} height={600} />
+
+// Aspect ratio — width/height are ratio units, not pixels
+<Image variant="aspect-ratio" src="/path/to/image.jpg" alt="Description" width={16} height={9} />
+
+// Background image (CSS background-image div)
+<Image variant="bg" src="/path/to/image.jpg" alt="Background" width={800} height={400} />
+
+// LCP image (above the fold)
+<Image src="/path/to/hero.jpg" alt="Hero" width={1600} height={900} loading="eager" fetchPriority="high" />
+
+// With responsive sizes hint
+<Image
+  src="/path/to/image.jpg"
+  alt="Description"
+  width={800}
+  height={600}
+  sizes="(max-width: 768px) 100vw, 50vw"
+/>
+```
+
+## Variants
+
+| Variant | Output | Use case |
+| --- | --- | --- |
+| `primary` | `<img>` via next/image | Default — standard responsive image |
+| `picture` | `<img>` via next/image | Same output as primary; `image--picture` class for CSS targeting |
+| `aspect-ratio` | `<div>` wrapper + fill-mode `<img>` | Constrained containers, cards, thumbnails |
+| `bg` | `<div>` with inline `background-image` | Hero sections, decorative backgrounds |
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `ImageVariant` | `'primary'` | Rendering variant |
+| `src` | `string` | — | Image source URL |
+| `alt` | `string` | — | Alt text — required; use `''` for decorative images |
+| `width` | `number` | — | Width in px (primary/picture) or ratio unit (aspect-ratio) |
+| `height` | `number` | — | Height in px (primary/picture) or ratio unit (aspect-ratio) |
+| `sizes` | `string` | — | Responsive sizes attribute |
+| `loading` | `'lazy' \| 'eager'` | `'lazy'` | Native lazy loading |
+| `fetchPriority` | `'high' \| 'low' \| 'auto'` | — | Fetch priority hint; use `'high'` for LCP images |
+| `className` | `string` | — | Additional CSS class names |
+
+## Notes
+
+- When `width` and `height` are omitted the component falls back to fill mode inside a relative wrapper. Always provide dimensions from WP GraphQL `mediaDetails.width` / `mediaDetails.height` when available — fill mode requires the parent to have an explicit height.
+- The `picture` variant produces identical HTML to `primary`. `next/image` delivers WebP automatically so a separate `<picture>` element is not needed; the variant exists purely for CSS targeting via `image--picture`.
+- For `aspect-ratio`, pass the ratio as integer units (e.g. `width={16} height={9}`) not pixel dimensions. The wrapper receives an `ar-{w}-{h}` class that maps to the SCSS `aspect-ratio` mixin.
+- The `bg` variant uses an inline `background-image` style and does not go through `next/image` optimization.
