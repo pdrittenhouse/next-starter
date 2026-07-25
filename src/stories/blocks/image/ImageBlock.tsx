@@ -8,16 +8,19 @@ import type { EditorBlock } from '@/types/blocks';
 /**
  * ACF field values for the image block, as they appear in attributesJSON.data.
  *
- * ACF stores the image field (return_format: 'array') as an attachment ID in
- * block post meta. The ID is resolved here via GET_MEDIA_ITEM_BY_ID so the
- * Image atom gets a proper sourceUrl, dimensions, and alt text — mirroring
- * how the Twig block resolves the image server-side before passing it to
- * the image pattern.
+ * The `image` field is an ACF clone of module-image with prefix_name: 1, so
+ * its sub-fields are stored with the clone name as prefix:
+ *   image_image_type  (not image_type)
+ *   image_image       (not image)   — attachment ID
+ *   image_image_url   (not image_url)
+ *
+ * All other fields (image_size, image_variant, loading, etc.) are top-level
+ * on the block and have no prefix.
  */
 interface ImageBlockData {
-  image_type?: 'file' | 'url';
-  image?: number | string | null;
-  image_url?: string | null;
+  image_image_type?: 'file' | 'url';
+  image_image?: number | string | null;
+  image_image_url?: string | null;
   image_size?: string;
   image_variant?: string;
   aspect_ratio?: string;
@@ -66,7 +69,7 @@ export async function ImageBlock({ block }: ImageBlockProps) {
   const attrs = parseBlockAttributes(block) as { data?: ImageBlockData; className?: string };
   const data: ImageBlockData = attrs?.data ?? {};
 
-  const imageType = data.image_type ?? 'file';
+  const imageType = data.image_image_type ?? 'file';
   const variant = (data.image_variant as ImageVariant | undefined) ?? 'picture';
   const loading = data.loading ?? 'lazy';
   const sizesAttr = data.sizes ?? '(max-width: 768px) 100vw, 50vw';
@@ -78,16 +81,16 @@ export async function ImageBlock({ block }: ImageBlockProps) {
   let width: number | undefined;
   let height: number | undefined;
 
-  if (imageType === 'url' && data.image_url) {
-    src = data.image_url;
-  } else if (imageType === 'file' && data.image) {
+  if (imageType === 'url' && data.image_image_url) {
+    src = data.image_image_url;
+  } else if (imageType === 'file' && data.image_image) {
     const { data: mediaData } = await fetchGraphQL<{
       mediaItem: {
         sourceUrl: string;
         altText?: string;
         mediaDetails?: { width?: number; height?: number };
       } | null;
-    }>(print(GET_MEDIA_ITEM_BY_ID), { id: String(data.image) });
+    }>(print(GET_MEDIA_ITEM_BY_ID), { id: String(data.image_image) });
 
     const media = mediaData?.mediaItem;
     if (media) {
