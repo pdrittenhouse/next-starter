@@ -45,50 +45,81 @@ export const GET_THEME_GENERAL_OPTIONS = gql`
 `;
 
 /**
- * Fetch global header behavior and alert bar content.
+ * Fetch global header behavior, alert bar content, and CTA buttons.
  * Powered by the "Header Options" ACF options page.
  *
  * headerPosition: "fixed" | "sticky" | "absolute" | "" (static)
+ * navbarBreakpoint: Bootstrap expand breakpoint ("sm"|"md"|"lg"|"xl"|"xxl")
+ * headerCta.headerCta — desktop CTA; headerCta.headerMobileCta — mobile CTA
  */
 export const GET_HEADER_OPTIONS = gql`
   query GetHeaderOptions {
-    settingsHeaderOptions {
-      headerPosition
-      hideHeader
-      shrinkHeader
-      hideHeaderContent
-      headerAlertMessage
+    themeHeaderOptions {
+      settingsHeaderOptions {
+        headerPosition
+        hideHeader
+        shrinkHeader
+        hideHeaderContent
+        headerAlertMessage
+        navbarBreakpoint
+        headerCta {
+          headerCta {
+            link { title url target }
+            style
+            placement
+            size
+            outline
+            disabled
+          }
+          headerMobileCta {
+            link { title url target }
+            style
+            placement
+            size
+            outline
+            disabled
+          }
+        }
+      }
     }
   }
 `;
 
 /**
- * Fetch global footer content: contact info, disclaimer, attribution, traveling CTA toggle.
- * Powered by the "Footer Options" ACF options page.
+ * Fetch global footer content: contact info, disclaimer, attribution.
+ * Powered by the "Theme Footer Options" ACF sub-page.
+ * WPGraphQL wraps ACF options fields: themeFooterOptions.settingsFooterOptions
  *
  * footerDisclaimer and footerAttribution are wysiwyg fields — render as HTML.
- * hideTravelingCta: "1" (hide) | "0" or "" (show)
  */
 export const GET_FOOTER_OPTIONS = gql`
   query GetFooterOptions {
-    settingsFooterOptions {
-      stickyFooter
-      hideFooterContent
-      footerContactPhone {
-        phoneLabel
-        phoneNumber
+    themeFooterOptions {
+      settingsFooterOptions {
+        hideFooterContent
+        footerContactPhone {
+          phoneLabel
+          phoneNumber
+        }
+        footerContactEmail {
+          emailLabel
+          emailAddress
+        }
+        footerContactAddress {
+          addressLabel
+          address
+        }
+        footerDisclaimer
+        footerAttribution
+        footerCta {
+          link { title url target }
+          style
+          placement
+          size
+          outline
+          disabled
+        }
       }
-      footerContactEmail {
-        emailLabel
-        emailAddress
-      }
-      footerContactAddress {
-        addressLabel
-        address
-      }
-      footerDisclaimer
-      footerAttribution
-      hideTravelingCta
     }
   }
 `;

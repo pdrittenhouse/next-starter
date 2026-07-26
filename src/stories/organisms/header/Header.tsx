@@ -108,9 +108,16 @@ export interface HeaderProps {
   secondaryNav?: NavProps;
 
   /**
-   * Props for the CTA Button rendered alongside the primary nav.
+   * Props for the CTA Button rendered alongside the primary nav (desktop).
+   * Rendered inside `.button-wrapper` inside `.navbar-collapse`.
    */
   primaryNavCta?: ButtonProps;
+
+  /**
+   * Props for the CTA Button rendered in the mobile header area.
+   * Rendered inside `.button-wrapper--mobile` immediately before `.navbar-collapse`.
+   */
+  mobileNavCta?: ButtonProps;
 
   // -------------------------------------------------------------------------
   // Social nav slot
@@ -239,6 +246,7 @@ export function Header({
   primaryNav,
   secondaryNav,
   primaryNavCta,
+  mobileNavCta,
   socialNavContent,
   showSearch = false,
   additionalContent,
@@ -316,6 +324,13 @@ export function Header({
                   </span>
                 </button>
 
+                {/* Mobile CTA — immediately before .navbar-collapse */}
+                {mobileNavCta && (
+                  <div className="button-wrapper--mobile">
+                    <Button {...mobileNavCta} />
+                  </div>
+                )}
+
                 <div className="site-header--row">
                   {/* Collapsible nav panel */}
                   <div className="collapse navbar-collapse" id="siteNav">
@@ -344,7 +359,9 @@ export function Header({
                             />
                           )}
                           {primaryNavCta && (
-                            <Button {...primaryNavCta} />
+                            <div className="button-wrapper">
+                              <Button {...primaryNavCta} />
+                            </div>
                           )}
                         </div>
 
