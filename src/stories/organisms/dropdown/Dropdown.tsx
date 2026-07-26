@@ -1,4 +1,6 @@
-import React, { useId } from 'react';
+'use client';
+
+import React, { useId, useState, useRef, useEffect } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './dropdown.module.scss';
@@ -60,8 +62,7 @@ export interface DropdownItem {
 export interface DropdownProps {
   /**
    * Props for the dropdown toggle button.
-   * `toggle` is forced to 'dropdown' by the component; pass all other
-   * Button props here (variant, size, label, disabled, etc.).
+   * Pass all Button props here (variant, size, label, disabled, etc.).
    * Maps to the button object in the Twig template.
    */
   button: ButtonProps;
@@ -108,22 +109,26 @@ export interface DropdownProps {
    */
   menuAlign?: 'start' | 'end';
   /**
-   * Horizontal pixel offset of the dropdown menu.
+   * Horizontal pixel offset of the dropdown menu (visual only).
    * Maps to offset_x.
    */
   offsetX?: number;
   /**
-   * Vertical pixel offset of the dropdown menu.
+   * Vertical pixel offset of the dropdown menu (visual only).
    * Maps to offset_y.
    */
   offsetY?: number;
   /**
-   * Add data-bs-reference="parent" to the toggle button.
+   * reference prop is kept for API compatibility.
    * Maps to reference.
    */
   reference?: boolean;
   /**
-   * Auto-close behavior passed as data-bs-auto-close on the toggle button.
+   * Auto-close behaviour when menu items are clicked.
+   * - 'true' (default) — close on outside OR inside click
+   * - 'outside'        — close only on outside click
+   * - 'inside'         — close only when clicking inside the menu
+   * - 'false'          — never close automatically
    * Maps to auto_close.
    */
   autoClose?: DropdownAutoClose;
@@ -183,13 +188,10 @@ function resolveItemClass(element: DropdownItemElement, extra?: string): string 
  * Dropdown organism — mirrors
  * `src/design-system/patterns/03-organisms/dropdown/_dropdown.tpl.twig`.
  *
- * Renders a Bootstrap 5 dropdown: a toggle button plus a positioned menu of
- * items. Supports all four open directions, dark mode, background/text color
- * utilities, positional offsets, auto-close behaviour, menu-end alignment,
- * and an optional btn-group wrapper mode for action-button dropdowns.
- *
- * Items may be anchors (default), buttons, section headings (h1–h6), or
- * horizontal-rule dividers — matching the full Twig item loop.
+ * Open/close state is managed via React state — no Bootstrap JS required.
+ * Outside-click auto-close is enabled by default (controlled via `autoClose`).
+ * Supports all four open directions, dark mode, background/text color utilities,
+ * menu-end alignment, and an optional btn-group wrapper mode.
  */
 export function Dropdown({
   button,
@@ -200,19 +202,33 @@ export function Dropdown({
   backgroundColor,
   textColor,
   menuAlign,
-  offsetX = 0,
-  offsetY = 0,
-  reference = false,
   autoClose,
   buttonGroup = false,
   buttonGroupDisplay = 'inline-block',
   buttonGroupSize,
   items,
+  reference: _reference,
+  offsetX: _offsetX,
+  offsetY: _offsetY,
 }: DropdownProps) {
+  const [show, setShow] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
   const rawId = useId();
-  // useId returns strings like ':r0:' — strip colons for a valid HTML id.
   const generatedId = rawId.replace(/:/g, '');
   const dropdownId = button.id ?? `dropdown_${generatedId}`;
+
+  // Outside-click close (disabled when autoClose is 'false' or 'inside').
+  useEffect(() => {
+    if (!show || autoClose === 'false' || autoClose === 'inside') return;
+    const handler = (e: MouseEvent) => {
+      if (!wrapperRef.current?.contains(e.target as Node)) {
+        setShow(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [show, autoClose]);
 
   // ── Wrapper classes ──────────────────────────────────────────────────────
   const directionClass =
@@ -241,42 +257,45 @@ export function Dropdown({
     backgroundColor ? `bg-${backgroundColor}` : '',
     textColor ? `text-${textColor}` : '',
     menuAlign === 'end' ? 'dropdown-menu-end' : '',
-    button.active ? 'show' : '',
+    show ? 'show' : '',
     menuClassName,
   ]
     .filter(Boolean)
     .join(' ');
 
-  // ── Toggle button extra data-bs-* attributes ─────────────────────────────
-  const extraAttrs: Record<string, string> = {
-    'data-bs-offset': `${offsetX},${offsetY}`,
+  // Close on inside-menu click when autoClose allows it.
+  const handleMenuClick = () => {
+    if (autoClose !== 'false' && autoClose !== 'outside') {
+      setShow(false);
+    }
   };
-  if (reference) {
-    extraAttrs['data-bs-reference'] = 'parent';
-  }
-  if (autoClose) {
-    extraAttrs['data-bs-auto-close'] = autoClose;
-  }
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className={wrapperClasses} data-pattern="timberland/dropdown">
-      {/* Toggle button — toggle="dropdown" is always forced */}
+    <div
+      ref={wrapperRef}
+      className={wrapperClasses}
+      data-pattern="timberland/dropdown"
+    >
+      {/* Toggle button */}
       <Button
         {...button}
         id={dropdownId}
-        toggle="dropdown"
-        expanded={button.active ?? false}
-        {...extraAttrs}
+        expanded={show}
+        aria-haspopup="true"
+        onClick={() => setShow(o => !o)}
       />
 
       {/* Dropdown menu */}
-      <ul className={menuClasses} aria-labelledby={dropdownId}>
+      <ul
+        className={menuClasses}
+        aria-labelledby={dropdownId}
+        onClick={handleMenuClick}
+      >
         {items.map((item, index) => {
           const element = item.element ?? 'a';
           const itemClass = resolveItemClass(element, item.className);
 
-          // Horizontal rule divider
           if (element === 'hr') {
             return (
               <li key={index}>
@@ -285,7 +304,6 @@ export function Dropdown({
             );
           }
 
-          // Section heading (dropdown-header)
           if (HEADING_ELEMENTS.has(element)) {
             const HeadingEl = element as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
             return (
@@ -297,7 +315,6 @@ export function Dropdown({
             );
           }
 
-          // Button item
           if (element === 'button') {
             return (
               <li key={index}>
@@ -308,7 +325,6 @@ export function Dropdown({
             );
           }
 
-          // Default: anchor
           return (
             <li key={index}>
               <a className={itemClass} href={item.link ?? '#'} id={item.id}>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useId } from 'react';
+import React, { useId, useState } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import styles from './tabs.module.scss';
 
@@ -111,26 +111,9 @@ export interface TabsProps {
  *
  * Supports two rendering modes:
  *   - **bootstrap** (default): Bootstrap 5 nav-tabs/nav-pills + tab-content.
- *     Composes the Button atom for each tab trigger.
- *     Bootstrap JS handles show/hide via `data-bs-*` attributes loaded globally.
+ *     Active tab state is managed via React `useState` — no Bootstrap JS required.
  *   - **jquery**: Responsive-tabs plugin markup (`ul.tabs > li.tabs__tab > a`).
- *
- * @example
- * ```tsx
- * <Tabs
- *   tabs={[
- *     { title: 'Overview', content: <p>Overview content.</p> },
- *     { title: 'Details',  content: <p>Details content.</p>  },
- *     { title: 'FAQs',     content: <p>FAQ content.</p>       },
- *   ]}
- * />
- *
- * // Pills, filled, vertical
- * <Tabs navPills fillJustify="fill" vertical tabs={[...]} />
- *
- * // jQuery responsive-tabs
- * <Tabs tabsType="jquery" tabs={[...]} />
- * ```
+ *     This mode is unchanged and still relies on the jQuery plugin.
  */
 export function Tabs({
   tabsType = 'bootstrap',
@@ -162,6 +145,9 @@ export function Tabs({
 }: TabsProps) {
   const generatedId = useId().replace(/:/g, '');
   const tabsId = id ?? `tabs_${generatedId}`;
+
+  // Active tab index for Bootstrap mode — managed via React state.
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   // ── Wrapper classes ──────────────────────────────────────────────────────
   const wrapperClasses = [
@@ -209,8 +195,6 @@ export function Tabs({
   }
 
   // ── Inline style string → React CSSProperties (best-effort) ─────────────
-  // The Twig concatenates raw CSS strings; React requires a CSSProperties object.
-  // We apply the raw string via the style attribute cast when provided.
   const wrapperStyle = otherStyles
     ? ({ cssText: otherStyles } as React.CSSProperties)
     : undefined;
@@ -240,21 +224,21 @@ export function Tabs({
             {tabs.map((tab, i) => {
               const btnId = `${tabsId}--tab-${i + 1}-link`;
               const panelId = `${tabsId}--tab-${i + 1}`;
+              const isActive = i === activeTabIndex;
               return (
                 <Button
                   key={tab.id ?? i}
                   id={btnId}
                   variant="primary"
                   label={tab.title}
-                  className={['nav-link', i === 0 ? 'active' : ''].filter(Boolean).join(' ')}
-                  toggle="tab"
-                  target={`#${panelId}`}
+                  className={['nav-link', isActive ? 'active' : ''].filter(Boolean).join(' ')}
                   controls={panelId}
                   role="tab"
                   hideLabel={tab.hideLabel}
-                  active={i === 0}
+                  active={isActive}
+                  onClick={() => setActiveTabIndex(i)}
                   {...(tab.ariaLabel ? { 'aria-label': tab.ariaLabel } : {})}
-                  {...({ 'aria-selected': i === 0 ? 'true' : 'false' } as Record<string, string>)}
+                  {...({ 'aria-selected': isActive ? 'true' : 'false' } as Record<string, string>)}
                 />
               );
             })}
@@ -266,6 +250,7 @@ export function Tabs({
           {tabs.map((tab, i) => {
             const btnId = `${tabsId}--tab-${i + 1}-link`;
             const panelId = `${tabsId}--tab-${i + 1}`;
+            const isActive = i === activeTabIndex;
             return (
               <div
                 key={tab.id ?? i}
@@ -273,7 +258,7 @@ export function Tabs({
                 className={[
                   'tab-pane',
                   'fade',
-                  i === 0 ? 'show active' : '',
+                  isActive ? 'show active' : '',
                 ]
                   .filter(Boolean)
                   .join(' ')}

@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import styles from './alert.module.scss';
 
 export type AlertStatus =
@@ -28,7 +30,7 @@ export interface AlertProps {
   alertSecondary?: string;
   /** URL applied to the title (or primary paragraph when no title is set). */
   alertLink?: string;
-  /** Renders a dismiss button using Bootstrap's data-bs-dismiss="alert". */
+  /** Renders a dismiss button. Clicking sets visibility to false — no Bootstrap JS required. */
   dismissable?: boolean;
   /** Position of the dismiss button. Defaults to 'top'. */
   closePosition?: 'top' | 'bottom';
@@ -46,6 +48,8 @@ export interface AlertProps {
    * `additional_header_content` and `additional_footer_content` blocks.
    */
   additionalContent?: React.ReactNode;
+  /** Callback invoked when the alert is dismissed. */
+  onClose?: () => void;
 }
 
 export function Alert({
@@ -60,7 +64,18 @@ export function Alert({
   alertTextAlign,
   className,
   additionalContent,
+  onClose,
 }: AlertProps) {
+  const [visible, setVisible] = useState(true);
+
+  if (!visible) return null;
+
+  const handleDismiss = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setVisible(false);
+    onClose?.();
+  };
+
   // d-flex is applied only when the alert has a single content element with no
   // additional slotted content. The `!additionalContent` mirrors Twig's `additional_content != true`.
   const dFlex =
@@ -104,7 +119,7 @@ export function Alert({
           className={['close', closeIsSingle ? 'd-inline-block' : null]
             .filter(Boolean)
             .join(' ')}
-          data-bs-dismiss="alert"
+          onClick={handleDismiss}
           aria-label="Close"
         >
           <span aria-hidden="true">&times;</span>
@@ -171,7 +186,7 @@ export function Alert({
           href="#"
           role="button"
           className="close"
-          data-bs-dismiss="alert"
+          onClick={handleDismiss}
           aria-label="Close"
         >
           <span aria-hidden="true">&times;</span>

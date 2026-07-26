@@ -1,4 +1,7 @@
-import React, { useId } from 'react';
+'use client';
+
+import React, { useId, useState } from 'react';
+import { Collapse as BsCollapse } from 'react-bootstrap';
 import { ButtonGroup } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonGroupItem, WrapperDisplay } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
@@ -83,14 +86,13 @@ export interface CollapseProps {
   buttonGroupClassName?: string;
   /**
    * Buttons to render in the controls area.
-   * Each button's `toggle` defaults to `'collapse'` and `target` defaults to
-   * `#<generated-id>` when not explicitly provided — mirroring the Twig loop
-   * that injects `button_target` and `button_link` on each button.
+   * Each button's `target` defaults to `#<generated-id>` when not explicitly
+   * provided — clicking toggles the matching panel.
    */
   buttons: ButtonProps[];
   /**
    * Collapse panel items.
-   * Each item renders a `.collapse--wrapper > .collapse > .collapse--inner`
+   * Each item renders a `.collapse--wrapper > BsCollapse > .collapse--inner`
    * structure. When `collapseId` is omitted the panel inherits the shared ID.
    */
   content: CollapseItem[];
@@ -105,11 +107,9 @@ export interface CollapseProps {
  * Collapse organism — mirrors
  * `src/design-system/patterns/03-organisms/collapse/_collapse.tpl.twig`.
  *
- * Renders a ButtonGroup that toggles one or more Bootstrap collapse panels.
- * A stable shared collapse ID is generated via React's `useId` hook so that
- * buttons and panels are wired together automatically without any props.
- * Pass explicit `target` on individual buttons and `collapseId` on individual
- * panels to create multiple independent collapse targets.
+ * Renders a ButtonGroup that toggles one or more collapse panels.
+ * Open/close state is managed via React state and React Bootstrap's `Collapse`
+ * component — no Bootstrap JS bundle required.
  */
 export function Collapse({
   buttonGroupDisplay = 'inline-block',
@@ -124,22 +124,32 @@ export function Collapse({
   content,
   className,
 }: CollapseProps) {
-  // Generate a stable, SSR-safe collapse ID.
-  // React's useId produces strings like ":r0:" — sanitize colons for valid HTML IDs.
   const uid = useId();
   const collapseId = 'collapse_' + uid.replace(/:/g, '');
 
-  // Mirror Twig's collapseButtons loop: inject target + toggle defaults for
-  // each button that does not already specify them.
-  const collapseButtons: ButtonProps[] = buttons.map((btn) => ({
-    ...btn,
-    toggle: btn.toggle ?? 'collapse',
-    // target maps to data-bs-target when toggle is set (see Button atom).
-    target: btn.target ?? '#' + collapseId,
-    // aria-controls should reference the panel ID (without leading #).
-    controls: btn.controls ?? collapseId,
-    expanded: btn.expanded ?? false,
-  }));
+  // Track open state per panel ID.
+  const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({});
+
+  const togglePanel = (panelId: string) => {
+    setOpenPanels(prev => ({ ...prev, [panelId]: !prev[panelId] }));
+  };
+
+  // Build collapse buttons: strip toggle/target (Bootstrap JS attrs), inject
+  // onClick and reactive expanded/controls instead.
+  const collapseButtons: ButtonProps[] = buttons.map((btn) => {
+    const { toggle: _t, target: _tgt, ...restBtn } = btn as ButtonProps & {
+      toggle?: unknown;
+      target?: unknown;
+    };
+    const targetId = ((btn as any).target as string | undefined ?? '#' + collapseId).replace(/^#/, '');
+    const isOpen = !!openPanels[targetId];
+    return {
+      ...restBtn,
+      controls: btn.controls ?? targetId,
+      expanded: isOpen,
+      onClick: () => togglePanel(targetId),
+    } as ButtonProps;
+  });
 
   const group: ButtonGroupItem = {
     displayGrid: buttonGroupDisplayGrid,
@@ -161,8 +171,6 @@ export function Collapse({
         wrapperDisplay={buttonGroupDisplay}
         size={buttonGroupSize}
         vertical={buttonGroupVertical}
-        // collapse--controls is applied to the ButtonGroup wrapper,
-        // matching button_group_wrapper_other_classes: 'collapse--controls' in Twig.
         wrapperClassName="collapse--controls"
         groups={[group]}
       />
@@ -171,9 +179,10 @@ export function Collapse({
       <div className="collapse--content">
         {content.map((item, index) => {
           const panelId = item.collapseId ?? collapseId;
+          const isOpen = !!openPanels[panelId];
 
+          // 'collapse' class omitted here — BsCollapse adds it automatically.
           const panelClasses = [
-            'collapse',
             'p-3',
             item.backgroundColor ? `bg-${item.backgroundColor}` : null,
             item.textColor ? `text-${item.textColor}` : null,
@@ -184,9 +193,11 @@ export function Collapse({
 
           return (
             <div key={index} className="collapse--wrapper">
-              <div className={panelClasses} id={panelId}>
-                <div className="collapse--inner">{item.content}</div>
-              </div>
+              <BsCollapse in={isOpen}>
+                <div className={panelClasses} id={panelId}>
+                  <div className="collapse--inner">{item.content}</div>
+                </div>
+              </BsCollapse>
             </div>
           );
         })}

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useId } from 'react';
+import React, { useId, useState } from 'react';
+import { Collapse } from 'react-bootstrap';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './accordion.module.scss';
@@ -64,19 +65,18 @@ export interface AccordionProps {
   otherAttributes?: Record<string, string>;
 }
 
-/**
- * A single accordion item — internal sub-component.
- *
- * Each item generates its own stable React key-based IDs via useId() so that
- * the collapse/header pair is always connected correctly, even when rendered
- * inside a list or conditional block.
- */
+// ---------------------------------------------------------------------------
+// Internal sub-component: single accordion item
+// ---------------------------------------------------------------------------
+
 function AccordionItemComponent({
   item,
-  accordionId,
+  isOpen,
+  onToggle,
 }: {
   item: AccordionItem;
-  accordionId: string;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
   const uid = useId().replace(/:/g, '');
   const collapseId = `collapse_${uid}`;
@@ -92,20 +92,6 @@ function AccordionItemComponent({
     .filter(Boolean)
     .join(' ');
 
-  const collapseClasses = [
-    'accordion-collapse',
-    'collapse',
-    item.active ? 'show' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  // Determine the data-bs-parent binding:
-  // - omit when alwaysOpen is true
-  // - otherwise bind to the parent accordion id so only one panel is open at a time
-  const dataBsParent =
-    item.alwaysOpen ? undefined : `#${accordionId}`;
-
   return (
     <div
       className={itemClasses}
@@ -113,49 +99,45 @@ function AccordionItemComponent({
     >
       <HeaderTag className="accordion-header" id={headerId}>
         <Button
-          {...item.button}
+          {...(item.button as ButtonProps)}
           className={[
             'accordion-button',
-            item.active ? '' : 'collapsed',
+            isOpen ? '' : 'collapsed',
             item.button.className ?? '',
           ]
             .filter(Boolean)
             .join(' ')}
-          toggle="collapse"
-          target={`#${collapseId}`}
-          expanded={item.active === true}
+          onClick={onToggle}
+          expanded={isOpen}
           controls={collapseId}
-          active={item.active}
+          active={isOpen}
         />
       </HeaderTag>
 
-      <div
-        id={collapseId}
-        className={collapseClasses}
-        aria-labelledby={headerId}
-        {...(dataBsParent ? { 'data-bs-parent': dataBsParent } : {})}
-      >
-        <div className="accordion-body">{item.content}</div>
-      </div>
+      <Collapse in={isOpen}>
+        <div
+          id={collapseId}
+          className="accordion-collapse"
+          aria-labelledby={headerId}
+        >
+          <div className="accordion-body">{item.content}</div>
+        </div>
+      </Collapse>
     </div>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Accordion molecule
+// ---------------------------------------------------------------------------
+
 /**
  * Accordion molecule — mirrors `src/design-system/patterns/02-molecules/accordion/_accordion.tpl.twig`.
  *
- * Composes the Button atom for each accordion trigger. Bootstrap JS handles
- * show/hide via `data-bs-*` attributes; no client-side JS import is needed.
- *
- * @example
- * ```tsx
- * <Accordion
- *   items={[
- *     { button: { label: 'What is this?' }, content: 'An accordion.' },
- *     { button: { label: 'How does it work?' }, content: 'Bootstrap collapse.', active: true },
- *   ]}
- * />
- * ```
+ * Open/close state is managed via React state and React Bootstrap's `Collapse`
+ * component — no Bootstrap JS bundle required. By default only one panel is open
+ * at a time; set `alwaysOpen: true` on individual items to make them toggle
+ * independently.
  */
 export function Accordion({
   items,
@@ -167,6 +149,33 @@ export function Accordion({
 }: AccordionProps) {
   const generatedId = useId().replace(/:/g, '');
   const accordionId = id ?? `accordion_${generatedId}`;
+
+  // Initialize open set from items that have active: true.
+  const [openKeys, setOpenKeys] = useState<Set<string>>(
+    () => new Set(
+      items
+        .map((item, i) => (item.active ? String(i) : null))
+        .filter(Boolean) as string[]
+    )
+  );
+
+  const handleToggle = (key: string, alwaysOpen: boolean) => {
+    setOpenKeys(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        if (!alwaysOpen) {
+          // Close all non-alwaysOpen items before opening this one.
+          items.forEach((item, idx) => {
+            if (!item.alwaysOpen) next.delete(String(idx));
+          });
+        }
+        next.add(key);
+      }
+      return next;
+    });
+  };
 
   const accordionClasses = [
     'accordion',
@@ -188,7 +197,8 @@ export function Accordion({
         <AccordionItemComponent
           key={item.itemId ?? index}
           item={item}
-          accordionId={accordionId}
+          isOpen={openKeys.has(String(index))}
+          onToggle={() => handleToggle(String(index), item.alwaysOpen ?? false)}
         />
       ))}
     </div>

@@ -1,28 +1,9 @@
 'use client';
 
-import React, { useId } from 'react';
+import React, { useId, useState } from 'react';
+import { Offcanvas as BsOffcanvas } from 'react-bootstrap';
 import { Button, type ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './offcanvas.module.scss';
-
-// ---------------------------------------------------------------------------
-// Type extensions
-// Bootstrap's offcanvas toggle requires data-bs-* attributes that are not in
-// ButtonProps. These local cast types let us spread them onto the Button atom
-// without losing the base prop types. At runtime Button's ...rest forwards
-// every unknown key to the underlying react-bootstrap element.
-// ---------------------------------------------------------------------------
-type TriggerButtonProps = ButtonProps & {
-  'data-bs-toggle'?: string;
-  'data-bs-target'?: string;
-  'aria-controls'?: string;
-};
-
-type CloseButtonExtraProps = ButtonProps & {
-  'data-bs-dismiss'?: string;
-};
-
-const TriggerButton = Button as React.ComponentType<TriggerButtonProps>;
-const PanelCloseButton = Button as React.ComponentType<CloseButtonExtraProps>;
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -84,11 +65,13 @@ export interface OffcanvasProps {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function resolvePlacementClass(placement?: OffcanvasPlacement): string {
-  if (placement === 'top') return 'offcanvas-top';
-  if (placement === 'bottom') return 'offcanvas-bottom';
-  if (placement === 'right') return 'offcanvas-end';
-  return 'offcanvas-start'; // 'left' or default
+type BsPlacement = 'start' | 'end' | 'top' | 'bottom';
+
+function resolveBsPlacement(placement?: OffcanvasPlacement): BsPlacement {
+  if (placement === 'right') return 'end';
+  if (placement === 'top') return 'top';
+  if (placement === 'bottom') return 'bottom';
+  return 'start'; // 'left' or default
 }
 
 function buildClasses(parts: (string | undefined | false)[]): string {
@@ -102,18 +85,9 @@ function buildClasses(parts: (string | undefined | false)[]): string {
 /**
  * Offcanvas molecule — Bootstrap 5 off-canvas panel with a toggle trigger.
  *
- * Mirrors `02-molecules/offcanvas/_offcanvas.tpl.twig`. Bootstrap JS is
- * loaded globally in the theme; this component only renders the required
- * static markup and `data-bs-*` attributes.
- *
- * ```tsx
- * <Offcanvas
- *   button={{ variant: 'primary', label: 'Open Menu' }}
- *   title="Navigation"
- *   content={<nav>…</nav>}
- *   closeButton="close"
- * />
- * ```
+ * Mirrors `02-molecules/offcanvas/_offcanvas.tpl.twig`. Open/close state is
+ * managed via React state and React Bootstrap's `Offcanvas` component —
+ * no Bootstrap JS bundle required.
  */
 export function Offcanvas({
   offcanvasId: providedId,
@@ -130,8 +104,8 @@ export function Offcanvas({
   textColor,
   closeButton,
 }: OffcanvasProps) {
-  // useId generates a stable, unique string scoped to this component instance.
-  // Replace the colons React uses internally so the value is a valid HTML id.
+  const [show, setShow] = useState(false);
+
   const reactId = useId().replace(/:/g, '_');
   const panelId = providedId ?? `offcanvas_${reactId}`;
   const labelId = `${panelId}_label`;
@@ -142,13 +116,9 @@ export function Offcanvas({
     wrapperClasses,
   ]);
 
-  const panelCls = buildClasses([
-    'offcanvas',
-    breakpoint && `offcanvas-${breakpoint}`,
+  const extraPanelCls = buildClasses([
     backgroundColor && `bg-${backgroundColor}`,
     textColor && `text-${textColor}`,
-    resolvePlacementClass(placement),
-    breakpoint && `d-${breakpoint}-none`,
     offcanvasClasses,
   ]);
 
@@ -161,46 +131,38 @@ export function Offcanvas({
   return (
     <div className={wrapperCls} data-pattern="timberland/offcanvas">
 
-      {/* Trigger button — data-bs-toggle wires Bootstrap JS automatically */}
+      {/* Trigger button */}
       {button && (
-        <TriggerButton
-          {...button}
-          data-bs-toggle="offcanvas"
-          data-bs-target={`#${panelId}`}
-          aria-controls={panelId}
-        />
+        <Button {...button} onClick={() => setShow(true)} />
       )}
 
       {/* Offcanvas panel */}
-      <div
-        className={panelCls}
+      <BsOffcanvas
+        show={show}
+        onHide={() => setShow(false)}
+        placement={resolveBsPlacement(placement)}
+        scroll={scroll}
+        backdrop={backdrop}
+        responsive={breakpoint}
         id={panelId}
         aria-labelledby={labelId}
-        data-bs-backdrop={backdrop ? 'true' : 'false'}
-        data-bs-scroll={scroll ? 'true' : 'false'}
+        className={extraPanelCls || undefined}
         tabIndex={-1}
       >
         {showHeader && (
-          <div className={headerCls}>
+          <BsOffcanvas.Header
+            closeButton={!!closeButton}
+            closeVariant={closeButton === 'white' ? 'white' : undefined}
+            className={headerCls}
+          >
             {title && (
-              <h5 className="offcanvas-title" id={labelId}>
-                {title}
-              </h5>
+              <BsOffcanvas.Title id={labelId}>{title}</BsOffcanvas.Title>
             )}
-            {closeButton && (
-              <PanelCloseButton
-                closeButton={closeButton === 'white' ? 'white' : true}
-                className="text-reset"
-                data-bs-dismiss="offcanvas"
-              />
-            )}
-          </div>
+          </BsOffcanvas.Header>
         )}
 
-        <div className="offcanvas-body">
-          {content}
-        </div>
-      </div>
+        <BsOffcanvas.Body>{content}</BsOffcanvas.Body>
+      </BsOffcanvas>
 
     </div>
   );

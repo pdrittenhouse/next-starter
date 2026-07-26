@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useId } from 'react';
+import React, { useId, useState } from 'react';
+import { Modal as BsModal } from 'react-bootstrap';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonVariant } from '@/stories/atoms/button/Button';
 import styles from './modal.module.scss';
@@ -61,9 +62,8 @@ export interface ModalCloseButtonConfig {
 /**
  * Props for the Modal molecule.
  *
- * Mirrors the Twig `timberland/modal` pattern. All structural Bootstrap 5
- * data attributes are rendered as static HTML; Bootstrap JS is loaded globally
- * by the theme and handles modal open/close behaviour.
+ * Mirrors the Twig `timberland/modal` pattern. Open/close state is managed via
+ * React state and React Bootstrap's `Modal` component — no Bootstrap JS required.
  */
 export interface ModalProps {
   /**
@@ -80,8 +80,7 @@ export interface ModalProps {
   animate?: boolean;
   /**
    * Render a backdrop overlay behind the modal.
-   * Defaults to `true` → `data-bs-backdrop="true"`.
-   * Set to `false` → `data-bs-backdrop="false"`.
+   * Defaults to `true`.
    * Maps to the Twig `backdrop` variable.
    */
   backdrop?: boolean;
@@ -91,7 +90,7 @@ export interface ModalProps {
    */
   backdropStatic?: boolean;
   /**
-   * Bootstrap color utility applied to the backdrop element (bg-{color}).
+   * Bootstrap color utility applied to the modal element (bg-{color}).
    * Maps to the Twig `backdrop_color` variable.
    */
   backdropColor?: string;
@@ -188,17 +187,9 @@ export interface ModalProps {
 /**
  * Modal molecule — mirrors `src/design-system/patterns/02-molecules/modal/_modal.tpl.twig`.
  *
- * Renders a Bootstrap 5 modal with an optional trigger button. Bootstrap JS
- * (loaded globally in the theme) handles open/close via `data-bs-*` attributes.
- * A unique modal ID is generated with React 18's `useId()` when not supplied.
- *
- * @example
- * <Modal
- *   modalTitle="Confirm action"
- *   modalContent={<p>Are you sure you want to proceed?</p>}
- *   showModalFooterClose
- *   modalButton={{ label: 'Open dialog', variant: 'primary' }}
- * />
+ * Open/close state is managed via React state and React Bootstrap's `Modal`
+ * component — no Bootstrap JS bundle required. The trigger button sets show=true;
+ * the header/footer close buttons and backdrop click set show=false.
  */
 export function Modal({
   modalId: propModalId,
@@ -227,45 +218,36 @@ export function Modal({
   modalTitleClassName,
   modalBodyClassName,
 }: ModalProps) {
-  // Generate a stable unique ID; strip colons which are invalid in CSS selectors.
+  const [show, setShow] = useState(false);
+
   const generated = useId().replace(/:/g, '');
   const modalId = propModalId || `modal_${generated}`;
   const labelId = `${modalId}Label`;
 
-  // Resolve data-bs-backdrop attribute value to match Twig logic.
-  const backdropAttr = backdrop && backdropStatic
+  // Resolve React Bootstrap backdrop prop
+  const resolvedBackdrop: boolean | 'static' = backdrop && backdropStatic
     ? 'static'
-    : backdrop
-    ? 'true'
-    : 'false';
+    : backdrop;
+
+  // Resolve React Bootstrap fullscreen prop
+  const resolvedFullscreen = modalFullscreen && modalFullscreenBreakpoint
+    ? (`${modalFullscreenBreakpoint}-down` as const)
+    : modalFullscreen
+    ? true
+    : undefined;
 
   // --- Class assembly ---
 
-  const modalClasses = [
-    'modal',
-    animate !== false ? 'fade' : null,
+  const modalExtraClasses = [
     backdropColor ? `bg-${backdropColor}` : null,
     className || null,
-  ].filter(Boolean).join(' ');
-
-  const dialogClasses = [
-    'modal-dialog',
-    modalCenter ? 'modal-dialog-centered' : null,
-    modalSize ? `modal-${modalSize}` : null,
-    modalFullscreen && modalFullscreenBreakpoint
-      ? `modal-fullscreen-${modalFullscreenBreakpoint}-down`
-      : modalFullscreen
-      ? 'modal-fullscreen'
-      : null,
-    modalDialogClassName || null,
-  ].filter(Boolean).join(' ');
+  ].filter(Boolean).join(' ') || undefined;
 
   const contentClasses = [
-    'modal-content',
     backgroundColor ? `bg-${backgroundColor}` : null,
     textColor ? `text-${textColor}` : null,
     modalContentClassName || null,
-  ].filter(Boolean).join(' ');
+  ].filter(Boolean).join(' ') || undefined;
 
   const titleClasses = [
     'modal-title',
@@ -279,12 +261,9 @@ export function Modal({
     modalBodyClassName || null,
   ].filter(Boolean).join(' ');
 
-  // Render the header when a title is present OR a header close button is requested.
   const showHeader = !!modalTitle || modalCloseHeader;
-  // Render the footer when footer content is present OR a footer close button is requested.
   const showFooter = !!modalFooter || showModalFooterClose;
 
-  // Close button icon classes (Bootstrap btn-close).
   const headerCloseClasses = [
     'btn-close',
     'modal--close',
@@ -292,7 +271,6 @@ export function Modal({
     modalCloseHeaderButton?.className || null,
   ].filter(Boolean).join(' ');
 
-  // Footer dismiss button classes (regular Bootstrap btn).
   const footerCloseVariant = modalCloseFooter?.variant || 'secondary';
   const footerCloseClasses = [
     'btn',
@@ -317,78 +295,76 @@ export function Modal({
           label={modalButton?.label ?? 'Open Modal'}
           disabled={modalButton?.disabled}
           id={modalButton?.id}
-          toggle="modal"
-          target={`#${modalId}`}
-          controls={modalId}
           className={['modal--trigger', modalButton?.className].filter(Boolean).join(' ')}
           nowrap={modalButton?.nowrap}
+          onClick={() => setShow(true)}
         />
       )}
 
       {/* --- Modal --- */}
-      <div
-        className={modalClasses}
+      <BsModal
+        show={show}
+        onHide={() => setShow(false)}
+        centered={modalCenter}
+        size={modalSize}
+        animation={animate}
+        backdrop={resolvedBackdrop}
+        fullscreen={resolvedFullscreen}
         id={modalId}
-        tabIndex={-1}
-        role="dialog"
         aria-labelledby={labelId}
-        data-bs-backdrop={backdropAttr}
+        className={modalExtraClasses}
+        dialogClassName={modalDialogClassName}
+        contentClassName={contentClasses}
       >
-        <div className={dialogClasses} role="document">
-          <div className={contentClasses}>
-
-            {/* Header */}
-            {showHeader && (
-              <div className="modal-header">
-                {modalTitle && (
-                  <h5 className={titleClasses} id={labelId}>
-                    {modalTitle}
-                  </h5>
-                )}
-                {modalCloseHeader && (
-                  <button
-                    type="button"
-                    className={headerCloseClasses}
-                    data-bs-dismiss="modal"
-                    aria-label={modalCloseHeaderButton?.label ?? 'Close'}
-                    disabled={modalCloseHeaderButton?.disabled}
-                  />
-                )}
-              </div>
+        {/* Header */}
+        {showHeader && (
+          <div className="modal-header">
+            {modalTitle && (
+              <h5 className={titleClasses} id={labelId}>
+                {modalTitle}
+              </h5>
             )}
-
-            {/* Body */}
-            <div className={bodyClasses}>
-              {modalContent}
-            </div>
-
-            {/* Footer */}
-            {showFooter && (
-              <div className="modal-footer">
-                {modalFooter && (
-                  <div className="modal-footer-content">
-                    {modalFooter}
-                  </div>
-                )}
-                {showModalFooterClose && (
-                  <div className="modal-actions">
-                    <button
-                      type="button"
-                      className={footerCloseClasses}
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                      disabled={modalCloseFooter?.disabled}
-                    >
-                      {modalCloseFooter?.label ?? 'Close'}
-                    </button>
-                  </div>
-                )}
-              </div>
+            {modalCloseHeader && (
+              <button
+                type="button"
+                className={headerCloseClasses}
+                onClick={() => setShow(false)}
+                aria-label={modalCloseHeaderButton?.label ?? 'Close'}
+                disabled={modalCloseHeaderButton?.disabled}
+              />
             )}
-
           </div>
+        )}
+
+        {/* Body */}
+        <div className={bodyClasses}>
+          {modalContent}
         </div>
-      </div>
+
+        {/* Footer */}
+        {showFooter && (
+          <div className="modal-footer">
+            {modalFooter && (
+              <div className="modal-footer-content">
+                {modalFooter}
+              </div>
+            )}
+            {showModalFooterClose && (
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className={footerCloseClasses}
+                  onClick={() => setShow(false)}
+                  aria-label="Close"
+                  disabled={modalCloseFooter?.disabled}
+                >
+                  {modalCloseFooter?.label ?? 'Close'}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </BsModal>
 
     </div>
   );
