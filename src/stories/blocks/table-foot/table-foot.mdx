@@ -1,0 +1,33 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TableFootBlockStories from './TableFootBlock.stories';
+
+<Meta of={TableFootBlockStories} />
+
+# Table Foot
+
+Semantic `<tfoot>` block for use inside a table. Applies a Bootstrap `table-{color}` class or a custom `backgroundColor` inline style from the `section_variant` ACF field.
+
+## Usage
+
+```tsx
+import { TableFootBlock } from '@/stories/blocks/table-foot/TableFootBlock';
+
+<TableFootBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `section_variant` | group | Color variant: `{ type: 'palette'|'custom', color: string }` |
+| `section_bg_color` | color_picker | Custom hex background when type is `custom` |
+
+## Stories
+
+<Canvas>
+  <Story of={TableFootBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={TableFootBlockStories.WithPaletteColor} />
+</Canvas>

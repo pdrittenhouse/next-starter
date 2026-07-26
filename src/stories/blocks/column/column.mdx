@@ -1,0 +1,45 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as ColumnBlockStories from './ColumnBlock.stories';
+
+<Meta of={ColumnBlockStories} />
+
+# Column
+
+Bootstrap grid column. Reads the `col_width` ACF repeater to build responsive `col-{bp}-{n}` classes for each defined breakpoint.
+
+## Usage
+
+```tsx
+import { ColumnBlock } from '@/stories/blocks/column/ColumnBlock';
+
+<ColumnBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `col_width` | repeater | Array of `{ breakpoint, width }` entries |
+| `col_width[].breakpoint` | select | Bootstrap breakpoint prefix: `` (xs/default), `sm`, `md`, `lg`, `xl`, `xxl` |
+| `col_width[].width` | number | Column span: 1–12 |
+
+## Class Generation
+
+```
+col_width: [{ breakpoint: '', width: '12' }, { breakpoint: 'md', width: '6' }]
+→ classes: "col-12 col-md-6"
+```
+
+An empty `breakpoint` value produces `col-{n}` (no breakpoint prefix).
+
+## Nesting
+
+`ColumnBlock` is a child of `RowBlock`. `RowBlock` iterates all `acf/column` inner blocks and reads each column's `attributesJSON` to apply the correct column classes.
+
+<Canvas>
+  <Story of={ColumnBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={ColumnBlockStories.FullWidth} />
+</Canvas>

@@ -1,0 +1,30 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as SlideBlockStories from './SlideBlock.stories';
+
+<Meta of={SlideBlockStories} />
+
+# Slide
+
+Individual slide inner block for use inside a [SliderBlock](/story/design-system-blocks-slider--default). When rendered standalone it wraps its `renderedHtml` in a `.carousel-cell` div.
+
+## Usage
+
+```tsx
+// Handled automatically by SliderBlock — no direct usage needed.
+// SliderBlock renders each acf/slide inner block internally.
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| (inner content) | blocks | Inner blocks rendered by the WordPress editor |
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/slide`.
+- The `.carousel-cell` class is the Flickity slide selector; do not change it without updating the slider configuration.
+
+<Canvas>
+  <Story of={SlideBlockStories.Default} />
+</Canvas>

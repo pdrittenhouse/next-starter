@@ -1,0 +1,36 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as LinkGroupBlockStories from './LinkGroupBlock.stories';
+
+<Meta of={LinkGroupBlockStories} />
+
+# Link Group
+
+A grouped collection of links with optional background and text color styling. Supports both Bootstrap palette colors and custom hex values via `section_variant`.
+
+## Usage
+
+```tsx
+import { LinkGroupBlock } from '@/stories/blocks/link-group/LinkGroupBlock';
+
+<LinkGroupBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `section_variant` | group | Color variant settings |
+| `section_variant.type` | select | `palette` or `custom` |
+| `section_variant.color` | select | Bootstrap palette name when type is `palette` |
+| `section_bg_color` | color_picker | Custom hex background color when type is `custom` |
+| `section_text_color` | color_picker | Custom hex text color when type is `custom` |
+
+## Stories
+
+<Canvas>
+  <Story of={LinkGroupBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={LinkGroupBlockStories.WithPaletteColors} />
+</Canvas>

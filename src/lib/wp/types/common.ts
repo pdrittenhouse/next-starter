@@ -55,6 +55,8 @@ export interface WpEditorBlock {
   parentClientId?: string;
   renderedHtml?: string;
   attributesJSON?: string | null;
+  /** Populated by buildBlockTree — not present in the raw GraphQL response. */
+  innerBlocks?: WpEditorBlock[];
 }
 
 /** Per-content SEO data (Yoast/RankMath via custom resolver). */

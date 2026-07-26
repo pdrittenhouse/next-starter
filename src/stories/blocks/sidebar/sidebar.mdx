@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as SidebarBlockStories from './SidebarBlock.stories';
+
+<Meta of={SidebarBlockStories} />
+
+# Sidebar
+
+WordPress widget sidebar block. Wraps the rendered widget area markup in a semantic `<aside>` element.
+
+## Usage
+
+```tsx
+import { SidebarBlock } from '@/stories/blocks/sidebar/SidebarBlock';
+
+<SidebarBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — widget areas are registered in WordPress via `register_sidebar()` and populated in **Appearance → Widgets**.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/sidebar`.
+- The `<aside>` wrapper carries no additional classes; add utility classes via the WordPress block inspector or global SCSS.
+
+<Canvas>
+  <Story of={SidebarBlockStories.Default} />
+</Canvas>

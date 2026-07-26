@@ -1,4 +1,5 @@
 @use "../../variables" as *;
+@use "patterns/atoms/button";
 
 .buttons {
   --#{$prefix}btn-padding-x: #{$btn-padding-x};

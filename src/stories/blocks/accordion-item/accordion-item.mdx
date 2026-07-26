@@ -1,0 +1,31 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as AccordionItemBlockStories from './AccordionItemBlock.stories';
+
+<Meta of={AccordionItemBlockStories} />
+
+# Accordion Item
+
+Inner sub-block of the [Accordion](/story/design-system-blocks-accordion--default) block. `AccordionItemBlock` is rendered recursively by `AccordionBlock` when it iterates inner `acf/accordion-item` blocks; it is not intended to be rendered at the top level.
+
+When it appears at the top level of `BlockRenderer` it falls back to `block.renderedHtml`.
+
+## Usage
+
+```tsx
+// Handled automatically by AccordionBlock — no direct usage needed.
+// AccordionBlock renders each acf/accordion-item inner block internally.
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| (inner content) | blocks | Inner blocks rendered by the WordPress editor |
+
+## Rendering
+
+Standalone rendering defers to `renderedHtml`; the `AccordionBlock` parent component owns the semantic accordion markup (`accordion-item`, `accordion-header`, `accordion-collapse`).
+
+<Canvas>
+  <Story of={AccordionItemBlockStories.Default} />
+</Canvas>

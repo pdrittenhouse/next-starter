@@ -5,6 +5,7 @@
 
 export interface WpConfig {
   graphqlUrl: string;
+  restUrl: string;
   authUser?: string;
   authPassword?: string;
 }
@@ -24,6 +25,8 @@ export function getWpConfig(): WpConfig {
     process.env.NEXT_PUBLIC_WP_GRAPHQL_URL ??
     '';
 
+  const restUrl = graphqlUrl.replace(/\/graphql$/, '');
+
   const authUser =
     process.env.NEXT_PUBLIC_WP_AUTH_USER;
 
@@ -34,7 +37,7 @@ export function getWpConfig(): WpConfig {
     console.warn('[wp] No WP_GRAPHQL_URL found in environment variables.');
   }
 
-  return { graphqlUrl, authUser, authPassword };
+  return { graphqlUrl, restUrl, authUser, authPassword };
 }
 
 /**

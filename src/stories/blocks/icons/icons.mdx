@@ -1,0 +1,40 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as IconsBlockStories from './IconsBlock.stories';
+
+<Meta of={IconsBlockStories} />
+
+# Icons
+
+Icon group block. Wraps icon markup in a `.icon-group` container and applies a display mode modifier class and optional `text-align` inline style.
+
+## Usage
+
+```tsx
+import { IconsBlock } from '@/stories/blocks/icons/IconsBlock';
+
+<IconsBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `display` | select | Display mode: `inline` or `grid` |
+| `text_align` | select | CSS `text-align` value applied as inline style |
+
+## Class Generation
+
+| `display` value | Class added |
+|---|---|
+| `inline` | `icon-group--inline` |
+| `grid` | `icon-group--grid` |
+
+## Stories
+
+<Canvas>
+  <Story of={IconsBlockStories.Inline} />
+</Canvas>
+
+<Canvas>
+  <Story of={IconsBlockStories.Grid} />
+</Canvas>

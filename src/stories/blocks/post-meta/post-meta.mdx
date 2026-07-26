@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as PostMetaBlockStories from './PostMetaBlock.stories';
+
+<Meta of={PostMetaBlockStories} />
+
+# Post Meta
+
+Renders post metadata including the publish date, author, categories, and tags. Output is fully WordPress-managed via `renderedHtml`.
+
+## Usage
+
+```tsx
+import { PostMetaBlock } from '@/stories/blocks/post-meta/PostMetaBlock';
+
+<PostMetaBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — the metadata output is determined by the post and WordPress display settings.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/post-meta`.
+- Commonly placed above or below the post content in single post templates.
+
+<Canvas>
+  <Story of={PostMetaBlockStories.Default} />
+</Canvas>

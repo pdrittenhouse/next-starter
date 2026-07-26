@@ -1,0 +1,31 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TabBlockStories from './TabBlock.stories';
+
+<Meta of={TabBlockStories} />
+
+# Tab
+
+Individual tab inner block for use inside a [TabsBlock](/story/design-system-blocks-tabs--default). `TabBlock` is rendered recursively by `TabsBlock` when it iterates inner `acf/tab` blocks. When rendered standalone it falls back to `renderedHtml`.
+
+## Usage
+
+```tsx
+// Handled automatically by TabsBlock — no direct usage needed.
+// TabsBlock renders each acf/tab inner block internally.
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `tab_label` | text | The visible tab button label |
+| (inner content) | blocks | Content rendered in the tab pane |
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/tab`.
+- `TabsBlock` reads `tab_label` from each inner tab's `attributesJSON` to build the `<nav>` tab buttons.
+
+<Canvas>
+  <Story of={TabBlockStories.Default} />
+</Canvas>

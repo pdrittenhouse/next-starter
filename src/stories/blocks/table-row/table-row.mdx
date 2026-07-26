@@ -1,0 +1,53 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TableRowBlockStories from './TableRowBlock.stories';
+
+<Meta of={TableRowBlockStories} />
+
+# Table Row
+
+Semantic `<tr>` block. Builds Bootstrap `table-{color}` and `table-active` classes from the `row_variant` ACF field, with optional custom `backgroundColor` inline style.
+
+## Usage
+
+```tsx
+import { TableRowBlock } from '@/stories/blocks/table-row/TableRowBlock';
+
+<TableRowBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `row_variant` | group | Row color variant |
+| `row_variant.type` | select | `palette` or `custom` |
+| `row_variant.color` | select | Bootstrap color name when type is `palette` |
+| `row_variant.active` | true_false | When `true`, adds the `table-active` class |
+| `row_bg_color` | color_picker | Custom hex background when type is `custom` |
+
+## Class Generation
+
+| Condition | Output |
+|---|---|
+| `row_variant.color = 'success'` | `table-success` |
+| `row_variant.active = true` | `table-active` |
+| Both | `table-success table-active` |
+
+## Notes
+
+- Inner `acf/table-cell` blocks are rendered recursively by `TableRowBlock`.
+- Registered in `BLOCK_MAP` as `acf/table-row`.
+
+## Stories
+
+<Canvas>
+  <Story of={TableRowBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={TableRowBlockStories.WithPaletteColor} />
+</Canvas>
+
+<Canvas>
+  <Story of={TableRowBlockStories.Active} />
+</Canvas>

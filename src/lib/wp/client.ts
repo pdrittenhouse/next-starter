@@ -84,6 +84,68 @@ export async function fetchGraphQL<T = Record<string, unknown>>(
   return response.json() as Promise<GraphQLResponse<T>>;
 }
 
+export interface FetchWpRestOptions {
+  /** Pass `true` to include Basic Auth headers. */
+  useAuth?: boolean;
+  /** Additional headers to include in the request. */
+  headers?: Record<string, string>;
+  /** Optional AbortSignal for request cancellation. */
+  signal?: AbortSignal;
+  /** Next.js fetch options (revalidate, tags, etc.) */
+  next?: Record<string, unknown>;
+}
+
+/**
+ * Fetch a WP REST API endpoint.
+ * The `path` is appended to `{wpBaseUrl}/wp-json`, e.g. `/timberland/v1/template-patterns`.
+ *
+ * @example
+ * ```ts
+ * import { fetchWpRest } from '@/lib/wp/client';
+ * const data = await fetchWpRest<MyType>('/timberland/v1/template-patterns');
+ * ```
+ */
+export async function fetchWpRest<T = unknown>(
+  path: string,
+  options: FetchWpRestOptions = {},
+): Promise<T> {
+  const config = getWpConfig();
+
+  if (!config.restUrl) {
+    throw new Error('[wp] No REST base URL configured. Set NEXT_PUBLIC_WP_GRAPHQL_URL in your environment.');
+  }
+
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const url = `${config.restUrl}/wp-json${normalizedPath}`;
+
+  const headers: Record<string, string> = { ...options.headers };
+
+  if (options.useAuth) {
+    const authHeader = buildAuthHeader(config);
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+  }
+
+  const fetchOptions: RequestInit & { next?: Record<string, unknown> } = {
+    method: 'GET',
+    headers,
+    signal: options.signal,
+  };
+
+  if (options.next) {
+    fetchOptions.next = options.next;
+  }
+
+  const response = await fetch(url, fetchOptions);
+
+  if (!response.ok) {
+    throw new Error(`[wp] REST request failed: ${response.status} ${response.statusText}`);
+  }
+
+  return response.json() as Promise<T>;
+}
+
 /**
  * Create a pre-configured client instance with custom defaults.
  * Useful when you want to bind a specific config or default options.

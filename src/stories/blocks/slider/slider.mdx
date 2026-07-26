@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as SliderBlockStories from './SliderBlock.stories';
+
+<Meta of={SliderBlockStories} />
+
+# Slider
+
+Carousel / slider block containing `acf/slide` inner blocks. Output is fully WordPress-managed via `renderedHtml`. Slider behavior (Flickity or similar) requires client-side JavaScript initialization.
+
+## Usage
+
+```tsx
+import { SliderBlock } from '@/stories/blocks/slider/SliderBlock';
+
+<SliderBlock block={block} />
+```
+
+## ACF Fields
+
+Slider settings (options, autoplay, arrows, etc.) are configured in the WordPress block editor. Refer to the Pattern Lab documentation for the `slider` pattern for available controls.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/slider`.
+- JavaScript initialization for Flickity must run client-side. In Next.js, use a Client Component or a `useEffect` hook to initialize after mount.
+
+<Canvas>
+  <Story of={SliderBlockStories.Default} />
+</Canvas>

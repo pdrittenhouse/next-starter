@@ -1,0 +1,48 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as SectionBlockStories from './SectionBlock.stories';
+
+<Meta of={SectionBlockStories} />
+
+# Section
+
+Full-width page section block. Renders a `<section>` element with `block-section` plus optional layout, background color, text color, and margin classes/styles.
+
+## Usage
+
+```tsx
+import { SectionBlock } from '@/stories/blocks/section/SectionBlock';
+
+<SectionBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `section_layout` | select | Layout variant — appended as `section-layout-{value}` class |
+| `section_bg_color` | group | Background color: `{ type: 'palette'|'custom', color: string }` |
+| `section_text_color` | group | Text color: `{ type: 'palette'|'custom', color: string }` |
+| `text_align` | select | CSS text-align applied as `text-{value}` class |
+| `margin` | group | Custom margin per side (`top`, `right`, `bottom`, `left`) applied as inline style |
+
+## Class / Style Generation
+
+- **Palette background**: adds `bg-{color}`.
+- **Custom background**: adds `backgroundColor: {hex}` inline style.
+- **Palette text**: adds `text-{color}`.
+- **Custom text**: adds `color: {hex}` inline style.
+- **Margin**: adds `marginTop`, `marginRight`, `marginBottom`, `marginLeft` inline styles when set.
+
+## Stories
+
+<Canvas>
+  <Story of={SectionBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={SectionBlockStories.WithPaletteBackground} />
+</Canvas>
+
+<Canvas>
+  <Story of={SectionBlockStories.WithCustomBackground} />
+</Canvas>

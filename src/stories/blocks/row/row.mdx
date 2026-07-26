@@ -1,0 +1,41 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as RowBlockStories from './RowBlock.stories';
+
+<Meta of={RowBlockStories} />
+
+# Row
+
+Bootstrap grid row. Builds gutter, alignment, and justification classes from ACF repeater fields, then renders `ColumnBlock` inner blocks or falls back to `renderedHtml`.
+
+## Usage
+
+```tsx
+import { RowBlock } from '@/stories/blocks/row/RowBlock';
+
+<RowBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `vert_gutters` | repeater | Vertical gutter per breakpoint — builds `gy-{size}` / `gy-{bp}-{size}` |
+| `hor_gutters` | repeater | Horizontal gutter per breakpoint — builds `gx-{size}` / `gx-{bp}-{size}` |
+| `align_items` | repeater | Bootstrap align-items per breakpoint — builds `align-items-{value}` |
+| `justify_content` | repeater | Bootstrap justify-content per breakpoint — builds `justify-content-{value}` |
+
+Each repeater row has `{ breakpoint, size | value }` fields. An empty `breakpoint` produces the unprefixed class.
+
+## Inner Blocks
+
+`RowBlock` iterates all `acf/column` inner blocks from the block registry and renders each as a `ColumnBlock`. If no inner column blocks are found, it falls back to `block.renderedHtml`.
+
+## Stories
+
+<Canvas>
+  <Story of={RowBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={RowBlockStories.AlignedAndJustified} />
+</Canvas>

@@ -12,13 +12,17 @@
  * Set SYNC_ICONS=false to skip without error (e.g. in CI without a WP instance).
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { resolve, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
-const OUT  = join(root, 'public', 'spritemap.svg');
+const OUT_SVG  = join(root, 'public', 'spritemap.svg');
+const OUT_SCSS = join(root, 'src', 'scss', 'printing', '01-atoms', 'svg', 'generated', '_icons-generated.scss');
+
+// Keep the old name as an alias so the rest of the script doesn't need a rename.
+const OUT = OUT_SVG;
 
 // ---------------------------------------------------------------------------
 // Environment
@@ -41,8 +45,27 @@ function loadDotEnv(path) {
 const env = { ...loadDotEnv(join(root, '.env.local')), ...process.env };
 
 function ensurePlaceholder() {
-  if (!existsSync(OUT)) {
-    writeFileSync(OUT, '<svg xmlns="http://www.w3.org/2000/svg"><!-- run `npm run sync-icons` to populate --></svg>\n', 'utf8');
+  if (!existsSync(OUT_SVG)) {
+    writeFileSync(OUT_SVG, '<svg xmlns="http://www.w3.org/2000/svg"><!-- run `npm run sync-icons` to populate --></svg>\n', 'utf8');
+  }
+  if (!existsSync(OUT_SCSS)) {
+    const scssDir = dirname(OUT_SCSS);
+    if (!existsSync(scssDir)) mkdirSync(scssDir, { recursive: true });
+    // Minimal stub: empty $sprites map + no-op sprite() mixin so @use and @include
+    // compile without error when offline. Real content arrives via npm run sync-icons.
+    writeFileSync(OUT_SCSS, [
+      '// AUTO-GENERATED — do not edit manually.',
+      '// Run `npm run sync-icons` to populate from WordPress.',
+      "// Stub: empty map and no-op mixin so offline builds compile without error.\n",
+      "@use 'sass:map';",
+      "@use 'sass:meta';",
+      "@use 'sass:string';\n",
+      '$sprites: ();',
+      '$svgicon-variables: ();',
+      '$svgicon-sizes: ();\n',
+      '@mixin sprite($name, $user-variables: (), $include-size: false, $property: \'background\') {}',
+      '',
+    ].join('\n'), 'utf8');
   }
 }
 
@@ -87,5 +110,15 @@ if (!data?.spritemap) {
 // ---------------------------------------------------------------------------
 // Write
 // ---------------------------------------------------------------------------
-writeFileSync(OUT, data.spritemap, 'utf8');
+writeFileSync(OUT_SVG, data.spritemap, 'utf8');
 console.log(`[sync-icons] Wrote public/spritemap.svg (source: ${data.url ?? url})`);
+
+if (data.scss) {
+  const scssDir = dirname(OUT_SCSS);
+  if (!existsSync(scssDir)) mkdirSync(scssDir, { recursive: true });
+  writeFileSync(OUT_SCSS, data.scss, 'utf8');
+  console.log('[sync-icons] Wrote src/scss/printing/01-atoms/svg/generated/_icons-generated.scss');
+} else {
+  console.warn('[sync-icons] No scss in response — _icons-generated.scss not updated. Run the WP theme build first.');
+  ensurePlaceholder();
+}

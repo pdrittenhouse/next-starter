@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as PostsLoopBlockStories from './PostsLoopBlock.stories';
+
+<Meta of={PostsLoopBlockStories} />
+
+# Posts Loop
+
+Dynamic posts loop / query block. Renders a collection of posts with layout determined by WordPress query parameters. Output is fully WordPress-managed via `renderedHtml`.
+
+## Usage
+
+```tsx
+import { PostsLoopBlock } from '@/stories/blocks/posts-loop/PostsLoopBlock';
+
+<PostsLoopBlock block={block} />
+```
+
+## ACF Fields
+
+Query parameters and layout options are configured in the WordPress block editor. Refer to the Pattern Lab documentation for the `posts-loop` pattern for available field controls.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/posts-loop`.
+- For dynamic revalidation with ISR, configure `revalidate` in the Next.js page route that uses this block.
+
+<Canvas>
+  <Story of={PostsLoopBlockStories.Default} />
+</Canvas>

@@ -1,0 +1,40 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TableCellBlockStories from './TableCellBlock.stories';
+
+<Meta of={TableCellBlockStories} />
+
+# Table Cell
+
+Renders a single table cell as either `<td>` or `<th>` based on the `element` ACF field. Supports `padding`, `width`, and `text_align` inline style fields.
+
+## Usage
+
+```tsx
+import { TableCellBlock } from '@/stories/blocks/table-cell/TableCellBlock';
+
+<TableCellBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `element` | select | HTML element: `td` (default) or `th` |
+| `padding` | text | CSS padding value applied as inline style |
+| `width` | text | CSS width value applied as inline style |
+| `text_align` | select | CSS text-align value applied as inline style |
+
+## Notes
+
+- Used as an inner block of `TableRowBlock`.
+- Registered in `BLOCK_MAP` as `acf/table-cell`.
+
+## Stories
+
+<Canvas>
+  <Story of={TableCellBlockStories.DataCell} />
+</Canvas>
+
+<Canvas>
+  <Story of={TableCellBlockStories.HeaderCell} />
+</Canvas>

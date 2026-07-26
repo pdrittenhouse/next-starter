@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as BrandingBlockStories from './BrandingBlock.stories';
+
+<Meta of={BrandingBlockStories} />
+
+# Branding
+
+Renders the site logo and branding markup as managed by WordPress. The output (`renderedHtml`) is produced server-side by WordPress and injected as-is into the headless front-end.
+
+## Usage
+
+```tsx
+import { BrandingBlock } from '@/stories/blocks/branding/BrandingBlock';
+
+<BrandingBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — all branding output is controlled by WordPress site settings (Site Title, Site Tagline, and Custom Logo).
+
+## Notes
+
+- The rendered output typically includes the site name, tagline, and/or `<img>` logo wrapped in an anchor tag.
+- Registered in `BLOCK_MAP` as `acf/branding`.
+
+<Canvas>
+  <Story of={BrandingBlockStories.Default} />
+</Canvas>

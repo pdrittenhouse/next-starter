@@ -1,0 +1,30 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as SocialShareBlockStories from './SocialShareBlock.stories';
+
+<Meta of={SocialShareBlockStories} />
+
+# Social Share
+
+Renders social media sharing links for the current post or page. Output is fully WordPress-managed via `renderedHtml`.
+
+## Usage
+
+```tsx
+import { SocialShareBlock } from '@/stories/blocks/social-share/SocialShareBlock';
+
+<SocialShareBlock block={block} />
+```
+
+## ACF Fields
+
+Social networks and sharing settings are configured in the WordPress block editor or via theme options. Refer to Pattern Lab documentation for available controls.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/social-share`.
+- Share URLs are generated server-side by WordPress; the headless front-end receives the final rendered markup.
+- In a headless context, ensure the WordPress site URL and the public front-end URL match in the share link generation logic.
+
+<Canvas>
+  <Story of={SocialShareBlockStories.Default} />
+</Canvas>

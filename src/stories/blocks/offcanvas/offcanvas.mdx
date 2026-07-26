@@ -1,0 +1,30 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as OffcanvasBlockStories from './OffcanvasBlock.stories';
+
+<Meta of={OffcanvasBlockStories} />
+
+# Offcanvas
+
+Bootstrap offcanvas panel block for mobile navigation or supplemental content. Output is fully WordPress-managed via `renderedHtml`.
+
+## Usage
+
+```tsx
+import { OffcanvasBlock } from '@/stories/blocks/offcanvas/OffcanvasBlock';
+
+<OffcanvasBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — the offcanvas content and trigger are configured in WordPress.
+
+## Notes
+
+- Bootstrap's offcanvas JS is required at runtime for the panel to open/close.
+- In a headless context, the `data-bs-dismiss` / `data-bs-toggle` attributes work only if Bootstrap JS is bundled.
+- Registered in `BLOCK_MAP` as `acf/offcanvas`.
+
+<Canvas>
+  <Story of={OffcanvasBlockStories.Default} />
+</Canvas>

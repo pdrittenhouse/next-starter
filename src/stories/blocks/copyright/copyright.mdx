@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as CopyrightBlockStories from './CopyrightBlock.stories';
+
+<Meta of={CopyrightBlockStories} />
+
+# Copyright
+
+Renders site copyright text. The output is fully managed by WordPress and passed through as `renderedHtml`.
+
+## Usage
+
+```tsx
+import { CopyrightBlock } from '@/stories/blocks/copyright/CopyrightBlock';
+
+<CopyrightBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — the copyright text is controlled by WordPress settings or a PHP filter.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/copyright`.
+- Typically placed in the site footer.
+
+<Canvas>
+  <Story of={CopyrightBlockStories.Default} />
+</Canvas>

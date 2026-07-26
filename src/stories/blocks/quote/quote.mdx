@@ -1,0 +1,47 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as QuoteBlockStories from './QuoteBlock.stories';
+
+<Meta of={QuoteBlockStories} />
+
+# Quote
+
+Bootstrap blockquote. Uses ACF fields to build a semantic `<figure>/<blockquote>/<figcaption>` structure. Falls back to `renderedHtml` if the `quote` field is absent.
+
+## Usage
+
+```tsx
+import { QuoteBlock } from '@/stories/blocks/quote/QuoteBlock';
+
+<QuoteBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `quote` | textarea | The quotation text |
+| `citation_name` | text | Attribution name (e.g. author name) |
+| `citation_title` | text | Attribution title or affiliation |
+
+## Rendered Markup (from ACF fields)
+
+```html
+<figure>
+  <blockquote class="blockquote">
+    <p>The quote text.</p>
+  </blockquote>
+  <figcaption class="blockquote-footer">
+    Name, <cite>Title</cite>
+  </figcaption>
+</figure>
+```
+
+## Stories
+
+<Canvas>
+  <Story of={QuoteBlockStories.WithACFFields} />
+</Canvas>
+
+<Canvas>
+  <Story of={QuoteBlockStories.FromRenderedHtml} />
+</Canvas>

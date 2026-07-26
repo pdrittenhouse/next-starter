@@ -1,0 +1,38 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as ButtonTextBlockStories from './ButtonTextBlock.stories';
+
+<Meta of={ButtonTextBlockStories} />
+
+# Button Text
+
+Renders a button label as a plain inline text `<span>`. Used as a sub-block inside button components to supply the visible label text.
+
+## Usage
+
+```tsx
+import { ButtonTextBlock } from '@/stories/blocks/button-text/ButtonTextBlock';
+
+<ButtonTextBlock block={block} />
+```
+
+## Rendering Priority
+
+1. If `data.button_text` is present in `attributesJSON`, renders `<span>{data.button_text}</span>`.
+2. Otherwise falls back to `<span dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />`.
+3. Returns `null` if neither source has content.
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `button_text` | text | The visible button label string |
+
+## Stories
+
+<Canvas>
+  <Story of={ButtonTextBlockStories.FromACFField} />
+</Canvas>
+
+<Canvas>
+  <Story of={ButtonTextBlockStories.FromRenderedHtml} />
+</Canvas>

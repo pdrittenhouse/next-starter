@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as GroupBlockStories from './GroupBlock.stories';
+
+<Meta of={GroupBlockStories} />
+
+# Group
+
+Generic block container. Concatenates `renderedHtml` from all inner blocks, or falls back to the group's own `renderedHtml` if no inner blocks are present.
+
+## Usage
+
+```tsx
+import { GroupBlock } from '@/stories/blocks/group/GroupBlock';
+
+<GroupBlock block={block} />
+```
+
+## ACF Fields
+
+The group block itself carries no custom ACF fields — its role is structural containment of other blocks.
+
+## Notes
+
+- Inner blocks are concatenated by joining each block's `renderedHtml`.
+- Registered in `BLOCK_MAP` as `acf/group`.
+
+<Canvas>
+  <Story of={GroupBlockStories.Default} />
+</Canvas>

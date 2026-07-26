@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as SearchBarBlockStories from './SearchBarBlock.stories';
+
+<Meta of={SearchBarBlockStories} />
+
+# Search Bar
+
+WordPress search form block. Output is fully WordPress-managed via `renderedHtml`.
+
+## Usage
+
+```tsx
+import { SearchBarBlock } from '@/stories/blocks/search-bar/SearchBarBlock';
+
+<SearchBarBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — the search form is rendered by WordPress's `get_search_form()` function.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/search-bar`.
+- In a headless context, the form action should point to the front-end search results URL. This typically requires a custom filter on the WordPress side.
+
+<Canvas>
+  <Story of={SearchBarBlockStories.Default} />
+</Canvas>

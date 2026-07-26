@@ -1,0 +1,45 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as HeroUnitBlockStories from './HeroUnitBlock.stories';
+
+<Meta of={HeroUnitBlockStories} />
+
+# Hero Unit
+
+Full-width hero block. Wraps content in a `<div class="block-hero-unit">` with optional palette-based or custom background and text color classes.
+
+## Usage
+
+```tsx
+import { HeroUnitBlock } from '@/stories/blocks/hero-unit/HeroUnitBlock';
+
+<HeroUnitBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `section_variant` | group | Color variant settings |
+| `section_variant.type` | select | `palette` or `custom` |
+| `section_variant.color` | select | Bootstrap palette name (e.g. `primary`, `light`) when type is `palette` |
+| `section_bg_color` | color_picker | Custom hex background color when type is `custom` |
+| `section_text_color` | color_picker | Custom hex text color when type is `custom` |
+
+## Class / Style Generation
+
+- **Palette**: adds `bg-{color}` and/or `text-{color}` class.
+- **Custom**: adds `backgroundColor` and/or `color` inline style.
+
+## Stories
+
+<Canvas>
+  <Story of={HeroUnitBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={HeroUnitBlockStories.WithPaletteBackground} />
+</Canvas>
+
+<Canvas>
+  <Story of={HeroUnitBlockStories.WithCustomBackground} />
+</Canvas>

@@ -173,9 +173,14 @@ for (const level of LEVEL_DIRS) ensureDir(join(PATTERNS_DIR, level));
 // ---------------------------------------------------------------------------
 let fileCount = 0;
 
+const USE_VARIABLES = '@use "variables" as *;\n';
+
 for (const { name, level, scss } of patterns) {
   const out = patternPath(level, name);
-  writeFileSync(out, scss, 'utf8');
+  // WP webpack injects variables via additionalData; Dart Sass module isolation
+  // means @use-loaded partials don't receive that injection. Prepend explicitly.
+  const content = scss.startsWith('@use "variables"') ? scss : USE_VARIABLES + scss;
+  writeFileSync(out, content, 'utf8');
   fileCount++;
 }
 

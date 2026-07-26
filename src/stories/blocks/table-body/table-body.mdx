@@ -1,0 +1,38 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TableBodyBlockStories from './TableBodyBlock.stories';
+
+<Meta of={TableBodyBlockStories} />
+
+# Table Body
+
+Semantic `<tbody>` block for use inside a table. Applies a Bootstrap `table-{color}` class or a custom `backgroundColor` inline style from the `section_variant` ACF field.
+
+## Usage
+
+```tsx
+import { TableBodyBlock } from '@/stories/blocks/table-body/TableBodyBlock';
+
+<TableBodyBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `section_variant` | group | Color variant: `{ type: 'palette'|'custom', color: string }` |
+| `section_bg_color` | color_picker | Custom hex background when type is `custom` |
+
+## Class / Style Generation
+
+- **Palette**: adds `table-{color}` class (e.g. `table-primary`).
+- **Custom**: adds `backgroundColor: {hex}` inline style.
+
+## Stories
+
+<Canvas>
+  <Story of={TableBodyBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={TableBodyBlockStories.WithPaletteColor} />
+</Canvas>

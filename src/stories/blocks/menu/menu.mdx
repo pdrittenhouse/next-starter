@@ -1,0 +1,30 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as MenuBlockStories from './MenuBlock.stories';
+
+<Meta of={MenuBlockStories} />
+
+# Menu
+
+Navigation menu block. Wraps the WordPress-rendered nav markup in a semantic `<nav>` element.
+
+## Usage
+
+```tsx
+import { MenuBlock } from '@/stories/blocks/menu/MenuBlock';
+
+<MenuBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — the menu items are managed by WordPress via **Appearance → Menus** or the navigation editor.
+
+## Notes
+
+- The `<nav>` wrapper receives no additional classes; style it via global SCSS.
+- Registered in `BLOCK_MAP` as `acf/menu`.
+- Typically placed in the header or footer template.
+
+<Canvas>
+  <Story of={MenuBlockStories.Default} />
+</Canvas>

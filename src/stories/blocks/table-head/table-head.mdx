@@ -1,0 +1,33 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TableHeadBlockStories from './TableHeadBlock.stories';
+
+<Meta of={TableHeadBlockStories} />
+
+# Table Head
+
+Semantic `<thead>` block for use inside a table. Applies a Bootstrap `table-{color}` class or a custom `backgroundColor` inline style from the `section_variant` ACF field.
+
+## Usage
+
+```tsx
+import { TableHeadBlock } from '@/stories/blocks/table-head/TableHeadBlock';
+
+<TableHeadBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `section_variant` | group | Color variant: `{ type: 'palette'|'custom', color: string }` |
+| `section_bg_color` | color_picker | Custom hex background when type is `custom` |
+
+## Stories
+
+<Canvas>
+  <Story of={TableHeadBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={TableHeadBlockStories.WithPaletteColor} />
+</Canvas>

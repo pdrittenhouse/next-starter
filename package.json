@@ -39,7 +39,8 @@
     "react": "^18",
     "react-bootstrap": "^2.10.1",
     "react-bootstrap-icons": "^1.11.6",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "responsive-tabs": "^1.6.3"
   },
   "devDependencies": {
     "@storybook/addon-a11y": "^10.5.2",

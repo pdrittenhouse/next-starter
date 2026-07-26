@@ -1,0 +1,29 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as PatternBlockStories from './PatternBlock.stories';
+
+<Meta of={PatternBlockStories} />
+
+# Pattern
+
+Renders a WordPress block pattern. The pattern is defined in the WordPress editor and its HTML is passed through as `renderedHtml`.
+
+## Usage
+
+```tsx
+import { PatternBlock } from '@/stories/blocks/pattern/PatternBlock';
+
+<PatternBlock block={block} />
+```
+
+## ACF Fields
+
+This block has no editable ACF fields — the pattern is selected in the WordPress block editor.
+
+## Notes
+
+- Registered in `BLOCK_MAP` as `acf/pattern`.
+- Useful for embedding reusable layout templates in specific page locations.
+
+<Canvas>
+  <Story of={PatternBlockStories.Default} />
+</Canvas>
