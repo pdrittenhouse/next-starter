@@ -1,5 +1,5 @@
 'use client';
-import React, { useId } from 'react';
+import React, { useId, useState, useRef, useEffect } from 'react';
 import styles from './nav.module.scss';
 
 // ---------------------------------------------------------------------------
@@ -162,18 +162,169 @@ function buildHoverStyles(navUid: string, breakpoint: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Internal recursive nav-items renderer
+// Internal: single nav item (with React-managed dropdown open/close)
+// ---------------------------------------------------------------------------
+
+interface NavItemEntryProps {
+  item: NavItem;
+  baseId: string;
+  depth: number;
+  index: number;
+  /** Top-level parent index (1-based) — carried through nesting for ID generation. */
+  activeMenuCount: number;
+  navbarBreakpoint?: string;
+}
+
+function NavItemEntry({
+  item,
+  baseId,
+  depth,
+  index,
+  activeMenuCount,
+  navbarBreakpoint,
+}: NavItemEntryProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const itemRef = useRef<HTMLElement>(null);
+
+  const navCount = index + 1;
+  const depthSuffix = depth > 0 ? `-${depth}` : '';
+  const itemBaseId = item.navId ?? 'navItem';
+  const toggleTargetId = `${itemBaseId}_toggle--${activeMenuCount}${depthSuffix}`;
+
+  const Element = (item.itemElement ?? 'li') as React.ElementType;
+  const SubMenuTag = (item.navElement ?? 'ul') as React.ElementType;
+
+  const hasChildren = !!(item.items?.length);
+  const hasMegaMenu = !!(item.megaMenu?.enabled);
+  const hasDropdown = hasChildren || hasMegaMenu;
+  const isNestedItem = depth > 0;
+
+  // Close when clicking outside this item
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (!itemRef.current?.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [isOpen]);
+
+  const itemClasses = [
+    'nav-item',
+    hasDropdown ? 'dropdown' : null,
+    hasMegaMenu ? 'has-mega-menu' : null,
+    isNestedItem ? 'dropdown-item' : null,
+    `nav-item--item-${navCount}`,
+    item.hideDropdownIcon ? 'hide-dropdown-icon' : null,
+    ...(item.itemClasses ?? []),
+    item.itemOtherClasses ?? null,
+    hasDropdown && isOpen ? 'show' : null,
+  ].filter(Boolean).join(' ');
+
+  const linkClasses = [
+    'nav-link',
+    hasDropdown ? 'dropdown-toggle' : null,
+    ...(item.linkClasses ?? []),
+    item.linkOtherClasses ?? null,
+    hasDropdown && isOpen ? 'show' : null,
+  ].filter(Boolean).join(' ');
+
+  const itemContent = (
+    <>
+      {item.icon?.enabled && item.icon.position === 'before' && (
+        <span className="nav-icon nav-icon--before" aria-hidden="true" />
+      )}
+      <span className="item-label">{item.title}</span>
+      {item.icon?.enabled && item.icon.position === 'after' && (
+        <span className="nav-icon nav-icon--after" aria-hidden="true" />
+      )}
+      {item.description && (
+        <span className="item-description">{item.description}</span>
+      )}
+      {hasDropdown && <span className="caret" />}
+    </>
+  );
+
+  if (hasDropdown) {
+    // depth >= 1 means this sub-menu is itself nested inside another dropdown
+    const subMenuClasses = [
+      'flex-column',
+      'dropdown-menu',
+      depth >= 1 ? 'dropdown-submenu' : null,
+      isOpen ? 'show' : null,
+    ].filter(Boolean).join(' ');
+
+    return (
+      <Element ref={itemRef as any} className={itemClasses}>
+        <a
+          className={linkClasses}
+          href={item.url}
+          {...(item.linkId ? { id: item.linkId } : {})}
+          role="button"
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+          aria-label={item.title}
+          {...(item.linkTarget ? { target: item.linkTarget } : {})}
+          onClick={(e) => {
+            e.preventDefault();
+            setIsOpen((o) => !o);
+          }}
+        >
+          {itemContent}
+        </a>
+
+        {hasMegaMenu && item.megaMenu && (
+          <div
+            className={`dropdown-menu mega-menu-dropdown${isOpen ? ' show' : ''}`}
+            id={toggleTargetId}
+            aria-labelledby={item.linkId}
+            dangerouslySetInnerHTML={{ __html: item.megaMenu.content }}
+          />
+        )}
+
+        {!hasMegaMenu && hasChildren && item.items && (
+          <SubMenuTag className={subMenuClasses} id={toggleTargetId}>
+            {item.items.map((child, childIndex) => (
+              <NavItemEntry
+                key={`${baseId}-${depth + 1}-${childIndex}`}
+                item={child}
+                baseId={baseId}
+                depth={depth + 1}
+                index={childIndex}
+                activeMenuCount={activeMenuCount}
+                navbarBreakpoint={item.navbarBreakpoint}
+              />
+            ))}
+          </SubMenuTag>
+        )}
+      </Element>
+    );
+  }
+
+  return (
+    <Element className={itemClasses}>
+      <a
+        className={linkClasses}
+        href={item.url}
+        {...(item.linkId ? { id: item.linkId } : {})}
+        aria-label={item.title}
+        {...(item.linkTarget ? { target: item.linkTarget } : {})}
+      >
+        {itemContent}
+      </a>
+    </Element>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Internal: top-level nav list container
 // ---------------------------------------------------------------------------
 
 interface NavItemsProps {
   items: NavItem[];
-  /** Unique nav instance ID (from useId). */
   baseId: string;
-  /** Whether this level renders as a Bootstrap dropdown menu. */
-  isDropdown?: boolean;
-  /** `id` to apply to the list element (dropdown panels only). */
-  dropdownId?: string;
-  hoverDropdown?: boolean;
   navbarBreakpoint?: string;
   navElement?: string;
   navId?: string;
@@ -181,18 +332,11 @@ interface NavItemsProps {
   navPills?: boolean;
   navFill?: boolean;
   navJustified?: boolean;
-  /** Nesting depth: 0 = top-level, 1 = first dropdown, etc. */
-  depth?: number;
-  /** Index of the parent item in the top-level nav (1-based). */
-  menuCount?: number;
 }
 
 function NavItems({
   items,
   baseId,
-  isDropdown = false,
-  dropdownId,
-  hoverDropdown,
   navbarBreakpoint,
   navElement = 'ul',
   navId,
@@ -200,140 +344,34 @@ function NavItems({
   navPills,
   navFill,
   navJustified,
-  depth = 0,
-  menuCount,
 }: NavItemsProps) {
   const NavTag = navElement as React.ElementType;
-  const isTopLevel = depth === 0;
-  const isSubMenu = depth > 1; // deeper than the first dropdown level
 
   const listClasses = [
     'flex-column',
-    isTopLevel && navbarBreakpoint && navbarBreakpoint !== 'none'
+    navbarBreakpoint && navbarBreakpoint !== 'none'
       ? `flex-${navbarBreakpoint}-row`
       : null,
-    isTopLevel && navTabs ? 'nav-tabs' : null,
-    isTopLevel && navPills ? 'nav-pills' : null,
-    isTopLevel && navFill ? 'nav-fill' : null,
-    isTopLevel && navJustified ? 'nav-justified' : null,
-    isDropdown ? 'dropdown-menu' : 'nav',
-    isSubMenu ? 'dropdown-submenu' : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const listId = isDropdown ? dropdownId : navId;
+    navTabs ? 'nav-tabs' : null,
+    navPills ? 'nav-pills' : null,
+    navFill ? 'nav-fill' : null,
+    navJustified ? 'nav-justified' : null,
+    'nav',
+  ].filter(Boolean).join(' ');
 
   return (
-    <NavTag
-      className={listClasses}
-      {...(listId ? { id: listId } : {})}
-    >
-      {items.map((item, index) => {
-        const navCount = index + 1;
-        // For nested menus the menu_count tracks the top-level parent position
-        const activeMenuCount = isTopLevel ? navCount : (menuCount ?? navCount);
-        const depthSuffix = depth > 0 ? `-${depth}` : '';
-        const itemBaseId = item.navId ?? 'navItem';
-        const toggleTargetId = `${itemBaseId}_toggle--${activeMenuCount}${depthSuffix}`;
-
-        const Element = (item.itemElement ?? 'li') as React.ElementType;
-
-        const hasChildren = !!(item.items?.length);
-        const hasMegaMenu = !!(item.megaMenu?.enabled);
-        const hasDropdown = hasChildren || hasMegaMenu;
-
-        const itemClasses = [
-          'nav-item',
-          hasDropdown ? 'dropdown' : null,
-          hasMegaMenu ? 'has-mega-menu' : null,
-          isDropdown ? 'dropdown-item' : null,
-          `nav-item--item-${navCount}`,
-          item.hideDropdownIcon ? 'hide-dropdown-icon' : null,
-          ...(item.itemClasses ?? []),
-          item.itemOtherClasses ?? null,
-        ]
-          .filter(Boolean)
-          .join(' ');
-
-        const linkClasses = [
-          'nav-link',
-          hasDropdown ? 'dropdown-toggle' : null,
-          ...(item.linkClasses ?? []),
-          item.linkOtherClasses ?? null,
-        ]
-          .filter(Boolean)
-          .join(' ');
-
-        // data-bs-target attribute on the toggle link (matches id on the dropdown list)
-        const dropdownLinkTarget = hasDropdown && !item.linkId
-          ? toggleTargetId
-          : undefined;
-
-        return (
-          <Element key={`${baseId}-${depth}-${index}`} className={itemClasses}>
-            <a
-              className={linkClasses}
-              href={item.url}
-              {...(item.linkId ? { id: item.linkId } : {})}
-              {...(dropdownLinkTarget ? { 'data-bs-target': dropdownLinkTarget } : {})}
-              {...(hasDropdown
-                ? {
-                    role: 'button',
-                    'data-bs-toggle': 'dropdown',
-                    'aria-haspopup': 'true',
-                    'aria-expanded': 'false',
-                  }
-                : {})}
-              aria-label={item.title}
-              {...(item.linkTarget ? { target: item.linkTarget } : {})}
-            >
-              {/* Icon before label */}
-              {item.icon?.enabled && item.icon.position === 'before' && (
-                <span className="nav-icon nav-icon--before" aria-hidden="true" />
-              )}
-
-              <span className="item-label">{item.title}</span>
-
-              {/* Icon after label */}
-              {item.icon?.enabled && item.icon.position === 'after' && (
-                <span className="nav-icon nav-icon--after" aria-hidden="true" />
-              )}
-
-              {item.description && (
-                <span className="item-description">{item.description}</span>
-              )}
-
-              {hasDropdown && <span className="caret" />}
-            </a>
-
-            {/* Mega menu panel */}
-            {hasMegaMenu && item.megaMenu && (
-              <div
-                className="dropdown-menu mega-menu-dropdown"
-                id={toggleTargetId}
-                aria-labelledby={item.linkId}
-                dangerouslySetInnerHTML={{ __html: item.megaMenu.content }}
-              />
-            )}
-
-            {/* Regular nested dropdown */}
-            {!hasMegaMenu && hasChildren && item.items && (
-              <NavItems
-                items={item.items}
-                baseId={baseId}
-                isDropdown
-                dropdownId={toggleTargetId}
-                hoverDropdown={hoverDropdown}
-                navbarBreakpoint={item.navbarBreakpoint}
-                navElement={item.navElement ?? 'ul'}
-                depth={depth + 1}
-                menuCount={activeMenuCount}
-              />
-            )}
-          </Element>
-        );
-      })}
+    <NavTag className={listClasses} {...(navId ? { id: navId } : {})}>
+      {items.map((item, index) => (
+        <NavItemEntry
+          key={`${baseId}-0-${index}`}
+          item={item}
+          baseId={baseId}
+          depth={0}
+          index={index}
+          activeMenuCount={index + 1}
+          navbarBreakpoint={navbarBreakpoint}
+        />
+      ))}
     </NavTag>
   );
 }
@@ -347,8 +385,8 @@ function NavItems({
  *
  * Renders a Bootstrap 5 `<nav>` with recursive dropdown support, mega menus,
  * hover-dropdown CSS injection, and all Bootstrap layout modifiers (tabs,
- * pills, fill, justified). Bootstrap JS is loaded globally; this component
- * uses `data-bs-*` attributes only.
+ * pills, fill, justified). Dropdown open/close is managed via React state —
+ * no Bootstrap JS bundle required.
  */
 export function Nav({
   navbarId = 'navbarNav',
@@ -404,8 +442,6 @@ export function Nav({
           <NavItems
             items={items}
             baseId={uid}
-            isDropdown={false}
-            hoverDropdown={hoverDropdown}
             navbarBreakpoint={navbarBreakpoint}
             navElement={navElement}
             navId={navId}
@@ -413,7 +449,6 @@ export function Nav({
             navPills={navPills}
             navFill={navFill}
             navJustified={navJustified}
-            depth={0}
           />
         )}
       </nav>

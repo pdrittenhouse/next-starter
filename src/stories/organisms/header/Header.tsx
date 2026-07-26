@@ -1,5 +1,6 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
+import { Collapse } from 'react-bootstrap';
 import { Branding, BrandingProps } from '@/stories/molecules/branding/Branding';
 import { Nav, NavProps } from '@/stories/molecules/nav/Nav';
 import { Button, ButtonProps } from '@/stories/atoms/button/Button';
@@ -197,7 +198,6 @@ function buildAlertClasses(alertOtherClasses?: string | string[]): string {
 function buildTogglerClasses(navbarTogglerClasses?: string | string[]): string {
   const base = [
     'navbar-toggler',
-    'collapsed',
     'hamburger',
     'hamburger--collapse',
   ];
@@ -230,8 +230,8 @@ function buildTogglerClasses(navbarTogglerClasses?: string | string[]): string {
  * - Optional search form
  * - Additional content slot below the main navbar row
  *
- * Bootstrap JS handles the `data-bs-toggle="collapse"` behaviour at runtime;
- * this component only supplies `data-bs-*` attributes.
+ * The navbar collapse is managed via React Bootstrap's `Collapse` component
+ * and local `useState` — no Bootstrap JS bundle required.
  */
 export function Header({
   navbarBreakpoint = 'lg',
@@ -251,9 +251,14 @@ export function Header({
   showSearch = false,
   additionalContent,
 }: HeaderProps) {
+  const [navOpen, setNavOpen] = useState(false);
+
   const headerClasses = buildHeaderClasses(navbarBreakpoint, otherClasses);
   const alertClasses = buildAlertClasses(alertOtherClasses);
-  const togglerClasses = buildTogglerClasses(navbarTogglerClasses);
+  const togglerClasses = [
+    buildTogglerClasses(navbarTogglerClasses),
+    !navOpen ? 'collapsed' : null,
+  ].filter(Boolean).join(' ');
 
   const headerStyle: React.CSSProperties | undefined = backgroundImage
     ? { backgroundImage: `url(${backgroundImage})` }
@@ -313,10 +318,9 @@ export function Header({
                   type="button"
                   id="navToggle"
                   className={togglerClasses}
-                  data-bs-toggle="collapse"
-                  data-bs-target="#siteNav"
+                  onClick={() => setNavOpen(o => !o)}
                   aria-controls="siteNav"
-                  aria-expanded="false"
+                  aria-expanded={navOpen}
                   aria-label="Toggle navigation"
                 >
                   <span className="hamburger-box">
@@ -333,83 +337,85 @@ export function Header({
 
                 <div className="site-header--row">
                   {/* Collapsible nav panel */}
-                  <div className="collapse navbar-collapse" id="siteNav">
-                    <div className="site-header--navbar-wrapper">
-                      <div className="site-header--row">
+                  <Collapse in={navOpen}>
+                    <div className="navbar-collapse" id="siteNav">
+                      <div className="site-header--navbar-wrapper">
+                        <div className="site-header--row">
 
-                        {/* Secondary nav + social ------------------------ */}
-                        <div className="site-header--secondary-nav">
-                          {secondaryNav && (
-                            <Nav
-                              navbarBreakpoint={navbarBreakpoint}
-                              {...secondaryNav}
-                            />
-                          )}
-                          <div className="site-header--social-nav">
-                            {socialNavContent}
-                          </div>
-                        </div>
-
-                        {/* Primary nav + CTA ----------------------------- */}
-                        <div className="site-header--primary-nav">
-                          {primaryNav && (
-                            <Nav
-                              navbarBreakpoint={navbarBreakpoint}
-                              {...primaryNav}
-                            />
-                          )}
-                          {primaryNavCta && (
-                            <div className="button-wrapper">
-                              <Button {...primaryNavCta} />
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Search ---------------------------------------- */}
-                        <div className="site-header--search">
-                          {showSearch && (
-                            <form
-                              name="header-search"
-                              id="headerSearch"
-                              className="header-search"
-                            >
-                              <legend className="visually-hidden">Search</legend>
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Search"
-                                aria-label="Search"
+                          {/* Secondary nav + social ------------------------ */}
+                          <div className="site-header--secondary-nav">
+                            {secondaryNav && (
+                              <Nav
+                                navbarBreakpoint={navbarBreakpoint}
+                                {...secondaryNav}
                               />
-                              <button
-                                type="submit"
-                                className="btn search-submit"
-                                aria-label="Submit search"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="20"
-                                  height="20"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  aria-hidden="true"
-                                  focusable="false"
-                                  className="icon"
-                                >
-                                  <circle cx="11" cy="11" r="8" />
-                                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                </svg>
-                              </button>
-                            </form>
-                          )}
-                        </div>
+                            )}
+                            <div className="site-header--social-nav">
+                              {socialNavContent}
+                            </div>
+                          </div>
 
+                          {/* Primary nav + CTA ----------------------------- */}
+                          <div className="site-header--primary-nav">
+                            {primaryNav && (
+                              <Nav
+                                navbarBreakpoint={navbarBreakpoint}
+                                {...primaryNav}
+                              />
+                            )}
+                            {primaryNavCta && (
+                              <div className="button-wrapper">
+                                <Button {...primaryNavCta} />
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Search ---------------------------------------- */}
+                          <div className="site-header--search">
+                            {showSearch && (
+                              <form
+                                name="header-search"
+                                id="headerSearch"
+                                className="header-search"
+                              >
+                                <legend className="visually-hidden">Search</legend>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  placeholder="Search"
+                                  aria-label="Search"
+                                />
+                                <button
+                                  type="submit"
+                                  className="btn search-submit"
+                                  aria-label="Submit search"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                    className="icon"
+                                  >
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                  </svg>
+                                </button>
+                              </form>
+                            )}
+                          </div>
+
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Collapse>
                 </div>
 
               </div>
