@@ -1,5 +1,6 @@
 'use client';
 import React, { useId } from 'react';
+import styles from './nav.module.scss';
 
 // ---------------------------------------------------------------------------
 // Types

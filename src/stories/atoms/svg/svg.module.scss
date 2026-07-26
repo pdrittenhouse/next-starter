@@ -1,2 +1,2 @@
-// Global SVG styles live in: src/scss/patterns/atoms/_svg.scss
-// No component-scoped styles are needed — all BEM classes are defined there.
+@use "variables" as *;
+@use "printing/01-atoms/svg";

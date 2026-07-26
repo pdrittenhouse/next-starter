@@ -1,2 +1,2 @@
-// Global modal styles live in src/scss/patterns/molecules/_modal.scss
-// No CSS Module classes are needed for this molecule.
+@use "variables" as *;
+@use "printing/02-molecules/modal";

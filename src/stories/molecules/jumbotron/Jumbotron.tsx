@@ -3,6 +3,7 @@ import { Image } from '@/stories/atoms/image/Image';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
+import styles from './jumbotron.module.scss';
 
 /**
  * Props for the Jumbotron molecule — mirrors the Twig pattern at

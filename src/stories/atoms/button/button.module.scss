@@ -1,5 +1,5 @@
-// Button atom styles — local (CSS Module) classes only.
-// Global styles are in src/scss/global/_button.scss.
+@use "variables" as *;
+@use "printing/01-atoms/button";
 
 // Block button utility (deprecated Bootstrap 4 compat)
 .btnBlock {

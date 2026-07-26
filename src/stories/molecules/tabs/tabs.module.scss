@@ -1,20 +1,2 @@
-// Tabs molecule — CSS Module
-//
-// Global tabs styles live in:
-//   src/scss/patterns/molecules/_tabs.scss
-//
-// That file is compiled into the theme's global stylesheet via webpack/sass-loader.
-// It covers all Bootstrap and jQuery responsive-tabs class names:
-//   .tabs-wrapper, .nav, .nav-tabs, .nav-pills, .nav-fill, .nav-justified,
-//   .tab-content, .tab-pane, .tabs, .tabs__tab, .tabs__tab-link,
-//   .tabs__content-wrapper, .tabs__content, and vertical/jquery modifiers.
-//
-// Add module-scoped overrides here only when you need to target a specific
-// instance of Tabs without affecting the global class cascade.
-
-// Example — override nav-link active indicator color for a story-level variant:
-// .brandedTabs {
-//   :global(.nav-tabs .nav-link.active) {
-//     border-bottom-color: var(--bs-primary);
-//   }
-// }
+@use "variables" as *;
+@use "printing/02-molecules/tabs";

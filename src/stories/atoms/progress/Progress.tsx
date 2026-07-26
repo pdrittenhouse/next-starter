@@ -1,3 +1,5 @@
+import styles from './progress.module.scss';
+
 export interface ProgressBarConfig {
   /** Unique ID for the bar element. Provide one for correct accessibility linkage. */
   progressBarId?: string;

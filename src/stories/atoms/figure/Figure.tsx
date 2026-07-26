@@ -1,3 +1,5 @@
+import styles from './figure.module.scss';
+
 export type CaptionPosition = 'before' | 'after';
 
 export interface FigureProps {

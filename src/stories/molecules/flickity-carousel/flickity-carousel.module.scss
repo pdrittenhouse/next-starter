@@ -1,2 +1,2 @@
-// FlickityCarousel atom styles — local (CSS Module) classes only.
-// Global styles are in src/scss/patterns/molecules/_flickity-carousel.scss.
+@use "variables" as *;
+@use "printing/02-molecules/flickity-carousel";

@@ -1,6 +1,7 @@
 import React, { useId } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
+import styles from './dropdown.module.scss';
 
 export type DropdownDirection = 'up' | 'down' | 'left' | 'right';
 export type DropdownAutoClose = 'true' | 'false' | 'inside' | 'outside';

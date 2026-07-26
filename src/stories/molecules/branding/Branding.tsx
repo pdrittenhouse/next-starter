@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image } from '@/stories/atoms/image/Image';
+import styles from './branding.module.scss';
 
 /**
  * Branding molecule — mirrors the Twig pattern at:

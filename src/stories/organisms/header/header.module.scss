@@ -1,9 +1,6 @@
-// Global header styles live in src/scss/patterns/organisms/_header.scss.
-// CSS Module classes here are for component-scoped overrides only.
+@use "variables" as *;
+@use "printing/03-organisms/header";
 
-// Storybook canvas: ensure the header fills the full preview width and sits
-// flush against the top edge (layout: 'fullscreen' removes Storybook padding,
-// but some canvas padding may still apply in older versions).
 :global(.sb-main-fullscreen),
 :global(.sb-main-padded) {
   .site-header {

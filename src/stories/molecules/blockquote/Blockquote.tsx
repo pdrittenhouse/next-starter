@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image } from '@/stories/atoms/image/Image';
 import type { ImageVariant } from '@/stories/atoms/image/Image';
+import styles from './blockquote.module.scss';
 
 /**
  * Citation image props — mirrors the citation_image object from the Twig pattern.

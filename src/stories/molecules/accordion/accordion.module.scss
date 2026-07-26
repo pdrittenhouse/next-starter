@@ -1,18 +1,2 @@
-// Accordion molecule — CSS Module
-//
-// Global accordion styles live in:
-//   src/scss/patterns/molecules/_accordion.scss
-//
-// That file is compiled into the theme's global stylesheet via webpack/sass-loader
-// and applies Bootstrap's `.accordion`, `.accordion-item`, `.accordion-header`,
-// `.accordion-button`, `.accordion-collapse`, and `.accordion-body` classes.
-//
-// Add module-scoped overrides here only when you need to target a specific
-// instance of Accordion without affecting the global class cascade.
-
-// Example — override button border-radius for a story-level variant:
-// .roundedButton {
-//   :global(.accordion-button) {
-//     border-radius: var(--bs-border-radius);
-//   }
-// }
+@use "variables" as *;
+@use "printing/02-molecules/accordion";

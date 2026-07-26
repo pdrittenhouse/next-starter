@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './video.module.scss';
 
 export type VideoFormat = 'youtube' | 'vimeo' | 'iframe';
 export type VideoPreload = 'none' | 'auto' | 'meta';

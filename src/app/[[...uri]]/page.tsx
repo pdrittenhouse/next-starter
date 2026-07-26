@@ -3,7 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { draftMode } from 'next/headers';
 import { print } from 'graphql';
 import type { Metadata } from 'next';
-import { fetchGraphQL } from '@/lib/wp/client';
+import { fetchGraphQL, fetchWpRest } from '@/lib/wp/client';
 import {
   GET_NODE_BY_URI,
   GET_PREVIEW_POST,
@@ -12,7 +12,6 @@ import {
   GET_ALL_PAGE_URIS,
   GET_READING_SETTINGS,
   GET_FRONT_PAGE_BY_ID,
-  GET_TEMPLATE_PATTERNS,
 } from '@/lib/wp/queries';
 import type { TimberlandPatternManifest } from '@/lib/wp/types/template-manifest';
 import { checkRedirects } from '@/lib/wp/utils';
@@ -25,6 +24,7 @@ import { AuthorTemplate } from '@/stories/templates/author';
 import { SearchTemplate } from '@/stories/templates/search';
 import { DateArchiveTemplate } from '@/stories/templates/date-archive';
 import { TemplateRenderer } from '@/stories/templates/partials/template-renderer';
+import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 
 interface PageProps {
   params: Promise<{ uri?: string[] }>;
@@ -85,16 +85,15 @@ const TEMPLATE_MANIFEST_KEYS: Record<string, string> = {
 
 /**
  * Fetch the template patterns manifest (version, patterns, per-template trees).
- * Cached per render via React cache() — shared across getTemplatePatterns calls
- * in the same render tree without a second GraphQL round-trip.
+ * Uses the WP REST endpoint instead of GraphQL to avoid the depth limit imposed
+ * by manually nested `children` fields in a GraphQL query.
+ * Cached per render via React cache() — no duplicate fetches within one render tree.
  */
 const getTemplatePatterns = cache(async (): Promise<TimberlandPatternManifest | null> => {
   try {
-    const { data } = await fetchGraphQL<{ templatePatterns: TimberlandPatternManifest }>(
-      print(GET_TEMPLATE_PATTERNS),
-    );
-    return data?.templatePatterns ?? null;
-  } catch {
+    return await fetchWpRest<TimberlandPatternManifest>('/timberland/v1/template-patterns');
+  } catch (err) {
+    console.error('[template-patterns] REST fetch failed:', err);
     return null;
   }
 });
@@ -256,11 +255,17 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
   const tree = manifestEntry?.tree ?? null;
 
   // When a manifest tree is available, TemplateRenderer handles the layout.
-  // It renders registered PATTERN_MAP components and places BlockRenderer
-  // at the `content` slot. Unregistered patterns are silently skipped until
-  // headless components are built for them.
-  if (tree?.length && node.editorBlocks) {
-    return <TemplateRenderer tree={tree} editorBlocks={node.editorBlocks} />;
+  // It renders registered PATTERN_MAP components and places BlockRenderer at
+  // the `content` slot. Classic post_content is passed as a fallback so pages
+  // that haven't migrated to the block editor still render their content.
+  if (tree?.length) {
+    return (
+      <TemplateRenderer
+        tree={tree}
+        editorBlocks={buildBlockTree(node.editorBlocks ?? [])}
+        content={node.content ?? undefined}
+      />
+    );
   }
 
   switch (template) {

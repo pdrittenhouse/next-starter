@@ -1,4 +1,5 @@
 import React, { useId } from 'react';
+import styles from './flickity-carousel.module.scss';
 
 export interface FlickityCarouselProps {
   /** Slides to render — each item becomes a `.carousel-cell` div. */

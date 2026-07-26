@@ -1,6 +1,2 @@
-// Global social-nav styles live in src/scss/patterns/organisms/_social-nav.scss.
-// That file is wired into the global SCSS bundle via:
-//   src/scss/printing/03-organisms/_all.scss → social-nav
-//
-// CSS Module classes here are for component-scoped overrides or Storybook-specific
-// isolation only. Add local class names below if needed.
+@use "variables" as *;
+@use "printing/03-organisms/social-nav";

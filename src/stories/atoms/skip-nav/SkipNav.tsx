@@ -1,3 +1,5 @@
+import styles from './skip-nav.module.scss';
+
 export interface SkipNavProps {
   /** Text for the skip nav link — maps to `text` in the Twig pattern. */
   text?: string;

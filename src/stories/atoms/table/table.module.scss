@@ -1,2 +1,2 @@
-// Global table styles live at src/scss/patterns/atoms/_table.scss.
-// No component-scoped overrides are needed for this atom.
+@use "variables" as *;
+@use "printing/01-atoms/table";

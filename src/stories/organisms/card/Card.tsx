@@ -5,6 +5,7 @@ import { Image } from '@/stories/atoms/image/Image';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import { List } from '@/stories/molecules/list/List';
 import type { ListProps } from '@/stories/molecules/list/List';
+import styles from './card.module.scss';
 
 // ─── Type exports ─────────────────────────────────────────────────────────────
 

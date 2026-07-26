@@ -3,6 +3,7 @@ import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_ADJACENT_POSTS } from '@/lib/wp/queries';
 import type { EditorBlock } from '@/types/blocks';
+import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { PageHeader } from './partials/page-header';
 import { Comments } from './partials/comments';
 import { BlockRenderer } from './partials/block-renderer';
@@ -99,7 +100,7 @@ export async function SingleTemplate({ node }: SingleTemplateProps) {
                 <div className="article-content--column">
                   <div className="article-body">
                     {node.editorBlocks?.length
-                      ? <BlockRenderer blocks={node.editorBlocks} />
+                      ? <BlockRenderer blocks={buildBlockTree(node.editorBlocks)} />
                       : <div dangerouslySetInnerHTML={{ __html: node.content ?? '' }} />
                     }
                   </div>

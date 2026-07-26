@@ -1,4 +1,5 @@
 import React, { useId } from 'react';
+import styles from './slick-carousel.module.scss';
 
 export interface SlickResponsiveBreakpoint {
   breakpoint: number;

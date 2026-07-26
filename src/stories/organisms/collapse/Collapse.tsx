@@ -2,6 +2,7 @@ import React, { useId } from 'react';
 import { ButtonGroup } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonGroupItem, WrapperDisplay } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
+import styles from './collapse.module.scss';
 
 /**
  * A single collapse panel item.

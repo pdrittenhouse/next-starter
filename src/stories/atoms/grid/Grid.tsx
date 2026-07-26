@@ -1,3 +1,5 @@
+import styles from './grid.module.scss';
+
 export type ContainerBreakpoint = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
 export interface GridProps {

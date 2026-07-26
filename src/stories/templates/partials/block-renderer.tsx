@@ -7,24 +7,27 @@ interface BlockRendererProps {
   blocks: EditorBlock[];
 }
 
-// Renders top-level blocks only — inner blocks are included in each parent's
-// renderedHtml, so rendering them separately would duplicate content.
-// When a headless component exists in BLOCK_MAP, it renders instead of the
-// raw HTML; otherwise renderedHtml is injected directly (same as node.content).
+// Renders a block tree built by buildBlockTree().
+// For registered BLOCK_MAP components, inner blocks are rendered recursively
+// and passed as children — container blocks render {children} instead of
+// dangerouslySetInnerHTML. Unregistered blocks fall back to renderedHtml, which
+// has WP-rendered inner content already baked in (no headless substitution).
 export function BlockRenderer({ blocks }: BlockRendererProps) {
-  const topLevel = blocks.filter(b => !b.parentClientId);
-
   return (
     <>
-      {topLevel.map(block => {
+      {blocks.map(block => {
         const Component = BLOCK_MAP[block.name];
+        const innerBlocks: EditorBlock[] = block.innerBlocks ?? [];
+
         if (Component) {
-          // Cast to any: TypeScript doesn't yet model async server components
-          // as valid JSX element types, but Next.js App Router supports them.
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const Comp = Component as any;
-          return <Comp key={block.clientId} block={block} />;
+          const children = innerBlocks.length > 0
+            ? <BlockRenderer blocks={innerBlocks} />
+            : undefined;
+          return <Comp key={block.clientId} block={block}>{children}</Comp>;
         }
+
         return (
           <div
             key={block.clientId}

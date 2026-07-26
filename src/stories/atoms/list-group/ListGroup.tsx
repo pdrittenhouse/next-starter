@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './list-group.module.scss';
 
 export type ListGroupElement = 'ul' | 'ol' | 'div';
 export type ListGroupItemElement = 'li' | 'a' | 'button' | 'div' | 'label';

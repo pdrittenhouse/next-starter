@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './list.module.scss';
 
 /**
  * Font Awesome class detection — mirrors the Twig pattern's regex check.

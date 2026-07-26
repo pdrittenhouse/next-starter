@@ -1,1 +1,2 @@
-// Global figure styles live at src/scss/patterns/atoms/_figure.scss
+@use "variables" as *;
+@use "printing/01-atoms/figure";

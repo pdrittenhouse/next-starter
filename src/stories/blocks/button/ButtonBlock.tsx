@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonToggle, ButtonVariant } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
@@ -66,6 +67,8 @@ interface ButtonBlockData {
 
 interface ButtonBlockProps {
   block: EditorBlock;
+  /** Inner blocks rendered by BlockRenderer — acf/button-text supplies the label. */
+  children?: ReactNode;
 }
 
 /**
@@ -78,7 +81,7 @@ interface ButtonBlockProps {
  *
  * Registered in BLOCK_MAP as 'acf/button'.
  */
-export async function ButtonBlock({ block }: ButtonBlockProps) {
+export async function ButtonBlock({ block, children }: ButtonBlockProps) {
   const attrs = parseBlockAttributes(block) as { data?: ButtonBlockData; className?: string };
   const data: ButtonBlockData = attrs?.data ?? {};
 
@@ -131,8 +134,8 @@ export async function ButtonBlock({ block }: ButtonBlockProps) {
     toggleStr === 'popover' ? (data.context?.content ?? undefined) : undefined;
   const placement = data.context?.placement as Placement | undefined;
 
-  // Guard: nothing meaningful to render (no text, no close variant, no input value)
-  if (!label && !closeButton && !data.value) {
+  // Guard: nothing meaningful to render (no text, no close variant, no input value, no inner blocks)
+  if (!label && !closeButton && !data.value && !children) {
     return null;
   }
 
@@ -163,7 +166,9 @@ export async function ButtonBlock({ block }: ButtonBlockProps) {
         popoverTitle={popoverTitle}
         popoverContent={popoverContent}
         placement={placement}
-      />
+      >
+        {children}
+      </Button>
     </div>
   );
 }

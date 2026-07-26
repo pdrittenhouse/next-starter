@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
+import styles from './button-group.module.scss';
 
 /**
  * Wrapper display utility variants — maps to Bootstrap d-* classes.

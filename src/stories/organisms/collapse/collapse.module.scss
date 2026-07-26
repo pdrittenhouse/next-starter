@@ -1,22 +1,2 @@
-// Collapse organism — CSS Module (local classes only).
-//
-// Global styles for this component live in:
-//   src/scss/patterns/organisms/_collapse.scss
-//
-// That file is compiled into the global stylesheet via webpack/Next.js
-// and targets the following BEM selectors produced by Collapse.tsx:
-//
-//   .collapse--container   outer wrapper div
-//   .collapse--controls    ButtonGroup wrapper modifier (wrapperClassName)
-//   .collapse--content     div wrapping all panel items
-//   .collapse--wrapper     per-panel wrapper div
-//   .collapse--inner       innermost content wrapper inside each panel
-//
-// Bootstrap utilities applied inline by the component:
-//   .collapse             Bootstrap collapse hide/show behaviour
-//   .p-3                  default panel padding
-//   .bg-{color}           optional panel background (backgroundColor prop)
-//   .text-{color}         optional panel text color (textColor prop)
-//
-// Add local (scoped) overrides here only when a module-scoped class is
-// needed — e.g. a layout variant specific to a single consumer page.
+@use "variables" as *;
+@use "printing/03-organisms/collapse";

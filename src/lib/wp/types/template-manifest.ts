@@ -5,6 +5,12 @@ export interface TimberlandTreeNode {
   source?: string | null;
   level?: string | null;
   file?: string | null;
+  /** Outermost HTML element tag extracted from the pattern's Twig file, e.g. "header". */
+  element?: string | null;
+  /** Classes from the pattern's rendered outer element, e.g. "site-header navbar". */
+  className?: string | null;
+  /** ID from the pattern's rendered outer element, e.g. "siteHeader". */
+  id?: string | null;
   children?: TimberlandTreeNode[] | null;
 }
 

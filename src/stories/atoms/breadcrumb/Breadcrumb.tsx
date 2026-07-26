@@ -1,3 +1,5 @@
+import styles from './breadcrumb.module.scss';
+
 export interface BreadcrumbItem {
   text: string;
   url: string;

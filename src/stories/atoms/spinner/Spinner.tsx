@@ -1,3 +1,5 @@
+import styles from './spinner.module.scss';
+
 export type SpinnerStyle = 'border' | 'grow';
 
 export interface SpinnerProps {

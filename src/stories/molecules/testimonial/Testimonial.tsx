@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image } from '@/stories/atoms/image/Image';
 import type { ImageVariant } from '@/stories/atoms/image/Image';
+import styles from './testimonial.module.scss';
 
 /**
  * Testimonial image props — mirrors the image object from the Twig pattern.

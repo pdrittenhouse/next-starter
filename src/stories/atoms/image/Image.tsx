@@ -1,4 +1,5 @@
 import NextImage from 'next/image';
+import styles from './image.module.scss';
 
 /**
  * Image rendering variants — mirrors the Twig pattern's `variant` parameter.

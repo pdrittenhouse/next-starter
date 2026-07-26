@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './social-nav.module.scss';
 
 // ─── Icon-library detection helpers ──────────────────────────────────────────
 

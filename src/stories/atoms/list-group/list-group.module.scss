@@ -1,2 +1,2 @@
-// Global list-group styles live in src/scss/patterns/atoms/_list-group.scss.
-// No component-scoped overrides are needed for this atom.
+@use "variables" as *;
+@use "printing/01-atoms/list-group";

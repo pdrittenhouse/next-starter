@@ -1,11 +1,2 @@
-// Global SCSS for this organism lives at src/scss/patterns/organisms/_card.scss
-//
-// That file defines all visual styles for:
-//   .card, .card-wrapper, .front, .back (flip-card faces),
-//   .card-content-wrapper-outer, .card-content-wrapper-inner,
-//   .card-header, .card-lead, .card-icon, .card-label,
-//   .card-image, .card-content, .card-intro, .card-body,
-//   .card-text, .card-link, .card-title, .card-subtitle,
-//   .card-footer, .card-footer-content, .card-back-content,
-//   .card--linked, .card--horizontal, .flip-card,
-//   .has-image-overlay, .has-overlay-text, .has-bg-img, .no-border
+@use "variables" as *;
+@use "printing/03-organisms/card";

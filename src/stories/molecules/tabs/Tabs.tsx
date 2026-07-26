@@ -2,6 +2,7 @@
 
 import React, { useId } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
+import styles from './tabs.module.scss';
 
 /**
  * A single tab item — maps to the per-item variables in `_tabs.tpl.twig`:

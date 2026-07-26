@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
+import styles from './traveling-cta.module.scss';
 
 /**
  * A single CTA button entry in the traveling CTA bar.

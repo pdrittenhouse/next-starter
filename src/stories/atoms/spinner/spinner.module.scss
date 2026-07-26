@@ -1,2 +1,2 @@
-// Global spinner styles live in src/scss/patterns/atoms/_spinner.scss
-// No component-scoped overrides needed.
+@use "variables" as *;
+@use "printing/01-atoms/spinner";

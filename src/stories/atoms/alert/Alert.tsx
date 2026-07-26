@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './alert.module.scss';
 
 export type AlertStatus =
   | 'info'

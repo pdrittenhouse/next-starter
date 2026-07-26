@@ -1,28 +1,6 @@
-// Toast organism — CSS Module (local classes only).
-//
-// Global styles for this component live in:
-//   src/scss/patterns/organisms/_toast.scss
-//
-// That file is compiled into the global stylesheet via webpack/Next.js
-// and targets the following BEM selectors produced by Toast.tsx:
-//
-//   .toast-wrapper          outer wrapper div
-//   .toast--controls        trigger button group container
-//   .toast-container        Bootstrap toast-container (position-fixed)
-//   .toast                  individual Bootstrap toast element
-//   .toast-header           header row (icon, image, title, meta, close)
-//   .toast--image           image thumbnail inside the header
-//   .toast-icon             Bootstrap Icon <i> element inside the header
-//   .toast--title           <strong> title inside the header
-//   .toast--meta            <small> meta/timestamp inside the header
-//   .toast-body             body content area
-//
-// Add local (scoped) overrides here only when a module-scoped class is
-// needed — e.g. a layout adjustment specific to a single consumer.
+@use "variables" as *;
+@use "printing/03-organisms/toast";
 
 .toastWrapper {
-  // Ensures the wrapper does not clip the fixed-position container.
-  // The toast-container is position-fixed so it escapes any overflow:hidden
-  // ancestor — this wrapper is intentionally overflow-visible.
   position: relative;
 }

@@ -6,6 +6,7 @@ import type { ImageProps } from '@/stories/atoms/image/Image';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import type { ComponentType } from 'react';
+import styles from './carousel.module.scss';
 
 /**
  * Local type alias extending ButtonProps with carousel-specific data attributes.

@@ -3,6 +3,7 @@
 import React, { useId } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonVariant } from '@/stories/atoms/button/Button';
+import styles from './modal.module.scss';
 
 export type ModalSize = 'sm' | 'lg';
 export type ModalFullscreenBreakpoint = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';

@@ -3,6 +3,7 @@ import { Video } from '@/stories/atoms/video/Video';
 import { Button } from '@/stories/atoms/button/Button';
 import type { VideoProps } from '@/stories/atoms/video/Video';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
+import styles from './video-promo.module.scss';
 
 // ── Inline SVG helpers ────────────────────────────────────────────────────────
 

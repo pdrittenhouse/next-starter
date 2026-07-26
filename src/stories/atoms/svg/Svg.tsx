@@ -1,3 +1,5 @@
+import styles from './svg.module.scss';
+
 export type SvgType = 'inline' | 'object' | 'picture';
 
 export interface SvgProps {

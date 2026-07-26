@@ -1,8 +1,2 @@
-// Blockquote molecule — scoped CSS module
-//
-// Global styles for this molecule live at:
-//   src/scss/patterns/molecules/_blockquote.scss
-//
-// Add module-scoped overrides here only when a class needs to be
-// referenced directly in Blockquote.tsx via styles.*. For structural
-// and theme styles, edit the global SCSS file above.
+@use "variables" as *;
+@use "printing/02-molecules/blockquote";

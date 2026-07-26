@@ -1,3 +1,5 @@
+import styles from './form.module.scss';
+
 export interface FormProps {
   /** Specifies the name of the form. */
   name?: string;

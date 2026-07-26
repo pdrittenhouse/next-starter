@@ -1,3 +1,2 @@
-// Jumbotron molecule styles — local (CSS Module) classes only.
-// Global component styles (BEM classes, layout, breakpoints) are in:
-//   src/scss/patterns/molecules/_jumbotron.scss
+@use "variables" as *;
+@use "printing/02-molecules/jumbotron";

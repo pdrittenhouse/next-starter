@@ -1,1 +1,2 @@
-// Global SCSS for this atom lives at src/scss/patterns/atoms/_badge.scss
+@use "variables" as *;
+@use "printing/01-atoms/badge";

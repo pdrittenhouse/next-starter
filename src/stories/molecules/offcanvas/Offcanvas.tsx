@@ -2,6 +2,7 @@
 
 import React, { useId } from 'react';
 import { Button, type ButtonProps } from '@/stories/atoms/button/Button';
+import styles from './offcanvas.module.scss';
 
 // ---------------------------------------------------------------------------
 // Type extensions
