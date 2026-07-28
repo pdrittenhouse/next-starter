@@ -62,7 +62,6 @@ export const GET_HEADER_OPTIONS = gql`
         hideHeaderContent
         headerAlertMessage
         navbarBreakpoint
-        hamburgerAnimation
         headerCta {
           headerCta {
             link { title url target }
@@ -83,8 +82,34 @@ export const GET_HEADER_OPTIONS = gql`
         }
       }
     }
-    headerNavTop: widgetArea(slug: "header_alerts_widget_area")
-    headerAdditional: widgetArea(slug: "header_widget_area")
+  }
+`;
+
+export const GET_HEADER_LAYOUT_OPTIONS = gql`
+  query GetHeaderLayoutOptions {
+    themeOptions {
+      headerLayoutOptions {
+        showMobileCtaButton
+        hidePrimaryNav
+        hideSecondaryNav
+        hideSocialNav
+        hideHeaderCta
+        hideHeaderSearch
+        fullWidthHeader
+        centerHeaderContent
+        desktopLogoRight
+        alignMobileCtaButton
+        fullHeightMobileCtaButton
+        navToggleRelativeToContainer
+        centerNavToggle
+        inlineMobileNavToggle
+        reverseMobileButtons
+        mobileNavMenuPosition
+        alignNavToContent
+        fullScreenNav
+        centerMobileNavContent
+      }
+    }
   }
 `;
 

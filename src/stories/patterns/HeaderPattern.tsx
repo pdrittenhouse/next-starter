@@ -7,7 +7,7 @@ import type { SocialNavItem } from '@/stories/organisms/social-nav/SocialNav';
 import { menuItemsToNavItems } from '@/lib/wp/utils/menuToNavItems';
 import { acfButtonToProps } from '@/lib/wp/utils/acfButtonToProps';
 import GET_CUSTOMIZER_SETTINGS from '@/lib/wp/queries/customizer-settings';
-import { GET_HEADER_OPTIONS } from '@/lib/wp/queries/acf-options';
+import { GET_HEADER_OPTIONS, GET_HEADER_LAYOUT_OPTIONS } from '@/lib/wp/queries/acf-options';
 import { GET_MENU_BY_LOCATION } from '@/lib/wp/queries/menus';
 import type { NavbarBreakpoint } from '@/stories/organisms/header/Header';
 
@@ -23,16 +23,17 @@ const getCustomizerSettings = cache(async () => {
 });
 
 const getHeaderOptions = cache(async () => {
-  const { data } = await fetchGraphQL<{
-    themeHeaderOptions: any;
-    headerNavTop: string | null;
-    headerAdditional: string | null;
-  }>(print(GET_HEADER_OPTIONS)).catch(() => ({ data: null }));
-  return {
-    options: (data as any)?.themeHeaderOptions?.settingsHeaderOptions ?? null,
-    headerNavTop: (data as any)?.headerNavTop ?? null,
-    headerAdditional: (data as any)?.headerAdditional ?? null,
-  };
+  const { data } = await fetchGraphQL<{ themeHeaderOptions: any }>(
+    print(GET_HEADER_OPTIONS),
+  ).catch(() => ({ data: null }));
+  return (data as any)?.themeHeaderOptions?.settingsHeaderOptions ?? null;
+});
+
+const getHeaderLayoutOptions = cache(async () => {
+  const { data } = await fetchGraphQL<{ themeOptions: any }>(
+    print(GET_HEADER_LAYOUT_OPTIONS),
+  ).catch(() => ({ data: null }));
+  return (data as any)?.themeOptions?.headerLayoutOptions ?? null;
 });
 
 const getMenuByLocation = cache(async (location: string) => {
@@ -44,9 +45,10 @@ const getMenuByLocation = cache(async (location: string) => {
 });
 
 export async function HeaderPattern() {
-  const [customizer, { options: headerOptions, headerNavTop, headerAdditional }, primaryMenu, secondaryMenu, socialMenu] = await Promise.all([
+  const [customizer, headerOptions, layout, primaryMenu, secondaryMenu, socialMenu] = await Promise.all([
     getCustomizerSettings(),
     getHeaderOptions(),
+    getHeaderLayoutOptions(),
     getMenuByLocation('PRIMARY'),
     getMenuByLocation('SECONDARY'),
     getMenuByLocation('SOCIAL'),
@@ -80,38 +82,38 @@ export async function HeaderPattern() {
     : undefined;
 
   // ── Layout modifier classes ───────────────────────────────────────────
-  const layout = customizer?.headerLayoutOptions ?? {};
-  const menuPos: string = layout.mobileNavMenuPosition ?? '';
+  const layoutOpts = layout ?? {};
+  const menuPos: string = layoutOpts.mobileNavMenuPosition ?? '';
 
   const layoutClasses = [
-    layout.fullWidthHeader === 'mobile'  ? 'full-width-mobile'        : null,
-    layout.fullWidthHeader === 'desktop' ? 'full-width-desktop'       : null,
-    layout.fullWidthHeader === 'both'    ? 'full-width'               : null,
-    layout.centerHeaderContent           ? 'center-mobile'            : null,
-    layout.desktopLogoRight              ? 'logo-right'               : null,
-    layout.showMobileCtaButton           ? 'show-mobile-button'       : null,
-    layout.alignMobileCtaButton          ? 'align-mobile-button'      : null,
-    layout.fullHeightMobileCtaButton     ? 'full-height-mobile-cta'   : null,
-    layout.navToggleRelativeToContainer  ? 'relative-to-container'    : null,
-    layout.centerNavToggle               ? 'center-nav-toggle'        : null,
-    layout.inlineMobileNavToggle         ? 'inline-toggle'            : null,
-    layout.reverseMobileButtons          ? 'reverse-mobile-buttons'   : null,
-    menuPos === 'top'                    ? 'mobile-nav-top'           : null,
-    menuPos === 'bottom'                 ? 'mobile-nav-bottom'        : null,
-    menuPos === 'left'                   ? 'mobile-nav-left'          : null,
-    menuPos === 'right'                  ? 'mobile-nav-right'         : null,
-    menuPos === 'overlay'                ? 'mobile-nav-overlay'       : null,
-    layout.alignNavToContent             ? 'align-to-content'         : null,
-    layout.fullScreenNav                 ? 'full-screen-mobile-nav'   : null,
-    layout.centerMobileNavContent        ? 'center-mobile-nav-content': null,
+    layoutOpts.fullWidthHeader === 'mobile'  ? 'full-width-mobile'        : null,
+    layoutOpts.fullWidthHeader === 'desktop' ? 'full-width-desktop'       : null,
+    layoutOpts.fullWidthHeader === 'both'    ? 'full-width'               : null,
+    layoutOpts.centerHeaderContent           ? 'center-mobile'            : null,
+    layoutOpts.desktopLogoRight              ? 'logo-right'               : null,
+    layoutOpts.showMobileCtaButton           ? 'show-mobile-button'       : null,
+    layoutOpts.alignMobileCtaButton          ? 'align-mobile-button'      : null,
+    layoutOpts.fullHeightMobileCtaButton     ? 'full-height-mobile-cta'   : null,
+    layoutOpts.navToggleRelativeToContainer  ? 'relative-to-container'    : null,
+    layoutOpts.centerNavToggle               ? 'center-nav-toggle'        : null,
+    layoutOpts.inlineMobileNavToggle         ? 'inline-toggle'            : null,
+    layoutOpts.reverseMobileButtons          ? 'reverse-mobile-buttons'   : null,
+    menuPos === 'top'                        ? 'mobile-nav-top'           : null,
+    menuPos === 'bottom'                     ? 'mobile-nav-bottom'        : null,
+    menuPos === 'left'                       ? 'mobile-nav-left'          : null,
+    menuPos === 'right'                      ? 'mobile-nav-right'         : null,
+    menuPos === 'overlay'                    ? 'mobile-nav-overlay'       : null,
+    layoutOpts.alignNavToContent             ? 'align-to-content'         : null,
+    layoutOpts.fullScreenNav                 ? 'full-screen-mobile-nav'   : null,
+    layoutOpts.centerMobileNavContent        ? 'center-mobile-nav-content': null,
   ].filter(Boolean) as string[];
 
   // ── Visibility toggles ───────────────────────────────────────────────
-  const hidePrimaryBoth   = layout.hidePrimaryNav   === 'both';
-  const hideSecondaryBoth = layout.hideSecondaryNav === 'both';
-  const hideSocialBoth    = layout.hideSocialNav    === 'both';
-  const hideCtaBoth       = layout.hideHeaderCta    === 'both';
-  const hideSearchBoth    = layout.hideHeaderSearch === 'both';
+  const hidePrimaryBoth   = layoutOpts.hidePrimaryNav   === 'both';
+  const hideSecondaryBoth = layoutOpts.hideSecondaryNav === 'both';
+  const hideSocialBoth    = layoutOpts.hideSocialNav    === 'both';
+  const hideCtaBoth       = layoutOpts.hideHeaderCta    === 'both';
+  const hideSearchBoth    = layoutOpts.hideHeaderSearch === 'both';
 
   // Hide hamburger toggler when every nav element is hidden on both viewports
   const hideToggler =
@@ -146,17 +148,8 @@ export async function HeaderPattern() {
       }))
     : [];
 
-  // ── Slots ────────────────────────────────────────────────────────────
   const alertContent = headerOptions?.headerAlertMessage
     ? <span dangerouslySetInnerHTML={{ __html: headerOptions.headerAlertMessage }} />
-    : undefined;
-
-  const navTopContent = headerNavTop
-    ? <div dangerouslySetInnerHTML={{ __html: headerNavTop }} />
-    : undefined;
-
-  const additionalContent = headerAdditional
-    ? <div dangerouslySetInnerHTML={{ __html: headerAdditional }} />
     : undefined;
 
   return (
@@ -164,7 +157,6 @@ export async function HeaderPattern() {
       navbarBreakpoint={navbarBreakpoint}
       backgroundImage={customizer?.headerImage || undefined}
       otherClasses={layoutClasses.length ? layoutClasses : undefined}
-      hamburgerAnimation={headerOptions?.hamburgerAnimation || undefined}
       navbarTogglerClasses={hideToggler ? 'd-none' : undefined}
       brand={brand}
       primaryNav={!hidePrimaryBoth ? primaryNavItems : undefined}
@@ -178,8 +170,6 @@ export async function HeaderPattern() {
           : undefined
       }
       alertContent={alertContent}
-      navTopContent={navTopContent}
-      additionalContent={additionalContent}
     />
   );
 }
