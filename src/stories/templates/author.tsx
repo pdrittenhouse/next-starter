@@ -29,7 +29,8 @@ export async function AuthorTemplate({ slug, name }: AuthorTemplateProps) {
   const pageInfo = data?.posts?.pageInfo;
 
   return (
-    <section className="content-wrapper">
+    <main id="content" className="content-wrapper">
+      <div className="wrapper">
       <PageHeader title={name ?? slug} />
 
       <div className="post-listing">
@@ -64,6 +65,7 @@ export async function AuthorTemplate({ slug, name }: AuthorTemplateProps) {
           startCursor={pageInfo.startCursor}
         />
       )}
-    </section>
+      </div>
+    </main>
   );
 }

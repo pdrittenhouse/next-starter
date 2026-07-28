@@ -13,7 +13,7 @@ import {
   GET_READING_SETTINGS,
   GET_FRONT_PAGE_BY_ID,
 } from '@/lib/wp/queries';
-import type { TimberlandPatternManifest } from '@/lib/wp/types/template-manifest';
+import type { TimberlandPatternManifest, TimberlandTreeNode } from '@/lib/wp/types/template-manifest';
 import { checkRedirects } from '@/lib/wp/utils';
 import { SingleTemplate } from '@/stories/templates/single';
 import { PageTemplate } from '@/stories/templates/page';
@@ -66,7 +66,7 @@ const getNodeByUri = cache(async (uri: string) => {
     (e) => !e.message.includes('is a non-existent Type in the Schema'),
   );
   if (realErrors?.length) {
-    console.error('[routing] GraphQL errors for URI:', uri, realErrors);
+    console.error('[routing] GraphQL errors for URI:', uri, JSON.stringify(realErrors, null, 2));
   }
   return data?.nodeByUri ?? null;
 });
@@ -259,9 +259,54 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
   // the `content` slot. Classic post_content is passed as a fallback so pages
   // that haven't migrated to the block editor still render their content.
   if (tree?.length) {
+    // The manifest tree is flat: pre-main patterns (skip-nav, header) come before
+    // the named 'content' slot, and post-main patterns (footer, etc.) come after.
+    // We insert the <main> structural wrapper only around the content + sidebar
+    // slots so that header and footer render outside it — mirroring base.twig.
+    const contentIdx = tree.findIndex(n => n.type === 'slot' && n.name === 'content');
+    const sidebarIdx = tree.findIndex(n => n.type === 'slot' && n.name === 'sidebar');
+    const lastMainIdx = sidebarIdx !== -1 && sidebarIdx === contentIdx + 1
+      ? sidebarIdx
+      : contentIdx;
+
+    let structuredTree: TimberlandTreeNode[];
+    if (contentIdx !== -1) {
+      const preMain = tree.slice(0, contentIdx);
+      const postMain = tree.slice(lastMainIdx + 1);
+      const innerSlots = tree.slice(contentIdx, lastMainIdx + 1);
+
+      const mainChildren: TimberlandTreeNode[] = [
+        {
+          type: 'element',
+          element: 'div',
+          className: 'wrapper',
+          style: node.contentWrapperStyle ?? null,
+          // content slot always goes inside the wrapper div
+          children: innerSlots.filter(n => n.type === 'slot' && n.name === 'content'),
+        },
+        // sidebar slot is a sibling of the wrapper, still inside <main>
+        ...innerSlots.filter(n => n.type === 'slot' && n.name === 'sidebar'),
+      ];
+
+      structuredTree = [
+        ...preMain,
+        {
+          type: 'element',
+          element: 'main',
+          id: 'content',
+          className: node.mainClasses ?? 'content-wrapper',
+          children: mainChildren,
+        },
+        ...postMain,
+      ];
+    } else {
+      // No content slot found — fall back to wrapping the entire tree.
+      structuredTree = tree;
+    }
+
     return (
       <TemplateRenderer
-        tree={tree}
+        tree={structuredTree}
         editorBlocks={buildBlockTree(node.editorBlocks ?? [])}
         content={node.content ?? undefined}
       />

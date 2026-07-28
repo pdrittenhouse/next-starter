@@ -31,6 +31,31 @@ export const GET_CUSTOMIZER_SETTINGS = gql`
         backgroundAttachment
         customCss
         menuLocations
+        headerLayoutOptions {
+          showMobileCtaButton
+          hidePrimaryNav
+          hideSecondaryNav
+          hideSocialNav
+          hideHeaderCta
+          hideHeaderSearch
+          fullWidthHeader
+          centerHeaderContent
+          desktopLogoRight
+          alignMobileCtaButton
+          fullHeightMobileCtaButton
+          navToggleRelativeToContainer
+          centerNavToggle
+          inlineMobileNavToggle
+          reverseMobileButtons
+          mobileNavMenuPosition
+          alignNavToContent
+          fullScreenNav
+          centerMobileNavContent
+        }
+      }
+      generalSettings {
+        title
+        description
       }
     }
 `;

@@ -398,6 +398,8 @@ export const GET_FRONT_PAGE_BY_ID = gql`
         }
         pageSeoNoindex
       }
+      mainClasses
+      contentWrapperStyle
     }
   }
 `;

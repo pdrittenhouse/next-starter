@@ -3,84 +3,41 @@ import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonToggle, ButtonVariant } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import { acfBool } from '@/lib/wp/utils/parseAcfRepeater';
 import type { Placement } from 'react-bootstrap/types';
 
-/**
- * ACF field values for the button block, as they appear in attributesJSON.data.
- *
- * Fields mirror those set in button.twig's embed call — link, style, size,
- * toggle, id, contextual overlay, close button, icon flags, and layout helpers.
- * The `style` field maps to the Button atom's `variant`; 'custom' is skipped
- * (inline-style overrides from the Twig are not supported in the headless layer).
- */
 interface ButtonBlockData {
-  /** ACF link field — provides button text (title), href (url), and target. */
-  link?: {
-    title?: string;
-    url?: string;
-    target?: string;
-  } | null;
-  /** HTML element to render: button, anchor, or input. Maps to `as`. */
+  link?: { title?: string; url?: string; target?: string } | null;
   element?: 'button' | 'a' | 'input';
-  /** Color variant (Bootstrap variant name) or 'custom'. Maps to `variant`. */
+  /** Color variant (Bootstrap variant name) or 'custom'. Maps to Button `variant`. */
   style?: string;
-  /** Button size. */
   size?: 'sm' | 'lg';
-  /** Render as outline button. */
-  outline?: boolean;
-  /** Render as full-width block button. Maps to `block`. */
-  full_width?: boolean;
-  /**
-   * Toggle type — Bootstrap toggles ('button' | 'collapse' | 'dropdown' | 'modal' | 'tab')
-   * or contextual overlays ('tooltip' | 'popover').
-   */
+  outline?: unknown;
+  full_width?: unknown;
   toggle?: string;
-  /** Button ID fields — `id` for manual ID, `id_gen` for ACF-generated suffix. */
-  id?: {
-    id?: string;
-    id_gen?: string;
-  } | null;
-  /** Show button in active/pressed state. Also maps to `expanded`. */
-  active?: boolean;
-  /** Disable the button. */
-  disabled?: boolean;
-  /** Value attribute for input buttons. */
+  id?: { id?: string; id_gen?: string } | null;
+  active?: unknown;
+  disabled?: unknown;
   value?: string;
-  /** Close button variant: 'black' → CloseButton default, 'white' → CloseButton white. */
   close?: string;
-  /** Hide the label text visually. */
-  hide_label?: boolean;
-  /** ARIA label string (handled via wrapper when set). */
+  hide_label?: unknown;
   aria_label?: string;
-  /** Prevent text wrapping. */
-  nowrap?: boolean;
-  /** Contextual overlay data for tooltip/popover toggles. */
-  context?: {
-    title?: string;
-    content?: string;
-    placement?: string;
-    container?: string;
-  } | null;
-  /** Whether to render a dropdown variant (layout hint — no separate component needed). */
-  dropdown?: boolean;
+  nowrap?: unknown;
+  context?: { title?: string; content?: string; placement?: string; container?: string } | null;
+  dropdown?: unknown;
+  /** Palette or custom background color — generates `bg-{theme_color}` class. */
+  background_color?: { bg_color?: string; bg_theme_color?: string; bg_custom_color?: string } | null;
+  /** Palette or custom text color — generates `text-{theme_color}` class. */
+  text_color?: { color?: string; theme_color?: string; custom_color?: string } | null;
+  /** Display/alignment utility class (only applied when not full-width). */
+  display?: { display?: string | null } | null;
 }
 
 interface ButtonBlockProps {
   block: EditorBlock;
-  /** Inner blocks rendered by BlockRenderer — acf/button-text supplies the label. */
   children?: ReactNode;
 }
 
-/**
- * Button block — mirrors `src/templates/blocks/button/button.twig`.
- *
- * Maps ACF block data to the Button atom. The Twig block embeds the button
- * pattern; this component renders it directly. Close buttons, Bootstrap
- * toggles, and contextual overlays (tooltip/popover) are all supported.
- * Custom inline styles from the Twig 'custom' style path are not carried over.
- *
- * Registered in BLOCK_MAP as 'acf/button'.
- */
 export async function ButtonBlock({ block, children }: ButtonBlockProps) {
   const attrs = parseBlockAttributes(block) as { data?: ButtonBlockData; className?: string };
   const data: ButtonBlockData = attrs?.data ?? {};
@@ -89,83 +46,89 @@ export async function ButtonBlock({ block, children }: ButtonBlockProps) {
   const label = link?.title || undefined;
   const href = link?.url || undefined;
 
-  // Resolve close button variant — 'black' → true, 'white' → 'white', absent → undefined
+  // Resolve close button variant
   const closeButton: boolean | 'white' | undefined =
     data.close === 'white' ? 'white' : data.close === 'black' ? true : undefined;
 
-  // Resolve color variant — 'custom' style uses inline overrides in Twig (unsupported here);
-  // fall back to 'primary'. Skip variant entirely when rendering a close button.
-  const rawStyle = data.style && data.style !== 'custom' ? data.style : 'primary';
-  const variant: ButtonVariant | undefined = !closeButton
-    ? (rawStyle as ButtonVariant)
-    : undefined;
+  // Resolve color variant. Twig defaults to 'default' (not 'primary') when style is absent.
+  const rawStyle =
+    !closeButton && data.style && data.style !== 'custom' ? data.style : 'default';
+  const variant = rawStyle as ButtonVariant;
 
-  // Distinguish Bootstrap toggle types from contextual overlay keywords.
-  // 'tooltip' and 'popover' become overlay props on the Button atom, not data-bs-toggle.
+  // Distinguish Bootstrap toggle types from contextual overlay keywords
   const toggleStr = data.toggle ?? '';
   const isContextual = toggleStr === 'tooltip' || toggleStr === 'popover';
   const toggle: ButtonToggle | undefined =
     !isContextual && toggleStr ? (toggleStr as ButtonToggle) : undefined;
 
-  // When a toggle is active, the link URL doubles as the data-bs-target selector
-  // (mirrors: button_target: fields.toggle == true ? fields.link['url'] : fields.link['target'])
+  // When a toggle is active the link URL doubles as data-bs-target
   const resolvedTarget = toggle
-    ? (href ?? undefined)
-    : (link?.target ?? undefined);
+    ? (href || undefined)
+    : (link?.target || undefined);  // || treats empty string the same as absent
 
-  // aria-controls strips the leading '#' from the selector
-  const resolvedControls = toggle
-    ? (href?.replace(/^#/, '') ?? undefined)
-    : undefined;
+  const resolvedControls = toggle ? (href?.replace(/^#/, '') || undefined) : undefined;
 
-  // Resolve button ID from manual id or ACF-generated suffix
   const buttonId = data.id?.id
     ? data.id.id
     : data.id?.id_gen
       ? `button${data.id.id_gen}`
       : undefined;
 
-  // Contextual overlay props — only populated for the matching toggle keyword
   const tooltip =
-    toggleStr === 'tooltip' ? (data.context?.title ?? undefined) : undefined;
+    toggleStr === 'tooltip' ? (data.context?.title || undefined) : undefined;
   const popoverTitle =
-    toggleStr === 'popover' ? (data.context?.title ?? undefined) : undefined;
+    toggleStr === 'popover' ? (data.context?.title || undefined) : undefined;
   const popoverContent =
-    toggleStr === 'popover' ? (data.context?.content ?? undefined) : undefined;
+    toggleStr === 'popover' ? (data.context?.content || undefined) : undefined;
   const placement = data.context?.placement as Placement | undefined;
 
-  // Guard: nothing meaningful to render (no text, no close variant, no input value, no inner blocks)
-  if (!label && !closeButton && !data.value && !children) {
-    return null;
-  }
+  // button_classes from Twig: bg color, text color, display utility
+  const isClose = data.close === 'black' || data.close === 'white';
+  const bgClass =
+    !isClose && data.background_color?.bg_color === 'palette' && data.background_color.bg_theme_color
+      ? `bg-${data.background_color.bg_theme_color}`
+      : null;
+  const textClass =
+    !isClose && data.text_color?.color === 'palette' && data.text_color.theme_color
+      ? `text-${data.text_color.theme_color}`
+      : null;
+  const displayClass =
+    !acfBool(data.full_width) && data.display?.display ? data.display.display : null;
 
-  const blockClasses = ['button-block', attrs.className].filter(Boolean).join(' ');
+  // button_other_classes = block['className'] from WP editor "Additional CSS class(es)"
+  const buttonClassName = [bgClass, textClass, displayClass, attrs.className]
+    .filter(Boolean)
+    .join(' ') || undefined;
+
+  if (!label && !closeButton && !data.value && !children) return null;
 
   return (
-    <div className={blockClasses}>
+    <div className="button-block">
       <Button
         variant={variant}
-        outline={data.outline ?? false}
+        outline={acfBool(data.outline)}
         size={data.size}
-        block={data.full_width ?? false}
+        block={acfBool(data.full_width)}
         as={data.element}
         href={href}
         target={resolvedTarget}
         label={label}
-        active={data.active ?? false}
-        disabled={data.disabled ?? false}
+        active={acfBool(data.active)}
+        disabled={acfBool(data.disabled)}
         toggle={toggle}
-        value={data.value}
+        value={data.value || undefined}
         id={buttonId}
-        expanded={data.active ?? false}
+        // aria-expanded is only meaningful on toggle buttons; omit for plain links/buttons
+        expanded={toggle ? acfBool(data.active) : undefined}
         controls={resolvedControls}
-        nowrap={data.nowrap ?? false}
+        nowrap={acfBool(data.nowrap)}
         closeButton={closeButton}
-        hideLabel={data.hide_label ?? false}
+        hideLabel={acfBool(data.hide_label)}
         tooltip={tooltip}
         popoverTitle={popoverTitle}
         popoverContent={popoverContent}
         placement={placement}
+        className={buttonClassName}
       >
         {children}
       </Button>

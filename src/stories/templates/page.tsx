@@ -1,5 +1,6 @@
 import type { EditorBlock } from '@/types/blocks';
 import { buildBlockTree } from '@/lib/wp/utils/blockTree';
+import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { PageHeader } from './partials/page-header';
 import { BlockRenderer } from './partials/block-renderer';
 
@@ -13,6 +14,8 @@ interface PageTemplateProps {
     modified?: string;
     status?: string;
     menuOrder?: number;
+    mainClasses?: string;
+    contentWrapperStyle?: string;
     template?: {
       templateName?: string;
     } | null;
@@ -89,9 +92,12 @@ function getLayoutVariant(templateName?: string): string {
 export function PageTemplate({ node }: PageTemplateProps) {
   const templateName = node.template?.templateName;
   const layoutVariant = getLayoutVariant(templateName);
+  const mainClasses = `${node.mainClasses ?? 'content-wrapper'} ${layoutVariant}`.trim();
+  const wrapperStyle = parseCssStyle(node.contentWrapperStyle);
 
   return (
-    <div className={`content-wrapper ${layoutVariant}`}>
+    <main id="content" className={mainClasses}>
+      <div className="wrapper" style={wrapperStyle}>
       <article className="post-type-page" id={`post-${node.databaseId}`}>
         <PageHeader
           title={node.title}
@@ -115,6 +121,7 @@ export function PageTemplate({ node }: PageTemplateProps) {
           </section>
         )}
       </article>
-    </div>
+      </div>
+    </main>
   );
 }

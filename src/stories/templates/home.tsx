@@ -23,7 +23,8 @@ export async function HomeTemplate() {
   const pageInfo = data?.posts?.pageInfo;
 
   return (
-    <section className="content-wrapper">
+    <main id="content" className="content-wrapper">
+      <div className="wrapper">
       <div className="post-listing">
         <div className="container">
           <div className="row">
@@ -56,6 +57,7 @@ export async function HomeTemplate() {
           startCursor={pageInfo.startCursor}
         />
       )}
-    </section>
+      </div>
+    </main>
   );
 }

@@ -92,6 +92,13 @@ export interface HeaderProps {
    */
   navbarTogglerClasses?: string | string[];
 
+  /**
+   * Hamburger animation style. Maps to `hamburger--{animation}`.
+   * Mirrors `options.hamburger_animation | default('boring')` in the Twig.
+   * @default 'boring'
+   */
+  hamburgerAnimation?: string;
+
   // -------------------------------------------------------------------------
   // Navigation
   // -------------------------------------------------------------------------
@@ -194,12 +201,20 @@ function buildAlertClasses(alertOtherClasses?: string | string[]): string {
 
 /**
  * Build the class string for the navbar-toggler button.
+ * Mirrors the Twig nav_toggle block, which embeds the button atom —
+ * producing `btn btn-default button` plus the hamburger classes.
  */
-function buildTogglerClasses(navbarTogglerClasses?: string | string[]): string {
+function buildTogglerClasses(
+  hamburgerAnimation?: string,
+  navbarTogglerClasses?: string | string[],
+): string {
   const base = [
+    'btn',
+    'btn-default',
+    'button',
     'navbar-toggler',
     'hamburger',
-    'hamburger--collapse',
+    `hamburger--${hamburgerAnimation ?? 'boring'}`,
   ];
 
   if (navbarTogglerClasses) {
@@ -242,6 +257,7 @@ export function Header({
   alertOtherClasses,
   navTopContent,
   brand,
+  hamburgerAnimation,
   navbarTogglerClasses,
   primaryNav,
   secondaryNav,
@@ -256,7 +272,7 @@ export function Header({
   const headerClasses = buildHeaderClasses(navbarBreakpoint, otherClasses);
   const alertClasses = buildAlertClasses(alertOtherClasses);
   const togglerClasses = [
-    buildTogglerClasses(navbarTogglerClasses),
+    buildTogglerClasses(hamburgerAnimation, navbarTogglerClasses),
     !navOpen ? 'collapsed' : null,
   ].filter(Boolean).join(' ');
 
@@ -292,11 +308,13 @@ export function Header({
         {/* ---------------------------------------------------------------- */}
         {/* Nav top                                                           */}
         {/* ---------------------------------------------------------------- */}
-        <div className="site-header--nav-top">
-          <div className="site-header--row">
-            {navTopContent}
+        {navTopContent && (
+          <div className="site-header--nav-top">
+            <div className="site-header--row">
+              {navTopContent}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* ---------------------------------------------------------------- */}
         {/* Main header content row                                           */}

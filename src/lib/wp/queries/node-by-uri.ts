@@ -105,6 +105,8 @@ export const GET_NODE_BY_URI = gql`
             isCurrentPage
           }
         }
+        mainClasses
+        contentWrapperStyle
         settingsPostOptions {
           headerPosition
           hidePageHeader
@@ -211,6 +213,8 @@ export const GET_NODE_BY_URI = gql`
             isCurrentPage
           }
         }
+        mainClasses
+        contentWrapperStyle
         settingsPageOptions {
           headerPosition
           hidePageHeader

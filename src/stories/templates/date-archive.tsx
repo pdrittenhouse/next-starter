@@ -44,7 +44,8 @@ export async function DateArchiveTemplate({ year, month, day }: DateArchiveTempl
   }
 
   return (
-    <section className="content-wrapper">
+    <main id="content" className="content-wrapper">
+      <div className="wrapper">
       <PageHeader title={title} />
 
       <div className="post-listing">
@@ -79,6 +80,7 @@ export async function DateArchiveTemplate({ year, month, day }: DateArchiveTempl
           startCursor={pageInfo.startCursor}
         />
       )}
-    </section>
+      </div>
+    </main>
   );
 }

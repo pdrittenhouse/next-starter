@@ -2,6 +2,7 @@ import type { ElementType } from 'react';
 import type { TimberlandTreeNode } from '@/lib/wp/types/template-manifest';
 import type { EditorBlock } from '@/types/blocks';
 import { PATTERN_MAP } from '@/lib/registries/PATTERN_MAP';
+import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { BlockRenderer } from './block-renderer';
 
 interface TemplateRendererProps {
@@ -31,6 +32,23 @@ export function TemplateRenderer({ tree, editorBlocks = [], content }: TemplateR
             return null;
           }
           return null;
+        }
+
+        if (node.type === 'element') {
+          const Tag = (node.element ?? 'div') as ElementType;
+          const childContent = node.children?.length ? (
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} />
+          ) : null;
+          return (
+            <Tag
+              key={`${node.element ?? 'el'}-${i}`}
+              id={node.id ?? undefined}
+              className={node.className ?? undefined}
+              style={parseCssStyle(node.style)}
+            >
+              {childContent}
+            </Tag>
+          );
         }
 
         if (node.type === 'pattern') {

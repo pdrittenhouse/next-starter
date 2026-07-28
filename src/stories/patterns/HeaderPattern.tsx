@@ -12,17 +12,27 @@ import { GET_MENU_BY_LOCATION } from '@/lib/wp/queries/menus';
 import type { NavbarBreakpoint } from '@/stories/organisms/header/Header';
 
 const getCustomizerSettings = cache(async () => {
-  const { data } = await fetchGraphQL<{ customizerSettings: any }>(
+  const { data } = await fetchGraphQL<{ customizerSettings: any; generalSettings: any }>(
     print(GET_CUSTOMIZER_SETTINGS),
   ).catch(() => ({ data: null }));
-  return (data as any)?.customizerSettings ?? null;
+  if (!data) return null;
+  return {
+    ...(data as any).customizerSettings,
+    generalSettings: (data as any).generalSettings ?? null,
+  };
 });
 
 const getHeaderOptions = cache(async () => {
-  const { data } = await fetchGraphQL<{ themeHeaderOptions: any }>(
-    print(GET_HEADER_OPTIONS),
-  ).catch(() => ({ data: null }));
-  return (data as any)?.themeHeaderOptions?.settingsHeaderOptions ?? null;
+  const { data } = await fetchGraphQL<{
+    themeHeaderOptions: any;
+    headerNavTop: string | null;
+    headerAdditional: string | null;
+  }>(print(GET_HEADER_OPTIONS)).catch(() => ({ data: null }));
+  return {
+    options: (data as any)?.themeHeaderOptions?.settingsHeaderOptions ?? null,
+    headerNavTop: (data as any)?.headerNavTop ?? null,
+    headerAdditional: (data as any)?.headerAdditional ?? null,
+  };
 });
 
 const getMenuByLocation = cache(async (location: string) => {
@@ -34,7 +44,7 @@ const getMenuByLocation = cache(async (location: string) => {
 });
 
 export async function HeaderPattern() {
-  const [customizer, headerOptions, primaryMenu, secondaryMenu, socialMenu] = await Promise.all([
+  const [customizer, { options: headerOptions, headerNavTop, headerAdditional }, primaryMenu, secondaryMenu, socialMenu] = await Promise.all([
     getCustomizerSettings(),
     getHeaderOptions(),
     getMenuByLocation('PRIMARY'),
@@ -44,24 +54,75 @@ export async function HeaderPattern() {
 
   if (headerOptions?.hideHeader) return null;
 
+  // ── Navbar breakpoint ────────────────────────────────────────────────
   const rawBp = Array.isArray(headerOptions?.navbarBreakpoint)
     ? headerOptions.navbarBreakpoint[0]
     : headerOptions?.navbarBreakpoint;
   const BREAKPOINTS = ['sm', 'md', 'lg', 'xl', 'xxl'];
   const navbarBreakpoint = (BREAKPOINTS.includes(rawBp) ? rawBp : 'lg') as NavbarBreakpoint;
 
+  // ── Branding ─────────────────────────────────────────────────────────
   const logoSrc: string | undefined = customizer?.customLogo?.sourceUrl ?? undefined;
-  const logoAlt: string | undefined = customizer?.customLogo?.altText ?? undefined;
+  const siteName: string | undefined = customizer?.generalSettings?.title ?? undefined;
+  const siteSlogan: string | undefined = customizer?.generalSettings?.description ?? undefined;
+  const displayHeaderText: boolean = customizer?.displayHeaderText !== false;
 
-  const brand = logoSrc
-    ? { url: '/', logoImgSrc: logoSrc, siteName: logoAlt }
+  const brand = logoSrc || siteName
+    ? {
+        url: '/',
+        logoImgSrc: logoSrc,
+        otherClasses: 'navbar-brand',
+        siteName,
+        siteSlogan,
+        hideSiteName: !displayHeaderText,
+        hideSiteSlogan: !displayHeaderText,
+      }
     : undefined;
 
-  const primaryNav = primaryMenu?.menuItems?.edges?.length
+  // ── Layout modifier classes ───────────────────────────────────────────
+  const layout = customizer?.headerLayoutOptions ?? {};
+  const menuPos: string = layout.mobileNavMenuPosition ?? '';
+
+  const layoutClasses = [
+    layout.fullWidthHeader === 'mobile'  ? 'full-width-mobile'        : null,
+    layout.fullWidthHeader === 'desktop' ? 'full-width-desktop'       : null,
+    layout.fullWidthHeader === 'both'    ? 'full-width'               : null,
+    layout.centerHeaderContent           ? 'center-mobile'            : null,
+    layout.desktopLogoRight              ? 'logo-right'               : null,
+    layout.showMobileCtaButton           ? 'show-mobile-button'       : null,
+    layout.alignMobileCtaButton          ? 'align-mobile-button'      : null,
+    layout.fullHeightMobileCtaButton     ? 'full-height-mobile-cta'   : null,
+    layout.navToggleRelativeToContainer  ? 'relative-to-container'    : null,
+    layout.centerNavToggle               ? 'center-nav-toggle'        : null,
+    layout.inlineMobileNavToggle         ? 'inline-toggle'            : null,
+    layout.reverseMobileButtons          ? 'reverse-mobile-buttons'   : null,
+    menuPos === 'top'                    ? 'mobile-nav-top'           : null,
+    menuPos === 'bottom'                 ? 'mobile-nav-bottom'        : null,
+    menuPos === 'left'                   ? 'mobile-nav-left'          : null,
+    menuPos === 'right'                  ? 'mobile-nav-right'         : null,
+    menuPos === 'overlay'                ? 'mobile-nav-overlay'       : null,
+    layout.alignNavToContent             ? 'align-to-content'         : null,
+    layout.fullScreenNav                 ? 'full-screen-mobile-nav'   : null,
+    layout.centerMobileNavContent        ? 'center-mobile-nav-content': null,
+  ].filter(Boolean) as string[];
+
+  // ── Visibility toggles ───────────────────────────────────────────────
+  const hidePrimaryBoth   = layout.hidePrimaryNav   === 'both';
+  const hideSecondaryBoth = layout.hideSecondaryNav === 'both';
+  const hideSocialBoth    = layout.hideSocialNav    === 'both';
+  const hideCtaBoth       = layout.hideHeaderCta    === 'both';
+  const hideSearchBoth    = layout.hideHeaderSearch === 'both';
+
+  // Hide hamburger toggler when every nav element is hidden on both viewports
+  const hideToggler =
+    hidePrimaryBoth && hideCtaBoth && hideSearchBoth && hideSecondaryBoth && hideSocialBoth;
+
+  // ── Navigation ───────────────────────────────────────────────────────
+  const primaryNavItems = primaryMenu?.menuItems?.edges?.length
     ? { items: menuItemsToNavItems(primaryMenu.menuItems.edges) }
     : undefined;
 
-  const secondaryNav = secondaryMenu?.menuItems?.edges?.length
+  const secondaryNavItems = secondaryMenu?.menuItems?.edges?.length
     ? { items: menuItemsToNavItems(secondaryMenu.menuItems.edges) }
     : undefined;
 
@@ -85,21 +146,40 @@ export async function HeaderPattern() {
       }))
     : [];
 
+  // ── Slots ────────────────────────────────────────────────────────────
   const alertContent = headerOptions?.headerAlertMessage
     ? <span dangerouslySetInnerHTML={{ __html: headerOptions.headerAlertMessage }} />
+    : undefined;
+
+  const navTopContent = headerNavTop
+    ? <div dangerouslySetInnerHTML={{ __html: headerNavTop }} />
+    : undefined;
+
+  const additionalContent = headerAdditional
+    ? <div dangerouslySetInnerHTML={{ __html: headerAdditional }} />
     : undefined;
 
   return (
     <Header
       navbarBreakpoint={navbarBreakpoint}
+      backgroundImage={customizer?.headerImage || undefined}
+      otherClasses={layoutClasses.length ? layoutClasses : undefined}
+      hamburgerAnimation={headerOptions?.hamburgerAnimation || undefined}
+      navbarTogglerClasses={hideToggler ? 'd-none' : undefined}
       brand={brand}
-      primaryNav={primaryNav}
-      secondaryNav={secondaryNav}
-      primaryNavCta={primaryNavCta}
-      mobileNavCta={mobileNavCta}
-      showSearch
-      socialNavContent={socialNavItems.length ? <SocialNav items={socialNavItems} hideLabels /> : undefined}
+      primaryNav={!hidePrimaryBoth ? primaryNavItems : undefined}
+      secondaryNav={!hideSecondaryBoth ? secondaryNavItems : undefined}
+      primaryNavCta={!hideCtaBoth ? primaryNavCta : undefined}
+      mobileNavCta={!hideCtaBoth ? mobileNavCta : undefined}
+      showSearch={!hideSearchBoth}
+      socialNavContent={
+        !hideSocialBoth && socialNavItems.length
+          ? <SocialNav items={socialNavItems} hideLabels />
+          : undefined
+      }
       alertContent={alertContent}
+      navTopContent={navTopContent}
+      additionalContent={additionalContent}
     />
   );
 }

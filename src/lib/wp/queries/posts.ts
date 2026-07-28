@@ -487,6 +487,8 @@ export const GET_PREVIEW_POST = gql`
             }
           }
         }
+        mainClasses
+        contentWrapperStyle
         seo {
           title
           description
@@ -507,6 +509,8 @@ export const GET_PREVIEW_POST = gql`
             altText
           }
         }
+        mainClasses
+        contentWrapperStyle
         seo {
           title
           description

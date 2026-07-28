@@ -36,7 +36,7 @@ export function menuItemsToNavItems(edges: WpMenuItemEdge[]): NavItem[] {
       linkClasses: node.cssClasses?.filter(Boolean) ?? undefined,
       linkTarget: node.target || undefined,
       description: node.description || undefined,
-      linkId: node.menuItemId ? String(node.menuItemId) : undefined,
+      linkId: undefined,
       items: [],
     });
   }

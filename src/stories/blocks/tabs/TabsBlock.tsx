@@ -1,5 +1,6 @@
 import type { EditorBlock } from '@/types/blocks';
 import { parseBlockAttributes } from '@/types/blocks';
+import { parseAcfRepeater } from '@/lib/wp/utils/parseAcfRepeater';
 import { Tabs } from '@/stories/molecules/tabs/Tabs';
 import type { TabItem } from '@/stories/molecules/tabs/Tabs';
 
@@ -133,8 +134,12 @@ function resolveAcfId(field: AcfIdField | undefined, prefix: string): string | u
  * Registered in BLOCK_MAP as 'acf/tabs'.
  */
 export async function TabsBlock({ block }: TabsBlockProps) {
-  const attrs = parseBlockAttributes(block) as { data?: TabsBlockData; className?: string };
-  const data: TabsBlockData = attrs?.data ?? {};
+  const attrs = parseBlockAttributes(block) as { data?: Record<string, unknown>; className?: string };
+  const rawData = attrs?.data ?? {};
+  const data: TabsBlockData = {
+    ...(rawData as Partial<TabsBlockData>),
+    disabled_tabs: parseAcfRepeater<{ tab_index: number }>(rawData, 'disabled_tabs'),
+  };
 
   // ── Tabs wrapper ID ──────────────────────────────────────────────────────
   // Mirrors: fields.tabs_id['id'] ?: 'tabs' ~ fields.tabs_id['id_gen']

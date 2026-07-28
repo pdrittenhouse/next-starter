@@ -27,7 +27,8 @@ export async function SearchTemplate({ query }: SearchTemplateProps) {
   const pageInfo = data?.contentNodes?.pageInfo;
 
   return (
-    <div className="content-wrapper">
+    <main id="content" className="content-wrapper">
+      <div className="wrapper">
       <div className="search-results">
         <div className="container">
           <div className="row">
@@ -69,6 +70,7 @@ export async function SearchTemplate({ query }: SearchTemplateProps) {
           startCursor={pageInfo.startCursor}
         />
       )}
-    </div>
+      </div>
+    </main>
   );
 }

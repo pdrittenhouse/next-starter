@@ -1,16 +1,25 @@
 export interface TimberlandTreeNode {
-  type: 'pattern' | 'slot';
+  /**
+   * - 'pattern'  — a registered Timberland pattern (maps to PATTERN_MAP or a generic element shell)
+   * - 'slot'     — a named content insertion point (e.g. the 'content' slot → BlockRenderer)
+   * - 'element'  — a structural HTML wrapper node (not a pattern; used for <main>, <div>, etc.)
+   *                The 'element' field names the tag; 'className'/'id'/'style' set its attributes.
+   *                Children recurse through TemplateRenderer.
+   */
+  type: 'pattern' | 'slot' | 'element';
   slug?: string | null;
   name?: string | null;
   source?: string | null;
   level?: string | null;
   file?: string | null;
-  /** Outermost HTML element tag extracted from the pattern's Twig file, e.g. "header". */
+  /** Outermost HTML element tag, e.g. "header", "main", "div". */
   element?: string | null;
-  /** Classes from the pattern's rendered outer element, e.g. "site-header navbar". */
+  /** CSS class string for the element, e.g. "content-wrapper sidebar-active". */
   className?: string | null;
-  /** ID from the pattern's rendered outer element, e.g. "siteHeader". */
+  /** ID attribute for the element, e.g. "content". */
   id?: string | null;
+  /** Inline CSS declaration string for the element, e.g. "padding-top: 20px; padding-bottom: 40px;". */
+  style?: string | null;
   children?: TimberlandTreeNode[] | null;
 }
 

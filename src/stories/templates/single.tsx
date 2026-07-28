@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { print } from 'graphql';
+import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_ADJACENT_POSTS } from '@/lib/wp/queries';
 import type { EditorBlock } from '@/types/blocks';
@@ -20,6 +21,8 @@ interface SingleTemplateProps {
     modified?: string;
     status?: string;
     contentTypeName?: string;
+    mainClasses?: string;
+    contentWrapperStyle?: string;
     author?: {
       node: {
         id: string;
@@ -85,8 +88,11 @@ export async function SingleTemplate({ node }: SingleTemplateProps) {
     }
   }
 
+  const wrapperStyle = parseCssStyle(node.contentWrapperStyle);
+
   return (
-    <div className="content-wrapper">
+    <main id="content" className={node.mainClasses ?? 'content-wrapper'}>
+      <div className="wrapper" style={wrapperStyle}>
       <article className={`post-type-${postType}`} id={`post-${node.databaseId}`}>
         <PageHeader
           title={node.title}
@@ -210,6 +216,7 @@ export async function SingleTemplate({ node }: SingleTemplateProps) {
           commentStatus={node.commentStatus}
         />
       </article>
-    </div>
+      </div>
+    </main>
   );
 }

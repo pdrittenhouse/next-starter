@@ -57,7 +57,8 @@ export async function ArchiveTemplate({ node }: ArchiveTemplateProps) {
   const pageInfo = data?.posts?.pageInfo;
 
   return (
-    <section className="content-wrapper">
+    <main id="content" className="content-wrapper">
+      <div className="wrapper">
       <PageHeader title={title} />
 
       <div className="post-listing">
@@ -92,6 +93,7 @@ export async function ArchiveTemplate({ node }: ArchiveTemplateProps) {
           startCursor={pageInfo.startCursor}
         />
       )}
-    </section>
+      </div>
+    </main>
   );
 }
