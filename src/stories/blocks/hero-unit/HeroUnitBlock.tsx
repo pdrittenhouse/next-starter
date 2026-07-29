@@ -2,6 +2,7 @@ import { Jumbotron } from '@/stories/molecules/jumbotron/Jumbotron';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './hero-unit.module.scss';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 interface HeroUnitImage {
   image_type?: 'file' | 'url' | null;
@@ -15,7 +16,7 @@ interface HeroUnitImage {
   image_url?: string | null;
 }
 
-interface HeroUnitBlockData {
+interface HeroUnitBlockData extends Pick<AcfBlockStyleData, 'height' | 'padding' | 'margin' | 'border' | 'border_radius' | 'box_shadow'> {
   label?: string | null;
   title?: string | null;
   subtitle?: string | null;
@@ -83,7 +84,10 @@ export async function HeroUnitBlock({ block }: HeroUnitBlockProps) {
       ? (data.bg_image?.image?.url ?? undefined)
       : (data.bg_image?.image_url ?? undefined);
 
-  // Background color class/style
+  // Block-level inline styles (height, padding, margin, border, border-radius, box-shadow)
+  const { style: blockStyle } = buildAcfBlockStyle(data);
+
+  // Background color class/style (bg_color handled separately — bg_color is on the block itself)
   const bgClass =
     data.bg_color?.bg_color === 'palette' && data.bg_color.bg_theme_color
       ? `bg-${data.bg_color.bg_theme_color}`
@@ -140,7 +144,7 @@ export async function HeroUnitBlock({ block }: HeroUnitBlockProps) {
     return <div dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />;
   }
 
-  return (
+  const jumbotron = (
     <Jumbotron
       fluid={data.full_width}
       removeContainer={true}
@@ -158,4 +162,7 @@ export async function HeroUnitBlock({ block }: HeroUnitBlockProps) {
       className={className || undefined}
     />
   );
+
+  if (blockStyle) return <div style={blockStyle}>{jumbotron}</div>;
+  return jumbotron;
 }

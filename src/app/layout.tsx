@@ -53,6 +53,12 @@ export default async function RootLayout({
       fontOptionsCss
       globalStylesCss
       customizerSettings { customCss }
+      themeHeaderOptions {
+        settingsHeaderOptions {
+          headerPosition
+          shrinkHeader
+        }
+      }
     }
   `;
 
@@ -61,6 +67,7 @@ export default async function RootLayout({
     fontOptionsCss: string | null;
     globalStylesCss: string | null;
     customizerSettings: { customCss: string | null } | null;
+    themeHeaderOptions: { settingsHeaderOptions: { headerPosition: string | null; shrinkHeader: boolean | null } | null } | null;
   }>(print(GET_GLOBAL_CSS)).catch(() => ({ data: null })) as any;
 
   const globalCss = [
@@ -69,6 +76,14 @@ export default async function RootLayout({
     cssData?.fontOptionsCss,
     cssData?.customizerSettings?.customCss,
   ].filter(Boolean).join('\n') || null;
+
+  const headerOpts = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions;
+  const headerPosition: string | null = headerOpts?.headerPosition ?? null;
+  const shrinkHeader: boolean = headerOpts?.shrinkHeader ?? false;
+  const bodyClasses = [
+    headerPosition ? `${headerPosition}-header-enabled` : 'static-header-enabled',
+    shrinkHeader ? 'shrink-header-enabled' : null,
+  ].filter(Boolean).join(' ');
 
   return (
       <html lang="en">
@@ -83,7 +98,7 @@ export default async function RootLayout({
             <style dangerouslySetInnerHTML={{ __html: globalCss }} />
           )}
         </head>
-        <body>
+        <body className={bodyClasses}>
           {children}
           {/* Adobe Fonts async — loads after page paint, no render-blocking.
               Fonts swap in with font-display:swap (set per-font in the Typekit dashboard). */}

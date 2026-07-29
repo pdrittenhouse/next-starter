@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { ButtonGroup } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonGroupItem, WrapperDisplay } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
@@ -229,6 +230,7 @@ function mapGroups(acfGroups: AcfButtonGroupItem[] | undefined): ButtonGroupItem
 
 interface ButtonGroupBlockProps {
   block: EditorBlock;
+  children?: ReactNode;
 }
 
 /**
@@ -240,21 +242,31 @@ interface ButtonGroupBlockProps {
  * alignment styles are derived from ACF group fields and applied as inline
  * styles on the block wrapper div.
  *
+ * When button_groups repeater data is absent (buttons stored as inner blocks
+ * rather than ACF field rows), children from BlockRenderer are rendered inside
+ * the wrapper so the acf/group → acf/button → acf/button-text tree still renders.
+ *
  * Registered in BLOCK_MAP as 'acf/button-group'.
  */
-export async function ButtonGroupBlock({ block }: ButtonGroupBlockProps) {
+export async function ButtonGroupBlock({ block, children }: ButtonGroupBlockProps) {
   const attrs = parseBlockAttributes(block) as { data?: ButtonGroupBlockData; className?: string };
   const data: ButtonGroupBlockData = attrs?.data ?? {};
 
   const groups = mapGroups(data.button_groups);
+  const wrapperStyle = buildWrapperStyle(data);
+  const blockClasses = ['button-group-block', attrs.className].filter(Boolean).join(' ') || undefined;
 
-  // Nothing to render without at least one group containing buttons.
-  if (groups.length === 0) return null;
+  if (groups.length === 0) {
+    if (!children) return null;
+    return (
+      <div className={blockClasses} style={wrapperStyle}>
+        {children}
+      </div>
+    );
+  }
 
   const wrapperDisplay =
     (data.btn_grp_display?.display as WrapperDisplay | undefined) ?? 'inline-block';
-  const wrapperStyle = buildWrapperStyle(data);
-  const blockClasses = ['button-group-block', attrs.className].filter(Boolean).join(' ') || undefined;
 
   return (
     <div className={blockClasses} style={wrapperStyle}>

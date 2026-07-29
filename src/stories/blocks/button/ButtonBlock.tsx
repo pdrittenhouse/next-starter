@@ -5,8 +5,9 @@ import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { acfBool } from '@/lib/wp/utils/parseAcfRepeater';
 import type { Placement } from 'react-bootstrap/types';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
-interface ButtonBlockData {
+interface ButtonBlockData extends Pick<AcfBlockStyleData, 'width' | 'margin' | 'padding' | 'border' | 'border_radius' | 'box_shadow'> {
   link?: { title?: string; url?: string; target?: string } | null;
   element?: 'button' | 'a' | 'input';
   /** Color variant (Bootstrap variant name) or 'custom'. Maps to Button `variant`. */
@@ -102,8 +103,10 @@ export async function ButtonBlock({ block, children }: ButtonBlockProps) {
 
   if (!label && !closeButton && !data.value && !children) return null;
 
+  const { style: blockStyle } = buildAcfBlockStyle(data);
+
   return (
-    <div className="button-block">
+    <div className="button-block" style={blockStyle}>
       <Button
         variant={variant}
         outline={acfBool(data.outline)}

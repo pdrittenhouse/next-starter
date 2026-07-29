@@ -6,6 +6,7 @@ import type { CardProps, CardImageProps } from '@/stories/organisms/card-grid/Ca
 import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 // ─── ACF field interfaces ──────────────────────────────────────────────────────
 
@@ -101,8 +102,6 @@ interface CardGridItemData {
  * Fields intentionally not mapped (CardGrid pattern component has no matching
  * prop; set via WordPress inline-style output in the Twig layer):
  *   fields.card_grid_id      — HTML id attribute on wrapper
- *   fields.card_grid_width   — inline width / min-width / max-width
- *   fields.card_grid_margin  — inline margin offsets
  *   fields.alignment         — justify-content on the inner grid
  *   fields.equal_height      — align-items: stretch on the inner grid
  *   fields.gutter            — custom per-column gutter px value
@@ -112,6 +111,8 @@ interface CardGridItemData {
 interface CardGridBlockData {
   type?: 'grid' | 'row' | 'group' | 'deck';
   column_count?: 2 | 3 | 4 | 5 | 6;
+  card_grid_width?: AcfBlockStyleData['width'];
+  card_grid_margin?: AcfBlockStyleData['margin'];
   placecard?: boolean;
   single_row?: boolean;
   mobile_columns?: boolean;
@@ -255,6 +256,11 @@ export async function CardGridBlock({ block }: CardGridBlockProps) {
   const type = data.type ?? 'grid';
   const columns = data.column_count;
 
+  const { style: wrapperStyle } = buildAcfBlockStyle({
+    width:  data.card_grid_width,
+    margin: data.card_grid_margin,
+  });
+
   // Outer wrapper classes — mirrors Twig block_classes:
   //   fields.placecard → 'has-placecard'
   //   block['className'] → WordPress editor-assigned class
@@ -277,9 +283,7 @@ export async function CardGridBlock({ block }: CardGridBlockProps) {
     // The block renderer's comment notes that inner blocks are included in
     // renderedHtml; this preserves that output when items are not pre-built.
     if (!block.renderedHtml) return null;
-    return (
-      <div dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />
-    );
+    return <div style={wrapperStyle} dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />;
   }
 
   // ─── Resolve all card images in parallel ────────────────────────────────────
@@ -297,7 +301,7 @@ export async function CardGridBlock({ block }: CardGridBlockProps) {
     buildCardProps(item, mediaItems[index]),
   );
 
-  return (
+  const cardGridEl = (
     <CardGrid
       type={type}
       columns={columns}
@@ -311,4 +315,7 @@ export async function CardGridBlock({ block }: CardGridBlockProps) {
       gridClassName={gridClassName}
     />
   );
+
+  if (wrapperStyle) return <div style={wrapperStyle}>{cardGridEl}</div>;
+  return cardGridEl;
 }

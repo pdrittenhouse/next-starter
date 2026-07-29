@@ -1,5 +1,6 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
+import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
 import { Video, type VideoFormat, type VideoPreload, type VideoQuality } from '@/stories/atoms/video/Video';
 import { parseBlockAttributes } from '@/types/blocks';
@@ -163,37 +164,12 @@ export async function VideoBlock({ block }: VideoBlockProps) {
     poster = data.poster.image_url;
   }
 
-  // ── Block-level wrapper styles (min-width, max-width, margins) ───────────────
-  const wrapperStyle: React.CSSProperties = {};
-  const vw = data.video_width?.width;
-  if (vw?.min_width != null) wrapperStyle.minWidth = `${vw.min_width}px`;
-  if (vw?.max_width != null) wrapperStyle.maxWidth = `${vw.max_width}px`;
-
-  const m = data.margin?.margin;
-  if (m) {
-    if (m.top?.auto) {
-      wrapperStyle.marginTop = 'auto';
-    } else if (m.top?.top != null && m.top.top >= 0) {
-      wrapperStyle.marginTop = `${m.top.top}px`;
-    }
-    if (m.bottom?.auto) {
-      wrapperStyle.marginBottom = 'auto';
-    } else if (m.bottom?.bottom != null && m.bottom.bottom >= 0) {
-      wrapperStyle.marginBottom = `${m.bottom.bottom}px`;
-    }
-    if (m.left?.auto) {
-      wrapperStyle.marginLeft = 'auto';
-    } else if (m.left?.left != null && m.left.left >= 0) {
-      wrapperStyle.marginLeft = `${m.left.left}px`;
-    }
-    if (m.right?.auto) {
-      wrapperStyle.marginRight = 'auto';
-    } else if (m.right?.right != null && m.right.right >= 0) {
-      wrapperStyle.marginRight = `${m.right.right}px`;
-    }
-  }
-
-  const hasWrapperStyle = Object.keys(wrapperStyle).length > 0;
+  // ── Block-level wrapper styles — remap video_width → width (same nested shape)
+  const { style: wrapperStyle } = buildAcfBlockStyle({
+    width:  data.video_width,
+    margin: data.margin,
+  });
+  const hasWrapperStyle = !!wrapperStyle;
   const blockClassName = ['video-block', attrs.className].filter(Boolean).join(' ');
 
   const videoEl = (

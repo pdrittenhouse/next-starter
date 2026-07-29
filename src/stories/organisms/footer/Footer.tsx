@@ -51,6 +51,18 @@ export interface FooterProps {
    */
   brand?: BrandingProps;
 
+  /**
+   * Props for a secondary co-brand Branding molecule rendered after `brand`
+   * inside `.site-footer--branding`. Maps to `options.co_brand` in the Twig.
+   */
+  coBrand?: BrandingProps;
+
+  /**
+   * Additional CSS classes applied to the `.site-footer--branding` wrapper div.
+   * Use for per-viewport visibility (`d-none d-xxl-flex`, `d-xxl-none`, `d-none`).
+   */
+  brandWrapperClasses?: string;
+
   // ---- CTA button -------------------------------------------------------
 
   /**
@@ -77,6 +89,12 @@ export interface FooterProps {
    */
   socialNav?: React.ReactNode;
 
+  /**
+   * Additional CSS classes applied to the `.site-footer--social-nav` wrapper div.
+   * Use for per-viewport visibility (`d-none d-xxl-flex`, `d-xxl-none`, `d-none`).
+   */
+  socialNavWrapperClasses?: string;
+
   // ---- Search -----------------------------------------------------------
 
   /**
@@ -92,6 +110,12 @@ export interface FooterProps {
    */
   onSearch?: (query: string) => void;
 
+  /**
+   * Additional CSS classes applied to the inner wrapper div around the
+   * search form inside `.site-footer--search`. Use for per-viewport visibility.
+   */
+  searchWrapperClasses?: string;
+
   // ---- Company / contact info -------------------------------------------
 
   /**
@@ -101,6 +125,12 @@ export interface FooterProps {
    */
   contactInfo?: ListProps;
 
+  /**
+   * Additional CSS classes applied to the `.site-footer--company` wrapper div.
+   * Use for per-viewport visibility.
+   */
+  contactInfoWrapperClasses?: string;
+
   // ---- Disclaimer -------------------------------------------------------
 
   /**
@@ -109,6 +139,12 @@ export interface FooterProps {
    */
   disclaimer?: React.ReactNode;
 
+  /**
+   * Additional CSS classes applied to the `.site-footer--disclaimer-wrapper` div.
+   * Use for per-viewport visibility.
+   */
+  disclaimerWrapperClasses?: string;
+
   // ---- Attribution ------------------------------------------------------
 
   /**
@@ -116,6 +152,12 @@ export interface FooterProps {
    * Mirrors the `attribution` Twig block.
    */
   attribution?: React.ReactNode;
+
+  /**
+   * Additional CSS classes applied to the `.site-footer--attribution-wrapper` div.
+   * Use for per-viewport visibility.
+   */
+  attributionWrapperClasses?: string;
 
   // ---- Utilities nav ----------------------------------------------------
 
@@ -134,6 +176,13 @@ export interface FooterProps {
    * Twig variable and the `copyright` block.
    */
   copyright?: React.ReactNode;
+
+  /**
+   * Additional CSS classes applied to the `.copyright` inner div.
+   * Use for per-viewport visibility and sub-element hide classes
+   * (`hide-label`, `hide-icon`, `hide-year`, `hide-name`).
+   */
+  copyrightOtherClasses?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -179,16 +228,24 @@ export function Footer({
   additionalContent,
   postFooterContent,
   brand,
+  coBrand,
+  brandWrapperClasses,
   ctaButton,
   footerNav,
   socialNav,
+  socialNavWrapperClasses,
   showSearch = false,
   onSearch,
+  searchWrapperClasses,
   contactInfo,
+  contactInfoWrapperClasses,
   disclaimer,
+  disclaimerWrapperClasses,
   attribution,
+  attributionWrapperClasses,
   utilitiesNav,
   copyright,
+  copyrightOtherClasses,
 }: FooterProps) {
   const footerClass = buildFooterClasses(otherClasses);
 
@@ -229,9 +286,10 @@ export function Footer({
               <div className="site-footer--row">
 
                 {/* Branding */}
-                {brand && (
-                  <div className="site-footer--branding">
-                    <Branding {...brand} />
+                {(brand || coBrand) && (
+                  <div className={['site-footer--branding', brandWrapperClasses].filter(Boolean).join(' ')}>
+                    {brand && <Branding {...brand} />}
+                    {coBrand && <Branding {...coBrand} />}
                   </div>
                 )}
 
@@ -251,14 +309,14 @@ export function Footer({
 
                 {/* Social nav slot */}
                 {socialNav && (
-                  <div className="site-footer--social-nav">
+                  <div className={['site-footer--social-nav', socialNavWrapperClasses].filter(Boolean).join(' ')}>
                     {socialNav}
                   </div>
                 )}
 
                 {/* Search form */}
                 {showSearch && (
-                  <div className="site-footer--search">
+                  <div className={['site-footer--search', searchWrapperClasses].filter(Boolean).join(' ')}>
                     <form
                       name="footer-search"
                       id="footerSearch"
@@ -316,14 +374,14 @@ export function Footer({
 
                   {/* Contact info */}
                   {contactInfo && (
-                    <div className="site-footer--company">
+                    <div className={['site-footer--company', contactInfoWrapperClasses].filter(Boolean).join(' ')}>
                       <List {...contactInfo} />
                     </div>
                   )}
 
                   {/* Disclaimer */}
                   {disclaimer && (
-                    <div className="site-footer--disclaimer-wrapper">
+                    <div className={['site-footer--disclaimer-wrapper', disclaimerWrapperClasses].filter(Boolean).join(' ')}>
                       <div className="site-footer--disclaimer">
                         {disclaimer}
                       </div>
@@ -332,8 +390,10 @@ export function Footer({
 
                   {/* Attribution */}
                   {attribution && (
-                    <div className="site-footer--attribution-wrapper">
-                      {attribution}
+                    <div className={['site-footer--attribution-wrapper', attributionWrapperClasses].filter(Boolean).join(' ')}>
+                      <div className="site-footer--attribution">
+                        {attribution}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -355,7 +415,7 @@ export function Footer({
                   {/* Copyright */}
                   {copyright && (
                     <div className="site-footer--copyright">
-                      <div className="copyright">
+                      <div className={['copyright', copyrightOtherClasses].filter(Boolean).join(' ')}>
                         {copyright}
                       </div>
                     </div>

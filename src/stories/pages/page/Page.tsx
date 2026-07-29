@@ -19,7 +19,7 @@ import {
   GET_ALL_REUSABLE_BLOCKS,
   GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS,
   GET_ALL_REVISIONS, GET_CUSTOMIZER_SETTINGS, GET_THEME_SETTINGS, GET_PUBLIC_OPTIONS, GET_DESIGN_TOKENS, GET_SPRITEMAP_ICONS, GET_CUSTOMIZER_CSS, GET_FONT_OPTIONS_CSS, GET_GLOBAL_STYLES_CSS, GET_SCSS_UTILS, GET_PATTERN_STYLES, GET_TEMPLATE_PATTERNS,
-  GET_WIDGET_AREAS, GET_BLOCK_PATTERNS,
+  GET_WIDGET_AREAS, GET_WIDGET_AREA_BLOCKS, GET_BLOCK_PATTERNS,
   GET_PERMALINK_SETTINGS, GET_SITE_HEALTH, GET_REDIRECTS, GET_SEO_SETTINGS,
   GET_ALL_GRAVITY_FORMS,
   GET_ALL_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_ALL_ORDERS, GET_ALL_COUPONS, GET_SHOP_SETTINGS,
@@ -75,6 +75,10 @@ export const Page: React.FC = () => {
   const { loading: patternStylesLoading, error: patternStylesError, data: patternStylesData } = useQuery(GET_PATTERN_STYLES)
   const { loading: templatePatternsLoading, error: templatePatternsError, data: templatePatternsData } = useQuery(GET_TEMPLATE_PATTERNS, { fetchPolicy: 'no-cache' })
   const { loading: widgetAreasLoading, error: widgetAreasError, data: widgetAreasData } = useQuery(GET_WIDGET_AREAS)
+  const { loading: wabHeaderAlertsLoading, error: wabHeaderAlertsError, data: wabHeaderAlertsData } = useQuery(GET_WIDGET_AREA_BLOCKS, { variables: { slug: 'header_alerts_widget_area' } })
+  const { loading: wabHeaderLoading, error: wabHeaderError, data: wabHeaderData } = useQuery(GET_WIDGET_AREA_BLOCKS, { variables: { slug: 'header_widget_area' } })
+  const { loading: wabFooterLoading, error: wabFooterError, data: wabFooterData } = useQuery(GET_WIDGET_AREA_BLOCKS, { variables: { slug: 'footer_widget_area' } })
+  const { loading: wabPostFooterLoading, error: wabPostFooterError, data: wabPostFooterData } = useQuery(GET_WIDGET_AREA_BLOCKS, { variables: { slug: 'post_footer_widget_area' } })
   const { loading: patternsLoading, error: patternsError, data: patternsData } = useQuery(GET_BLOCK_PATTERNS)
   const { loading: themeAssetsLoading, error: themeAssetsError, data: themeAssetsData } = useQuery(GET_THEME_ENQUEUED_ASSETS)
   const { loading: permalinksLoading, error: permalinksError, data: permalinksData } = useQuery(GET_PERMALINK_SETTINGS)
@@ -411,6 +415,42 @@ export const Page: React.FC = () => {
                     <details>
                       <summary>Widget Areas ({widgetAreasData.widgetAreas?.length ?? 0})</summary>
                       <pre>{JSON.stringify(widgetAreasData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  {wabHeaderAlertsLoading ? <p>Loading header alerts blocks...</p> : wabHeaderAlertsError ? (
+                    <p style={{color: 'red'}}>Header Alerts Widget Area Blocks Error: {wabHeaderAlertsError.message}</p>
+                  ) : wabHeaderAlertsData && (
+                    <details>
+                      <summary>Widget Area Blocks: header_alerts_widget_area ({wabHeaderAlertsData.widgetAreaBlocks?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(wabHeaderAlertsData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  {wabHeaderLoading ? <p>Loading header widget blocks...</p> : wabHeaderError ? (
+                    <p style={{color: 'red'}}>Header Widget Area Blocks Error: {wabHeaderError.message}</p>
+                  ) : wabHeaderData && (
+                    <details>
+                      <summary>Widget Area Blocks: header_widget_area ({wabHeaderData.widgetAreaBlocks?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(wabHeaderData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  {wabFooterLoading ? <p>Loading footer widget blocks...</p> : wabFooterError ? (
+                    <p style={{color: 'red'}}>Footer Widget Area Blocks Error: {wabFooterError.message}</p>
+                  ) : wabFooterData && (
+                    <details>
+                      <summary>Widget Area Blocks: footer_widget_area ({wabFooterData.widgetAreaBlocks?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(wabFooterData, null, 2)}</pre>
+                    </details>
+                  )}
+
+                  {wabPostFooterLoading ? <p>Loading post footer widget blocks...</p> : wabPostFooterError ? (
+                    <p style={{color: 'red'}}>Post Footer Widget Area Blocks Error: {wabPostFooterError.message}</p>
+                  ) : wabPostFooterData && (
+                    <details>
+                      <summary>Widget Area Blocks: post_footer_widget_area ({wabPostFooterData.widgetAreaBlocks?.length ?? 0})</summary>
+                      <pre>{JSON.stringify(wabPostFooterData, null, 2)}</pre>
                     </details>
                   )}
 

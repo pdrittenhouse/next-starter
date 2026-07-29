@@ -2,8 +2,9 @@ import type { CSSProperties } from 'react';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './icons.module.scss';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
-interface IconsBlockData {
+interface IconsBlockData extends Pick<AcfBlockStyleData, 'width' | 'margin'> {
   display?: { display?: string | null };
   text_align?: string | null;
 }
@@ -21,9 +22,11 @@ export async function IconsBlock({ block }: IconsBlockProps) {
     .filter(Boolean)
     .join(' ');
 
-  const wrapperStyle: CSSProperties = data.text_align
-    ? { textAlign: data.text_align as CSSProperties['textAlign'] }
-    : {};
+  const { style: acfStyle } = buildAcfBlockStyle({ width: data.width, margin: data.margin });
+  const wrapperStyle: CSSProperties = {
+    ...acfStyle,
+    ...(data.text_align ? { textAlign: data.text_align as CSSProperties['textAlign'] } : {}),
+  };
 
   if (!block.renderedHtml) return null;
   return (

@@ -1,6 +1,7 @@
 import { Branding } from '@/stories/molecules/branding/Branding';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import styles from './branding.module.scss';
 
 interface BrandingBlockData {
@@ -30,6 +31,9 @@ interface BrandingBlockData {
     theme_color?: string | null;
     custom_color?: string | null;
   };
+  branding_wrapper_width?: AcfBlockStyleData['width'];
+  branding_wrapper_height?: AcfBlockStyleData['height'];
+  margin?: AcfBlockStyleData['margin'];
 }
 
 interface BrandingBlockProps {
@@ -42,9 +46,15 @@ export async function BrandingBlock({ block }: BrandingBlockProps) {
 
   const brandUrl = data.branding_image?.url ?? null;
 
+  const { style: wrapperStyle } = buildAcfBlockStyle({
+    width:  data.branding_wrapper_width,
+    height: data.branding_wrapper_height,
+    margin: data.margin,
+  });
+
   if (!brandUrl && !data.branding_name && !data.branding_slogan) {
     if (!block.renderedHtml) return null;
-    return <div dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />;
+    return <div style={wrapperStyle} dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />;
   }
 
   // Mirror Twig text-align logic (left → text-start, right → text-end, else text-{value})
@@ -79,7 +89,7 @@ export async function BrandingBlock({ block }: BrandingBlockProps) {
     logoImgSrc = brandUrl;
   }
 
-  return (
+  const brandingEl = (
     <Branding
       url={data.branding_link ?? undefined}
       target={data.open_in_new_window ? '_blank' : undefined}
@@ -96,4 +106,7 @@ export async function BrandingBlock({ block }: BrandingBlockProps) {
       otherClasses={otherClasses || undefined}
     />
   );
+
+  if (wrapperStyle) return <div style={wrapperStyle}>{brandingEl}</div>;
+  return brandingEl;
 }

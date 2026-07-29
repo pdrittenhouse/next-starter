@@ -1,10 +1,12 @@
+import type React from 'react';
 import { FlickityCarousel } from '@/stories/molecules/flickity-carousel/FlickityCarousel';
 import { SlickCarousel } from '@/stories/molecules/slick-carousel/SlickCarousel';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './slider.module.scss';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
-interface SliderBlockData {
+interface SliderBlockData extends Pick<AcfBlockStyleData, 'width' | 'padding' | 'margin'> {
   slider?: 'bootstrap' | 'flickity' | 'slick' | null;
   equal_height_slides?: boolean;
   // Shared options
@@ -48,6 +50,12 @@ export async function SliderBlock({ block }: SliderBlockProps) {
   const rawInner = (block as unknown as Record<string, unknown>).innerBlocks;
   const innerBlocks = Array.isArray(rawInner) ? (rawInner as EditorBlock[]) : [];
 
+  const { style: wrapperStyle } = buildAcfBlockStyle({
+    width: data.width,
+    padding: data.padding,
+    margin: data.margin,
+  });
+
   const blockClasses = [
     attrs.className,
     'block-slider',
@@ -65,8 +73,10 @@ export async function SliderBlock({ block }: SliderBlockProps) {
     />
   ));
 
+  let carousel: React.ReactElement | null = null;
+
   if (data.slider === 'flickity') {
-    return (
+    carousel = (
       <FlickityCarousel
         slides={slides}
         className={blockClasses || undefined}
@@ -94,10 +104,8 @@ export async function SliderBlock({ block }: SliderBlockProps) {
         columns={data.columns ?? undefined}
       />
     );
-  }
-
-  if (data.slider === 'slick') {
-    return (
+  } else if (data.slider === 'slick') {
+    carousel = (
       <SlickCarousel
         slides={slides}
         className={blockClasses || undefined}
@@ -117,15 +125,18 @@ export async function SliderBlock({ block }: SliderBlockProps) {
         pauseOnHover={data.pause_on_hover}
       />
     );
+  } else if (block.renderedHtml) {
+    // Bootstrap carousel — Carousel molecule expects ImageSlide objects, not arbitrary JSX;
+    // fall back to WordPress-rendered HTML for the bootstrap slider type.
+    carousel = (
+      <div
+        className={blockClasses || undefined}
+        dangerouslySetInnerHTML={{ __html: block.renderedHtml }}
+      />
+    );
   }
 
-  // Bootstrap carousel — Carousel molecule expects ImageSlide objects, not arbitrary JSX;
-  // fall back to WordPress-rendered HTML for the bootstrap slider type.
-  if (!block.renderedHtml) return null;
-  return (
-    <div
-      className={blockClasses || undefined}
-      dangerouslySetInnerHTML={{ __html: block.renderedHtml }}
-    />
-  );
+  if (!carousel) return null;
+  if (wrapperStyle) return <div style={wrapperStyle}>{carousel}</div>;
+  return carousel;
 }

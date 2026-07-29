@@ -1,9 +1,9 @@
-import type { CSSProperties } from 'react';
 import { Accordion } from '@/stories/molecules/accordion/Accordion';
 import type { AccordionItem } from '@/stories/molecules/accordion/Accordion';
 import type { ButtonVariant } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 /**
  * ACF field values for the acf/accordion wrapper block.
@@ -83,46 +83,6 @@ interface AccordionBlockProps {
   block: EditorBlock;
 }
 
-/**
- * Resolve the margin ACF field group into a React.CSSProperties object.
- *
- * Mirrors the margin-to-inline-style logic in accordion.twig's accordion_styles:
- *   auto === true   → 'auto'
- *   value >= 0      → '{value}px'
- *   otherwise       → (property omitted)
- */
-function resolveMarginStyle(margin?: AccordionBlockData['margin']): CSSProperties {
-  const m = margin?.margin;
-  if (!m) return {};
-
-  const style: CSSProperties = {};
-
-  if (m.top?.auto) {
-    style.marginTop = 'auto';
-  } else if (m.top?.top != null && m.top.top >= 0) {
-    style.marginTop = `${m.top.top}px`;
-  }
-
-  if (m.bottom?.auto) {
-    style.marginBottom = 'auto';
-  } else if (m.bottom?.bottom != null && m.bottom.bottom >= 0) {
-    style.marginBottom = `${m.bottom.bottom}px`;
-  }
-
-  if (m.left?.auto) {
-    style.marginLeft = 'auto';
-  } else if (m.left?.left != null && m.left.left >= 0) {
-    style.marginLeft = `${m.left.left}px`;
-  }
-
-  if (m.right?.auto) {
-    style.marginRight = 'auto';
-  } else if (m.right?.right != null && m.right.right >= 0) {
-    style.marginRight = `${m.right.right}px`;
-  }
-
-  return style;
-}
 
 /**
  * Accordion block — mirrors `src/templates/blocks/accordion/accordion.twig`.
@@ -160,11 +120,10 @@ export async function AccordionBlock({ block }: AccordionBlockProps) {
 
   const blockClasses = [attrs.className, layoutModifier].filter(Boolean) as string[];
 
-  // Margin inline styles — mirrors accordion.twig's accordion_styles / accordion_attributes.
-  // Applied via a wrapper div rather than otherAttributes (which is Record<string, string>
-  // and cannot carry a CSSProperties object).
-  const marginStyle = resolveMarginStyle(data.margin);
-  const hasMargin = Object.keys(marginStyle).length > 0;
+  // Inline styles — mirrors accordion.twig's accordion_styles / accordion_attributes.
+  // Applied via a wrapper div (otherAttributes is Record<string, string>, can't carry CSSProperties).
+  const { style: wrapperStyle } = buildAcfBlockStyle({ margin: data.margin });
+  const hasStyle = !!wrapperStyle;
 
   // Access inner blocks — WPGraphQL nested queries surface acf/accordion-item
   // blocks here even though WpEditorBlock doesn't model the field (flat-list
@@ -178,8 +137,8 @@ export async function AccordionBlock({ block }: AccordionBlockProps) {
   // the block from being silently dropped.
   if (itemBlocks.length === 0) {
     if (!block.renderedHtml) return null;
-    return hasMargin ? (
-      <div style={marginStyle} dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />
+    return hasStyle ? (
+      <div style={wrapperStyle} dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />
     ) : (
       <div dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />
     );
@@ -262,5 +221,5 @@ export async function AccordionBlock({ block }: AccordionBlockProps) {
   // Wrap in a div when margin styles are present — the Accordion component's
   // otherAttributes is Record<string, string> and cannot carry a CSSProperties
   // object, so a wrapper div is the cleanest alternative.
-  return hasMargin ? <div style={marginStyle}>{accordion}</div> : accordion;
+  return hasStyle ? <div style={wrapperStyle}>{accordion}</div> : accordion;
 }

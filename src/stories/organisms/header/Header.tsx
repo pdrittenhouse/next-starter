@@ -83,6 +83,13 @@ export interface HeaderProps {
    */
   brand?: BrandingProps;
 
+  /**
+   * Props for a secondary co-brand Branding molecule rendered after `brand`
+   * inside `.site-header--branding`. Maps to `options.co_brand` in the Twig —
+   * rendered with `otherClasses: 'co-brand'` to distinguish it from the primary brand.
+   */
+  coBrand?: BrandingProps;
+
   // -------------------------------------------------------------------------
   // Navbar toggler
   // -------------------------------------------------------------------------
@@ -137,6 +144,23 @@ export interface HeaderProps {
    */
   socialNavContent?: React.ReactNode;
 
+  /**
+   * Additional CSS classes applied to the `site-header--social-nav` wrapper div.
+   * Use for per-viewport visibility (`d-none d-lg-flex`, `d-lg-none`).
+   */
+  socialNavWrapperClasses?: string;
+
+  // -------------------------------------------------------------------------
+  // Mobile CTA wrapper
+  // -------------------------------------------------------------------------
+
+  /**
+   * Additional CSS classes applied to the `.button-wrapper--mobile` div.
+   * Use `'d-none'` when `showMobileCtaButton` is false to hide the wrapper —
+   * mirrors `show_button != true ? 'd-none'` in the Twig template.
+   */
+  mobileNavCtaWrapperClasses?: string;
+
   // -------------------------------------------------------------------------
   // Search
   // -------------------------------------------------------------------------
@@ -146,6 +170,25 @@ export interface HeaderProps {
    * @default false
    */
   showSearch?: boolean;
+
+  /**
+   * Additional CSS classes applied to the wrapper div around the search form.
+   * Use for per-viewport visibility (`d-none d-lg-flex`, `d-lg-none`) — mirrors
+   * the inner `<div class="pt-2 …">` inside `.site-header--search` in the Twig.
+   */
+  searchWrapperClasses?: string;
+
+  // -------------------------------------------------------------------------
+  // Skip navigation
+  // -------------------------------------------------------------------------
+
+  /**
+   * Label text for the skip-navigation link rendered before `<header>`.
+   * Mirrors `@atoms/skip-nav/_skip-nav.tpl.twig` in the Twig pattern library.
+   * Target is `#content` (`<main id="content">`).
+   * @default 'Skip to content'
+   */
+  skipNavLabel?: string;
 
   // -------------------------------------------------------------------------
   // Additional content slot
@@ -257,14 +300,19 @@ export function Header({
   alertOtherClasses,
   navTopContent,
   brand,
+  coBrand,
   hamburgerAnimation,
   navbarTogglerClasses,
   primaryNav,
   secondaryNav,
   primaryNavCta,
   mobileNavCta,
+  mobileNavCtaWrapperClasses,
   socialNavContent,
+  socialNavWrapperClasses,
   showSearch = false,
+  searchWrapperClasses,
+  skipNavLabel = 'Skip to content',
   additionalContent,
 }: HeaderProps) {
   const [navOpen, setNavOpen] = useState(false);
@@ -281,6 +329,10 @@ export function Header({
     : undefined;
 
   return (
+    <>
+    <a href="#content" className="skip-nav visually-hidden-focusable">
+      {skipNavLabel}
+    </a>
     <header
       className={headerClasses}
       role="banner"
@@ -326,6 +378,7 @@ export function Header({
               {/* Branding ------------------------------------------------- */}
               <div className="site-header--branding">
                 {brand && <Branding {...brand} />}
+                {coBrand && <Branding {...coBrand} />}
               </div>
 
               {/* Navigation ------------------------------------------------ */}
@@ -348,7 +401,7 @@ export function Header({
 
                 {/* Mobile CTA — immediately before .navbar-collapse */}
                 {mobileNavCta && (
-                  <div className="button-wrapper--mobile">
+                  <div className={['button-wrapper--mobile', mobileNavCtaWrapperClasses].filter(Boolean).join(' ')}>
                     <Button {...mobileNavCta} />
                   </div>
                 )}
@@ -368,7 +421,7 @@ export function Header({
                                 {...secondaryNav}
                               />
                             )}
-                            <div className="site-header--social-nav">
+                            <div className={['site-header--social-nav', socialNavWrapperClasses].filter(Boolean).join(' ')}>
                               {socialNavContent}
                             </div>
                           </div>
@@ -390,44 +443,49 @@ export function Header({
 
                           {/* Search ---------------------------------------- */}
                           <div className="site-header--search">
-                            {showSearch && (
-                              <form
-                                name="header-search"
-                                id="headerSearch"
-                                className="header-search"
-                              >
-                                <legend className="visually-hidden">Search</legend>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Search"
-                                  aria-label="Search"
-                                />
-                                <button
-                                  type="submit"
-                                  className="btn search-submit"
-                                  aria-label="Submit search"
+                            {showSearch && (() => {
+                              const searchForm = (
+                                <form
+                                  name="header-search"
+                                  id="headerSearch"
+                                  className="header-search"
                                 >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    aria-hidden="true"
-                                    focusable="false"
-                                    className="icon"
+                                  <legend className="visually-hidden">Search</legend>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search"
+                                    aria-label="Search"
+                                  />
+                                  <button
+                                    type="submit"
+                                    className="btn search-submit"
+                                    aria-label="Submit search"
                                   >
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                  </svg>
-                                </button>
-                              </form>
-                            )}
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="20"
+                                      height="20"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      aria-hidden="true"
+                                      focusable="false"
+                                      className="icon"
+                                    >
+                                      <circle cx="11" cy="11" r="8" />
+                                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                    </svg>
+                                  </button>
+                                </form>
+                              );
+                              return searchWrapperClasses
+                                ? <div className={searchWrapperClasses}>{searchForm}</div>
+                                : searchForm;
+                            })()}
                           </div>
 
                         </div>
@@ -460,5 +518,6 @@ export function Header({
       </div>
       {/* /site-header--wrapper */}
     </header>
+    </>
   );
 }

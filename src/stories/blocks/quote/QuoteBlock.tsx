@@ -25,7 +25,7 @@ interface QuoteBlockProps {
 }
 
 export async function QuoteBlock({ block }: QuoteBlockProps) {
-  const attrs = parseBlockAttributes(block) as { data?: QuoteBlockData; className?: string };
+  const attrs = parseBlockAttributes(block) as { data?: QuoteBlockData; className?: string; align?: string };
   const data: QuoteBlockData = attrs?.data ?? {};
 
   if (!data.quote) {
@@ -51,7 +51,8 @@ export async function QuoteBlock({ block }: QuoteBlockProps) {
 
   // Mirror Twig blockquote_classes: 'block-quote' + layout variant + block className
   const layoutClass = data.layout && data.layout !== 'default' ? data.layout : null;
-  const className = ['block-quote', layoutClass, attrs.className].filter(Boolean).join(' ');
+  const alignClass = attrs.align ? `align-${attrs.align}` : null;
+  const className = ['block-quote', layoutClass, alignClass, attrs.className].filter(Boolean).join(' ');
 
   return (
     <Blockquote

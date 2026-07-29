@@ -1,7 +1,7 @@
-import type React from 'react';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { Table } from '@/stories/atoms/table/Table';
+import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';
 import type { TableVariant, TableResponsive, VerticalAlign } from '@/stories/atoms/table/Table';
 
 /**
@@ -92,48 +92,6 @@ interface TableBlockProps {
   block: EditorBlock;
 }
 
-/**
- * Build a React.CSSProperties object from the margin, padding, and width ACF
- * clone groups. Mirrors the `block_styles` Twig variable in table.twig.
- */
-function resolveBlockStyle(data: TableBlockData): React.CSSProperties {
-  const style: React.CSSProperties = {};
-
-  const m = data.margin?.margin;
-  if (m) {
-    if (m.top?.auto) style.marginTop = 'auto';
-    else if (m.top?.top != null && m.top.top >= 0) style.marginTop = `${m.top.top}px`;
-
-    if (m.bottom?.auto) style.marginBottom = 'auto';
-    else if (m.bottom?.bottom != null && m.bottom.bottom >= 0)
-      style.marginBottom = `${m.bottom.bottom}px`;
-
-    if (m.left?.auto) style.marginLeft = 'auto';
-    else if (m.left?.left != null && m.left.left >= 0) style.marginLeft = `${m.left.left}px`;
-
-    if (m.right?.auto) style.marginRight = 'auto';
-    else if (m.right?.right != null && m.right.right >= 0) style.marginRight = `${m.right.right}px`;
-  }
-
-  const p = data.padding?.padding;
-  if (p) {
-    if (p.top != null && p.top >= 0) style.paddingTop = `${p.top}px`;
-    if (p.bottom != null && p.bottom >= 0) style.paddingBottom = `${p.bottom}px`;
-    if (p.left != null && p.left >= 0) style.paddingLeft = `${p.left}px`;
-    if (p.right != null && p.right >= 0) style.paddingRight = `${p.right}px`;
-  }
-
-  const w = data.width?.width;
-  if (w) {
-    if (w.width?.value && w.width.value !== '') {
-      (style as Record<string, string>).width = `${w.width.value}${w.width.unit ?? ''}`;
-    }
-    if (w.min_width && w.min_width !== '') style.minWidth = `${w.min_width}px`;
-    if (w.max_width && w.max_width !== '') style.maxWidth = `${w.max_width}px`;
-  }
-
-  return style;
-}
 
 /**
  * Resolve the Bootstrap contextual variant from the ACF variant field.
@@ -187,8 +145,12 @@ export async function TableBlock({ block }: TableBlockProps) {
 
   const tableVariant = resolveTableVariant(data.table_variant);
 
-  const blockStyle = resolveBlockStyle(data);
-  const hasBlockStyle = Object.keys(blockStyle).length > 0;
+  const { style: blockStyle } = buildAcfBlockStyle({
+    width: data.width,
+    padding: data.padding,
+    margin: data.margin,
+  });
+  const hasBlockStyle = !!blockStyle;
 
   const blockClasses = ['table-block', attrs.className].filter(Boolean).join(' ');
 

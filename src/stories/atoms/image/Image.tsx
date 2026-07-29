@@ -39,6 +39,12 @@ export interface ImageProps {
   fetchPriority?: 'high' | 'low' | 'auto';
   /** Additional CSS class names — maps to `image_other_classes` in the Twig pattern. */
   className?: string;
+  /**
+   * Inline styles applied to the inner <img> / NextImage element itself.
+   * Use for ACF `object_fit` and similar per-image overrides.
+   * Has no effect on the `bg` variant (which renders a <div>, not <img>).
+   */
+  imgStyle?: React.CSSProperties;
 }
 
 function buildClasses(variant: ImageVariant, extra?: string): string {
@@ -67,6 +73,7 @@ export function Image({
   loading = 'lazy',
   fetchPriority,
   className,
+  imgStyle,
 }: ImageProps) {
   const priority = fetchPriority === 'high';
   // next/image: when priority=true, loading must be undefined (it ignores it anyway,
@@ -105,7 +112,7 @@ export function Image({
             sizes={sizes}
             loading={resolvedLoading}
             priority={priority}
-            style={{ objectFit: 'cover', maxWidth: '100%' }}
+            style={{ objectFit: 'cover', maxWidth: '100%', ...imgStyle }}
           />
         </div>
       </div>
@@ -124,6 +131,7 @@ export function Image({
         loading={resolvedLoading}
         priority={priority}
         className={cls}
+        style={imgStyle}
       />
     );
   }
@@ -141,6 +149,7 @@ export function Image({
         loading={resolvedLoading}
         priority={priority}
         className={cls}
+        style={imgStyle}
       />
     </div>
   );

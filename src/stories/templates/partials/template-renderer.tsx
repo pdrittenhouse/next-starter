@@ -4,20 +4,23 @@ import type { EditorBlock } from '@/types/blocks';
 import { PATTERN_MAP } from '@/lib/registries/PATTERN_MAP';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { BlockRenderer } from './block-renderer';
+import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
 
 interface TemplateRendererProps {
   tree: TimberlandTreeNode[];
   editorBlocks?: EditorBlock[];
   /** Classic WP post_content HTML — used as fallback when editorBlocks is empty. */
   content?: string | null;
+  /** Resolved widget-area slug for the sidebar slot (e.g. 'primary_sidebar'). */
+  sidebarSlug?: string | null;
 }
 
 // Walks the manifest tree and renders registered PATTERN_MAP components.
-// The `content` slot is the only slot rendered here — it maps to BlockRenderer.
-// All other slots are Twig-only concerns (html_head, foot, etc.) and are skipped.
+// The `content` and `sidebar` slots are handled here; all other slots are
+// Twig-only concerns (html_head, foot, etc.) and are skipped.
 // Unregistered patterns use a generic HTML shell derived from the PHP-rendered
 // outer element (element + className + id) so their children still recurse.
-export function TemplateRenderer({ tree, editorBlocks = [], content }: TemplateRendererProps) {
+export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug }: TemplateRendererProps) {
   return (
     <>
       {tree.map((node, i) => {
@@ -31,13 +34,16 @@ export function TemplateRenderer({ tree, editorBlocks = [], content }: TemplateR
             }
             return null;
           }
+          if (node.name === 'sidebar' && sidebarSlug) {
+            return <SidebarPattern key="sidebar" slug={sidebarSlug} />;
+          }
           return null;
         }
 
         if (node.type === 'element') {
           const Tag = (node.element ?? 'div') as ElementType;
           const childContent = node.children?.length ? (
-            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} />
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} sidebarSlug={sidebarSlug} />
           ) : null;
           return (
             <Tag
@@ -53,7 +59,7 @@ export function TemplateRenderer({ tree, editorBlocks = [], content }: TemplateR
 
         if (node.type === 'pattern') {
           const childContent = node.children?.length ? (
-            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} />
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} sidebarSlug={sidebarSlug} />
           ) : null;
 
           const Component = PATTERN_MAP[node.slug ?? ''];

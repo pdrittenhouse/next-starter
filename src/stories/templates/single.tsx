@@ -8,6 +8,7 @@ import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { PageHeader } from './partials/page-header';
 import { Comments } from './partials/comments';
 import { BlockRenderer } from './partials/block-renderer';
+import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
 
 interface SingleTemplateProps {
   node: {
@@ -23,6 +24,7 @@ interface SingleTemplateProps {
     contentTypeName?: string;
     mainClasses?: string;
     contentWrapperStyle?: string;
+    sidebarSlug?: string | null;
     author?: {
       node: {
         id: string;
@@ -217,6 +219,7 @@ export async function SingleTemplate({ node }: SingleTemplateProps) {
         />
       </article>
       </div>
+      {node.sidebarSlug && <SidebarPattern slug={node.sidebarSlug} />}
     </main>
   );
 }

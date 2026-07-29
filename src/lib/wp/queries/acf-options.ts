@@ -61,7 +61,14 @@ export const GET_HEADER_OPTIONS = gql`
         shrinkHeader
         hideHeaderContent
         headerAlertMessage
+        alertLayout
         navbarBreakpoint
+        hamburgerAnimation
+        headerLogoUseOriginalColor
+        brandHeight
+        siteHeaderLayout {
+          headerLayout
+        }
         headerCta {
           headerCta {
             link { title url target }
@@ -70,6 +77,8 @@ export const GET_HEADER_OPTIONS = gql`
             size
             outline
             disabled
+            element
+            toggle
           }
           headerMobileCta {
             link { title url target }
@@ -78,6 +87,8 @@ export const GET_HEADER_OPTIONS = gql`
             size
             outline
             disabled
+            element
+            toggle
           }
         }
       }
@@ -125,6 +136,10 @@ export const GET_FOOTER_OPTIONS = gql`
     themeFooterOptions {
       settingsFooterOptions {
         hideFooterContent
+        footerLogoUseOriginalColor
+        siteFooterLayout {
+          footerLayout
+        }
         footerContactPhone {
           phoneLabel
           phoneNumber
@@ -146,6 +161,47 @@ export const GET_FOOTER_OPTIONS = gql`
           size
           outline
           disabled
+          element
+          toggle
+        }
+      }
+    }
+  }
+`;
+
+export const GET_FOOTER_LAYOUT_OPTIONS = gql`
+  query GetFooterLayoutOptions {
+    themeOptions {
+      footerLayoutOptions {
+        hideFooterBrand
+        hideFooterCta
+        hideFooterNav
+        hideFooterSocialNav
+        hideFooterSearch
+        hideFooterContactInfo
+        hideFooterDisclaimer
+        hideFooterAttribution
+        hideFooterUtilityNav
+        hideFooterCopyright
+        hideFooterCopyrightLabel
+        hideFooterCopyrightIcon
+        hideFooterCopyrightYear
+        hideFooterCopyrightSiteName
+        footerTwoColumnLayout
+        footerReverseColumnLayout
+        footerReverseMetaColumns
+      }
+    }
+  }
+`;
+
+export const GET_CO_BRAND = gql`
+  query GetCoBrand {
+    settingsThemeGeneralOptions {
+      coBrand {
+        node {
+          sourceUrl
+          altText
         }
       }
     }

@@ -14,6 +14,7 @@ import styles from './button.module.scss';
  * Color variants matching the theme's extended Bootstrap palette.
  */
 export type ButtonVariant =
+  | 'default'
   | 'primary'
   | 'secondary'
   | 'tertiary'

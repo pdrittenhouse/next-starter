@@ -2,6 +2,7 @@ import { Button } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './link-group.module.scss';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 interface LinkItem {
   link?: {
@@ -24,13 +25,8 @@ interface LinkItem {
   };
 }
 
-interface LinkGroupBlockData {
+interface LinkGroupBlockData extends Pick<AcfBlockStyleData, 'padding' | 'margin' | 'border' | 'border_radius' | 'box_shadow' | 'bg_color'> {
   links?: LinkItem[];
-  bg_color?: {
-    bg_color?: string | null;
-    bg_theme_color?: string | null;
-    bg_custom_color?: string | null;
-  };
   color?: {
     color?: string | null;
     theme_color?: string | null;
@@ -52,10 +48,7 @@ export async function LinkGroupBlock({ block }: LinkGroupBlockProps) {
     return <div dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />;
   }
 
-  const bgClass =
-    data.bg_color?.bg_color === 'palette' && data.bg_color.bg_theme_color
-      ? `bg-${data.bg_color.bg_theme_color}`
-      : null;
+  const { style: acfStyle, bgClass } = buildAcfBlockStyle(data);
   const textClass =
     data.color?.color === 'palette' && data.color.theme_color
       ? `text-${data.color.theme_color}`
@@ -65,18 +58,18 @@ export async function LinkGroupBlock({ block }: LinkGroupBlockProps) {
     .filter(Boolean)
     .join(' ');
 
-  const wrapperStyle: Record<string, string> = {};
-  if (data.bg_color?.bg_color === 'custom' && data.bg_color.bg_custom_color) {
-    wrapperStyle.backgroundColor = data.bg_color.bg_custom_color;
-  }
-  if (data.color?.color === 'custom' && data.color.custom_color) {
-    wrapperStyle.color = data.color.custom_color;
-  }
+  // Merge ACF styles with text-color override
+  const wrapperStyle = {
+    ...acfStyle,
+    ...(data.color?.color === 'custom' && data.color.custom_color
+      ? { color: data.color.custom_color }
+      : {}),
+  };
 
   return (
     <div
       className={wrapperClasses || undefined}
-      style={Object.keys(wrapperStyle).length > 0 ? wrapperStyle : undefined}
+      style={wrapperStyle && Object.keys(wrapperStyle).length > 0 ? wrapperStyle : undefined}
     >
       {data.links.map((item, i) => {
         const link = item.link;

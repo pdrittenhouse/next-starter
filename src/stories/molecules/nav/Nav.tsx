@@ -91,6 +91,8 @@ export interface NavProps {
   navElement?: string;
   /** HTML `id` for the nav list element. */
   navId?: string;
+  /** Additional class string appended to the nav list element. */
+  navOtherClasses?: string;
   /** Navigation items. */
   items?: NavItem[];
   /** Mega menu positioned relative to the item rather than the viewport. */
@@ -328,6 +330,7 @@ interface NavItemsProps {
   navbarBreakpoint?: string;
   navElement?: string;
   navId?: string;
+  navOtherClasses?: string;
   navTabs?: boolean;
   navPills?: boolean;
   navFill?: boolean;
@@ -340,6 +343,7 @@ function NavItems({
   navbarBreakpoint,
   navElement = 'ul',
   navId,
+  navOtherClasses,
   navTabs,
   navPills,
   navFill,
@@ -357,6 +361,7 @@ function NavItems({
     navFill ? 'nav-fill' : null,
     navJustified ? 'nav-justified' : null,
     'nav',
+    navOtherClasses ?? null,
   ].filter(Boolean).join(' ');
 
   return (
@@ -401,6 +406,7 @@ export function Nav({
   navJustified,
   navElement = 'ul',
   navId,
+  navOtherClasses,
   items = [],
   relativeMegaMenu = false,
   containerRelativeMenu = false,
@@ -445,6 +451,7 @@ export function Nav({
             navbarBreakpoint={navbarBreakpoint}
             navElement={navElement}
             navId={navId}
+            navOtherClasses={navOtherClasses}
             navTabs={navTabs}
             navPills={navPills}
             navFill={navFill}

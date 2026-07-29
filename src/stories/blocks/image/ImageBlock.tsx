@@ -1,9 +1,11 @@
+import type { CSSProperties } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
 import { Image, type ImageVariant } from '@/stories/atoms/image/Image';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 /**
  * ACF field values for the image block, as they appear in attributesJSON.data.
@@ -14,13 +16,34 @@ import type { EditorBlock } from '@/types/blocks';
  *   image_image       (not image)   — attachment ID
  *   image_image_url   (not image_url)
  *
+ * When get_fields() is used to expand block attrs, ACF may instead return the
+ * clone sub-fields grouped under the clone name as data.image.{image_type, image, image_url}.
+ * Both formats are handled. The nested format includes the full WP attachment
+ * object (url, width, height, alt) so no secondary GraphQL fetch is needed.
+ *
  * All other fields (image_size, image_variant, loading, etc.) are top-level
  * on the block and have no prefix.
  */
-interface ImageBlockData {
+
+interface AcfAttachmentObject {
+  ID?: number;
+  id?: number;
+  url?: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+}
+
+interface ImageBlockData extends AcfBlockStyleData {
   image_image_type?: 'file' | 'url';
   image_image?: number | string | null;
   image_image_url?: string | null;
+  /** Nested clone format from get_fields(): sub-fields grouped under the clone field name. */
+  image?: {
+    image_type?: 'file' | 'url';
+    image?: AcfAttachmentObject | number | null;
+    image_url?: string | null;
+  } | null;
   image_size?: string;
   image_variant?: string;
   aspect_ratio?: string;
@@ -66,38 +89,55 @@ function resolveAspectRatio(data: ImageBlockData): { width: number; height: numb
  * Registered in BLOCK_MAP as 'acf/image'.
  */
 export async function ImageBlock({ block }: ImageBlockProps) {
-  const attrs = parseBlockAttributes(block) as { data?: ImageBlockData; className?: string };
+  const attrs = parseBlockAttributes(block) as { data?: ImageBlockData; className?: string; align?: string };
   const data: ImageBlockData = attrs?.data ?? {};
 
-  const imageType = data.image_image_type ?? 'file';
+  // Handle both flat format (image_image_type) and nested clone format (image.image_type)
+  const imageType = data.image_image_type ?? data.image?.image_type ?? 'file';
   const variant = (data.image_variant as ImageVariant | undefined) ?? 'picture';
   const loading = data.loading ?? 'lazy';
   const sizesAttr = data.sizes ?? '(max-width: 768px) 100vw, 50vw';
   const aspectRatio = variant === 'aspect-ratio' ? resolveAspectRatio(data) : null;
 
-  // Resolve image source — file type fetches the full media object by attachment ID
   let src: string | null = null;
   let alt: string = data.alt_text ?? '';
   let width: number | undefined;
   let height: number | undefined;
 
-  if (imageType === 'url' && data.image_image_url) {
-    src = data.image_image_url;
-  } else if (imageType === 'file' && data.image_image) {
-    const { data: mediaData } = await fetchGraphQL<{
-      mediaItem: {
-        sourceUrl: string;
-        altText?: string;
-        mediaDetails?: { width?: number; height?: number };
-      } | null;
-    }>(print(GET_MEDIA_ITEM_BY_ID), { id: String(data.image_image) });
+  const urlSource = data.image_image_url ?? data.image?.image_url ?? null;
 
-    const media = mediaData?.mediaItem;
-    if (media) {
-      src = media.sourceUrl;
-      alt = data.alt_text || media.altText || '';
-      width = media.mediaDetails?.width;
-      height = media.mediaDetails?.height;
+  if (imageType === 'url' && urlSource) {
+    src = urlSource;
+  } else if (imageType === 'file') {
+    const nestedImage = data.image?.image;
+
+    if (nestedImage && typeof nestedImage === 'object' && 'url' in nestedImage) {
+      // Nested format: get_fields() returned the full WP attachment array
+      const attachment = nestedImage as AcfAttachmentObject;
+      src = attachment.url ?? null;
+      if (!data.alt_text) alt = attachment.alt ?? '';
+      width = attachment.width;
+      height = attachment.height;
+    } else {
+      // Flat format: attachment ID (original format) or nested numeric ID
+      const imageId = data.image_image ?? (typeof nestedImage === 'number' ? nestedImage : null);
+      if (imageId) {
+        const { data: mediaData } = await fetchGraphQL<{
+          mediaItem: {
+            sourceUrl: string;
+            altText?: string;
+            mediaDetails?: { width?: number; height?: number };
+          } | null;
+        }>(print(GET_MEDIA_ITEM_BY_ID), { id: String(imageId) });
+
+        const media = mediaData?.mediaItem;
+        if (media) {
+          src = media.sourceUrl;
+          alt = data.alt_text || media.altText || '';
+          width = media.mediaDetails?.width;
+          height = media.mediaDetails?.height;
+        }
+      }
     }
   }
 
@@ -109,6 +149,13 @@ export async function ImageBlock({ block }: ImageBlockProps) {
   const imageWidth = aspectRatio ? aspectRatio.width : width;
   const imageHeight = aspectRatio ? aspectRatio.height : height;
 
+  // ACF inline style fields — mirrors the Twig template's style="" construction
+  const { style: wrapperStyle, bgClass } = buildAcfBlockStyle(data);
+  const alignClass = attrs.align ? `align-${attrs.align}` : undefined;
+  const imgStyle: CSSProperties | undefined = data.object_fit
+    ? { objectFit: data.object_fit as CSSProperties['objectFit'] }
+    : undefined;
+
   const imageEl = (
     <Image
       variant={variant}
@@ -118,6 +165,7 @@ export async function ImageBlock({ block }: ImageBlockProps) {
       height={imageHeight}
       sizes={sizesAttr}
       loading={loading}
+      imgStyle={imgStyle}
     />
   );
 
@@ -146,10 +194,12 @@ export async function ImageBlock({ block }: ImageBlockProps) {
     </div>
   ) : linkedImage;
 
-  const blockClasses = ['image-block', attrs.className].filter(Boolean).join(' ');
+  const blockClasses = ['image-block', alignClass, bgClass, attrs.className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <div className={blockClasses}>
+    <div className={blockClasses} style={wrapperStyle}>
       {withOverlay}
       {data.caption && (
         <figcaption className="image-caption">{data.caption}</figcaption>

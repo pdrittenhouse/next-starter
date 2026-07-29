@@ -2,6 +2,7 @@ import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
 import { Card } from '@/stories/organisms/card/Card';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import type {
   CardBackground,
   CardBorder,
@@ -69,7 +70,7 @@ interface AcfCardImageField {
  * Group sub-fields are represented as nested objects exactly as ACF serialises
  * them (e.g. `card_bg_color.bg_theme_color`).
  */
-export interface CardBlockData {
+export interface CardBlockData extends Pick<AcfBlockStyleData, 'width' | 'height' | 'margin'> {
   // ─── Content ────────────────────────────────────────────────────────────────
   card_title?: string | null;
   subtitle?: string | null;
@@ -294,6 +295,7 @@ export async function CardBlock({ block }: CardBlockProps) {
     data?: CardBlockData;
     className?: string;
     anchor?: string;
+    align?: string;
   };
   const data: CardBlockData = attrs?.data ?? {};
 
@@ -362,6 +364,14 @@ export async function CardBlock({ block }: CardBlockProps) {
   // ─── Text alignment ──────────────────────────────────────────────────────────
   const textAlignment = resolveTextAlignment(data.text_align);
 
+  // ─── Block-level wrapper styles (width, height, margin) and align class ──────
+  const { style: blockStyle } = buildAcfBlockStyle({
+    width:  data.width,
+    height: data.height,
+    margin: data.margin,
+  });
+  const alignClass = attrs.align ? `align-${attrs.align}` : null;
+
   // ─── Extra className for the card wrapper ────────────────────────────────────
   // Mirrors card_classes array: block-card, layout variant, WordPress className.
   const layoutClass =
@@ -375,6 +385,7 @@ export async function CardBlock({ block }: CardBlockProps) {
   const extraClasses = [
     'block-card',
     layoutClass,
+    alignClass,
     data.vertically_center_content ? 'vertically-center-content' : null,
     attrs.className ?? null,
   ]
@@ -407,7 +418,7 @@ export async function CardBlock({ block }: CardBlockProps) {
     <div dangerouslySetInnerHTML={{ __html: data.card_back_content }} />
   ) : undefined;
 
-  return (
+  const cardEl = (
     <Card
       id={attrs.anchor ?? undefined}
       title={data.card_title ?? undefined}
@@ -453,4 +464,7 @@ export async function CardBlock({ block }: CardBlockProps) {
       className={extraClasses}
     />
   );
+
+  if (blockStyle) return <div style={blockStyle}>{cardEl}</div>;
+  return cardEl;
 }

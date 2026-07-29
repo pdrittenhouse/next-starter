@@ -309,6 +309,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
         tree={structuredTree}
         editorBlocks={buildBlockTree(node.editorBlocks ?? [])}
         content={node.content ?? undefined}
+        sidebarSlug={node.sidebarSlug ?? null}
       />
     );
   }

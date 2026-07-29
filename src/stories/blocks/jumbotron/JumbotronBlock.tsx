@@ -6,6 +6,7 @@ import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 // ─── ACF sub-field interfaces ─────────────────────────────────────────────────
 
@@ -117,6 +118,18 @@ interface JumbotronBlockData {
   include_overlay?: boolean;
   /** Background video mode — suppresses the bg image URL. Twig: `fields.bg_video`. */
   bg_video?: boolean;
+  /** Block-level height (standard AcfBlockStyleData shape). */
+  height?: AcfBlockStyleData['height'];
+  /** Block-level border (standard AcfBlockStyleData shape). */
+  border?: AcfBlockStyleData['border'];
+  border_radius?: AcfBlockStyleData['border_radius'];
+  box_shadow?: AcfBlockStyleData['box_shadow'];
+  /** Custom-prefixed padding field — same ACF group structure as standard padding. */
+  jumbotron_padding?: AcfBlockStyleData['padding'];
+  /** Custom-prefixed margin field — same ACF group structure as standard margin. */
+  jumbotron_margin?: AcfBlockStyleData['margin'];
+  /** Custom-prefixed bg_color field — same ACF group structure as standard bg_color. */
+  jumbotron_bg_color?: AcfBlockStyleData['bg_color'];
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -273,7 +286,18 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
 
   const className = ['block-jumbotron', attrs.className].filter(Boolean).join(' ') || undefined;
 
-  return (
+  // Block-level styles — remap jumbotron_* fields to standard AcfBlockStyleData names
+  const { style: blockStyle, bgClass } = buildAcfBlockStyle({
+    height:        data.height,
+    border:        data.border,
+    border_radius: data.border_radius,
+    box_shadow:    data.box_shadow,
+    padding:       data.jumbotron_padding,
+    margin:        data.jumbotron_margin,
+    bg_color:      data.jumbotron_bg_color,
+  });
+
+  const jumbotronEl = (
     <Jumbotron
       id={id}
       fluid={data.jumbotron_fluid ?? false}
@@ -292,4 +316,13 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
       className={className}
     />
   );
+
+  if (blockStyle || bgClass) {
+    return (
+      <div className={bgClass || undefined} style={blockStyle}>
+        {jumbotronEl}
+      </div>
+    );
+  }
+  return jumbotronEl;
 }

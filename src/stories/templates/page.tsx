@@ -3,6 +3,7 @@ import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { PageHeader } from './partials/page-header';
 import { BlockRenderer } from './partials/block-renderer';
+import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
 
 interface PageTemplateProps {
   node: {
@@ -16,6 +17,7 @@ interface PageTemplateProps {
     menuOrder?: number;
     mainClasses?: string;
     contentWrapperStyle?: string;
+    sidebarSlug?: string | null;
     template?: {
       templateName?: string;
     } | null;
@@ -122,6 +124,7 @@ export function PageTemplate({ node }: PageTemplateProps) {
         )}
       </article>
       </div>
+      {node.sidebarSlug && <SidebarPattern slug={node.sidebarSlug} />}
     </main>
   );
 }
