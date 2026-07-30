@@ -115,6 +115,11 @@ export default async function RootLayout({
     headerPosition ? `${headerPosition}-header-enabled` : 'static-header-enabled',
     shrinkHeader ? 'shrink-header-enabled' : null,
     customBackgroundCss ? 'custom-background' : null,
+    'include-content-containers',
+    'include-header-containers',
+    'include-footer-containers',
+    'max-width-content-container',
+    'max-width-footer-container',
   ].filter(Boolean).join(' ');
 
   return (
@@ -130,7 +135,7 @@ export default async function RootLayout({
             <style dangerouslySetInnerHTML={{ __html: globalCss }} />
           )}
         </head>
-        <body className={bodyClasses}>
+        <body className={bodyClasses} data-bs-spy="scroll" data-bs-target="#primaryNavigation">
           {children}
           {/* Adobe Fonts async — loads after page paint, no render-blocking.
               Fonts swap in with font-display:swap (set per-font in the Typekit dashboard). */}
