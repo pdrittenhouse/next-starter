@@ -169,6 +169,37 @@ export const GET_FOOTER_OPTIONS = gql`
   }
 `;
 
+/**
+ * Fetch traveling-CTA configuration from Theme Footer Options.
+ * hideTravelingCta / style / toggle are returned as string arrays by WPGraphQL —
+ * always take [0] or check with includes().
+ */
+export const GET_TRAVELING_CTA_OPTIONS = gql`
+  query GetTravelingCtaOptions {
+    themeFooterOptions {
+      settingsFooterOptions {
+        hideTravelingCta
+        tctaAutoWidth
+        travelingCtas {
+          link { title url target }
+          style
+          size
+          outline
+          fullWidth
+          toggle
+          active
+          disabled
+          element
+          hideLabel
+          classes
+          display { display }
+          textColor { color customColor }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_FOOTER_LAYOUT_OPTIONS = gql`
   query GetFooterLayoutOptions {
     themeOptions {

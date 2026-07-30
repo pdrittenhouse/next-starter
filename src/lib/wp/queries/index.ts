@@ -42,7 +42,7 @@ export { GET_GLOBAL_STYLES_CSS } from './global-styles-css';
 export { GET_SCSS_UTILS } from './scss-utils';
 export { GET_PATTERN_STYLES } from './pattern-styles';
 export { GET_TEMPLATE_PATTERNS } from './templatePatterns';
-export { GET_THEME_GENERAL_OPTIONS, GET_HEADER_OPTIONS, GET_FOOTER_OPTIONS, GET_MENU_WIDGET_OPTIONS } from './acf-options';
+export { GET_THEME_GENERAL_OPTIONS, GET_HEADER_OPTIONS, GET_FOOTER_OPTIONS, GET_MENU_WIDGET_OPTIONS, GET_TRAVELING_CTA_OPTIONS } from './acf-options';
 
 // Themes & Assets
 export { GET_ALL_THEMES } from './themes';

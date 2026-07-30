@@ -1,6 +1,7 @@
 import type { ComponentType, ReactNode } from 'react';
 import { HeaderPattern } from '@/stories/patterns/HeaderPattern';
 import { FooterPattern } from '@/stories/patterns/FooterPattern';
+import { TravelingCtaPattern } from '@/stories/patterns/TravelingCtaPattern';
 
 export type PatternComponent = ComponentType<{ children?: ReactNode }>;
 
@@ -13,6 +14,6 @@ export const PATTERN_MAP: Record<string, PatternComponent | null> = {
   'timberland/header':        HeaderPattern as PatternComponent,
   'timberland/branding':      null,
   'timberland/nav':           null,
-  'timberland/traveling-cta': null,
+  'timberland/traveling-cta': TravelingCtaPattern as PatternComponent,
   'timberland/footer':        FooterPattern as PatternComponent,
 };
