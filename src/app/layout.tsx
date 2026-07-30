@@ -52,7 +52,15 @@ export default async function RootLayout({
       customizerCss
       fontOptionsCss
       globalStylesCss
-      customizerSettings { customCss }
+      customizerSettings {
+        customCss
+        backgroundColor
+        backgroundImage
+        backgroundRepeat
+        backgroundPosition
+        backgroundSize
+        backgroundAttachment
+      }
       themeHeaderOptions {
         settingsHeaderOptions {
           headerPosition
@@ -66,14 +74,37 @@ export default async function RootLayout({
     customizerCss: string | null;
     fontOptionsCss: string | null;
     globalStylesCss: string | null;
-    customizerSettings: { customCss: string | null } | null;
+    customizerSettings: {
+      customCss: string | null;
+      backgroundColor: string | null;
+      backgroundImage: string | null;
+      backgroundRepeat: string | null;
+      backgroundPosition: string | null;
+      backgroundSize: string | null;
+      backgroundAttachment: string | null;
+    } | null;
     themeHeaderOptions: { settingsHeaderOptions: { headerPosition: string | null; shrinkHeader: boolean | null } | null } | null;
   }>(print(GET_GLOBAL_CSS)).catch(() => ({ data: null })) as any;
+
+  const bgSettings = cssData?.customizerSettings;
+  const customBackgroundCss = (bgSettings?.backgroundImage || bgSettings?.backgroundColor)
+    ? [
+        'body.custom-background {',
+        bgSettings.backgroundColor ? `  background-color: #${bgSettings.backgroundColor.replace(/^#/, '')};` : null,
+        bgSettings.backgroundImage ? `  background-image: url("${bgSettings.backgroundImage}");` : null,
+        bgSettings.backgroundImage ? `  background-position: ${bgSettings.backgroundPosition ?? 'left top'};` : null,
+        bgSettings.backgroundImage ? `  background-size: ${bgSettings.backgroundSize ?? 'auto'};` : null,
+        bgSettings.backgroundImage ? `  background-repeat: ${bgSettings.backgroundRepeat ?? 'repeat'};` : null,
+        bgSettings.backgroundImage ? `  background-attachment: ${bgSettings.backgroundAttachment ?? 'scroll'};` : null,
+        '}',
+      ].filter(Boolean).join('\n')
+    : null;
 
   const globalCss = [
     cssData?.globalStylesCss,
     cssData?.customizerCss,
     cssData?.fontOptionsCss,
+    customBackgroundCss,
     cssData?.customizerSettings?.customCss,
   ].filter(Boolean).join('\n') || null;
 
@@ -83,6 +114,7 @@ export default async function RootLayout({
   const bodyClasses = [
     headerPosition ? `${headerPosition}-header-enabled` : 'static-header-enabled',
     shrinkHeader ? 'shrink-header-enabled' : null,
+    customBackgroundCss ? 'custom-background' : null,
   ].filter(Boolean).join(' ');
 
   return (
