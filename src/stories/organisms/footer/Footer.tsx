@@ -333,7 +333,7 @@ export function Footer({
                             ref={searchRef}
                             id="footerSearchInput"
                             type="text"
-                            className="form-control"
+                            className="form-control search-field"
                             placeholder="Search&hellip;"
                           />
                           <button

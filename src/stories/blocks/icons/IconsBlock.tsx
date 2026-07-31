@@ -29,11 +29,15 @@ export async function IconsBlock({ block }: IconsBlockProps) {
   };
 
   if (!block.renderedHtml) return null;
+  const rewrittenHtml = block.renderedHtml.replace(
+    /href="[^"]*spritemap\.svg#sprite-([^"]+)"/g,
+    'href="#sprite-$1"',
+  );
   return (
     <div
       className={wrapperClasses || undefined}
       style={Object.keys(wrapperStyle).length > 0 ? wrapperStyle : undefined}
-      dangerouslySetInnerHTML={{ __html: block.renderedHtml }}
+      dangerouslySetInnerHTML={{ __html: rewrittenHtml }}
     />
   );
 }

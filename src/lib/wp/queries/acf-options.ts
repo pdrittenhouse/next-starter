@@ -10,36 +10,38 @@ import { gql } from "@apollo/client";
  */
 export const GET_THEME_GENERAL_OPTIONS = gql`
   query GetThemeGeneralOptions {
-    settingsThemeGeneralOptions {
-      orgName
-      orgLogo {
-        node {
-          sourceUrl
-          altText
+    themeGeneralOptions {
+      settingsThemeGeneralOptions {
+        orgName
+        orgLogo {
+          node {
+            sourceUrl
+            altText
+          }
         }
-      }
-      siteOgImage {
-        node {
-          sourceUrl
-          altText
+        siteOgImage {
+          node {
+            sourceUrl
+            altText
+          }
         }
+        orgSameAs
+        llmsEnabled
+        llmsAbout
+        enableGtm
+        enableDirectGa
+        enableOnetrust
+        onetrustDomainScriptId
+        googleSiteVerification
+        bingSiteVerification
+        facebookDomainVerification
+        gtmConfiguration {
+          gtmContainerId
+          gtmRequireConsent
+          gtmConsentCookieName
+        }
+        gaMeasurementId
       }
-      orgSameAs
-      llmsEnabled
-      llmsAbout
-      enableGtm
-      enableDirectGa
-      enableOnetrust
-      onetrustDomainScriptId
-      googleSiteVerification
-      bingSiteVerification
-      facebookDomainVerification
-      gtmConfiguration {
-        gtmContainerId
-        gtmRequireConsent
-        gtmConsentCookieName
-      }
-      gaMeasurementId
     }
   }
 `;
@@ -66,6 +68,9 @@ export const GET_HEADER_OPTIONS = gql`
         hamburgerAnimation
         headerLogoUseOriginalColor
         brandHeight
+        enableMegaMenus
+        navItemRelative
+        containerRelative
         siteHeaderLayout {
           headerLayout
         }
@@ -137,6 +142,7 @@ export const GET_FOOTER_OPTIONS = gql`
       settingsFooterOptions {
         hideFooterContent
         footerLogoUseOriginalColor
+        footerLogoHeight
         siteFooterLayout {
           footerLayout
         }
@@ -228,11 +234,13 @@ export const GET_FOOTER_LAYOUT_OPTIONS = gql`
 
 export const GET_CO_BRAND = gql`
   query GetCoBrand {
-    settingsThemeGeneralOptions {
-      coBrand {
-        node {
-          sourceUrl
-          altText
+    themeGeneralOptions {
+      settingsThemeGeneralOptions {
+        coBrand {
+          node {
+            sourceUrl
+            altText
+          }
         }
       }
     }
@@ -246,16 +254,34 @@ export const GET_CO_BRAND = gql`
  */
 export const GET_MENU_WIDGET_OPTIONS = gql`
   query GetMenuWidgetOptions {
-    settingsMenuWidgetOptions {
-      customMenuLocations {
-        menuLabel
-        menuSlug
-        enableMegaMenu
+    menuWidgetOptions {
+      settingsMenuWidgetOptions {
+        customMenuLocations {
+          menuLabel
+          menuSlug
+          enableMegaMenu
+        }
+        customWidgetAreas {
+          widgetLabel
+          widgetSlug
+          widgetDescription
+        }
       }
-      customWidgetAreas {
-        widgetLabel
-        widgetSlug
-        widgetDescription
+    }
+  }
+`;
+
+/**
+ * Minimal query for the "Disable Content Containers" setting in Theme General Options.
+ * Used by SectionBlock and RowBlock to decide whether to render their own .container div.
+ * When removeContentContainers is false (default), the body carries the
+ * `include-content-containers` class and CSS handles container styling.
+ */
+export const GET_CONTENT_WRAPPER_OPTIONS = gql`
+  query GetContentWrapperOptions {
+    themeGeneralOptions {
+      settingsThemeGeneralOptions {
+        removeContentContainers
       }
     }
   }

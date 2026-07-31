@@ -1,3 +1,4 @@
+@use "variables" as *;
 // Font loading has been moved out of CSS to prevent render-blocking.
 // CSS @import is resolved serially after stylesheet download — the worst
 // possible place to load web fonts. Use one of these patterns instead:

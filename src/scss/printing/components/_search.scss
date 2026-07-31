@@ -1,0 +1,100 @@
+@use "variables" as *;
+
+.site-header {
+
+  .search-field {
+    background-color: var(--header-search-input-background-color);
+    border: var(--header-search-input-border-width) var(--header-search-input-border-color) var(--header-search-input-border-style);
+    border-radius: var(--header-search-input-border-radius);
+    font-size: var(--header-search-input-font-size);
+    line-height: var(--header-search-input-line-height);
+    padding: var(--header-search-input-vertical-padding) var(--header-search-input-horizontal-padding);
+
+    &:hover,
+    &:focus {
+      background-color: var(--header-search-input-hover-background-color);
+      border-color: var(--header-search-input-hover-border-color);
+      padding-left: var(--header-search-input-hover-horizontal-padding);
+      padding-right: var(--header-search-input-hover-horizontal-padding);
+    }
+  }
+
+  .search-submit {
+
+    &:not(.navbar-toggler) {
+      @include button(
+        $bgcolor: var(--header-search-submit-bg),
+        $hover-bg-color: var(--header-search-submit-bg-hover),
+        $border-top-color: var(--header-search-submit-border-top),
+        $border-bottom-color: var(--header-search-submit-border-bottom),
+        $border-left-color: var(--header-search-submit-border-left),
+        $border-right-color: var(--header-search-submit-border-right),
+        $hover-border-top-color: var(--header-search-submit-border-top-hover),
+        $hover-border-bottom-color: var(--header-search-submit-border-bottom-hover),
+        $hover-border-left-color: var(--header-search-submit-border-left-hover),
+        $hover-border-right-color: var(--header-search-submit-border-right-hover),
+        $border-top-width: var(--header-search-submit-border-top-width),
+        $border-bottom-width: var(--header-search-submit-border-bottom-width),
+        $border-left-width: var(--header-search-submit-border-left-width),
+        $border-right-width: var(--header-search-submit-border-right-width),
+        $border-top-width-hover: var(--header-search-submit-border-top-width-hover),
+        $border-bottom-width-hover: var(--header-search-submit-border-bottom-width-hover),
+        $border-left-width-hover: var(--header-search-submit-border-left-width-hover),
+        $border-right-width-hover: var(--header-search-submit-border-right-width-hover),
+        $border-top-style: var(--header-search-submit-border-top-style),
+        $border-bottom-style: var(--header-search-submit-border-bottom-style),
+        $border-left-style: var(--header-search-submit-border-left-style),
+        $border-right-style: var(--header-search-submit-border-right-style),
+        $border-top-style-hover: var(--header-search-submit-border-top-style-hover),
+        $border-bottom-style-hover: var(--header-search-submit-border-bottom-style-hover),
+        $border-left-style-hover: var(--header-search-submit-border-left-style-hover),
+        $border-right-style-hover: var(--header-search-submit-border-right-style-hover),
+        $border-top-left-radius: var(--header-search-submit-border-top-left-radius),
+        $border-top-right-radius: var(--header-search-submit-border-top-right-radius),
+        $border-bottom-left-radius: var(--header-search-submit-border-bottom-left-radius),
+        $border-bottom-right-radius: var(--header-search-submit-border-bottom-right-radius),
+        $border-top-left-radius-hover: var(--header-search-submit-border-top-left-radius-hover),
+        $border-top-right-radius-hover: var(--header-search-submit-border-top-right-radius-hover),
+        $border-bottom-left-radius-hover: var(--header-search-submit-border-bottom-left-radius-hover),
+        $border-bottom-right-radius-hover: var(--header-search-submit-border-bottom-right-radius-hover),
+        $color: var(--header-search-submit-text),
+        $hover-color: var(--header-search-submit-text-hover),
+        $font-family: var(--header-search-submit-font-family),
+        $font-size: var(--header-search-submit-font-size),
+        $font-weight: var(--header-search-submit-font-weight),
+        $font-style: var(--header-search-submit-font-style),
+        $letter-spacing: var(--header-search-submit-letter-spacing),
+        $line-height: var(--header-search-submit-line-height),
+        $text-transform: var(--header-search-submit-text-transform),
+        $padding: var(--header-search-submit-vertical-padding) var(--header-search-submit-horizontal-padding),
+        $font-family-hover: var(--header-search-submit-font-family-hover),
+        $font-size-hover: var(--header-search-submit-font-size-hover),
+        $font-weight-hover: var(--header-search-submit-font-weight-hover),
+        $font-style-hover: var(--header-search-submit-font-style-hover),
+        $letter-spacing-hover: var(--header-search-submit-letter-spacing-hover),
+        $line-height-hover: var(--header-search-submit-line-height-hover),
+        $text-transform-hover: var(--header-search-submit-text-transform-hover),
+        $padding-hover: var(--header-search-submit-vertical-padding-hover) var(--header-search-submit-horizontal-padding-hover),
+        $box-shadow-x: var(--header-search-submit-box-shadow-x),
+        $box-shadow-y: var(--header-search-submit-box-shadow-y),
+        $box-shadow-blur: var(--header-search-submit-box-shadow-blur),
+        $box-shadow-spread: var(--header-search-submit-box-shadow-spread),
+        $box-shadow-color: var(--header-search-submit-box-shadow-color),
+        $box-shadow-hover-x: var(--header-search-submit-box-shadow-hover-x),
+        $box-shadow-hover-y: var(--header-search-submit-box-shadow-hover-y),
+        $box-shadow-hover-blur: var(--header-search-submit-box-shadow-hover-blur),
+        $box-shadow-hover-spread: var(--header-search-submit-box-shadow-hover-spread),
+        $box-shadow-hover-color: var(--header-search-submit-box-shadow-hover-color),
+        $text-shadow-x: var(--header-search-submit-text-shadow-x),
+        $text-shadow-y: var(--header-search-submit-text-shadow-y),
+        $text-shadow-blur: var(--header-search-submit-text-shadow-blur),
+        $text-shadow-color: var(--header-search-submit-text-shadow-color),
+        $text-shadow-hover-x: var(--header-search-submit-text-shadow-hover-x),
+        $text-shadow-hover-y: var(--header-search-submit-text-shadow-hover-y),
+        $text-shadow-hover-blur: var(--header-search-submit-text-shadow-hover-blur),
+        $text-shadow-hover-color: var(--header-search-submit-text-shadow-hover-color)
+      );
+    }
+  }
+
+}

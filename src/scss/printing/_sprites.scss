@@ -1,49 +1,73 @@
-// SVG sprite utility class generation.
-// Requires the sprite build to produce 01-atoms/svg/generated/_icons-generated.scss.
-// Uncomment and wire up once the headless SVG sprite build is in place.
-//
-// @use "sass:map";
-// @use "01-atoms/svg/generated/icons-generated" as icons;
-//
-// @each $name, $_ in icons.$sprites {
-//   .icon-#{$name} {
-//     @include icons.sprite($name);
-//     display: inline-block;
-//     height: 30px;
-//     width: 30px;
-//   }
-//
-//   @each $color-name, $variantList in $c-palette {
-//     @each $variant in map.keys($variantList) {
-//       @if $variant == 'base' {
-//         .icon-#{$name}-#{"" + $color-name} {
-//           @include icons.sprite($name, ('color': c($color-name)));
-//           display: inline-block; height: 30px; width: 30px;
-//         }
-//       } @else {
-//         .icon-#{$name}-#{"" + $color-name}-#{$variant} {
-//           @include icons.sprite($name, ('color': c($color-name, $variant)));
-//           display: inline-block; height: 30px; width: 30px;
-//         }
-//       }
-//     }
-//   }
-//
-//   .button.btn-icon-#{$name} {
-//     &:before { @include icons.sprite($name); content: ""; vertical-align: middle; }
-//   }
-//
-//   @each $color-name, $variantList in $c-palette {
-//     @each $variant in map.keys($variantList) {
-//       @if $variant == 'base' {
-//         .button.btn-icon-#{$name}-#{"" + $color-name} {
-//           &:before { @include icons.sprite($name, ('color': c($color-name))); content: ""; vertical-align: middle; }
-//         }
-//       } @else {
-//         .button.btn-icon-#{$name}-#{"" + $color-name}-#{$variant} {
-//           &:before { @include icons.sprite($name, ('color': c($color-name, $variant))); content: ""; vertical-align: middle; }
-//         }
-//       }
-//     }
-//   }
-// }
+@use "variables" as *;
+// SVG sprite CSS background-image utility classes.
+// Uses the $sprites data-URI map and sprite() mixin from _icons-generated.scss.
+// Produces .icon-{name} (base) and .button.btn-icon-{name} (button before-icon) classes.
+// Color variants (.icon-{name}-{color}) are generated for every palette entry via c().
+
+@use "../variables" as *;
+@use "01-atoms/svg/generated/icons-generated" as icons;
+
+@each $name, $_ in icons.$sprites {
+  .icon-#{$name} {
+    @include icons.sprite($name);
+    background-size: contain;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+  }
+
+  @each $color-name, $variantList in $c-palette {
+    @each $variant, $__ in $variantList {
+      @if $variant == 'base' {
+        .icon-#{$name}-#{"" + $color-name} {
+          @include icons.sprite($name, ('color': c($color-name)));
+          background-size: contain;
+          display: inline-block;
+          height: 30px;
+          width: 30px;
+        }
+      } @else {
+        .icon-#{$name}-#{"" + $color-name}-#{$variant} {
+          @include icons.sprite($name, ('color': c($color-name, $variant)));
+          background-size: contain;
+          display: inline-block;
+          height: 30px;
+          width: 30px;
+        }
+      }
+    }
+  }
+
+  .button.btn-icon-#{$name} {
+    &:before {
+      @include icons.sprite($name);
+      background-size: contain;
+      content: "";
+      vertical-align: middle;
+    }
+  }
+
+  @each $color-name, $variantList in $c-palette {
+    @each $variant, $__ in $variantList {
+      @if $variant == 'base' {
+        .button.btn-icon-#{$name}-#{"" + $color-name} {
+          &:before {
+            @include icons.sprite($name, ('color': c($color-name)));
+            background-size: contain;
+            content: "";
+            vertical-align: middle;
+          }
+        }
+      } @else {
+        .button.btn-icon-#{$name}-#{"" + $color-name}-#{$variant} {
+          &:before {
+            @include icons.sprite($name, ('color': c($color-name, $variant)));
+            background-size: contain;
+            content: "";
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+}

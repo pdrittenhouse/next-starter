@@ -1,3 +1,4 @@
+@use "variables" as *;
 // @wordpress/base-styles does not use !default, so its variables cannot be
 // overridden via @use ... with (). To shadow them, create local files at
 // src/scss/@wordpress/base-styles/_breakpoints.scss etc. — Sass checks

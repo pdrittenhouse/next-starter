@@ -1,3 +1,4 @@
+@use "variables" as *;
 @use "patterns/organisms/social-nav";
 // Social Nav organism styles — Next.js printing layer.
 // Source pattern: src/scss/patterns/organisms/_social-nav.scss (Timberland/Twig).
@@ -118,14 +119,22 @@
         flex-direction: column;
         align-items: center;
 
+        .social-nav-link {
+          padding-top: 0 !important; // override inline style from Twig template
+        }
+      }
+    }
+  }
+
+  // hide-labels centres its icon via position:absolute; this reset must not fire.
+  &.nav-direction-horizontal:not(.hide-labels) {
+    &.bullet-icons--before,
+    &.bullet-icons--after {
+      > .social-nav-item {
         > .icon,
         > .svg--icon {
           position: static;
           transform: none;
-        }
-
-        .social-nav-link {
-          padding-top: 0 !important; // override inline style from Twig template
         }
       }
     }
@@ -190,6 +199,20 @@
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
+    }
+
+    &.bullet-icons--before,
+    &.bullet-icons--after {
+      > .social-nav-item {
+        > .icon,
+        > .svg--icon {
+          display: inline-block;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
     }
   }
 

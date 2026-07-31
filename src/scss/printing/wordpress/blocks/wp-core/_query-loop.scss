@@ -1,3 +1,4 @@
+@use "variables" as *;
 // core/query (Query Loop) has no frontend style.scss — it's a container block.
 // Styles come from child blocks (post-title, post-featured-image, post-date, etc.).
 // Add query loop layout overrides below.

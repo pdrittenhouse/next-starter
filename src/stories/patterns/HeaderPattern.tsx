@@ -28,7 +28,7 @@ const getCustomizerSettings = cache(async () => {
 
 const getCoBrand = cache(async () => {
   const { data } = await fetchGraphQL(print(GET_CO_BRAND)).catch(() => ({ data: null }));
-  return (data as any)?.settingsThemeGeneralOptions?.coBrand ?? null;
+  return (data as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.coBrand ?? null;
 });
 
 const getHeaderOptions = cache(async () => {
@@ -90,10 +90,13 @@ export async function HeaderPattern() {
   const siteSlogan: string | undefined = customizer?.generalSettings?.description ?? undefined;
   const displayHeaderText: boolean = customizer?.displayHeaderText !== false;
 
+  const isSvgLogo = logoSrc?.toLowerCase().endsWith('.svg') ?? false;
+
   const brand = logoSrc || siteName
     ? {
         url: '/',
-        logoImgSrc: logoSrc,
+        logoSvgInline: isSvgLogo ? logoSrc : undefined,
+        logoBgImgSrc:  !isSvgLogo ? logoSrc : undefined,
         otherClasses: 'navbar-brand',
         siteName,
         siteSlogan,
@@ -214,6 +217,7 @@ export async function HeaderPattern() {
         navbarId: 'primaryNavigation',
         navId: 'primaryNav',
         navOtherClasses: ['primary-nav', primaryNavVisibility].filter(Boolean).join(' ') || undefined,
+        relativeMegaMenu: !!(headerOptions?.enableMegaMenus && headerOptions?.navItemRelative),
       }
     : undefined;
 
@@ -237,13 +241,24 @@ export async function HeaderPattern() {
   const mobileNavCtaWrapperClasses = !layoutOpts.showMobileCtaButton ? 'd-none' : undefined;
 
   // ── Social nav ───────────────────────────────────────────────────────
+  // WP social menu items carry the network name as a CSS class (e.g. 'facebook', 'twitter').
+  // Mirror Twig social-nav.twig: strip 'menu-item*' utility classes and pass the remaining
+  // class(es) — typically the bare network name — directly to SocialNav so it routes to the
+  // correct renderer (spritemap for custom names, BI/FA for icon class strings).
+  const socialCssToIcon = (cssClasses: string[] | null | undefined): string | undefined => {
+    if (!cssClasses) return undefined;
+    const iconClasses = cssClasses.filter(Boolean).filter((cls: string) => !cls.startsWith('menu-item'));
+    const icon = iconClasses.sort().join(' ').trim();
+    return icon || undefined;
+  };
+
   const socialNavVisibility = visClass(layoutOpts.hideSocialNav);
   const socialNavItems: SocialNavItem[] = socialMenu?.menuItems?.edges?.length
     ? socialMenu.menuItems.edges.map(({ node }: any) => ({
         url: node.url || node.path || '#',
         label: node.label || node.title || '',
         target: node.target || '_blank',
-        icon: node.cssClasses?.filter(Boolean).join(' ') || undefined,
+        icon: socialCssToIcon(node.cssClasses),
       }))
     : [];
 

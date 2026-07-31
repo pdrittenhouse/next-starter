@@ -1,34 +1,14 @@
 import React from 'react';
 import styles from './social-nav.module.scss';
-
-// ─── Icon-library detection helpers ──────────────────────────────────────────
-
-/**
- * Font Awesome class pattern — matches `fab`/`fad`/`fal`/`far`/`fas` alone,
- * `fa-name fab`, or `fab fa-`. Mirrors the List molecule's FA_REGEX.
- */
-const FA_REGEX = /(fa[bdlrs]|fa-.*?\s+fa[bdlrs]|fa[bdlrs]\s+fa-)/;
-
-/**
- * Bootstrap Icons class pattern — matches the `bi` base class word-boundary,
- * e.g. `bi bi-facebook`, `bi bi-twitter-x`, `bi-instagram bi`.
- */
-const BI_REGEX = /\bbi\b/;
-
-function isFontAwesome(icon: string): boolean {
-  return FA_REGEX.test(icon);
-}
-
-function isBootstrapIcon(icon: string): boolean {
-  return BI_REGEX.test(icon);
-}
+import { isFontAwesome, isBootstrapIcon, isCustomIcon } from '@/lib/icons/iconType';
+import { SvgIcon } from '@/stories/atoms/svg/SvgIcon';
 
 /**
  * Render the icon element for a social nav item.
  *
- * - Font Awesome → `<span class="icon"><i class="fas fa-… color-fill--{color}"/></span>`
- * - Bootstrap Icons → `<span class="icon"><i class="bi bi-… text-{color}"/></span>`
- * - Unknown string → `<span class="svg svg--colorable text-{color}"/>` placeholder
+ * - Font Awesome  → <span class="icon"><i class="fas fa-… color-fill--{color}">
+ * - Bootstrap Icons → <span class="icon"><i class="bi bi-… text-{color}">
+ * - Custom (spritemap) → <SvgIcon name={icon} fill={color} />
  */
 function renderIconNode(
   icon: string,
@@ -40,9 +20,7 @@ function renderIconNode(
     : undefined;
 
   if (isFontAwesome(icon)) {
-    const iconCls = [icon, color ? `color-fill--${color}` : null]
-      .filter(Boolean)
-      .join(' ');
+    const iconCls = [icon, color ? `color-fill--${color}` : null].filter(Boolean).join(' ');
     return (
       <span className="icon" style={spanStyle}>
         <i className={iconCls} aria-hidden="true" />
@@ -51,9 +29,7 @@ function renderIconNode(
   }
 
   if (isBootstrapIcon(icon)) {
-    const iconCls = [icon, color ? `text-${color}` : null]
-      .filter(Boolean)
-      .join(' ');
+    const iconCls = [icon, color ? `text-${color}` : null].filter(Boolean).join(' ');
     return (
       <span className="icon" style={spanStyle}>
         <i className={iconCls} aria-hidden="true" />
@@ -61,18 +37,12 @@ function renderIconNode(
     );
   }
 
-  // SVG / custom icon — mirrors List molecule SVG span approach
-  const svgSize = size ?? '1em';
-  const svgCls = ['svg', 'svg--colorable', color ? `text-${color}` : null]
-    .filter(Boolean)
-    .join(' ');
-  return (
-    <span
-      className={svgCls}
-      style={{ display: 'inline-block', width: svgSize, height: svgSize }}
-      aria-hidden="true"
-    />
-  );
+  if (isCustomIcon(icon)) {
+    const px = size ?? '18px';
+    return <SvgIcon name={icon} fill={color} width={px} height={px} />;
+  }
+
+  return null;
 }
 
 // ─── Public types ─────────────────────────────────────────────────────────────

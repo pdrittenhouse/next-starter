@@ -275,14 +275,41 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       const postMain = tree.slice(lastMainIdx + 1);
       const innerSlots = tree.slice(contentIdx, lastMainIdx + 1);
 
+      // front-page.twig wraps its content slot in homepage-specific structural divs.
+      // The manifest tree doesn't include those wrappers, so we inject them here
+      // to match the WP output: homepage-content-wrapper > container > row > column.
+      const contentSlotNodes = innerSlots.filter(n => n.type === 'slot' && n.name === 'content');
+      const wrappedContent: TimberlandTreeNode[] = template === 'front-page'
+        ? [{
+            type: 'element',
+            element: 'section',
+            className: 'homepage-content-wrapper',
+            children: [{
+              type: 'element',
+              element: 'div',
+              className: 'homepage-content--container',
+              children: [{
+                type: 'element',
+                element: 'div',
+                className: 'homepage-content--row',
+                children: [{
+                  type: 'element',
+                  element: 'div',
+                  className: 'homepage-content--column',
+                  children: contentSlotNodes,
+                }],
+              }],
+            }],
+          }]
+        : contentSlotNodes;
+
       const mainChildren: TimberlandTreeNode[] = [
         {
           type: 'element',
           element: 'div',
           className: 'wrapper',
           style: node.contentWrapperStyle ?? null,
-          // content slot always goes inside the wrapper div
-          children: innerSlots.filter(n => n.type === 'slot' && n.name === 'content'),
+          children: wrappedContent,
         },
         // sidebar slot is a sibling of the wrapper, still inside <main>
         ...innerSlots.filter(n => n.type === 'slot' && n.name === 'sidebar'),

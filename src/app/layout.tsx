@@ -10,6 +10,7 @@ import '@phosphor-icons/web/regular';
 // import '@phosphor-icons/web/fill';
 import { gql } from '@apollo/client';
 import { fetchGraphQL } from '@/lib/wp/client';
+import GET_SPRITEMAP_ICONS from '@/lib/wp/queries/spritemap-icons';
 
 // Font loading patterns:
 //
@@ -67,24 +68,39 @@ export default async function RootLayout({
           shrinkHeader
         }
       }
+      themeGeneralOptions {
+        settingsThemeGeneralOptions {
+          removeContentContainers
+        }
+      }
     }
   `;
 
-  const { data: cssData } = await fetchGraphQL<{
-    customizerCss: string | null;
-    fontOptionsCss: string | null;
-    globalStylesCss: string | null;
-    customizerSettings: {
-      customCss: string | null;
-      backgroundColor: string | null;
-      backgroundImage: string | null;
-      backgroundRepeat: string | null;
-      backgroundPosition: string | null;
-      backgroundSize: string | null;
-      backgroundAttachment: string | null;
-    } | null;
-    themeHeaderOptions: { settingsHeaderOptions: { headerPosition: string | null; shrinkHeader: boolean | null } | null } | null;
-  }>(print(GET_GLOBAL_CSS)).catch(() => ({ data: null })) as any;
+  const [cssResult, spritemapResult] = await Promise.allSettled([
+    fetchGraphQL<{
+      customizerCss: string | null;
+      fontOptionsCss: string | null;
+      globalStylesCss: string | null;
+      customizerSettings: {
+        customCss: string | null;
+        backgroundColor: string | null;
+        backgroundImage: string | null;
+        backgroundRepeat: string | null;
+        backgroundPosition: string | null;
+        backgroundSize: string | null;
+        backgroundAttachment: string | null;
+      } | null;
+      themeHeaderOptions: { settingsHeaderOptions: { headerPosition: string | null; shrinkHeader: boolean | null } | null } | null;
+    }>(print(GET_GLOBAL_CSS)),
+    fetchGraphQL<{ spritemapIcons: { spritemap: string | null; url: string | null; scss: string | null } | null }>(
+      print(GET_SPRITEMAP_ICONS),
+    ),
+  ]);
+
+  const cssData = cssResult.status === 'fulfilled' ? (cssResult.value as any)?.data : null;
+  const spritemapSvg: string | null = spritemapResult.status === 'fulfilled'
+    ? ((spritemapResult.value as any)?.data?.spritemapIcons?.spritemap ?? null)
+    : null;
 
   const bgSettings = cssData?.customizerSettings;
   const customBackgroundCss = (bgSettings?.backgroundImage || bgSettings?.backgroundColor)
@@ -111,11 +127,12 @@ export default async function RootLayout({
   const headerOpts = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions;
   const headerPosition: string | null = headerOpts?.headerPosition ?? null;
   const shrinkHeader: boolean = headerOpts?.shrinkHeader ?? false;
+  const removeContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.removeContentContainers === true;
   const bodyClasses = [
     headerPosition ? `${headerPosition}-header-enabled` : 'static-header-enabled',
     shrinkHeader ? 'shrink-header-enabled' : null,
     customBackgroundCss ? 'custom-background' : null,
-    'include-content-containers',
+    removeContentContainers !== true ? 'include-content-containers' : null,
     'include-header-containers',
     'include-footer-containers',
     'max-width-content-container',
@@ -136,6 +153,9 @@ export default async function RootLayout({
           )}
         </head>
         <body className={bodyClasses} data-bs-spy="scroll" data-bs-target="#primaryNavigation">
+          {spritemapSvg && (
+            <div aria-hidden="true" style={{ display: 'none' }} dangerouslySetInnerHTML={{ __html: spritemapSvg }} />
+          )}
           {children}
           {/* Adobe Fonts async — loads after page paint, no render-blocking.
               Fonts swap in with font-display:swap (set per-font in the Typekit dashboard). */}

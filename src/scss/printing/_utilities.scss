@@ -1,4 +1,17 @@
+@use "variables" as *;
 @use "../variables" as *;
+
+// Bootstrap xs flex utility (no Bootstrap breakpoint suffix for xs — WP theme defines this explicitly)
+/* stylelint-disable */
+.flex-xs-row {
+  -webkit-box-direction: normal !important;
+  -webkit-box-orient: horizontal !important;
+  -webkit-flex-direction: row !important;
+  -moz-flex-direction: row !important;
+  -ms-flex-direction: row !important;
+  flex-direction: row !important;
+}
+/* stylelint-enable */
 
 // Breakout Contaner Single Side
 .breakout-right {
@@ -1274,4 +1287,8 @@ $viewport-positions: (
       }
     }
   }
+}
+
+.screen-reader-text {
+  @include sr-only-focusable;
 }

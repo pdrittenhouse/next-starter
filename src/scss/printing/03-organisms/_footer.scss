@@ -1,1 +1,10 @@
+@use "variables" as *;
 @use "patterns/organisms/footer";
+
+// The WP site renders search via get_search_form() which outputs class `.searchform`.
+// The headless Footer organism uses class `.footer-search` instead.
+.site-footer {
+  .footer-search {
+    margin-bottom: rem-calc(30px);
+  }
+}

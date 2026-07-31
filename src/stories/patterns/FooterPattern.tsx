@@ -28,7 +28,7 @@ const getCustomizerSettings = cache(async () => {
 
 const getCoBrand = cache(async () => {
   const { data } = await fetchGraphQL(print(GET_CO_BRAND)).catch(() => ({ data: null }));
-  return (data as any)?.settingsThemeGeneralOptions?.coBrand ?? null;
+  return (data as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.coBrand ?? null;
 });
 
 const getFooterOptions = cache(async () => {
@@ -103,11 +103,16 @@ export async function FooterPattern() {
   const siteTitle: string                  = customizer?.generalSettings?.title ?? '';
   const siteSlogan: string | undefined     = customizer?.generalSettings?.description ?? undefined;
   const displayHeaderText: boolean         = customizer?.displayHeaderText !== false;
+  const isSvgLogo                          = logoSrc?.toLowerCase().endsWith('.svg') ?? false;
+
+  const footerLogoHeight: number | undefined = footerOptions?.footerLogoHeight ?? undefined;
 
   const brand = !hideBrandBoth && (logoSrc || siteTitle)
     ? {
         url: '/',
-        logoImgSrc: logoSrc,
+        logoSvgInline: isSvgLogo ? logoSrc : undefined,
+        logoBgImgSrc:  !isSvgLogo ? logoSrc : undefined,
+        height: !isSvgLogo ? (footerLogoHeight ?? 125) : undefined,
         otherClasses: 'footer-brand',
         siteName: siteTitle || undefined,
         siteSlogan,
@@ -287,7 +292,7 @@ export async function FooterPattern() {
       footerNav={footerNav}
       socialNav={
         !hideSocialNavBoth && socialNavItems.length
-          ? <SocialNav items={socialNavItems} hideLabels bulletIconSize="18px" />
+          ? <SocialNav items={socialNavItems} hideLabels bulletIconSize="18px" otherClasses="footer-social-nav" />
           : undefined
       }
       socialNavWrapperClasses={hideSocialNavBoth ? undefined : socialNavVisibility}

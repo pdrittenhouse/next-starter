@@ -3,8 +3,13 @@ import { BLOCK_MAP } from '@/lib/registries/BLOCK_MAP';
 
 export type { EditorBlock };
 
+export interface BlockRenderContext {
+  parentContainerSet?: boolean;
+}
+
 interface BlockRendererProps {
   blocks: EditorBlock[];
+  context?: BlockRenderContext;
 }
 
 // Renders a block tree built by buildBlockTree().
@@ -12,7 +17,11 @@ interface BlockRendererProps {
 // and passed as children — container blocks render {children} instead of
 // dangerouslySetInnerHTML. Unregistered blocks fall back to renderedHtml, which
 // has WP-rendered inner content already baked in (no headless substitution).
-export function BlockRenderer({ blocks }: BlockRendererProps) {
+//
+// The optional `context` prop is injected into each block as `_context` so child
+// components can read parent state without prop drilling. Inner blocks always
+// start with fresh context (not inherited from the parent level).
+export function BlockRenderer({ blocks, context }: BlockRendererProps) {
   return (
     <>
       {blocks.map(block => {
@@ -22,10 +31,11 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
         if (Component) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const Comp = Component as any;
+          const blockWithCtx = context ? { ...block, _context: context } : block;
           const children = innerBlocks.length > 0
             ? <BlockRenderer blocks={innerBlocks} />
             : undefined;
-          return <Comp key={block.clientId} block={block}>{children}</Comp>;
+          return <Comp key={block.clientId} block={blockWithCtx}>{children}</Comp>;
         }
 
         return (

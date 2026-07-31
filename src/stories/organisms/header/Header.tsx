@@ -4,6 +4,7 @@ import { Collapse } from 'react-bootstrap';
 import { Branding, BrandingProps } from '@/stories/molecules/branding/Branding';
 import { Nav, NavProps } from '@/stories/molecules/nav/Nav';
 import { Button, ButtonProps } from '@/stories/atoms/button/Button';
+import { SvgIcon } from '@/stories/atoms/svg/SvgIcon';
 import styles from './header.module.scss';
 
 // ---------------------------------------------------------------------------
@@ -446,40 +447,31 @@ export function Header({
                             {showSearch && (() => {
                               const searchForm = (
                                 <form
-                                  name="header-search"
+                                  name="searchform"
                                   id="headerSearch"
-                                  className="header-search"
+                                  className="searchform placeholder-black"
+                                  role="search"
+                                  action="/"
+                                  method="get"
+                                  autoComplete="off"
                                 >
-                                  <legend className="visually-hidden">Search</legend>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Search"
-                                    aria-label="Search"
-                                  />
-                                  <button
-                                    type="submit"
-                                    className="btn search-submit"
-                                    aria-label="Submit search"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="20"
-                                      height="20"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      aria-hidden="true"
-                                      focusable="false"
-                                      className="icon"
+                                  <div>
+                                    <label className="screen-reader-text" htmlFor="s">Search</label>
+                                    <input
+                                      type="text"
+                                      name="s"
+                                      id="s"
+                                      className="search-field"
+                                      placeholder="Search"
+                                    />
+                                    <button
+                                      type="submit"
+                                      className="btn btn-black btn-default btn-lg button search-submit text-nowrap"
+                                      aria-label="Submit"
                                     >
-                                      <circle cx="11" cy="11" r="8" />
-                                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                    </svg>
-                                  </button>
+                                      <SvgIcon name="search" fill="white" width="16px" height="16px" className="search-icon" />
+                                    </button>
+                                  </div>
                                 </form>
                               );
                               return searchWrapperClasses
