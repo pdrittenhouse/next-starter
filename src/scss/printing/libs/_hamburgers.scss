@@ -122,7 +122,7 @@
   }
 
   // 3d XY
-  .hamburger--3dxy {
+  &.hamburger--3dxy {
 
     .hamburger-box {
       perspective: calc(var(--nav-toggle-layer-width) * 2);
@@ -144,7 +144,7 @@
   }
 
   // 3d XY Reverse
-  .hamburger--3dxy-r {
+  &.hamburger--3dxy-r {
 
     .hamburger-box {
       perspective: calc(var(--nav-toggle-layer-width) * 2);
@@ -166,7 +166,7 @@
   }
 
   // 3d Y
-  .hamburger--3dy {
+  &.hamburger--3dy {
 
     .hamburger-box {
       perspective: calc(var(--nav-toggle-layer-width) * 2);
@@ -188,7 +188,7 @@
   }
 
   // 3d Y Reverse
-  .hamburger--3dy-r {
+  &.hamburger--3dy-r {
 
     .hamburger-box {
       perspective: calc(var(--nav-toggle-layer-width) * 2);
@@ -210,7 +210,7 @@
   }
 
   // Arrow
-  .hamburger--arrow {
+  &.hamburger--arrow {
 
     &.is-active {
 
@@ -228,9 +228,9 @@
   }
 
   // Arrow Reverse
-  .hamburger--arrow-r {
+  &.hamburger--arrow-r {
 
-    .is-active {
+    &.is-active {
 
       .hamburger-inner {
 
@@ -246,7 +246,7 @@
   }
 
   // Arrow Alternate
-  .hamburger--arrowalt {
+  &.hamburger--arrowalt {
 
     &.is-active {
 
@@ -264,7 +264,7 @@
   }
 
   // Arrow Alternate Reverse
-  .hamburger--arrowalt-r {
+  &.hamburger--arrowalt-r {
 
     &.is-active {
 
@@ -282,13 +282,13 @@
   }
 
   // Arrow Turn
-  .hamburger--arrowturn {}
+  &.hamburger--arrowturn {}
 
   // Arrow Turn Reverse
-  .hamburger--arrowturn-r {}
+  &.hamburger--arrowturn-r {}
 
   // Boring
-  .hamburger--boring {}
+  &.hamburger--boring {}
 
   // Collapse
   &.hamburger--collapse {
@@ -310,7 +310,7 @@
   }
 
   // Collapse Reverse
-  .hamburger--collapse-r {
+  &.hamburger--collapse-r {
 
     .hamburger-inner {
 
@@ -328,7 +328,7 @@
   }
 
   // Elastic
-  .hamburger--elastic {
+  &.hamburger--elastic {
 
     .hamburger-inner {
       top: calc(var(--nav-toggle-layer-height) * .5);
@@ -355,7 +355,7 @@
   }
 
   // Elastic Reverse
-  .hamburger--elastic-r {
+  &.hamburger--elastic-r {
 
     .hamburger-inner {
       top: calc(var(--nav-toggle-layer-height) * .5);
@@ -382,9 +382,9 @@
   }
 
   // Emphatic
-  .hamburger--emphatic {
+  &.hamburger--emphatic {
 
-    .hamburger--emphatic {
+    &.hamburger--emphatic {
 
       &::after {
         top: calc((var(--nav-toggle-layer-height)) + (var(--nav-toggle-layer-spacing)));
@@ -411,7 +411,7 @@
   }
 
   // Emphatic Reverse
-  .hamburger--emphatic-r {
+  &.hamburger--emphatic-r {
 
     .hamburger-inner {
 
@@ -440,10 +440,10 @@
   }
 
   // Minus
-  .hamburger--minus {}
+  &.hamburger--minus {}
 
   // Slider
-  .hamburger--slider {
+  &.hamburger--slider {
 
     .hamburger-inner {
       top: calc(var(--nav-toggle-layer-height) * .5);
@@ -474,7 +474,7 @@
   }
 
   // Slider Reverse
-  .hamburger--slider-r {
+  &.hamburger--slider-r {
 
     .hamburger-inner {
       top: calc(var(--nav-toggle-layer-height) * .5);
@@ -505,13 +505,13 @@
   }
 
   // Spin
-  .hamburger--spin {}
+  &.hamburger--spin {}
 
   // Spin Reverse
-  .hamburger--spin-r {}
+  &.hamburger--spin-r {}
 
   // Spring
-  .hamburger--spring {
+  &.hamburger--spring {
 
     .hamburger-inner {
       top: calc(var(--nav-toggle-layer-height) * .5);
@@ -541,7 +541,7 @@
   }
 
   // Spring Reverse
-  .hamburger--spring-r {
+  &.hamburger--spring-r {
 
     .hamburger-inner {
 
@@ -559,18 +559,18 @@
   }
 
   // Squeeze
-  .hamburger--squeeze {}
+  &.hamburger--squeeze {}
 
   // Stand
-  .hamburger--stand {}
+  &.hamburger--stand {}
 
   // Stand Reverse
-  .hamburger--stand-r {}
+  &.hamburger--stand-r {}
 
   // Vortex
-  .hamburger--vortex {}
+  &.hamburger--vortex {}
 
   // Vortex Reverse
-  .hamburger--vortex-r {}
+  &.hamburger--vortex-r {}
 
 }
