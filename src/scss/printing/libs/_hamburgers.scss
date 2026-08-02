@@ -1,0 +1,576 @@
+// Hamburger CSS files use $hamburger-* vars — @import puts them in global scope
+@import "variables";
+
+// Hamburger base & types. DO NOT REMOVE.
+
+// Base Hamburger
+// ==================================================
+@import "hamburgers/_sass/hamburgers/base";
+
+// Hamburger types
+// ==================================================
+@import "hamburgers/_sass/hamburgers/types/3dx";
+@import "hamburgers/_sass/hamburgers/types/3dx-r";
+@import "hamburgers/_sass/hamburgers/types/3dy";
+@import "hamburgers/_sass/hamburgers/types/3dy-r";
+@import "hamburgers/_sass/hamburgers/types/3dxy";
+@import "hamburgers/_sass/hamburgers/types/3dxy-r";
+@import "hamburgers/_sass/hamburgers/types/arrow";
+@import "hamburgers/_sass/hamburgers/types/arrow-r";
+@import "hamburgers/_sass/hamburgers/types/arrowalt";
+@import "hamburgers/_sass/hamburgers/types/arrowalt-r";
+@import "hamburgers/_sass/hamburgers/types/arrowturn";
+@import "hamburgers/_sass/hamburgers/types/arrowturn-r";
+@import "hamburgers/_sass/hamburgers/types/boring";
+@import "hamburgers/_sass/hamburgers/types/collapse";
+@import "hamburgers/_sass/hamburgers/types/collapse-r";
+@import "hamburgers/_sass/hamburgers/types/elastic";
+@import "hamburgers/_sass/hamburgers/types/elastic-r";
+@import "hamburgers/_sass/hamburgers/types/emphatic";
+@import "hamburgers/_sass/hamburgers/types/emphatic-r";
+@import "hamburgers/_sass/hamburgers/types/minus";
+@import "hamburgers/_sass/hamburgers/types/slider";
+@import "hamburgers/_sass/hamburgers/types/slider-r";
+@import "hamburgers/_sass/hamburgers/types/spin";
+@import "hamburgers/_sass/hamburgers/types/spin-r";
+@import "hamburgers/_sass/hamburgers/types/spring";
+@import "hamburgers/_sass/hamburgers/types/spring-r";
+@import "hamburgers/_sass/hamburgers/types/stand";
+@import "hamburgers/_sass/hamburgers/types/stand-r";
+@import "hamburgers/_sass/hamburgers/types/squeeze";
+@import "hamburgers/_sass/hamburgers/types/vortex";
+@import "hamburgers/_sass/hamburgers/types/vortex-r";
+
+.hamburger {
+  /*
+  * BASE
+  */
+
+  .hamburger-box {
+    height: calc(var(--nav-toggle-layer-height) * 3 + var(--nav-toggle-layer-spacing) * 2);
+    width: var(--nav-toggle-layer-width);
+  }
+
+  .hamburger-inner {
+    margin-top: calc(var(--nav-toggle-layer-height) / -2);
+
+    &,
+    &:before,
+    &:after {
+      width: var(--nav-toggle-layer-width);
+      height: var(--nav-toggle-layer-height);
+    }
+
+    &::before {
+      top: calc((var(--nav-toggle-layer-spacing) + var(--nav-toggle-layer-height)) * -1);
+    }
+
+    &::after {
+      bottom: calc((var(--nav-toggle-layer-spacing) + var(--nav-toggle-layer-height)) * -1);
+    }
+  }
+
+  &.is-active {}
+
+
+  /*
+   * TYPES
+   */
+
+  // 3d X
+  &.hamburger--3dx {
+
+    .hamburger-box {
+      perspective: calc(var(--nav-toggle-layer-width) * 2);
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}), 0) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}) * -1), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // 3d X Reverse
+  &.hamburger--3dx-r {
+
+    .hamburger-box {
+      perspective: calc(var(--nav-toggle-layer-width) * 2);
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}), 0) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}) * -1), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // 3d XY
+  .hamburger--3dxy {
+
+    .hamburger-box {
+      perspective: calc(var(--nav-toggle-layer-width) * 2);
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}), 0) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}) * -1), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // 3d XY Reverse
+  .hamburger--3dxy-r {
+
+    .hamburger-box {
+      perspective: calc(var(--nav-toggle-layer-width) * 2);
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}), 0) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}) * -1), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // 3d Y
+  .hamburger--3dy {
+
+    .hamburger-box {
+      perspective: calc(var(--nav-toggle-layer-width) * 2);
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}), 0) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}) * -1), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // 3d Y Reverse
+  .hamburger--3dy-r {
+
+    .hamburger-box {
+      perspective: calc(var(--nav-toggle-layer-width) * 2);
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}), 0) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-height)} + #{var(--nav-toggle-layer-spacing)}) * -1), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // Arrow
+  .hamburger--arrow {
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * -0.2), 0, 0) rotate(-45deg) scale(0.7, 1);
+        }
+
+        &::after {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * -0.2), 0, 0) rotate(45deg) scale(0.7, 1);
+        }
+      }
+    }
+  }
+
+  // Arrow Reverse
+  .hamburger--arrow-r {
+
+    .is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * 0.2), 0, 0) rotate(45deg) scale(0.7, 1);
+        }
+
+        &::after {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * 0.2), 0, 0) rotate(-45deg) scale(0.7, 1);
+        }
+      }
+    }
+  }
+
+  // Arrow Alternate
+  .hamburger--arrowalt {
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * -0.2), calc(#{var(--nav-toggle-layer-width)} * -0.25), 0) rotate(-45deg) scale(0.7, 1);
+        }
+
+        &::after {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * -0.2), calc(#{var(--nav-toggle-layer-width)} * 0.25), 0) rotate(45deg) scale(0.7, 1);
+        }
+      }
+    }
+  }
+
+  // Arrow Alternate Reverse
+  .hamburger--arrowalt-r {
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * 0.2), calc(#{var(--nav-toggle-layer-width)} * -0.25), 0) rotate(45deg) scale(0.7, 1);
+        }
+
+        &::after {
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * 0.2), calc(#{var(--nav-toggle-layer-width)} * 0.25), 0) rotate(-45deg) scale(0.7, 1);
+        }
+      }
+    }
+  }
+
+  // Arrow Turn
+  .hamburger--arrowturn {}
+
+  // Arrow Turn Reverse
+  .hamburger--arrowturn-r {}
+
+  // Boring
+  .hamburger--boring {}
+
+  // Collapse
+  &.hamburger--collapse {
+
+    .hamburger-inner {
+      top: auto;
+
+      &:after {
+        top: calc((var(--nav-toggle-layer-spacing) * 2 + var(--nav-toggle-layer-height) * 2) * -1);
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+        transform: translate3d(0, calc((#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}) * -1), 0) rotate(-45deg);
+      }
+    }
+  }
+
+  // Collapse Reverse
+  .hamburger--collapse-r {
+
+    .hamburger-inner {
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-spacing) * 2 + var(--nav-toggle-layer-height) * 2) * -1);
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+        transform: translate3d(0, calc((#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}) * -1), 0) rotate(45deg);
+      }
+    }
+  }
+
+  // Elastic
+  .hamburger--elastic {
+
+    .hamburger-inner {
+      top: calc(var(--nav-toggle-layer-height) * .5);
+
+      &::before {
+        top: calc(var(--nav-toggle-layer-height) + var(--nav-toggle-layer-spacing));
+      }
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-height) * 2) + (var(--nav-toggle-layer-spacing) * 2));
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+        transform: translate3d(0, calc(#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}), 0) rotate(135deg);
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}) * -2), 0) rotate(-270deg);
+        }
+      }
+    }
+  }
+
+  // Elastic Reverse
+  .hamburger--elastic-r {
+
+    .hamburger-inner {
+      top: calc(var(--nav-toggle-layer-height) * .5);
+
+      &::before {
+        top: calc(var(--nav-toggle-layer-height) + var(--nav-toggle-layer-spacing));
+      }
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-height) * 2) + (var(--nav-toggle-layer-spacing) * 2));
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+        transform: translate3d(0, calc(#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}), 0) rotate(-135deg);
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}) * -2), 0) rotate(270deg);
+        }
+      }
+    }
+  }
+
+  // Emphatic
+  .hamburger--emphatic {
+
+    .hamburger--emphatic {
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-height)) + (var(--nav-toggle-layer-spacing)));
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          left: calc(var(--nav-toggle-layer-width) * -2);
+          top: calc(var(--nav-toggle-layer-width) * -2);
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * 2), calc(#{var(--nav-toggle-layer-width)} * 2), 0) rotate(45deg);
+        }
+
+        &::after {
+          right: calc(var(--nav-toggle-layer-width) * -2);
+          top: calc(var(--nav-toggle-layer-width) * -2);
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * -2), calc(#{var(--nav-toggle-layer-width)} * 2), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // Emphatic Reverse
+  .hamburger--emphatic-r {
+
+    .hamburger-inner {
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-height)) + (var(--nav-toggle-layer-spacing)));
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          left: calc(var(--nav-toggle-layer-width) * -2);
+          top: calc(var(--nav-toggle-layer-width) * 2);
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * 2), calc(#{var(--nav-toggle-layer-width)} * -2), 0) rotate(-45deg);
+        }
+
+        &::after {
+          right: calc(var(--nav-toggle-layer-width) * -2);
+          top: calc(var(--nav-toggle-layer-width) * 2);
+          transform: translate3d(calc(#{var(--nav-toggle-layer-width)} * -2), calc(#{var(--nav-toggle-layer-width)} * -2), 0) rotate(45deg);
+        }
+      }
+    }
+  }
+
+  // Minus
+  .hamburger--minus {}
+
+  // Slider
+  .hamburger--slider {
+
+    .hamburger-inner {
+      top: calc(var(--nav-toggle-layer-height) * .5);
+
+      &::before {
+        top: calc(var(--nav-toggle-layer-height) + var(--nav-toggle-layer-spacing));
+      }
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-height) * 2) + (var(--nav-toggle-layer-spacing) * 2));
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+        transform: translate3d(0, calc(#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}), 0) rotate(45deg);
+
+        &::before {
+          transform: rotate(-45deg) translate3d(calc(#{var(--nav-toggle-layer-width)} / -7), calc(#{var(--nav-toggle-layer-spacing)} * -1), 0);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}) * -2), 0) rotate(-90deg);
+        }
+      }
+    }
+  }
+
+  // Slider Reverse
+  .hamburger--slider-r {
+
+    .hamburger-inner {
+      top: calc(var(--nav-toggle-layer-height) * .5);
+
+      &::before {
+        top: calc(var(--nav-toggle-layer-height) + var(--nav-toggle-layer-spacing));
+      }
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-height) * 2) + (var(--nav-toggle-layer-spacing) * 2));
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+        transform: translate3d(0, calc(#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}), 0) rotate(-45deg);
+
+        &::before {
+          transform: rotate(45deg) translate3d(calc(#{var(--nav-toggle-layer-width)} / 7), calc(#{var(--nav-toggle-layer-spacing)} * -1), 0);
+        }
+
+        &::after {
+          transform: translate3d(0, calc((#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}) * -2), 0) rotate(90deg);
+        }
+      }
+    }
+  }
+
+  // Spin
+  .hamburger--spin {}
+
+  // Spin Reverse
+  .hamburger--spin-r {}
+
+  // Spring
+  .hamburger--spring {
+
+    .hamburger-inner {
+      top: calc(var(--nav-toggle-layer-height) * .5);
+
+      &::before {
+        top: calc(var(--nav-toggle-layer-height) + var(--nav-toggle-layer-spacing));
+      }
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-height) * 2) + (var(--nav-toggle-layer-spacing) * 2));
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+
+        &::before {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}), 0) rotate(45deg);
+        }
+
+        &::after {
+          transform: translate3d(0, calc(#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}), 0) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // Spring Reverse
+  .hamburger--spring-r {
+
+    .hamburger-inner {
+
+      &::after {
+        top: calc((var(--nav-toggle-layer-spacing) * 2 + var(--nav-toggle-layer-height) * 2) * -1);
+      }
+    }
+
+    &.is-active {
+
+      .hamburger-inner {
+        transform: translate3d(0, calc((#{var(--nav-toggle-layer-spacing)} + #{var(--nav-toggle-layer-height)}) * -1), 0) rotate(-45deg);
+      }
+    }
+  }
+
+  // Squeeze
+  .hamburger--squeeze {}
+
+  // Stand
+  .hamburger--stand {}
+
+  // Stand Reverse
+  .hamburger--stand-r {}
+
+  // Vortex
+  .hamburger--vortex {}
+
+  // Vortex Reverse
+  .hamburger--vortex-r {}
+
+}

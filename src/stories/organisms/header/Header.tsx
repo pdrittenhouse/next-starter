@@ -324,6 +324,7 @@ export function Header({
     styles,
     buildTogglerClasses(hamburgerAnimation, navbarTogglerClasses),
     !navOpen ? 'collapsed' : null,
+    navOpen ? 'is-active' : null,
   );
 
   const headerStyle: React.CSSProperties | undefined = backgroundImage

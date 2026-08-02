@@ -1,0 +1,60 @@
+@use "../functions/rem" as *;
+
+// Hamburger variable customization
+// See all variables available at: ~hamburgers/_sass/hamburgers.scss
+
+// Settings
+// ==================================================
+$hamburger-padding-x              : var(--nav-toggle-horizontal-padding);
+$hamburger-padding-y              : var(--nav-toggle-vertical-padding);
+$hamburger-layer-width            : rem-calc(40px);
+$hamburger-layer-height           : rem-calc(4px);
+$hamburger-layer-spacing          : rem-calc(6px);
+$hamburger-layer-color            : var(--nav-toggle-color);
+$hamburger-layer-border-radius    : var(--nav-toggle-border-radius);
+$hamburger-hover-opacity          : var(--nav-toggle-hover-opacity);
+$hamburger-active-layer-color     : var(--nav-toggle-active-color);
+$hamburger-active-hover-opacity   : var(--nav-toggle-active-hover-opacity);
+
+// To use CSS filters as the hover effect instead of opacity,
+// set $hamburger-hover-use-filter as true and
+// change the value of $hamburger-hover-filter accordingly.
+$hamburger-hover-use-filter   : false;
+$hamburger-hover-filter       : opacity(50%);
+$hamburger-active-hover-filter: $hamburger-hover-filter;
+
+// Remove or comment out the hamburger types you don't want
+// or need, so they get excluded from the compiled CSS.
+$hamburger-types: (
+  3dx,
+  3dx-r,
+  3dy,
+  3dy-r,
+  3dxy,
+  3dxy-r,
+  arrow,
+  arrow-r,
+  arrowalt,
+  arrowalt-r,
+  arrowturn,
+  arrowturn-r,
+  boring,
+  collapse,
+  collapse-r,
+  elastic,
+  elastic-r,
+  emphatic,
+  emphatic-r,
+  minus,
+  slider,
+  slider-r,
+  spring,
+  spring-r,
+  stand,
+  stand-r,
+  spin,
+  spin-r,
+  squeeze,
+  vortex,
+  vortex-r
+);
