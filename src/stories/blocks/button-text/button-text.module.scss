@@ -1,3 +1,2 @@
 @use "variables" as *;
-// ButtonTextBlock styles — local (CSS Module) classes only.
-// Global block styles live in src/scss/patterns/blocks/_button-text.scss.
+@use "printing/wordpress/blocks/timberland/button-text";

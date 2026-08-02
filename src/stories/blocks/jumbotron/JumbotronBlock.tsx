@@ -7,6 +7,8 @@ import type { EditorBlock } from '@/types/blocks';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
+import styles from './jumbotron.module.scss';
+import { cx } from '@/lib/cx';
 
 // ─── ACF sub-field interfaces ─────────────────────────────────────────────────
 
@@ -284,7 +286,7 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
   // headless context, so container presence is driven solely by the block field).
   const removeContainer = !data.jumbotron_container;
 
-  const className = ['block-jumbotron', attrs.className].filter(Boolean).join(' ') || undefined;
+  const className = cx(styles, 'block-jumbotron', attrs.className) || undefined;
 
   // Block-level styles — remap jumbotron_* fields to standard AcfBlockStyleData names
   const { style: blockStyle, bgClass } = buildAcfBlockStyle({

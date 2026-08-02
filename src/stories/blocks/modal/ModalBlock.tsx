@@ -3,6 +3,8 @@ import type { EditorBlock } from '@/types/blocks';
 import { Modal } from '@/stories/molecules/modal/Modal';
 import type { ModalSize, ModalFullscreenBreakpoint } from '@/stories/molecules/modal/Modal';
 import type { ButtonVariant } from '@/stories/atoms/button/Button';
+import styles from './modal.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF colour sub-object — reused by backdrop, modal bg, and modal text colour fields.
@@ -246,13 +248,12 @@ export async function ModalBlock({ block }: ModalBlockProps) {
 
   // --- Block-level CSS classes (mirrors Twig modal_classes array) ---
   const layout = data.layout?.modal_layout;
-  const blockClasses = [
+  const blockClasses = cx(
+    styles,
     'block-modal',
     layout && layout !== 'default' ? `modal-${layout}` : null,
     attrs.className || null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <Modal

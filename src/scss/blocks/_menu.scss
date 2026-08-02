@@ -1,0 +1,129 @@
+@use "variables" as *;
+.block-menu {
+
+  .navbar-nav {
+    @include flex(1 1 auto);
+    width: 100%;
+  }
+
+  .navbar {}
+
+  .navbar-toggler {
+    box-shadow: none;
+
+    &:focus {}
+  }
+
+  nav {}
+
+  .nav-item {}
+
+  .nav-link {}
+
+  .menu-nav {
+    max-width: 100%;
+
+    nav {}
+
+    .nav-item {}
+
+    .nav-link {
+      @include font($font-stack-navs);
+    }
+  }
+
+  .menu-social {
+
+    nav {}
+
+    .nav-item {}
+
+    .nav-link {}
+  }
+
+  .menu-custom {
+
+    nav {}
+
+    .nav-item {}
+
+    .nav-link {}
+  }
+
+  .content-wrapper & {
+
+    .mega-menu-dropdown {
+      width: 100%;
+    }
+  }
+
+  .menu-nav,
+  .menu-custom {
+
+    &.nav-item-relative-mega-menu {
+
+      .content-wrapper & {
+
+        .mega-menu-dropdown {
+          width: 100vw;
+        }
+      }
+
+      &.dropdown-hover {
+
+        &.nav-item-relative-mega-menu {
+
+          .content-wrapper & {
+
+            .mega-menu-dropdown {
+              left: auto;
+              right: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .mega-menu-panel & {}
+
+  .default {}
+
+  // Responsive behavior based on navbar-expand-* breakpoint
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    $next: breakpoint-next($breakpoint, $grid-breakpoints);
+    $infix: breakpoint-infix($next, $grid-breakpoints);
+
+    // Desktop: Full viewport width, absolute positioning
+    .navbar-expand#{$infix} & {
+      @if $breakpoint != 'none' and $breakpoint != 'xs' and $next != null {
+        .nav-link {
+
+            @include media-breakpoint-up($next) {
+              // padding-right: var(--bs-navbar-nav-link-padding-x);
+              // padding-left: var(--bs-navbar-nav-link-padding-x);
+              padding-right: var(--bs-nav-link-padding-x);
+              padding-left: var(--bs-nav-link-padding-x);
+            }
+          }
+
+        // Mobile: Regular dropdown behavior
+        @include media-breakpoint-down($breakpoint) {}
+      }
+    }
+  }
+
+  // Mobile Only
+  .navbar-expand-none {
+
+    .nav-link {
+      // padding-right: var(--bs-navbar-nav-link-padding-x);
+      // padding-left: var(--bs-navbar-nav-link-padding-x);
+      padding-right: var(--bs-nav-link-padding-x);
+      padding-left: var(--bs-nav-link-padding-x);
+    }
+  }
+
+  // Desktop Only
+  .navbar-expand-xs & {}
+}

@@ -1,6 +1,7 @@
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
+import styles from './sidebar.module.scss';
 
 interface SidebarBlockData {
   sidebar?: string | null;

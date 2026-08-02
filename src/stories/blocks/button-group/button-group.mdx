@@ -1,0 +1,45 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as ButtonGroupBlockStories from './ButtonGroupBlock.stories';
+
+<Meta of={ButtonGroupBlockStories} />
+
+# Button Group
+
+Button group block that maps the `button_groups` ACF repeater to the ButtonGroup molecule. Each repeater row becomes one group of buttons. Supports optional title/description, toolbar mode, vertical orientation, per-group gap, and wrapper-level width/margin/alignment styles.
+
+## Usage
+
+```tsx
+import { ButtonGroupBlock } from '@/stories/blocks/button-group/ButtonGroupBlock';
+
+<ButtonGroupBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `title` | text | Optional heading above the group(s) |
+| `description` | textarea | Optional description below the title |
+| `size` | select | Bootstrap size variant applied to all buttons: `sm` or `lg` |
+| `vertical` | true_false | Render all groups vertically |
+| `toolbar` | true_false | Wrap groups in a `btn-toolbar` |
+| `toolbar_label` | text | `aria-label` for the toolbar |
+| `toolbar_classes` | text | Additional classes for the toolbar div |
+| `btn_grp_display` | group | Wrapper display utility (`display.display`) |
+| `button_group_wrapper_width` | group | Wrapper width: `width.value`+`unit`, `min_width`, `max_width` |
+| `button_group_wrapper_margin` | group | Wrapper margin: `top`, `bottom`, `left`, `right` (auto or px) |
+| `alignment` | group | Text alignment for the wrapper (`text_align`) |
+| `button_groups` | repeater | One row per group; each row has `display_grid`, `breakpoints`, `gap`, `label`, `classes`, and a `buttons` sub-repeater |
+
+Each `buttons` row supports: `button_label`, `button_variant`, `button_outline`, `button_size`, `button_href`, `button_target`, `button_type`, `button_disabled`, `button_classes`.
+
+## Stories
+
+<Canvas>
+  <Story of={ButtonGroupBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={ButtonGroupBlockStories.Toolbar} />
+</Canvas>

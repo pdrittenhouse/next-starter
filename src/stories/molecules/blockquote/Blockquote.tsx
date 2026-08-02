@@ -2,6 +2,7 @@ import React from 'react';
 import { Image } from '@/stories/atoms/image/Image';
 import type { ImageVariant } from '@/stories/atoms/image/Image';
 import styles from './blockquote.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Citation image props — mirrors the citation_image object from the Twig pattern.
@@ -72,20 +73,13 @@ export function Blockquote({
   // Mirror the Twig class-building logic:
   // blockquote_classes|merge(['blockquote', positionClass, blockquote_other_classes])
   const positionClass = citationPosition === 'before' ? 'citation-top' : 'citation-bottom';
-  const blockquoteClasses = [
-    'blockquote',
-    positionClass,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  const blockquoteClasses = cx(styles, 'blockquote', positionClass, className);
 
   // Render the <cite> block — shared between 'before' and 'after' positions.
   const renderCite = () => (
     <cite>
       {citationImage?.src && (
-        <span className="cite-img">
+        <span className={cx(styles, 'cite-img')}>
           <Image
             variant={citationImage.variant}
             src={citationImage.src}
@@ -94,13 +88,11 @@ export function Blockquote({
             height={citationImage.height}
             sizes={citationImage.sizes}
             loading={citationImage.loading}
-            className={['citation-image', citationImage.className]
-              .filter(Boolean)
-              .join(' ')}
+            className={cx(styles, 'citation-image', citationImage.className)}
           />
         </span>
       )}
-      <span className="cite-txt">{citation}</span>
+      <span className={cx(styles, 'cite-txt')}>{citation}</span>
     </cite>
   );
 

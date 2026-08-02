@@ -3,6 +3,8 @@ import { parseBlockAttributes } from '@/types/blocks';
 import { parseAcfRepeater } from '@/lib/wp/utils/parseAcfRepeater';
 import { Tabs } from '@/stories/molecules/tabs/Tabs';
 import type { TabItem } from '@/stories/molecules/tabs/Tabs';
+import styles from './tabs.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF id group field — shared by both the tabs wrapper (tabs_id)
@@ -199,13 +201,12 @@ export async function TabsBlock({ block }: TabsBlockProps) {
   // The alignment class (justify-content-*) targets the nav list in Twig but
   // the Tabs pattern component does not expose a navClasses prop; it is
   // appended to the wrapper classes as a best-effort mapping.
-  const blockClasses = [
+  const blockClasses = cx(
+    styles,
     'block-tabs',
     attrs.className ?? null,
     data.alignment ? `justify-content-${data.alignment}` : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <Tabs

@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './svg.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * SvgIcon atom — mirrors _svg~icon.tpl.twig in the Timberland framework.
@@ -26,13 +28,14 @@ export interface SvgIconProps {
 }
 
 export function SvgIcon({ name, fill, width, height, className }: SvgIconProps) {
-  const classes = [
+  const classes = cx(
+    styles,
     'svg',
     'svg--icon',
     fill ? `color-fill--${fill}` : null,
     fill ? `text-${fill}` : null,
-    className ?? null,
-  ].filter(Boolean).join(' ');
+    className,
+  );
 
   const style: React.CSSProperties | undefined = (width || height)
     ? { ...(width ? { width } : {}), ...(height ? { height } : {}) }

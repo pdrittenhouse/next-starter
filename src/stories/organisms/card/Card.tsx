@@ -6,6 +6,7 @@ import type { ImageProps } from '@/stories/atoms/image/Image';
 import { List } from '@/stories/molecules/list/List';
 import type { ListProps } from '@/stories/molecules/list/List';
 import styles from './card.module.scss';
+import { cx } from '@/lib/cx';
 
 // ─── Type exports ─────────────────────────────────────────────────────────────
 
@@ -218,13 +219,15 @@ export interface CardProps {
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
- * Build a sorted, space-joined class string — mirrors the Twig `| sort | join | trim` chain.
+ * Build a sorted, space-joined class string via cx — mirrors the Twig `| sort | join | trim` chain.
  */
 function buildClasses(parts: (string | null | undefined | false)[]): string {
-  return parts
-    .filter((c): c is string => typeof c === 'string' && c.trim().length > 0)
-    .sort()
-    .join(' ');
+  return cx(
+    styles,
+    ...parts
+      .filter((c): c is string => typeof c === 'string' && c.trim().length > 0)
+      .sort(),
+  );
 }
 
 /**
@@ -238,7 +241,7 @@ function renderIcon(icon: CardIconProps | string): React.ReactNode {
     return <span className={icon} />;
   }
   const { name, fill, width, height, svgClasses } = icon;
-  const cls = ['svg', 'svg--colorable', svgClasses].filter(Boolean).join(' ');
+  const cls = cx(styles, 'svg', 'svg--colorable', svgClasses);
   return (
     <span
       className={cls}
@@ -383,29 +386,29 @@ export function Card({
 
   // ─── Core card content ─────────────────────────────────────────────────────
   const cardContent = (
-    <div className="card-wrapper">
+    <div className={cx(styles, 'card-wrapper')}>
       {/* ── Front face ─────────────────────────────────────────────────────── */}
       <div
-        className="front"
+        className={cx(styles, 'front')}
         {...(Object.keys(frontStyle).length > 0 ? { style: frontStyle } : {})}
       >
-        <div className="card-content-wrapper-outer">
-          <div className="card-content-wrapper-inner">
+        <div className={cx(styles, 'card-content-wrapper-outer')}>
+          <div className={cx(styles, 'card-content-wrapper-inner')}>
 
             {/* ── card-header block ──────────────────────────────────────────── */}
             {showHeader && (
-              <div className={['card-header', noHeaderPadding ? 'p-0' : null].filter(Boolean).join(' ')}>
+              <div className={cx(styles, 'card-header', noHeaderPadding ? 'p-0' : null)}>
 
                 {/* card-lead: icon + label */}
                 {showLead && (
-                  <div className="card-lead">
+                  <div className={cx(styles, 'card-lead')}>
                     {hasIcon && icon != null && (
-                      <div className="card-icon">
+                      <div className={cx(styles, 'card-icon')}>
                         {renderIcon(icon)}
                       </div>
                     )}
                     {label && (
-                      <span className={['card-label', inheritColor ? 'text-reset' : null].filter(Boolean).join(' ')}>
+                      <span className={cx(styles, 'card-label', inheritColor ? 'text-reset' : null)}>
                         {label}
                       </span>
                     )}
@@ -414,23 +417,24 @@ export function Card({
 
                 {/* Optional header heading text */}
                 {header && (
-                  <div className="card-header-text">{header}</div>
+                  <div className={cx(styles, 'card-header-text')}>{header}</div>
                 )}
 
                 {/* Image at top position */}
                 {imageLocation === 'top' && image && (
                   <div
-                    className={[
+                    className={cx(
+                      styles,
                       'card-image',
                       !imageOverlay && imageOverlayText ? 'has-image-overlay' : null,
-                    ].filter(Boolean).join(' ')}
+                    )}
                   >
                     <Image
                       {...image}
-                      className={['card-img-top', image.className].filter(Boolean).join(' ')}
+                      className={cx(styles, 'card-img-top', image.className)}
                     />
                     {!imageOverlay && imageOverlayText && (
-                      <div className="card-img-overlay card-img-overlay--text">
+                      <div className={cx(styles, 'card-img-overlay', 'card-img-overlay--text')}>
                         <p>{imageOverlayText}</p>
                       </div>
                     )}
@@ -441,22 +445,23 @@ export function Card({
 
             {/* ── card-content ───────────────────────────────────────────────── */}
             <div
-              className={[
+              className={cx(
+                styles,
                 'card-content',
                 imageOverlay && !imageOverlayText ? 'card-img-overlay' : null,
                 noBodyPadding ? 'p-0' : null,
-              ].filter(Boolean).join(' ')}
+              )}
             >
               {/* card-intro: title + subtitle */}
               {(title || subtitle) && (
-                <div className={['card-intro', noBodyPadding ? 'p-0' : null].filter(Boolean).join(' ')}>
+                <div className={cx(styles, 'card-intro', noBodyPadding ? 'p-0' : null)}>
                   {title && (
-                    <h4 className={['card-title', inheritColor ? 'text-reset' : null].filter(Boolean).join(' ')}>
+                    <h4 className={cx(styles, 'card-title', inheritColor ? 'text-reset' : null)}>
                       {title}
                     </h4>
                   )}
                   {subtitle && (
-                    <h6 className={['card-subtitle', inheritColor ? 'text-reset' : null].filter(Boolean).join(' ')}>
+                    <h6 className={cx(styles, 'card-subtitle', inheritColor ? 'text-reset' : null)}>
                       {subtitle}
                     </h6>
                   )}
@@ -465,11 +470,11 @@ export function Card({
 
               {/* card-body: text, link, button, list */}
               {showBody && (
-                <div className={['card-body', noBodyPadding ? 'p-0' : null].filter(Boolean).join(' ')}>
+                <div className={cx(styles, 'card-body', noBodyPadding ? 'p-0' : null)}>
 
                   {/* body text */}
                   {text && (
-                    <div className={['card-text', inheritColor ? 'text-reset' : null].filter(Boolean).join(' ')}>
+                    <div className={cx(styles, 'card-text', inheritColor ? 'text-reset' : null)}>
                       {text}
                     </div>
                   )}
@@ -478,7 +483,7 @@ export function Card({
                   {link && !linked && (
                     <a
                       href={link}
-                      className={['card-link', inheritColor ? 'text-reset' : null].filter(Boolean).join(' ')}
+                      className={cx(styles, 'card-link', inheritColor ? 'text-reset' : null)}
                       {...(linkTarget ? { target: linkTarget } : {})}
                     >
                       {linkText}
@@ -489,10 +494,7 @@ export function Card({
                   {button && (
                     <Button
                       {...button}
-                      className={[
-                        inheritColor ? 'text-reset' : null,
-                        button.className ?? null,
-                      ].filter(Boolean).join(' ') || undefined}
+                      className={cx(styles, inheritColor ? 'text-reset' : null, button.className ?? null) || undefined}
                     />
                   )}
 
@@ -512,20 +514,20 @@ export function Card({
 
             {/* ── card-footer ────────────────────────────────────────────────── */}
             {showFooter && (
-              <div className={['card-footer', noFooterPadding ? 'p-0' : null].filter(Boolean).join(' ')}>
+              <div className={cx(styles, 'card-footer', noFooterPadding ? 'p-0' : null)}>
 
                 {footer && (
-                  <div className={['card-footer-content', inheritColor ? 'text-reset' : null].filter(Boolean).join(' ')}>
+                  <div className={cx(styles, 'card-footer-content', inheritColor ? 'text-reset' : null)}>
                     {footer}
                   </div>
                 )}
 
                 {/* Image at bottom position */}
                 {imageLocation === 'bottom' && image && (
-                  <div className="card-image">
+                  <div className={cx(styles, 'card-image')}>
                     <Image
                       {...image}
-                      className={['card-img-bottom', image.className].filter(Boolean).join(' ')}
+                      className={cx(styles, 'card-img-bottom', image.className)}
                     />
                   </div>
                 )}
@@ -539,12 +541,12 @@ export function Card({
       {/* ── Flip card back face ────────────────────────────────────────────── */}
       {flipCard && (
         <div
-          className="back"
+          className={cx(styles, 'back')}
           {...(Object.keys(backStyle).length > 0 ? { style: backStyle } : {})}
         >
-          <div className="card-content-wrapper-outer">
-            <div className="card-content-wrapper-inner">
-              <div className={['card-back-content', inheritColor ? 'text-reset' : null].filter(Boolean).join(' ')}>
+          <div className={cx(styles, 'card-content-wrapper-outer')}>
+            <div className={cx(styles, 'card-content-wrapper-inner')}>
+              <div className={cx(styles, 'card-back-content', inheritColor ? 'text-reset' : null)}>
                 {backContent}
               </div>
             </div>

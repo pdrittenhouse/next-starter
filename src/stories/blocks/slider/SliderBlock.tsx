@@ -4,6 +4,7 @@ import { SlickCarousel } from '@/stories/molecules/slick-carousel/SlickCarousel'
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './slider.module.scss';
+import { cx } from '@/lib/cx';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 interface SliderBlockData extends Pick<AcfBlockStyleData, 'width' | 'padding' | 'margin'> {
@@ -56,19 +57,18 @@ export async function SliderBlock({ block }: SliderBlockProps) {
     margin: data.margin,
   });
 
-  const blockClasses = [
+  const blockClasses = cx(
+    styles,
     attrs.className,
     'block-slider',
     data.equal_height_slides ? 'equal-height-slides' : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   // Each inner slide block becomes a .carousel-cell div
   const slides = innerBlocks.map((b, i) => (
     <div
       key={i}
-      className="carousel-cell"
+      className={cx(styles, 'carousel-cell')}
       dangerouslySetInnerHTML={{ __html: b.renderedHtml ?? '' }}
     />
   ));

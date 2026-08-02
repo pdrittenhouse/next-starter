@@ -1,4 +1,5 @@
 import styles from './spinner.module.scss';
+import { cx } from '@/lib/cx';
 
 export type SpinnerStyle = 'border' | 'grow';
 
@@ -27,15 +28,14 @@ function buildClasses(
   spinnerColor?: string,
   className?: string,
 ): string {
-  return [
+  return cx(
+    styles,
     spinnerStyle === 'border' ? 'spinner-border' : 'spinner-grow',
     spinnerSmall && spinnerStyle === 'border' ? 'spinner-border-sm' : null,
     spinnerSmall && spinnerStyle === 'grow' ? 'spinner-grow-sm' : null,
     spinnerColor ? `text-${spinnerColor}` : null,
-    className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    className,
+  );
 }
 
 export function Spinner({
@@ -63,7 +63,7 @@ export function Spinner({
       style={style}
     >
       {children ?? (spinnerLabel ? (
-        <span className="visually-hidden">{spinnerLabel}</span>
+        <span className={cx(styles, 'visually-hidden')}>{spinnerLabel}</span>
       ) : null)}
     </div>
   );

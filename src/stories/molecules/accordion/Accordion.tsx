@@ -5,6 +5,7 @@ import { Collapse } from 'react-bootstrap';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './accordion.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * A single accordion item.
@@ -84,29 +85,27 @@ function AccordionItemComponent({
 
   const HeaderTag = (item.headerElement ?? 'h2') as React.ElementType;
 
-  const itemClasses = [
+  const itemClasses = cx(
+    styles,
     'accordion-item',
     ...(item.itemClasses ?? []),
-    item.itemOtherClasses ?? '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+    item.itemOtherClasses,
+  );
 
   return (
     <div
       className={itemClasses}
       {...(item.itemId ? { id: item.itemId } : {})}
     >
-      <HeaderTag className="accordion-header" id={headerId}>
+      <HeaderTag className={cx(styles, 'accordion-header')} id={headerId}>
         <Button
           {...(item.button as ButtonProps)}
-          className={[
+          className={cx(
+            styles,
             'accordion-button',
-            isOpen ? '' : 'collapsed',
-            item.button.className ?? '',
-          ]
-            .filter(Boolean)
-            .join(' ')}
+            !isOpen && 'collapsed',
+            item.button.className,
+          )}
           onClick={onToggle}
           expanded={isOpen}
           controls={collapseId}
@@ -117,10 +116,10 @@ function AccordionItemComponent({
       <Collapse in={isOpen}>
         <div
           id={collapseId}
-          className="accordion-collapse"
+          className={cx(styles, 'accordion-collapse')}
           aria-labelledby={headerId}
         >
-          <div className="accordion-body">{item.content}</div>
+          <div className={cx(styles, 'accordion-body')}>{item.content}</div>
         </div>
       </Collapse>
     </div>
@@ -177,14 +176,13 @@ export function Accordion({
     });
   };
 
-  const accordionClasses = [
+  const accordionClasses = cx(
+    styles,
     'accordion',
-    flush ? 'accordion-flush' : '',
+    flush && 'accordion-flush',
     ...classes,
-    otherClasses ?? '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+    otherClasses,
+  );
 
   return (
     <div

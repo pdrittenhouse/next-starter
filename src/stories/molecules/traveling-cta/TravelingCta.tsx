@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './traveling-cta.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * A single CTA button entry in the traveling CTA bar.
@@ -152,17 +153,16 @@ export const TravelingCta = ({
   }
 
   // ── Section classes (mirrors Twig section_classes merge + sort + trim) ──────
-  const sectionClasses = [
+  const sectionClasses = cx(
+    styles,
     'traveling-cta',
     bgThemeColor ? `bg-${bgThemeColor}` : null,
-    !autoWidth ? 'stretch-ctas' : null,
-    hideOn === 'mobile' ? 'd-none' : null,
-    hideOn === 'mobile' ? 'd-lg-block' : null,
-    hideOn === 'desktop' ? 'd-lg-none' : null,
-    className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    !autoWidth && 'stretch-ctas',
+    hideOn === 'mobile' && 'd-none',
+    hideOn === 'mobile' && 'd-lg-block',
+    hideOn === 'desktop' && 'd-lg-none',
+    className,
+  );
 
   // ── Horizontal alignment classes on the ctas div ─────────────────────────────
   // Mirrors Twig's horizontal_alignment loop: justify-content[-bp]-[alignment]
@@ -178,21 +178,19 @@ export const TravelingCta = ({
     : '';
 
   // ── Wrapper classes ──────────────────────────────────────────────────────────
-  const wrapperClasses = [
+  const wrapperClasses = cx(
+    styles,
     'traveling-cta--ctas-wrapper',
-    includeContainer ? 'col' : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    includeContainer && 'col',
+  );
 
   // ── Container class (mirrors Twig container_breakpoint logic) ────────────────
   const breakpointSuffix = containerBreakpoint ? `-${containerBreakpoint}` : '';
-  const containerClass = [
+  const containerClass = cx(
+    styles,
     fullWidth ? 'container-fluid' : `container${breakpointSuffix}`,
-    fullWidth && maxWidthFluidContainer ? 'max-width-fluid-container' : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    fullWidth && maxWidthFluidContainer && 'max-width-fluid-container',
+  );
 
   // ── CTA order ────────────────────────────────────────────────────────────────
   const ctasToRender = travelingCtas
@@ -204,13 +202,7 @@ export const TravelingCta = ({
   // ── Inner content (wrapper + buttons) ────────────────────────────────────────
   const ctasContent = ctasToRender.length > 0 ? (
     <div className={wrapperClasses} {...(wrapperStyle ? { style: wrapperStyle } : {})}>
-      <div
-        className={
-          ['traveling-cta--ctas', alignmentClasses]
-            .filter(Boolean)
-            .join(' ')
-        }
-      >
+      <div className={cx(styles, 'traveling-cta--ctas', alignmentClasses)}>
         {ctasToRender.map((cta, index) => {
           const {
             inlineStyle,
@@ -223,15 +215,14 @@ export const TravelingCta = ({
           } = cta;
 
           // Mirrors Twig button_classes array for each CTA
-          const buttonClassName = [
+          const buttonClassName = cx(
+            styles,
             'traveling-cta--button',
             ctaBgThemeColor ? `bg-${ctaBgThemeColor}` : null,
             textThemeColor ? `text-${textThemeColor}` : null,
             !block && display ? display : null,
-            ctaClassName ?? null,
-          ]
-            .filter(Boolean)
-            .join(' ');
+            ctaClassName,
+          );
 
           // Style is passed through rest spread on the underlying Bootstrap Button.
           // The cast is required because ButtonProps does not extend HTMLAttributes.
@@ -258,16 +249,16 @@ export const TravelingCta = ({
       data-pattern="timberland/traveling-cta"
     >
       {/* Border decoration spans — mirrors Twig traveling-cta--border block */}
-      <div className="traveling-cta--border">
-        <span className="bg bg1" />
-        <span className="bg bg2" />
-        <span className="bg bg3" />
-        <span className="bg bg4" />
+      <div className={cx(styles, 'traveling-cta--border')}>
+        <span className={cx(styles, 'bg', 'bg1')} />
+        <span className={cx(styles, 'bg', 'bg2')} />
+        <span className={cx(styles, 'bg', 'bg3')} />
+        <span className={cx(styles, 'bg', 'bg4')} />
       </div>
 
       {includeContainer ? (
         <div className={containerClass}>
-          <div className="row">{ctasContent}</div>
+          <div className={cx(styles, 'row')}>{ctasContent}</div>
         </div>
       ) : (
         ctasContent

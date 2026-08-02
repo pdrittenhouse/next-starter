@@ -3,6 +3,8 @@ import type { EditorBlock } from '@/types/blocks';
 import { Table } from '@/stories/atoms/table/Table';
 import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';
 import type { TableVariant, TableResponsive, VerticalAlign } from '@/stories/atoms/table/Table';
+import styles from './table.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF field values for the table block, as they appear in attributesJSON.data.
@@ -152,7 +154,7 @@ export async function TableBlock({ block }: TableBlockProps) {
   });
   const hasBlockStyle = !!blockStyle;
 
-  const blockClasses = ['table-block', attrs.className].filter(Boolean).join(' ');
+  const blockClasses = cx(styles, 'table-block', attrs.className);
 
   const caption = data.caption_group?.caption;
   const captionTop = data.caption_group?.caption_top;

@@ -1,6 +1,7 @@
 'use client';
 import React, { useId, useState, useRef, useEffect } from 'react';
 import styles from './nav.module.scss';
+import { cx } from '@/lib/cx';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -213,50 +214,53 @@ function NavItemEntry({
     return () => document.removeEventListener('mousedown', handler);
   }, [isOpen]);
 
-  const itemClasses = [
+  const itemClasses = cx(
+    styles,
     'nav-item',
-    hasDropdown ? 'dropdown' : null,
-    hasMegaMenu ? 'has-mega-menu' : null,
-    isNestedItem ? 'dropdown-item' : null,
+    hasDropdown && 'dropdown',
+    hasMegaMenu && 'has-mega-menu',
+    isNestedItem && 'dropdown-item',
     `nav-item--item-${navCount}`,
-    item.hideDropdownIcon ? 'hide-dropdown-icon' : null,
+    item.hideDropdownIcon && 'hide-dropdown-icon',
     ...(item.itemClasses ?? []),
-    item.itemOtherClasses ?? null,
-    hasDropdown && isOpen ? 'show' : null,
-  ].filter(Boolean).join(' ');
+    item.itemOtherClasses,
+    hasDropdown && isOpen && 'show',
+  );
 
-  const linkClasses = [
+  const linkClasses = cx(
+    styles,
     'nav-link',
-    hasDropdown ? 'dropdown-toggle' : null,
+    hasDropdown && 'dropdown-toggle',
     ...(item.linkClasses ?? []),
-    item.linkOtherClasses ?? null,
-    hasDropdown && isOpen ? 'show' : null,
-  ].filter(Boolean).join(' ');
+    item.linkOtherClasses,
+    hasDropdown && isOpen && 'show',
+  );
 
   const itemContent = (
     <>
       {item.icon?.enabled && item.icon.position === 'before' && (
-        <span className="nav-icon nav-icon--before" aria-hidden="true" />
+        <span className={cx(styles, 'nav-icon', 'nav-icon--before')} aria-hidden="true" />
       )}
-      <span className="item-label">{item.title}</span>
+      <span className={cx(styles, 'item-label')}>{item.title}</span>
       {item.icon?.enabled && item.icon.position === 'after' && (
-        <span className="nav-icon nav-icon--after" aria-hidden="true" />
+        <span className={cx(styles, 'nav-icon', 'nav-icon--after')} aria-hidden="true" />
       )}
       {item.description && (
-        <span className="item-description">{item.description}</span>
+        <span className={cx(styles, 'item-description')}>{item.description}</span>
       )}
-      {hasDropdown && <span className="caret" />}
+      {hasDropdown && <span className={cx(styles, 'caret')} />}
     </>
   );
 
   if (hasDropdown) {
     // depth >= 1 means this sub-menu is itself nested inside another dropdown
-    const subMenuClasses = [
+    const subMenuClasses = cx(
+      styles,
       'flex-column',
       'dropdown-menu',
-      depth >= 1 ? 'dropdown-submenu' : null,
-      isOpen ? 'show' : null,
-    ].filter(Boolean).join(' ');
+      depth >= 1 && 'dropdown-submenu',
+      isOpen && 'show',
+    );
 
     return (
       <Element ref={itemRef as any} className={itemClasses}>
@@ -279,7 +283,7 @@ function NavItemEntry({
 
         {hasMegaMenu && item.megaMenu && (
           <div
-            className={`dropdown-menu mega-menu-dropdown${isOpen ? ' show' : ''}`}
+            className={cx(styles, 'dropdown-menu', 'mega-menu-dropdown', isOpen && 'show')}
             id={toggleTargetId}
             aria-labelledby={item.linkId}
             dangerouslySetInnerHTML={{ __html: item.megaMenu.content }}
@@ -351,18 +355,19 @@ function NavItems({
 }: NavItemsProps) {
   const NavTag = navElement as React.ElementType;
 
-  const listClasses = [
+  const listClasses = cx(
+    styles,
     'flex-column',
     navbarBreakpoint && navbarBreakpoint !== 'none'
       ? `flex-${navbarBreakpoint}-row`
       : null,
-    navTabs ? 'nav-tabs' : null,
-    navPills ? 'nav-pills' : null,
-    navFill ? 'nav-fill' : null,
-    navJustified ? 'nav-justified' : null,
+    navTabs && 'nav-tabs',
+    navPills && 'nav-pills',
+    navFill && 'nav-fill',
+    navJustified && 'nav-justified',
     'nav',
-    navOtherClasses ?? null,
-  ].filter(Boolean).join(' ');
+    navOtherClasses,
+  );
 
   return (
     <NavTag className={listClasses} {...(navId ? { id: navId } : {})}>
@@ -414,18 +419,17 @@ export function Nav({
 }: NavProps) {
   const uid = useId().replace(/:/g, '');
 
-  const navbarCls = [
+  const navbarCls = cx(
+    styles,
     'navbar-nav',
     `navbar-${uid}`,
-    hoverDropdown ? 'dropdown-hover' : null,
-    relativeMegaMenu ? 'nav-item-relative-mega-menu' : null,
-    containerRelativeMenu ? 'container-relative-menu' : null,
-    toggleOpenMenus ? 'toggle-open-menus' : null,
+    hoverDropdown && 'dropdown-hover',
+    relativeMegaMenu && 'nav-item-relative-mega-menu',
+    containerRelativeMenu && 'container-relative-menu',
+    toggleOpenMenus && 'toggle-open-menus',
     ...navbarClasses,
-    navbarOtherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    navbarOtherClasses,
+  );
 
   return (
     <>

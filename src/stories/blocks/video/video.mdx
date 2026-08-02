@@ -1,0 +1,72 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as VideoBlockStories from './VideoBlock.stories';
+
+<Meta of={VideoBlockStories} />
+
+# Video
+
+Video block that renders the Video atom with ACF-driven configuration. Supports YouTube, Vimeo, HTML5 (mp4/ogg/webm/flv/3gp), and other formats. File-based poster images are resolved via WPGraphQL. Includes player-specific options (autoplay, loop, muted, controls, aspect ratio, quality, closed captions) and block-level width/margin styles.
+
+## Usage
+
+```tsx
+import { VideoBlock } from '@/stories/blocks/video/VideoBlock';
+
+<VideoBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `video_id` | group | Element id: `id_type` (`generated`/`custom`), `id_gen`, `id` |
+| `title` | text | Accessible title for the video player |
+| `format` | select | Video format/provider (e.g. `youtube`, `vimeo`, `mp4`) |
+| `source` | url | Primary video source URL |
+| `ogg_source` | url | OGG source URL (HTML5 fallback) |
+| `webm_source` | url | WebM source URL (HTML5 fallback) |
+| `flv_src` | url | FLV source URL |
+| `threegp_src` | url | 3GP source URL |
+| `start` | number | Start time in seconds |
+| `end` | number | End time in seconds |
+| `autoplay` | true_false | Autoplay the video |
+| `loop` | true_false | Loop playback |
+| `muted` | true_false | Mute audio |
+| `playsinline` | true_false | Play inline on iOS |
+| `fullscreen` | true_false | Allow fullscreen |
+| `controls` | true_false | Show player controls |
+| `aspect_ratio` | select | Player aspect ratio (e.g. `16x9`) |
+| `preload` | select | Preload strategy: `none`, `metadata`, or `auto` |
+| `captions` | true_false | Enable closed captions track |
+| `cc_source` | url | Closed captions VTT file URL |
+| `cc_label` | text | Captions track label |
+| `cc_lang` | text | Captions track language code |
+| `cc_default` | true_false | Show captions by default |
+| `poster` | group | Poster image: `image_type`, `image` (ID or object), `image_url` |
+| `color` | group | Player accent color: `color_type` (`red`/`white`/`custom`), `hex_color` |
+| `info` | true_false | Show video info (YouTube) |
+| `related` | true_false | Show related videos after playback |
+| `suggested` | true_false | Restrict related videos to the same channel |
+| `modest_branding` | true_false | Hide YouTube logo in control bar |
+| `annotations` | true_false | Show YouTube annotations |
+| `playlist` | text | YouTube playlist ID |
+| `background` | true_false | Background/ambient video mode |
+| `quality` | select | Vimeo quality setting |
+| `byline` | true_false | Show Vimeo byline |
+| `dnt` | true_false | Do-not-track flag (Vimeo) |
+| `portrait` | true_false | Show Vimeo portrait |
+| `speed` | true_false | Show Vimeo speed controls |
+| `video_title` | true_false | Show video title overlay |
+| `transparent` | true_false | Transparent player background (Vimeo) |
+| `video_width` | group | Block-level width: `width.value`+`unit`, `min_width`, `max_width` |
+| `margin` | group | Block-level margin (top/bottom/left/right, auto or px) |
+
+## Stories
+
+<Canvas>
+  <Story of={VideoBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={VideoBlockStories.Vimeo} />
+</Canvas>

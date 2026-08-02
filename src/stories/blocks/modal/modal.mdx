@@ -1,0 +1,55 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as ModalBlockStories from './ModalBlock.stories';
+
+<Meta of={ModalBlockStories} />
+
+# Modal
+
+Modal block that renders a Bootstrap modal via the Modal molecule. Supports an optional trigger button, configurable size, fullscreen breakpoint, vertical centering, static or dynamic backdrop, palette-based background and text colors, header and footer close buttons, and HTML body/footer content.
+
+## Usage
+
+```tsx
+import { ModalBlock } from '@/stories/blocks/modal/ModalBlock';
+
+<ModalBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `modal_id` | group | Modal HTML id: `id` (explicit) or `id_gen` (suffix) |
+| `title` | text | Modal header title text |
+| `trigger` | true_false | Show a trigger button before the modal element |
+| `trigger_text` | text | Trigger button label |
+| `trigger_button` | group | Trigger button style: `style`, `size`, `outline`, `full_width`, `disabled`, `nowrap`, `classes` |
+| `modal_size` | select | Modal size: `sm`, `lg`, `xl` |
+| `center_modal` | true_false | Vertically center the dialog |
+| `animate` | true_false | Enable fade animation |
+| `backdrop` | true_false | Show a backdrop overlay |
+| `static_backdrop` | true_false | Prevent closing on backdrop click |
+| `backdrop_color` | group | Palette backdrop color |
+| `full_screen` | true_false | Full-screen modal |
+| `fullscreen_breakpoint` | group | Full-screen below breakpoint (`breakpoint`) |
+| `modal_bg_color` | group | Palette background color for the modal content |
+| `modal_text_color` | group | Palette text color for the modal content |
+| `header_close` | true_false | Show the header close (X) button |
+| `header_close_button_text` | text | Header close button text |
+| `header_close_button` | group | Header close button style settings |
+| `content` | wysiwyg | HTML content for the modal body |
+| `footer_content` | wysiwyg | HTML content in the modal footer before the close button |
+| `footer_close` | true_false | Show a dismiss button in the footer |
+| `footer_button_text` | text | Footer dismiss button label |
+| `footer_button` | group | Footer button style settings |
+| `layout` | group | Layout modifier appended as `modal-{layout}` |
+
+## Stories
+
+<Canvas>
+  <Story of={ModalBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={ModalBlockStories.Large} />
+</Canvas>

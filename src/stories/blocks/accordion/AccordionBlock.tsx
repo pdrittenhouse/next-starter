@@ -4,6 +4,8 @@ import type { ButtonVariant } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';
+import styles from './accordion.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF field values for the acf/accordion wrapper block.
@@ -198,7 +200,7 @@ export async function AccordionBlock({ block }: AccordionBlockProps) {
       // Body content rendered by WP — injected as raw HTML inside the accordion panel.
       content: bodyHtml ? (
         <div
-          className="inner-blocks-wrapper"
+          className={cx(styles, 'inner-blocks-wrapper')}
           dangerouslySetInnerHTML={{ __html: bodyHtml }}
         />
       ) : null,

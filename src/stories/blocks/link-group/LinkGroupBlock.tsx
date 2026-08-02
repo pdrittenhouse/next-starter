@@ -2,6 +2,7 @@ import { Button } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './link-group.module.scss';
+import { cx } from '@/lib/cx';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 interface LinkItem {
@@ -54,9 +55,7 @@ export async function LinkGroupBlock({ block }: LinkGroupBlockProps) {
       ? `text-${data.color.theme_color}`
       : null;
 
-  const wrapperClasses = ['link-group-block', bgClass, textClass, attrs.className]
-    .filter(Boolean)
-    .join(' ');
+  const wrapperClasses = cx(styles, 'link-group-block', bgClass, textClass, attrs.className);
 
   // Merge ACF styles with text-color override
   const wrapperStyle = {

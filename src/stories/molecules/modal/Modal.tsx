@@ -5,6 +5,7 @@ import { Modal as BsModal } from 'react-bootstrap';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonVariant } from '@/stories/atoms/button/Button';
 import styles from './modal.module.scss';
+import { cx } from '@/lib/cx';
 
 export type ModalSize = 'sm' | 'lg';
 export type ModalFullscreenBreakpoint = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
@@ -238,52 +239,56 @@ export function Modal({
 
   // --- Class assembly ---
 
-  const modalExtraClasses = [
-    backdropColor ? `bg-${backdropColor}` : null,
-    className || null,
-  ].filter(Boolean).join(' ') || undefined;
+  const modalExtraClasses =
+    cx(styles, backdropColor ? `bg-${backdropColor}` : null, className) || undefined;
 
-  const contentClasses = [
-    backgroundColor ? `bg-${backgroundColor}` : null,
-    textColor ? `text-${textColor}` : null,
-    modalContentClassName || null,
-  ].filter(Boolean).join(' ') || undefined;
+  const contentClasses =
+    cx(
+      styles,
+      backgroundColor ? `bg-${backgroundColor}` : null,
+      textColor ? `text-${textColor}` : null,
+      modalContentClassName,
+    ) || undefined;
 
-  const titleClasses = [
+  const titleClasses = cx(
+    styles,
     'modal-title',
     textColor ? `text-${textColor}` : null,
-    modalTitleClassName || null,
-  ].filter(Boolean).join(' ');
+    modalTitleClassName,
+  );
 
-  const bodyClasses = [
+  const bodyClasses = cx(
+    styles,
     'modal-body',
     textColor ? `text-${textColor}` : null,
-    modalBodyClassName || null,
-  ].filter(Boolean).join(' ');
+    modalBodyClassName,
+  );
 
   const showHeader = !!modalTitle || modalCloseHeader;
   const showFooter = !!modalFooter || showModalFooterClose;
 
-  const headerCloseClasses = [
+  const headerCloseClasses = cx(
+    styles,
     'btn-close',
     'modal--close',
-    modalCloseHeaderButton?.whiteClose ? 'btn-close-white' : null,
-    modalCloseHeaderButton?.className || null,
-  ].filter(Boolean).join(' ');
+    modalCloseHeaderButton?.whiteClose && 'btn-close-white',
+    modalCloseHeaderButton?.className,
+  );
 
   const footerCloseVariant = modalCloseFooter?.variant || 'secondary';
-  const footerCloseClasses = [
+  const footerCloseClasses = cx(
+    styles,
     'btn',
     modalCloseFooter?.outline
       ? `btn-outline-${footerCloseVariant}`
       : `btn-${footerCloseVariant}`,
     modalCloseFooter?.size ? `btn-${modalCloseFooter.size}` : null,
     'modal--close',
-    modalCloseFooter?.className || null,
-  ].filter(Boolean).join(' ');
+    modalCloseFooter?.className,
+  );
 
   return (
-    <div className="modal-pattern-wrapper" data-pattern="timberland/modal">
+    <div className={cx(styles, 'modal-pattern-wrapper')} data-pattern="timberland/modal">
 
       {/* --- Trigger Button --- */}
       {showModalButton && (
@@ -295,7 +300,7 @@ export function Modal({
           label={modalButton?.label ?? 'Open Modal'}
           disabled={modalButton?.disabled}
           id={modalButton?.id}
-          className={['modal--trigger', modalButton?.className].filter(Boolean).join(' ')}
+          className={cx(styles, 'modal--trigger', modalButton?.className)}
           nowrap={modalButton?.nowrap}
           onClick={() => setShow(true)}
         />
@@ -318,7 +323,7 @@ export function Modal({
       >
         {/* Header */}
         {showHeader && (
-          <div className="modal-header">
+          <div className={cx(styles, 'modal-header')}>
             {modalTitle && (
               <h5 className={titleClasses} id={labelId}>
                 {modalTitle}
@@ -343,14 +348,14 @@ export function Modal({
 
         {/* Footer */}
         {showFooter && (
-          <div className="modal-footer">
+          <div className={cx(styles, 'modal-footer')}>
             {modalFooter && (
-              <div className="modal-footer-content">
+              <div className={cx(styles, 'modal-footer-content')}>
                 {modalFooter}
               </div>
             )}
             {showModalFooterClose && (
-              <div className="modal-actions">
+              <div className={cx(styles, 'modal-actions')}>
                 <button
                   type="button"
                   className={footerCloseClasses}

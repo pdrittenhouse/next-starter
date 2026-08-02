@@ -2,6 +2,7 @@ import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import styles from './slide.module.scss';
+import { cx } from '@/lib/cx';
 
 interface SlideBlockData extends AcfBlockStyleData {
   [key: string]: unknown;
@@ -17,11 +18,11 @@ export async function SlideBlock({ block, children }: SlideBlockProps) {
   const data: SlideBlockData = (attrs?.data ?? {}) as SlideBlockData;
 
   const { style: wrapperStyle, bgClass } = buildAcfBlockStyle(data);
-  const cellClasses = ['carousel-cell', bgClass, attrs.className].filter(Boolean).join(' ');
+  const cellClasses = cx(styles, 'carousel-cell', bgClass, attrs.className);
 
   if (children) {
     return (
-      <div className={cellClasses || 'carousel-cell'} style={wrapperStyle}>
+      <div className={cellClasses} style={wrapperStyle}>
         {children}
       </div>
     );
@@ -30,7 +31,7 @@ export async function SlideBlock({ block, children }: SlideBlockProps) {
   if (!block.renderedHtml) return null;
   return (
     <div
-      className={cellClasses || 'carousel-cell'}
+      className={cellClasses}
       style={wrapperStyle}
       dangerouslySetInnerHTML={{ __html: block.renderedHtml }}
     />

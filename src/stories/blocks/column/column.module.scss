@@ -1,3 +1,2 @@
 @use "variables" as *;
-// ColumnBlock styles — local (CSS Module) classes only.
-// Global block styles live in src/scss/patterns/blocks/_column.scss.
+@use "printing/wordpress/blocks/timberland/column";

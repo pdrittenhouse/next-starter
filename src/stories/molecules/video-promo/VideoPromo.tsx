@@ -4,6 +4,7 @@ import { Button } from '@/stories/atoms/button/Button';
 import type { VideoProps } from '@/stories/atoms/video/Video';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './video-promo.module.scss';
+import { cx } from '@/lib/cx';
 
 // ── Inline SVG helpers ────────────────────────────────────────────────────────
 
@@ -134,9 +135,7 @@ export const VideoPromo = ({
   ctas,
 }: VideoPromoProps) => {
   // ── Root classes (mirrors Twig video_promo_classes merge + sort + trim) ──────
-  const rootClasses = ['video-promo', className ?? null]
-    .filter(Boolean)
-    .join(' ');
+  const rootClasses = cx(styles, 'video-promo', className);
 
   // ── Background color class helper ──────────────────────────────────────────
   const bgClass = bgColor ? `bg-${bgColor}` : '';
@@ -165,32 +164,28 @@ export const VideoPromo = ({
     >
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       {hasHeader && (
-        <div
-          className={['video-promo--header', bgClass].filter(Boolean).join(' ')}
-        >
-          <div className="video-promo--container">
-            <div className="video-promo--row">
-              <div className="video-promo--content">
+        <div className={cx(styles, 'video-promo--header', bgClass)}>
+          <div className={cx(styles, 'video-promo--container')}>
+            <div className={cx(styles, 'video-promo--row')}>
+              <div className={cx(styles, 'video-promo--content')}>
                 {title && (
                   <h2
-                    className={[
+                    className={cx(
+                      styles,
                       'video-promo--title',
                       titleColor ? `text-${titleColor}` : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
+                    )}
                   >
                     {title}
                   </h2>
                 )}
                 {subtitle && (
                   <h3
-                    className={[
+                    className={cx(
+                      styles,
                       'video-promo--subtitle',
                       subtitleColor ? `text-${subtitleColor}` : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
+                    )}
                   >
                     {subtitle}
                   </h3>
@@ -199,12 +194,11 @@ export const VideoPromo = ({
                   // Twig renders {{ video_promo_intro }} unescaped.
                   // eslint-disable-next-line react/no-danger
                   <div
-                    className={[
+                    className={cx(
+                      styles,
                       'video-promo--intro',
                       introColor ? `text-${introColor}` : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
+                    )}
                     dangerouslySetInnerHTML={{ __html: intro }}
                   />
                 )}
@@ -216,19 +210,17 @@ export const VideoPromo = ({
 
       {/* ── Body ───────────────────────────────────────────────────────────── */}
       {hasBody && (
-        <div
-          className={['video-promo--body', bgClass].filter(Boolean).join(' ')}
-        >
+        <div className={cx(styles, 'video-promo--body', bgClass)}>
           {/* ── Video ──────────────────────────────────────────────────────── */}
           {video?.source && (
-            <div className="video-promo--content">
-              <div className="video-promo--video">
+            <div className={cx(styles, 'video-promo--content')}>
+              <div className={cx(styles, 'video-promo--video')}>
                 {/* Play-button overlay for HTML5 native video (no embed format) */}
                 {showPlayButton && (
                   <Button
                     variant="link"
                     label=""
-                    className="video-promo--play"
+                    className={cx(styles, 'video-promo--play')}
                     aria-label="Play video"
                   >
                     <PlayIcon />
@@ -241,8 +233,8 @@ export const VideoPromo = ({
 
           {/* ── CTAs ───────────────────────────────────────────────────────── */}
           {ctas && ctas.length > 0 && (
-            <div className="video-promo--content">
-              <div className="video-promo--promos">
+            <div className={cx(styles, 'video-promo--content')}>
+              <div className={cx(styles, 'video-promo--promos')}>
                 {ctas.map((cta, index) => (
                   <Button
                     key={cta.id ?? index}
@@ -251,7 +243,7 @@ export const VideoPromo = ({
                     {cta.children ?? (
                       <>
                         {cta.label && (
-                          <span className="button--label">{cta.label}</span>
+                          <span className={cx(styles, 'button--label')}>{cta.label}</span>
                         )}
                         <ArrowRightIcon />
                       </>

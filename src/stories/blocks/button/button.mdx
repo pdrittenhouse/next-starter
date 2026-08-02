@@ -1,0 +1,55 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as ButtonBlockStories from './ButtonBlock.stories';
+
+<Meta of={ButtonBlockStories} />
+
+# Button
+
+Button block that wraps the Button atom with full ACF field mapping. Supports all Bootstrap variants, outline mode, size, toggle types (collapse/dropdown/modal/tab), tooltip/popover, close button, full-width, and block-level spacing/width/margin/padding/border/shadow styles.
+
+## Usage
+
+```tsx
+import { ButtonBlock } from '@/stories/blocks/button/ButtonBlock';
+
+<ButtonBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `link` | link | Button href (`url`), label (`title`), and target |
+| `element` | select | HTML element: `button`, `a`, or `input` |
+| `style` | select | Bootstrap variant name (e.g. `primary`) or `custom` |
+| `size` | select | Size modifier: `sm` or `lg` |
+| `outline` | true_false | Render as an outline button |
+| `full_width` | true_false | Add `d-grid` block button class |
+| `toggle` | select | Bootstrap toggle type: `collapse`, `dropdown`, `modal`, `tab`, `tooltip`, `popover` |
+| `id.id` | text | Explicit HTML id |
+| `id.id_gen` | text | Auto-generated id suffix |
+| `active` | true_false | Apply `active` class and `aria-pressed` |
+| `disabled` | true_false | Disable the button |
+| `value` | text | `value` attribute for `input` elements |
+| `close` | select | Render as a close button: `black` or `white` |
+| `hide_label` | true_false | Visually hide the label text |
+| `aria_label` | text | Accessible label override |
+| `nowrap` | true_false | Apply `text-nowrap` |
+| `context` | group | Tooltip/popover `title`, `content`, `placement`, `container` |
+| `background_color` | group | Palette or custom background color |
+| `text_color` | group | Palette or custom text color |
+| `display` | group | Display utility class (applied when not full-width) |
+
+## Stories
+
+<Canvas>
+  <Story of={ButtonBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={ButtonBlockStories.Outline} />
+</Canvas>
+
+<Canvas>
+  <Story of={ButtonBlockStories.Large} />
+</Canvas>

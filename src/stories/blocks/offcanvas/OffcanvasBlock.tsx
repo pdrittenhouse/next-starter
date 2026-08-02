@@ -3,6 +3,7 @@ import type { OffcanvasPlacement, OffcanvasBreakpoint } from '@/stories/molecule
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './offcanvas.module.scss';
+import { cx } from '@/lib/cx';
 
 interface OffcanvasBlockData {
   id?: {
@@ -86,7 +87,7 @@ export async function OffcanvasBlock({ block }: OffcanvasBlockProps) {
     className: btnClassName,
   };
 
-  const wrapperClasses = ['block-offcanvas', attrs.className].filter(Boolean).join(' ');
+  const wrapperClasses = cx(styles, 'block-offcanvas', attrs.className);
 
   return (
     <Offcanvas

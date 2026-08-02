@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './icons.module.scss';
+import { cx } from '@/lib/cx';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 interface IconsBlockData extends Pick<AcfBlockStyleData, 'width' | 'margin'> {
@@ -18,9 +19,7 @@ export async function IconsBlock({ block }: IconsBlockProps) {
   const data: IconsBlockData = attrs?.data ?? {};
 
   const displayClass = data.display?.display ?? null;
-  const wrapperClasses = ['icon-group', displayClass, attrs.className]
-    .filter(Boolean)
-    .join(' ');
+  const wrapperClasses = cx(styles, 'icon-group', displayClass, attrs.className);
 
   const { style: acfStyle } = buildAcfBlockStyle({ width: data.width, margin: data.margin });
   const wrapperStyle: CSSProperties = {

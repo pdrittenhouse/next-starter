@@ -1,0 +1,60 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as CardBlockStories from './CardBlock.stories';
+
+<Meta of={CardBlockStories} />
+
+# Card
+
+Card block that resolves file-based card and background images via WPGraphQL, then renders the Card organism. Supports title, subtitle, body, footer, label, link (inline or button), image (top/bottom/overlay), flip-card, background/text/border colors, background images, and block-level spacing styles.
+
+## Usage
+
+```tsx
+import { CardBlock } from '@/stories/blocks/card/CardBlock';
+
+<CardBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `card_title` | text | Card heading text |
+| `subtitle` | text | Secondary heading below the title |
+| `body` | wysiwyg | HTML body content rendered inside `.card-text` |
+| `label` | text | Category or eyebrow label |
+| `card_footer` | wysiwyg | HTML content for the card footer |
+| `link` | link | Card link — `url`, `title`, `target` |
+| `link_card` | true_false | Wrap the entire card in an anchor |
+| `show_button` | true_false | Show a Button atom instead of an inline link |
+| `button` | group | Button settings: `style`, `size`, `outline`, `full_width`, `element`, `disabled`, `toggle`, `classes` |
+| `image` | group | Card image: `image_type` (`file`/`url`), `image` (ID), `image_url` |
+| `image_position` | select | Image location: `top` or `bottom` |
+| `image_overlay` | true_false | Render image as a full-card overlay |
+| `image_overlay_text` | text | Text shown over the image overlay |
+| `horizontal` | true_false | Render card in horizontal layout |
+| `layout` | group | Layout modifier class (`card_layout`) |
+| `text_align` | select | Text alignment: `left`, `center`, `right` |
+| `vertically_center_content` | true_false | Add `vertically-center-content` class |
+| `flip_card` | true_false | Enable flip-card front/back animation |
+| `card_back_content` | wysiwyg | HTML for the flip-card back face |
+| `card_bg_color` | group | Palette or custom background color |
+| `card_text_color` | group | Palette or custom text color |
+| `card_border_color` | group | Palette border color |
+| `remove_card_border` | true_false | Remove the card border |
+| `card_bg_image` | group | CSS background image for the card |
+| `back_bg_image` | group | CSS background image for the flip-card back |
+| `card_icon` | group | Icon: `type` (`custom`/`font-awesome`/`none`), `icon`, `fa_icon`, `fa_icon_style`, `icon_color`, `size` |
+| `width` | group | Block-level CSS width |
+| `height` | group | Block-level CSS height |
+| `margin` | group | Block-level margin (top/bottom/left/right, auto or px) |
+
+## Stories
+
+<Canvas>
+  <Story of={CardBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={CardBlockStories.WithBackground} />
+</Canvas>

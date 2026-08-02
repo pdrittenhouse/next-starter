@@ -1,3 +1,2 @@
 @use "variables" as *;
-// LinkGroupBlock styles — local (CSS Module) classes only.
-// Global block styles live in src/scss/patterns/blocks/_link-group.scss.
+@use "printing/wordpress/blocks/timberland/link-group";

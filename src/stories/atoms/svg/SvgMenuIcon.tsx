@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './svg.module.scss';
+import { cx } from '@/lib/cx';
 import { SvgIcon } from './SvgIcon';
 
 /**
@@ -58,34 +60,31 @@ export function SvgMenuIcon({ iconData }: SvgMenuIconProps) {
     : undefined;
 
   if (type === 'custom' && custom) {
-    return <SvgIcon name={custom} fill={fill} width={width} height={height} className="menu-icon" />;
+    return <SvgIcon name={custom} fill={fill} width={width} height={height} className={cx(styles, 'menu-icon')} />;
   }
 
   if (type === 'font-awesome' && fa_icon) {
-    const cls = [fa_style ?? 'fas', `fa-${fa_icon}`, fill ? `color-fill--${fill}` : null]
-      .filter(Boolean).join(' ');
+    const cls = cx(styles, fa_style ?? 'fas', `fa-${fa_icon}`, fill ? `color-fill--${fill}` : null);
     return (
-      <span className="menu-icon" style={offsetStyle}>
+      <span className={cx(styles, 'menu-icon')} style={offsetStyle}>
         <i className={cls} aria-hidden="true" />
       </span>
     );
   }
 
   if (type === 'phosphor' && ph_icon) {
-    const cls = [ph_weight ?? 'ph', `ph-${ph_icon}`, fill ? `text-${fill}` : null]
-      .filter(Boolean).join(' ');
+    const cls = cx(styles, ph_weight ?? 'ph', `ph-${ph_icon}`, fill ? `text-${fill}` : null);
     return (
-      <span className="menu-icon" style={offsetStyle}>
+      <span className={cx(styles, 'menu-icon')} style={offsetStyle}>
         <i className={cls} aria-hidden="true" />
       </span>
     );
   }
 
   if (type === 'bootstrap-icons' && bi_icon) {
-    const cls = ['bi', `bi-${bi_icon}`, fill ? `text-${fill}` : null]
-      .filter(Boolean).join(' ');
+    const cls = cx(styles, 'bi', `bi-${bi_icon}`, fill ? `text-${fill}` : null);
     return (
-      <span className="menu-icon" style={offsetStyle}>
+      <span className={cx(styles, 'menu-icon')} style={offsetStyle}>
         <i className={cls} aria-hidden="true" />
       </span>
     );

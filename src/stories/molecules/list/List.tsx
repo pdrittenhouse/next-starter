@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './list.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Font Awesome class detection — mirrors the Twig pattern's regex check.
@@ -32,18 +33,16 @@ function buildParentClasses(
         ? 'bullet-icons--after'
         : null;
 
-  return [
+  return cx(
+    styles,
     ...(parentClasses ?? []),
     'list',
     listId ? `list-id--${listId}` : null,
     `list-type--${listType}`,
     bulletIcons ? 'bullet-icons' : null,
     bulletPositionClass,
-    parentOtherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .sort()
-    .join(' ');
+    parentOtherClasses,
+  );
 }
 
 /**
@@ -55,15 +54,13 @@ function buildItemClasses(
   itemClasses: string[] | undefined,
   itemOtherClasses: string | undefined,
 ): string {
-  return [
+  return cx(
+    styles,
     ...(itemClasses ?? []),
     'list-item',
     `list-item--item-${itemCount}`,
-    itemOtherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .sort()
-    .join(' ');
+    itemOtherClasses,
+  );
 }
 
 interface IconSizes {
@@ -118,28 +115,26 @@ function renderIcon(
   if (!item.itemIcon) return null;
 
   if (isFontAwesome(item.itemIcon)) {
-    const iconCls = [
+    const iconCls = cx(
+      styles,
       item.itemIcon,
       item.iconColor ? `color-fill--${item.iconColor}` : null,
-    ]
-      .filter(Boolean)
-      .join(' ');
+    );
 
     return (
-      <span className="icon" style={{ fontSize: width }}>
+      <span className={cx(styles, 'icon')} style={{ fontSize: width }}>
         <i className={iconCls} style={item.iconStyles} />
       </span>
     );
   }
 
   // SVG icon — span structure matches @atoms/svg inline rendering
-  const svgCls = [
+  const svgCls = cx(
+    styles,
     'svg',
     'svg--colorable',
     item.iconColor ? `text-${item.iconColor}` : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <span

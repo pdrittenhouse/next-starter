@@ -1,0 +1,54 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TabsBlockStories from './TabsBlock.stories';
+
+<Meta of={TabsBlockStories} />
+
+# Tabs
+
+Tabs block that builds tab items from `acf/tab` inner blocks and renders the Tabs molecule. Falls back to `renderedHtml` when no inner blocks are accessible. Supports Bootstrap and jQuery responsive-tabs modes, pill-style nav, fill/justified alignment, vertical orientation, collapsible panels, disabled tabs, hash-based deep linking, and auto-rotation.
+
+## Usage
+
+```tsx
+import { TabsBlock } from '@/stories/blocks/tabs/TabsBlock';
+
+<TabsBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `tabs_id` | group | Wrapper HTML id: `id` (explicit) or `id_gen` (suffix, produces `tabs{n}`) |
+| `pills` | true_false | Use pill-style nav instead of underline tabs |
+| `type` | select | Tab library: `bootstrap` or `jquery` (responsive-tabs plugin) |
+| `fill` | select | Nav alignment: `fill` or `justified` |
+| `alignment` | select | Horizontal nav alignment (`justify-content-{value}` class) |
+| `vertical` | true_false | Render tabs vertically |
+| `active_tab` | number | 0-based index of the initially active tab |
+| `disabled_tabs` | repeater | Rows of `tab_index` (1-based) for tabs to disable |
+| `collapsible` | text | Enable collapsible panel behavior |
+| `start_collapsed` | text | Start all panels collapsed |
+| `accordion_tab_element` | text | Heading element for accordion headers at breakpoint |
+| `scroll_to_accordion` | text | Scroll to accordion panel on activation |
+| `scroll_to_accordion_on_load` | text | Scroll on initial load |
+| `scroll_to_accordion_offset` | text | Pixel offset for accordion scroll |
+| `set_hash` | text | Update URL hash on tab activation |
+| `rotate` | text | Auto-rotate through tabs |
+| `event` | text | Activation event (e.g. `click`, `mouseover`) |
+| `animation` | text | Panel animation type |
+| `animation_queue` | text | Enable animation queuing |
+| `duration` | number | Animation duration in milliseconds |
+| `fluid_height` | text | Adaptive height animation |
+
+Inner `acf/tab` blocks carry: `tab_label` (nav button text), `id` (group: custom or generated per-tab ID), and `active` (initially active flag).
+
+## Stories
+
+<Canvas>
+  <Story of={TabsBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={TabsBlockStories.Pills} />
+</Canvas>

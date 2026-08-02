@@ -1,0 +1,54 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as JumbotronBlockStories from './JumbotronBlock.stories';
+
+<Meta of={JumbotronBlockStories} />
+
+# Jumbotron
+
+Full-width jumbotron block. Maps ACF fields to the Jumbotron molecule: label, title, subtitle, body text, background image, inline side image, CTA button, fluid/container mode, overlay, and block-level padding/margin/border/shadow styles. File-based images are resolved via WPGraphQL.
+
+## Usage
+
+```tsx
+import { JumbotronBlock } from '@/stories/blocks/jumbotron/JumbotronBlock';
+
+<JumbotronBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `label` | text | Eyebrow label above the title |
+| `jumbotron_title` | text | Primary heading |
+| `jumbotron_subtitle` | text | Secondary heading |
+| `jumbotron_text` | wysiwyg | Body copy (HTML) |
+| `jumbotron_fluid` | true_false | Remove rounded corners for a full-width look |
+| `vertical_center` | true_false | Vertically center content |
+| `image_left` | true_false | Position inline side image to the left |
+| `jumbotron_container` | true_false | Keep Bootstrap container (default: full-width/no container) |
+| `container_breakpoint` | group | Container responsive breakpoint (`breakpoint`) |
+| `max_width_fluid_container` | true_false | Add max-width class to a fluid container |
+| `id` | group | HTML id: `id` (explicit) or `id_gen` (suffix) |
+| `jumbotron_bg_image` | group | CSS background image: `bg_image_type`, `bg_image` (ID), `bg_image_url`, size/position/repeat/attachment |
+| `jumbotron_image` | group | Inline side image: `image_type`, `image` (ID), `image_url` |
+| `jumbotron_button` | group | CTA button: `link`, `style`, `size`, `outline`, `full_width`, `element`, `toggle`, `id`, `active`, `disabled`, `value`, `classes` |
+| `include_overlay` | true_false | Render a `.jumbotron-overlay` span for background dimming |
+| `bg_video` | true_false | Background video mode (suppresses bg image URL) |
+| `height` | group | Block-level CSS height |
+| `border` | group | Block-level border |
+| `border_radius` | group | Block-level border radius |
+| `box_shadow` | group | Block-level box shadow |
+| `jumbotron_padding` | group | Block-level padding |
+| `jumbotron_margin` | group | Block-level margin |
+| `jumbotron_bg_color` | group | Block-level background color |
+
+## Stories
+
+<Canvas>
+  <Story of={JumbotronBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={JumbotronBlockStories.WithBackground} />
+</Canvas>

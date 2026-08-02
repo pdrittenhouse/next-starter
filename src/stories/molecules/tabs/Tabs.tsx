@@ -3,6 +3,7 @@
 import React, { useId, useState } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import styles from './tabs.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * A single tab item — maps to the per-item variables in `_tabs.tpl.twig`:
@@ -150,15 +151,14 @@ export function Tabs({
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   // ── Wrapper classes ──────────────────────────────────────────────────────
-  const wrapperClasses = [
+  const wrapperClasses = cx(
+    styles,
     'tabs-wrapper',
-    vertical ? 'vertical' : '',
+    vertical && 'vertical',
     tabsType,
     ...classes,
-    otherClasses ?? '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+    otherClasses,
+  );
 
   // ── Wrapper data-* attributes (jQuery responsive-tabs options) ───────────
   const wrapperDataAttrs: Record<string, string> = {};
@@ -201,13 +201,12 @@ export function Tabs({
 
   // ── Bootstrap tabs variant ───────────────────────────────────────────────
   if (tabsType === 'bootstrap') {
-    const navListClasses = [
+    const navListClasses = cx(
+      styles,
       'nav',
       navPills ? 'nav-pills' : 'nav-tabs',
-      fillJustify ? `nav-${fillJustify}` : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+      fillJustify ? `nav-${fillJustify}` : null,
+    );
 
     return (
       <div
@@ -231,7 +230,7 @@ export function Tabs({
                   id={btnId}
                   variant="primary"
                   label={tab.title}
-                  className={['nav-link', isActive ? 'active' : ''].filter(Boolean).join(' ')}
+                  className={cx(styles, 'nav-link', isActive && 'active')}
                   controls={panelId}
                   role="tab"
                   hideLabel={tab.hideLabel}
@@ -246,7 +245,7 @@ export function Tabs({
         </nav>
 
         {/* Tab panels */}
-        <div className="tab-content">
+        <div className={cx(styles, 'tab-content')}>
           {tabs.map((tab, i) => {
             const btnId = `${tabsId}--tab-${i + 1}-link`;
             const panelId = `${tabsId}--tab-${i + 1}`;
@@ -255,17 +254,11 @@ export function Tabs({
               <div
                 key={tab.id ?? i}
                 id={panelId}
-                className={[
-                  'tab-pane',
-                  'fade',
-                  isActive ? 'show active' : '',
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
+                className={cx(styles, 'tab-pane', 'fade', isActive && 'show', isActive && 'active')}
                 role="tabpanel"
                 aria-labelledby={btnId}
               >
-                <div className="tab-pane-inner">{tab.content}</div>
+                <div className={cx(styles, 'tab-pane-inner')}>{tab.content}</div>
               </div>
             );
           })}
@@ -275,13 +268,12 @@ export function Tabs({
   }
 
   // ── jQuery responsive-tabs variant ───────────────────────────────────────
-  const jqueryListClasses = [
+  const jqueryListClasses = cx(
+    styles,
     'tabs',
     'clearfix',
-    vertical ? 'vertical' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+    vertical && 'vertical',
+  );
 
   return (
     <div
@@ -298,11 +290,11 @@ export function Tabs({
           const linkId = `${tabsId}--tab-${i + 1}-link`;
           const panelId = `${tabsId}--tab-${i + 1}`;
           return (
-            <li key={tab.id ?? i} className="tabs__tab" role="presentation">
+            <li key={tab.id ?? i} className={cx(styles, 'tabs__tab')} role="presentation">
               <a
                 href={`#${panelId}`}
                 id={linkId}
-                className="tabs__tab-link"
+                className={cx(styles, 'tabs__tab-link')}
                 role="tab"
                 aria-controls={panelId}
                 aria-selected={i === 0 ? 'true' : 'false'}
@@ -323,16 +315,11 @@ export function Tabs({
           <div
             key={tab.id ?? i}
             id={panelId}
-            className={[
-              'tabs__content-wrapper',
-              i === 0 ? 'show active' : '',
-            ]
-              .filter(Boolean)
-              .join(' ')}
+            className={cx(styles, 'tabs__content-wrapper', i === 0 && 'show', i === 0 && 'active')}
             role="tabpanel"
             aria-labelledby={linkId}
           >
-            <div className="tabs__content">{tab.content}</div>
+            <div className={cx(styles, 'tabs__content')}>{tab.content}</div>
           </div>
         );
       })}

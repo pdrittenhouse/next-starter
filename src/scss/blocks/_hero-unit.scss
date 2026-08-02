@@ -1,0 +1,13 @@
+@use "variables" as *;
+// Block: hero-unit - Frontend Styles
+.hero-unit {
+    position: relative;
+
+    .overlay {
+        @include cover();
+    }
+
+    > .container {
+        position: relative;
+    }
+}

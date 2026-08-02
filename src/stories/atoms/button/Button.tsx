@@ -9,6 +9,7 @@ import {
 import type { ButtonProps as BsButtonProps } from 'react-bootstrap/Button';
 import type { Placement } from 'react-bootstrap/types';
 import styles from './button.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Color variants matching the theme's extended Bootstrap palette.
@@ -158,12 +159,13 @@ export const Button = ({
   const resolvedAs = elementType || (href ? 'a' : undefined);
 
   // Build extra class names
-  const classNames = [
+  const classNames = cx(
+    styles,
     'button',
-    block ? styles.btnBlock : '',
-    nowrap ? 'text-nowrap' : '',
-    className || '',
-  ].filter(Boolean).join(' ');
+    block ? 'btnBlock' : null,
+    nowrap ? 'text-nowrap' : null,
+    className,
+  );
 
   // Build data attributes for toggle
   const dataAttrs: Record<string, string> = {};
@@ -189,16 +191,17 @@ export const Button = ({
   // Input elements are void — they can't have children.
   // Render a plain <input> with Bootstrap classes instead.
   if (resolvedAs === 'input') {
-    const inputClasses = [
+    const inputClasses = cx(
+      styles,
       'button',
       'btn',
       outline ? `btn-outline-${variant}` : `btn-${variant}`,
-      size ? `btn-${size}` : '',
-      block ? styles.btnBlock : '',
-      active ? 'active' : '',
-      nowrap ? 'text-nowrap' : '',
-      className || '',
-    ].filter(Boolean).join(' ');
+      size ? `btn-${size}` : null,
+      block ? 'btnBlock' : null,
+      active ? 'active' : null,
+      nowrap ? 'text-nowrap' : null,
+      className,
+    );
 
     return (
       <input
@@ -218,7 +221,7 @@ export const Button = ({
 
   // Build the button content
   const content = children || (
-    hideLabel ? null : <span className="button--label">{label}</span>
+    hideLabel ? null : <span className={cx(styles, 'button--label')}>{label}</span>
   );
 
   // Assemble the button

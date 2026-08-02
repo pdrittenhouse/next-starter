@@ -1,0 +1,42 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as AccordionBlockStories from './AccordionBlock.stories';
+
+<Meta of={AccordionBlockStories} />
+
+# Accordion
+
+Wrapper block that renders a Bootstrap accordion from nested `acf/accordion-item` inner blocks. When no inner blocks are present (flat-list WPGraphQL responses), the block falls back to `block.renderedHtml` so content is never silently dropped.
+
+## Usage
+
+```tsx
+import { AccordionBlock } from '@/stories/blocks/accordion/AccordionBlock';
+
+<AccordionBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `id.id` | text | Explicit HTML id for the accordion wrapper |
+| `id.id_gen` | number | Auto-generated id suffix (produces `accordion{n}`) |
+| `flush` | true_false | Remove outer border and rounded corners (`accordion-flush`) |
+| `always_open` | true_false | Allow multiple items open simultaneously |
+| `layout.accordion_layout` | select | Layout modifier appended as `accordion-{layout}` |
+| `margin.margin.top` | group | Top margin — `top` (px) or `auto` flag |
+| `margin.margin.bottom` | group | Bottom margin — `bottom` (px) or `auto` flag |
+| `margin.margin.left` | group | Left margin — `left` (px) or `auto` flag |
+| `margin.margin.right` | group | Right margin — `right` (px) or `auto` flag |
+
+Inner `acf/accordion-item` blocks carry their own fields: `header`, `active`, `header_element`, `button` (style/size/outline/element/disabled), and `id`.
+
+## Stories
+
+<Canvas>
+  <Story of={AccordionBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={AccordionBlockStories.Flush} />
+</Canvas>

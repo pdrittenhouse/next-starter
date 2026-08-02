@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import styles from './flickity-carousel.module.scss';
+import { cx } from '@/lib/cx';
 
 export interface FlickityCarouselProps {
   /** Slides to render — each item becomes a `.carousel-cell` div. */
@@ -93,16 +94,18 @@ export function FlickityCarousel({
   const uid = useId().replace(/:/g, '');
   const carouselId = id ?? `flickityCarousel${uid}`;
 
-  const wrapperClasses = [
+  const wrapperClasses = cx(
+    styles,
     'flickity-carousel--wrapper',
     columns ? `flickity-cols-${columns}` : null,
     className,
-  ].filter(Boolean).join(' ');
+  );
 
-  const carouselClasses = [
+  const carouselClasses = cx(
+    styles,
     'flickity-carousel',
-    prevNextButtons ? 'has-arrows' : null,
-  ].filter(Boolean).join(' ');
+    prevNextButtons && 'has-arrows',
+  );
 
   return (
     <div
@@ -138,27 +141,27 @@ export function FlickityCarousel({
         data-percentposition={percentPosition ? 'true' : 'false'}
       >
         {slides.map((slide, i) => (
-          <div key={i} className="carousel-cell">
+          <div key={i} className={cx(styles, 'carousel-cell')}>
             {slide}
           </div>
         ))}
       </div>
 
       {showControls && (
-        <div className="button--row">
-          <button className="button button--previous" aria-label="Previous slide">&larr;</button>
-          <div className="button--group button--group-cells">
+        <div className={cx(styles, 'button--row')}>
+          <button className={cx(styles, 'button', 'button--previous')} aria-label="Previous slide">&larr;</button>
+          <div className={cx(styles, 'button--group', 'button--group-cells')}>
             {slides.map((_, i) => (
               <button
                 key={i}
-                className={['button', i === 0 ? 'is-selected' : null].filter(Boolean).join(' ')}
+                className={cx(styles, 'button', i === 0 && 'is-selected')}
                 aria-label={`Go to slide ${i + 1}`}
               >
                 {i + 1}
               </button>
             ))}
           </div>
-          <button className="button button--next" aria-label="Next slide">&rarr;</button>
+          <button className={cx(styles, 'button', 'button--next')} aria-label="Next slide">&rarr;</button>
         </div>
       )}
     </div>

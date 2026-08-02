@@ -3,6 +3,7 @@ import { Button } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './accordion-item.module.scss';
+import { cx } from '@/lib/cx';
 
 interface AccordionItemBlockData {
   header?: string | null;
@@ -38,10 +39,10 @@ export async function AccordionItemBlock({ block, children }: AccordionItemBlock
   const HeadingEl = (data.header_element ?? 'h2') as keyof JSX.IntrinsicElements;
 
   const fallbackHtml = block.renderedHtml ?? '';
-  const itemClasses = ['accordion-item', attrs.className].filter(Boolean).join(' ');
+  const itemClasses = cx(styles, 'accordion-item', attrs.className);
 
   return (
-    <div className={itemClasses || 'accordion-item'}>
+    <div className={itemClasses}>
       <HeadingEl id={headerId} className="accordion-header">
         <Button
           label={data.header}

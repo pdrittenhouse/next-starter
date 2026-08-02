@@ -1,0 +1,19 @@
+@use "variables" as *;
+.block-search {
+
+  .searchform {
+
+    > div {}
+  }
+
+  label {}
+
+  .search-field {}
+
+  .search-submit {
+
+    .button--label {}
+
+    .search-icon {}
+  }
+}

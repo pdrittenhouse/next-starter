@@ -3,6 +3,7 @@ import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { parseAcfRepeater, acfBool } from '@/lib/wp/utils/parseAcfRepeater';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
+import styles from './column.module.scss';
 
 interface ColWidthEntry  { breakpoint?: string | null; width?: string | null;     [k: string]: unknown }
 interface ColAlignEntry  { breakpoint?: string | null; alignment?: string | null; [k: string]: unknown }

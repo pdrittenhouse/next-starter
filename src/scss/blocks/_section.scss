@@ -1,0 +1,57 @@
+@use "variables" as *;
+.block-section {
+  position: relative;
+  z-index: z('site-content');
+
+  .overlay {
+    @include cover;
+    z-index: -1;
+  }
+
+  &--wrapper {
+    height: 100%;
+
+      > .container,
+      > .container-fluid {
+        overflow: clip;
+        height: 100%;
+      }
+
+      *:last-child {
+        // margin-bottom: 0;
+      }
+  }
+
+  &.overflow-visible {
+
+    .block-section--wrapper {
+
+      > .container,
+      > .container-fluid {
+        overflow: visible;
+      }
+    }
+  }
+
+  &.overflow-x-auto {
+
+    .block-section--wrapper {
+
+      > .container,
+      > .container-fluid {
+        overflow: auto;
+      }
+    }
+  }
+
+  &.overflow-x-scroll {
+
+    .block-section--wrapper {
+
+      > .container,
+      > .container-fluid {
+        overflow: scroll;
+      }
+    }
+  }
+}

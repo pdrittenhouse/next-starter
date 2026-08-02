@@ -1,0 +1,47 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as ImageBlockStories from './ImageBlock.stories';
+
+<Meta of={ImageBlockStories} />
+
+# Image
+
+Image block that renders the Image atom. Handles both file-type images (resolving the attachment ID via WPGraphQL) and URL-type images. Supports `picture`, `aspect-ratio`, and raw variants, plus an optional link wrapper, overlay text, and caption.
+
+## Usage
+
+```tsx
+import { ImageBlock } from '@/stories/blocks/image/ImageBlock';
+
+<ImageBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `image_image_type` | select | Source type: `file` or `url` (flat clone format) |
+| `image_image` | number | Attachment ID when `image_image_type === 'file'` (flat clone format) |
+| `image_image_url` | url | Direct URL when `image_image_type === 'url'` (flat clone format) |
+| `image` | group | Nested clone format from `get_fields()`: `image_type`, `image`, `image_url` |
+| `image_size` | select | WordPress image size key |
+| `image_variant` | select | Render variant: `picture`, `aspect-ratio`, or `raw` |
+| `aspect_ratio` | select | Preset ratio (e.g. `16-9`) or `custom` |
+| `custom_aspect_width` | number | Custom ratio width units |
+| `custom_aspect_height` | number | Custom ratio height units |
+| `loading` | select | Loading strategy: `lazy` or `eager` |
+| `sizes` | text | `sizes` attribute for responsive images |
+| `alt_text` | text | Alt text override (defaults to attachment alt) |
+| `caption` | text | Optional caption rendered in `<figcaption>` |
+| `overlay_text` | text | Text displayed as an absolute overlay over the image |
+| `link` | link | Wrap image in an anchor: `url`, `title`, `target` |
+| `object_fit` | select | CSS `object-fit` value applied to the `<img>` |
+
+## Stories
+
+<Canvas>
+  <Story of={ImageBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={ImageBlockStories.WithCaption} />
+</Canvas>

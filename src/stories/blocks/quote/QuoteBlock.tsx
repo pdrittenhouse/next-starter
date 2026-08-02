@@ -3,6 +3,7 @@ import type { CitationImageProps } from '@/stories/molecules/blockquote/Blockquo
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './quote.module.scss';
+import { cx } from '@/lib/cx';
 
 interface QuoteBlockData {
   quote?: string | null;
@@ -52,7 +53,7 @@ export async function QuoteBlock({ block }: QuoteBlockProps) {
   // Mirror Twig blockquote_classes: 'block-quote' + layout variant + block className
   const layoutClass = data.layout && data.layout !== 'default' ? data.layout : null;
   const alignClass = attrs.align ? `align-${attrs.align}` : null;
-  const className = ['block-quote', layoutClass, alignClass, attrs.className].filter(Boolean).join(' ');
+  const className = cx(styles, 'block-quote', layoutClass, alignClass, attrs.className);
 
   return (
     <Blockquote

@@ -9,6 +9,7 @@ import type { NavProps } from '@/stories/molecules/nav/Nav';
 import { List } from '@/stories/molecules/list/List';
 import type { ListProps } from '@/stories/molecules/list/List';
 import styles from './footer.module.scss';
+import { cx } from '@/lib/cx';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -190,14 +191,10 @@ export interface FooterProps {
 // ---------------------------------------------------------------------------
 
 function buildFooterClasses(otherClasses?: string | string[]): string {
-  const base = ['site-footer'];
-
-  if (otherClasses) {
-    const extras = Array.isArray(otherClasses) ? otherClasses : [otherClasses];
-    base.push(...extras.filter(Boolean));
-  }
-
-  return [...new Set(base)].sort().join(' ');
+  const extras = otherClasses
+    ? (Array.isArray(otherClasses) ? otherClasses : [otherClasses]).filter(Boolean)
+    : [];
+  return cx(styles, 'site-footer', ...extras);
 }
 
 // ---------------------------------------------------------------------------
@@ -267,9 +264,9 @@ export function Footer({
     >
       {/* ---- Pre-footer content band ------------------------------------ */}
       {additionalContent && (
-        <div className="site-footer--container">
-          <div className="site-footer--row">
-            <div className="site-footer--column">
+        <div className={cx(styles, 'site-footer--container')}>
+          <div className={cx(styles, 'site-footer--row')}>
+            <div className={cx(styles, 'site-footer--column')}>
               {additionalContent}
             </div>
           </div>
@@ -277,17 +274,17 @@ export function Footer({
       )}
 
       {/* ---- Main content ----------------------------------------------- */}
-      <div className="site-footer--content">
-        <div className="site-footer--container">
-          <div className="site-footer--row">
+      <div className={cx(styles, 'site-footer--content')}>
+        <div className={cx(styles, 'site-footer--container')}>
+          <div className={cx(styles, 'site-footer--row')}>
 
             {/* ---- Navigation region ------------------------------------ */}
-            <div className="site-footer--navigation">
-              <div className="site-footer--row">
+            <div className={cx(styles, 'site-footer--navigation')}>
+              <div className={cx(styles, 'site-footer--row')}>
 
                 {/* Branding */}
                 {(brand || coBrand) && (
-                  <div className={['site-footer--branding', brandWrapperClasses].filter(Boolean).join(' ')}>
+                  <div className={cx(styles, 'site-footer--branding', brandWrapperClasses)}>
                     {brand && <Branding {...brand} />}
                     {coBrand && <Branding {...coBrand} />}
                   </div>
@@ -295,28 +292,28 @@ export function Footer({
 
                 {/* CTA button */}
                 {ctaButton && (
-                  <div className="site-footer--cta">
+                  <div className={cx(styles, 'site-footer--cta')}>
                     <Button {...ctaButton} />
                   </div>
                 )}
 
                 {/* Footer navigation */}
                 {footerNav && (
-                  <div className="site-footer--nav">
+                  <div className={cx(styles, 'site-footer--nav')}>
                     <Nav {...footerNav} />
                   </div>
                 )}
 
                 {/* Social nav slot */}
                 {socialNav && (
-                  <div className={['site-footer--social-nav', socialNavWrapperClasses].filter(Boolean).join(' ')}>
+                  <div className={cx(styles, 'site-footer--social-nav', socialNavWrapperClasses)}>
                     {socialNav}
                   </div>
                 )}
 
                 {/* Search form */}
                 {showSearch && (
-                  <div className={['site-footer--search', searchWrapperClasses].filter(Boolean).join(' ')}>
+                  <div className={cx(styles, 'site-footer--search', searchWrapperClasses)}>
                     <form
                       name="footer-search"
                       id="footerSearch"
@@ -333,7 +330,7 @@ export function Footer({
                             ref={searchRef}
                             id="footerSearchInput"
                             type="text"
-                            className="form-control search-field"
+                            className={cx(styles, 'form-control', 'search-field')}
                             placeholder="Search&hellip;"
                           />
                           <button
@@ -369,20 +366,20 @@ export function Footer({
 
             {/* ---- Info region ------------------------------------------ */}
             {(contactInfo || disclaimer || attribution) && (
-              <div className="site-footer--info">
-                <div className="site-footer--row">
+              <div className={cx(styles, 'site-footer--info')}>
+                <div className={cx(styles, 'site-footer--row')}>
 
                   {/* Contact info */}
                   {contactInfo && (
-                    <div className={['site-footer--company', contactInfoWrapperClasses].filter(Boolean).join(' ')}>
+                    <div className={cx(styles, 'site-footer--company', contactInfoWrapperClasses)}>
                       <List {...contactInfo} />
                     </div>
                   )}
 
                   {/* Disclaimer */}
                   {disclaimer && (
-                    <div className={['site-footer--disclaimer-wrapper', disclaimerWrapperClasses].filter(Boolean).join(' ')}>
-                      <div className="site-footer--disclaimer">
+                    <div className={cx(styles, 'site-footer--disclaimer-wrapper', disclaimerWrapperClasses)}>
+                      <div className={cx(styles, 'site-footer--disclaimer')}>
                         {disclaimer}
                       </div>
                     </div>
@@ -390,8 +387,8 @@ export function Footer({
 
                   {/* Attribution */}
                   {attribution && (
-                    <div className={['site-footer--attribution-wrapper', attributionWrapperClasses].filter(Boolean).join(' ')}>
-                      <div className="site-footer--attribution">
+                    <div className={cx(styles, 'site-footer--attribution-wrapper', attributionWrapperClasses)}>
+                      <div className={cx(styles, 'site-footer--attribution')}>
                         {attribution}
                       </div>
                     </div>
@@ -402,20 +399,20 @@ export function Footer({
 
             {/* ---- Meta region ------------------------------------------ */}
             {(utilitiesNav || copyright) && (
-              <div className="site-footer--meta">
-                <div className="site-footer--row">
+              <div className={cx(styles, 'site-footer--meta')}>
+                <div className={cx(styles, 'site-footer--row')}>
 
                   {/* Utilities nav */}
                   {utilitiesNav && (
-                    <div className="site-footer--utilities">
+                    <div className={cx(styles, 'site-footer--utilities')}>
                       <Nav {...utilitiesNav} />
                     </div>
                   )}
 
                   {/* Copyright */}
                   {copyright && (
-                    <div className="site-footer--copyright">
-                      <div className={['copyright', copyrightOtherClasses].filter(Boolean).join(' ')}>
+                    <div className={cx(styles, 'site-footer--copyright')}>
+                      <div className={cx(styles, 'copyright', copyrightOtherClasses)}>
                         {copyright}
                       </div>
                     </div>
@@ -430,9 +427,9 @@ export function Footer({
 
       {/* ---- Post-footer content band ----------------------------------- */}
       {postFooterContent && (
-        <div className="site-footer--container">
-          <div className="site-footer--row">
-            <div className="site-footer--column">
+        <div className={cx(styles, 'site-footer--container')}>
+          <div className={cx(styles, 'site-footer--row')}>
+            <div className={cx(styles, 'site-footer--column')}>
               {postFooterContent}
             </div>
           </div>

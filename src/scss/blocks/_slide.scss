@@ -1,0 +1,8 @@
+@use "variables" as *;
+.block-slide {
+  overflow: hidden;
+
+  .wp-block-image {
+    margin: 0;
+  }
+}

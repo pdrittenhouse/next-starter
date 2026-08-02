@@ -1,3 +1,2 @@
 @use "variables" as *;
-// SectionBlock styles — local (CSS Module) classes only.
-// Global block styles live in src/scss/patterns/blocks/_section.scss.
+@use "printing/wordpress/blocks/timberland/section";

@@ -6,6 +6,8 @@ import { Image, type ImageVariant } from '@/stories/atoms/image/Image';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
+import styles from './image.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF field values for the image block, as they appear in attributesJSON.data.
@@ -183,26 +185,24 @@ export async function ImageBlock({ block }: ImageBlockProps) {
 
   // Optional overlay text — mirrors {% if overlay_text %}
   const withOverlay = data.overlay_text ? (
-    <div className="image-overlay-wrapper position-relative">
+    <div className={cx(styles, 'image-overlay-wrapper', 'position-relative')}>
       {linkedImage}
-      <div className="image-overlay image-overlay--text position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+      <div className={cx(styles, 'image-overlay', 'image-overlay--text', 'position-absolute', 'top-0', 'start-0', 'w-100', 'h-100', 'd-flex', 'align-items-center', 'justify-content-center')}>
         <div
-          className="overlay-text-content p-3 text-center"
+          className={cx(styles, 'overlay-text-content', 'p-3', 'text-center')}
           dangerouslySetInnerHTML={{ __html: data.overlay_text }}
         />
       </div>
     </div>
   ) : linkedImage;
 
-  const blockClasses = ['image-block', alignClass, bgClass, attrs.className]
-    .filter(Boolean)
-    .join(' ');
+  const blockClasses = cx(styles, 'image-block', alignClass, bgClass, attrs.className);
 
   return (
     <div className={blockClasses} style={wrapperStyle}>
       {withOverlay}
       {data.caption && (
-        <figcaption className="image-caption">{data.caption}</figcaption>
+        <figcaption className={cx(styles, 'image-caption')}>{data.caption}</figcaption>
       )}
     </div>
   );

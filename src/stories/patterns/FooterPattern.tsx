@@ -1,6 +1,8 @@
 import { cache } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
+import styles from './FooterPattern.module.scss';
+import { cx } from '@/lib/cx';
 import { Footer } from '@/stories/organisms/footer/Footer';
 import { SocialNav } from '@/stories/organisms/social-nav/SocialNav';
 import type { SocialNavItem } from '@/stories/organisms/social-nav/SocialNav';
@@ -273,10 +275,10 @@ export async function FooterPattern() {
   const year = new Date().getFullYear();
   const copyright = !hideCopyrightBoth && siteTitle ? (
     <>
-      <span className="label">Copyright</span>{' '}
-      <span className="icon">©</span>{' '}
-      <span className="year">{year}</span>{' '}
-      <span className="name">{siteTitle}</span>
+      <span className={cx(styles, 'label')}>Copyright</span>{' '}
+      <span className={cx(styles, 'icon')}>©</span>{' '}
+      <span className={cx(styles, 'year')}>{year}</span>{' '}
+      <span className={cx(styles, 'name')}>{siteTitle}</span>
     </>
   ) : undefined;
 

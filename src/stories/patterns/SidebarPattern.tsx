@@ -4,6 +4,8 @@ import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_WIDGET_AREA_BLOCKS } from '@/lib/wp/queries/widgets';
 import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { BlockRenderer } from '@/stories/templates/partials/block-renderer';
+import styles from './SidebarPattern.module.scss';
+import { cx } from '@/lib/cx';
 
 const getWidgetAreaBlocks = cache(async (slug: string) => {
   const { data } = await fetchGraphQL(print(GET_WIDGET_AREA_BLOCKS), { slug }).catch(() => ({ data: null }));
@@ -29,7 +31,7 @@ export async function SidebarPattern({ slug, className }: SidebarPatternProps) {
   if (!blocks?.length) return null;
 
   const variant = slug.replace('_sidebar', '');
-  const sidebarClasses = ['sidebar', `sidebar-${variant}`, className].filter(Boolean).join(' ');
+  const sidebarClasses = cx(styles, 'sidebar', `sidebar-${variant}`, className);
 
   return (
     <aside className={sidebarClasses}>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './list-group.module.scss';
+import { cx } from '@/lib/cx';
 
 export type ListGroupElement = 'ul' | 'ol' | 'div';
 export type ListGroupItemElement = 'li' | 'a' | 'button' | 'div' | 'label';
@@ -46,15 +47,14 @@ function buildListGroupClasses(
   extra?: string[],
   otherClasses?: string,
 ): string {
-  return [
+  return cx(
+    styles,
     'list-group',
     flush ? 'list-group-flush' : null,
     horizontal ? 'list-group-horizontal' : null,
     ...(extra ?? []),
-    otherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    otherClasses,
+  );
 }
 
 function buildItemClasses(
@@ -63,7 +63,8 @@ function buildItemClasses(
   extra?: string[],
   otherClasses?: string,
 ): string {
-  return [
+  return cx(
+    styles,
     'list-group-item',
     item.itemActive ? 'active' : null,
     item.itemDisabled ? 'disabled' : null,
@@ -71,11 +72,9 @@ function buildItemClasses(
     item.contextualClass ? `list-group-item-${item.contextualClass}` : null,
     ...(item.itemClasses ?? []),
     ...(extra ?? []),
-    item.itemOtherClasses ?? null,
-    otherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    item.itemOtherClasses,
+    otherClasses,
+  );
 }
 
 export function ListGroup({

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './table.module.scss';
+import { cx } from '@/lib/cx';
 
 export type TableVariant =
   | 'primary'
@@ -83,15 +84,14 @@ function buildCellClasses(
   cellIndex: number,
   rowIndex: number,
 ): string {
-  return [
+  return cx(
+    styles,
     `table-cell--cell-${cellIndex}`,
     `table-cell--row-${rowIndex}`,
     cell.verticalAlign ? `align-${cell.verticalAlign}` : null,
     ...(cell.cellClasses ?? []),
-    cell.cellOtherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    cell.cellOtherClasses,
+  );
 }
 
 function TableCellElement({
@@ -142,13 +142,12 @@ function TableRowElement({
   row: TableRowData;
   rowIndex: number;
 }) {
-  const cls = [
+  const cls = cx(
+    styles,
     `table-row--row-${rowIndex}`,
     ...(row.rowClasses ?? []),
-    row.rowOtherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    row.rowOtherClasses,
+  );
 
   return (
     <tr className={cls || undefined}>
@@ -172,9 +171,7 @@ function TableSection({
   config: TableSectionConfig;
 }) {
   const Tag = tag;
-  const cls = [...(config.classes ?? []), config.otherClasses ?? null]
-    .filter(Boolean)
-    .join(' ');
+  const cls = cx(styles, ...(config.classes ?? []), config.otherClasses);
 
   return (
     <Tag className={cls || undefined}>
@@ -232,15 +229,14 @@ export function Table({
       : null,
   ];
 
-  const tableCls = [
+  const tableCls = cx(
+    styles,
     'table',
     tableId ? `table-id--${tableId}` : null,
     ...(tableClasses ?? []),
     ...bootstrapClasses,
-    className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    className,
+  );
 
   const tableStyle: React.CSSProperties = {};
   if (borderCollapse === false) {
@@ -252,13 +248,12 @@ export function Table({
     tableStyle.borderCollapse = 'collapse';
   }
 
-  const captionCls = [
+  const captionCls = cx(
+    styles,
     captionTop ? 'caption-top' : null,
     ...(captionClasses ?? []),
-    captionOtherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    captionOtherClasses,
+  );
 
   const implicitTbody: TableSectionConfig | undefined =
     !tbody && rows && rows.length > 0 ? { rows } : undefined;
@@ -287,8 +282,10 @@ export function Table({
   );
 
   if (responsive) {
-    const responsiveCls =
-      responsive === true ? 'table-responsive' : `table-responsive-${responsive}`;
+    const responsiveCls = cx(
+      styles,
+      responsive === true ? 'table-responsive' : `table-responsive-${responsive}`,
+    );
     return (
       <div className={responsiveCls} data-pattern="timberland/table">
         {tableEl}

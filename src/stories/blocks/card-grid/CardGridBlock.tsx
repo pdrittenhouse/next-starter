@@ -7,6 +7,8 @@ import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
+import styles from './card-grid.module.scss';
+import { cx } from '@/lib/cx';
 
 // ─── ACF field interfaces ──────────────────────────────────────────────────────
 
@@ -264,16 +266,11 @@ export async function CardGridBlock({ block }: CardGridBlockProps) {
   // Outer wrapper classes — mirrors Twig block_classes:
   //   fields.placecard → 'has-placecard'
   //   block['className'] → WordPress editor-assigned class
-  const wrapperClassName = [
-    data.placecard ? 'has-placecard' : null,
-    attrs.className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ') || undefined;
+  const wrapperClassName = cx(styles, data.placecard ? 'has-placecard' : null, attrs.className ?? null) || undefined;
 
   // Inner grid classes — mirrors Twig grid_classes:
   //   fields.numbered_cards → 'card-count'
-  const gridClassName = data.numbered_cards ? 'card-count' : undefined;
+  const gridClassName = data.numbered_cards ? cx(styles, 'card-count') : undefined;
 
   // ─── Card items: headless repeater path ─────────────────────────────────────
   const items = data.items;

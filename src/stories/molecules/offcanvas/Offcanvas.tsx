@@ -4,6 +4,7 @@ import React, { useId, useState } from 'react';
 import { Offcanvas as BsOffcanvas } from 'react-bootstrap';
 import { Button, type ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './offcanvas.module.scss';
+import { cx } from '@/lib/cx';
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -75,7 +76,7 @@ function resolveBsPlacement(placement?: OffcanvasPlacement): BsPlacement {
 }
 
 function buildClasses(parts: (string | undefined | false)[]): string {
-  return parts.filter(Boolean).join(' ');
+  return cx(styles, ...parts);
 }
 
 // ---------------------------------------------------------------------------

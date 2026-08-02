@@ -9,6 +9,7 @@ import type { ImageProps } from '@/stories/atoms/image/Image';
 import { ButtonGroup } from '@/stories/molecules/button-group/ButtonGroup';
 import type { WrapperDisplay } from '@/stories/molecules/button-group/ButtonGroup';
 import styles from './toast.module.scss';
+import { cx } from '@/lib/cx';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -148,21 +149,19 @@ interface SingleToastProps {
 function SingleToast({ toast, fallbackId, show, onClose }: SingleToastProps) {
   const resolvedId = toast.toastId ?? fallbackId;
 
-  const toastClassName = [
+  const toastClassName = cx(
+    styles,
     toast.backgroundColor ? `bg-${toast.backgroundColor}` : null,
     toast.textColor ? `text-${toast.textColor}` : null,
     toast.toastClassName,
-  ]
-    .filter(Boolean)
-    .join(' ') || undefined;
+  ) || undefined;
 
-  const headerClasses = [
+  const headerClasses = cx(
+    styles,
     'toast-header',
     toast.headerBackgroundColor ? `bg-${toast.headerBackgroundColor}` : null,
     toast.headerTextColor ? `text-${toast.headerTextColor}` : null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   return (
     <BsToast
@@ -180,14 +179,13 @@ function SingleToast({ toast, fallbackId, show, onClose }: SingleToastProps) {
       <div className={headerClasses}>
         {toast.icon && (
           <i
-            className={[
+            className={cx(
+              styles,
               'toast-icon',
               'me-2',
               `bi bi-${toast.icon.name}`,
               toast.icon.className,
-            ]
-              .filter(Boolean)
-              .join(' ')}
+            )}
             aria-hidden="true"
           />
         )}
@@ -195,22 +193,21 @@ function SingleToast({ toast, fallbackId, show, onClose }: SingleToastProps) {
         {toast.image && (
           <Image
             {...toast.image}
-            className={[
+            className={cx(
+              styles,
               'toast--image',
               'me-2',
               toast.image.imageOtherClasses,
-            ]
-              .filter(Boolean)
-              .join(' ')}
+            )}
           />
         )}
 
         {toast.title && (
-          <strong className="toast--title me-auto">{toast.title}</strong>
+          <strong className={cx(styles, 'toast--title', 'me-auto')}>{toast.title}</strong>
         )}
 
         {toast.meta && (
-          <small className="toast--meta">{toast.meta}</small>
+          <small className={cx(styles, 'toast--meta')}>{toast.meta}</small>
         )}
 
         {toast.toastCloseButton && (
@@ -271,13 +268,7 @@ export function Toast({
     setShowStates(prev => prev.map((s, i) => (i === index ? false : s)));
   };
 
-  const wrapperClasses = [
-    'toast-wrapper',
-    toastWrapperClassName,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const wrapperClasses = cx(styles, 'toast-wrapper', toastWrapperClassName, className);
 
   // Build controls buttons — onClick shows the corresponding toast.
   const toastsWithButtons = toasts
@@ -293,7 +284,7 @@ export function Toast({
 
   return (
     <div
-      className={[wrapperClasses, styles.toastWrapper].filter(Boolean).join(' ')}
+      className={wrapperClasses}
       data-pattern="timberland/toast"
       id={toastWrapperId}
       aria-live="polite"
@@ -301,7 +292,7 @@ export function Toast({
     >
       {/* controls: trigger buttons */}
       {hasControls && (
-        <div className="toast--controls">
+        <div className={cx(styles, 'toast--controls')}>
           <ButtonGroup
             wrapperDisplay={buttonGroupDisplay}
             size={buttonGroupSize}
@@ -321,7 +312,7 @@ export function Toast({
       {/* toast container */}
       <ToastContainer
         position={resolveContainerPosition(verticalPosition, horizontalPosition)}
-        className={['p-3', toastContainerClassName].filter(Boolean).join(' ') || undefined}
+        className={cx(styles, 'p-3', toastContainerClassName) || undefined}
       >
         {toasts.map((toast, i) => (
           <SingleToast

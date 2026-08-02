@@ -1,4 +1,5 @@
 import styles from './grid.module.scss';
+import { cx } from '@/lib/cx';
 
 export type ContainerBreakpoint = 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
@@ -37,14 +38,13 @@ function buildClasses({
     containerClass = containerBreakpoint ? `container-${containerBreakpoint}` : 'container';
   }
 
-  return [
+  return cx(
+    styles,
     'grid',
     containerClass,
     containerFluid && maxWidthFluidContainer ? 'max-width-fluid-container' : null,
-    className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    className,
+  );
 }
 
 export function Grid({
@@ -65,8 +65,8 @@ export function Grid({
 
   return (
     <div className={cls} data-pattern="timberland/grid">
-      <div className="row">
-        <div className="col col-first">{children}</div>
+      <div className={cx(styles, 'row')}>
+        <div className={cx(styles, 'col', 'col-first')}>{children}</div>
       </div>
     </div>
   );

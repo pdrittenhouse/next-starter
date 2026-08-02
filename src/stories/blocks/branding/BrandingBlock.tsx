@@ -3,6 +3,7 @@ import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import styles from './branding.module.scss';
+import { cx } from '@/lib/cx';
 
 interface BrandingBlockData {
   use_site_logo?: boolean;
@@ -66,9 +67,7 @@ export async function BrandingBlock({ block }: BrandingBlockProps) {
       : `text-${data.alignment.text_align}`
     : null;
 
-  const otherClasses = ['block-branding', textAlignClass, attrs.className]
-    .filter(Boolean)
-    .join(' ');
+  const otherClasses = cx(styles, 'block-branding', textAlignClass, attrs.className);
 
   // Resolve logo variant: SVG inline (fetched) → bg-image → img
   let logoSvgInline: string | undefined;
@@ -103,7 +102,7 @@ export async function BrandingBlock({ block }: BrandingBlockProps) {
       siteSlogan={data.branding_slogan ?? undefined}
       hideSiteSlogan={data.hide_branding_slogan}
       colorOriginal={data.svg_options?.use_original_color}
-      otherClasses={otherClasses || undefined}
+      otherClasses={otherClasses}
     />
   );
 

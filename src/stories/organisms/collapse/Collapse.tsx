@@ -6,6 +6,7 @@ import { ButtonGroup } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonGroupItem, WrapperDisplay } from '@/stories/molecules/button-group/ButtonGroup';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './collapse.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * A single collapse panel item.
@@ -160,9 +161,7 @@ export function Collapse({
     buttons: collapseButtons,
   };
 
-  const containerClasses = ['collapse--container', className]
-    .filter(Boolean)
-    .join(' ');
+  const containerClasses = cx(styles, 'collapse--container', className);
 
   return (
     <div className={containerClasses} data-pattern="timberland/collapse">
@@ -176,26 +175,25 @@ export function Collapse({
       />
 
       {/* content block — mirrors {% block items %} */}
-      <div className="collapse--content">
+      <div className={cx(styles, 'collapse--content')}>
         {content.map((item, index) => {
           const panelId = item.collapseId ?? collapseId;
           const isOpen = !!openPanels[panelId];
 
           // 'collapse' class omitted here — BsCollapse adds it automatically.
-          const panelClasses = [
+          const panelClasses = cx(
+            styles,
             'p-3',
             item.backgroundColor ? `bg-${item.backgroundColor}` : null,
             item.textColor ? `text-${item.textColor}` : null,
             item.className,
-          ]
-            .filter(Boolean)
-            .join(' ');
+          );
 
           return (
-            <div key={index} className="collapse--wrapper">
+            <div key={index} className={cx(styles, 'collapse--wrapper')}>
               <BsCollapse in={isOpen}>
                 <div className={panelClasses} id={panelId}>
-                  <div className="collapse--inner">{item.content}</div>
+                  <div className={cx(styles, 'collapse--inner')}>{item.content}</div>
                 </div>
               </BsCollapse>
             </div>

@@ -1,0 +1,242 @@
+@use "variables" as *;
+.post-meta {
+    @include fontSize(14px);
+
+    &.author-hidden {
+
+        .post-meta--coauthor {
+
+            .post-meta--author {
+                @include flex(0 0 auto);
+            }
+        }
+    }
+
+    &.has-author-image {
+
+        .post-meta--wrapper {
+
+            .post-meta--author-image {}
+
+            .post-meta--content {}
+        }
+    }
+
+    &--wrapper {
+        @include flexbox;
+        @include flex-flow(row nowrap);
+        margin-bottom: rem-calc(16px);
+
+        .post-meta--author-image {
+            @include flex(0 0 64px);
+            padding-right: rem-calc(16px);
+        }
+
+        .post-meta--gravatar {
+            @include cover-image-max;
+            border-radius: 50%;
+            width: rem-calc(48px);
+            height: rem-calc(48px);
+        }
+
+        .post-meta--content {
+            @include flex(1 1 auto);
+            @include flexbox;
+            @include flex-flow(row wrap);
+            @include align-items(center);
+        }
+
+        .post-meta--author {
+            @include flex(0 0 auto);
+            @include flexbox;
+            @include flex-flow(row wrap);
+            line-height: 1;
+        }
+
+        .post-meta--byline {}
+
+        .post-meta--author-name {
+            @include flex(0 0 auto);
+        }
+
+        .post-meta--author-email {
+            @include flex(0 0 auto);
+            margin-left: rem-calc(10px);
+        }
+
+        .post-meta--date {
+            @include flex(0 0 auto);
+            @include flexbox;
+            @include flex-flow(row wrap);
+            line-height: 1;
+        }
+
+        .post-meta--author-date {
+            @include flex(0 0 auto);
+            border-left: rem-calc(1px) solid var(--black);
+            margin-left: rem-calc(10px);
+            padding-left: rem-calc(10px);
+        }
+
+        .date {}
+
+        .date-label {}
+
+        .post-meta--author-modified-date {
+            @include flex(0 0 auto);
+            border-left: rem-calc(1px) solid var(--black);
+            margin-left: rem-calc(10px);
+            padding-left: rem-calc(10px);
+        }
+
+        .modified-date {}
+
+        .modified-date-label {}
+
+        .post-meta--description {
+            @include flex(0 0 100%);
+        }
+
+        .post-meta--bio {
+            display: block;
+            margin-top: rem-calc(8px);
+        }
+
+        .post-meta--edit {
+            display: block;
+            margin-top: rem-calc(8px);
+        }
+    }
+
+    &.has-coauthor-image {
+
+        .post-meta--coauthor {
+
+            .post-meta--author-image {}
+
+            .post-meta--content {}
+        }
+    }
+
+    &--coauthors {}
+
+    &--coauthor {
+        @include flexbox;
+        @include flex-flow(row nowrap);
+        margin-bottom: rem-calc(16px);
+
+        .post-meta--author-image {
+            @include flex(0 0 64px);
+            padding-right: rem-calc(16px);
+        }
+
+        .post-meta--gravatar {
+            @include cover-image-max;
+            border-radius: 50%;
+            width: rem-calc(48px);
+            height: rem-calc(48px);
+        }
+
+        .post-meta--content {
+            @include flex(1 1 auto);
+            @include flexbox;
+            @include flex-flow(row wrap);
+            @include align-items(center);
+        }
+
+        .post-meta--author {
+            @include flex(0 0 100%);
+            @include flexbox;
+            @include flex-flow(row wrap);
+            line-height: 1;
+        }
+
+        .post-meta--byline {}
+
+        .post-meta--author-name {
+            @include flex(0 0 auto);
+        }
+
+        .post-meta--date {
+            @include flex(0 0 auto);
+            @include flexbox;
+            @include flex-flow(row wrap);
+            line-height: 1;
+        }
+
+        .post-meta--author-date {
+            @include flex(0 0 auto);
+            border-left: rem-calc(1px) solid var(--black);
+            margin-left: rem-calc(10px);
+            padding-left: rem-calc(10px);
+        }
+
+        .date {}
+
+        .date-label {}
+
+        .post-meta--author-modified-date {
+            @include flex(0 0 auto);
+            border-left: rem-calc(1px) solid var(--black);
+            margin-left: rem-calc(10px);
+            padding-left: rem-calc(10px);
+        }
+
+        .modified-date {}
+
+        .modified-date-label {}
+
+        .post-meta--author-email {
+            @include flex(0 0 auto);
+            margin-left: rem-calc(10px);
+        }
+
+        .post-meta--description {
+            @include flex(0 0 100%);
+        }
+
+        .post-meta--bio {
+            display: block;
+            margin-top: rem-calc(8px);
+        }
+
+        .post-meta--edit {
+            display: block;
+            margin-top: rem-calc(8px);
+        }
+    }
+
+    &--author-image {}
+
+    &--gravatar {}
+
+    &--content {}
+
+    &--author {}
+
+    &--byline {}
+
+    &--author-name {}
+
+    &--author-email {}
+
+    &--date {}
+
+    &--author-date {}
+
+    .date {}
+
+    .date-label {}
+
+    &--author-modified-date {}
+
+    .modified-date {}
+
+    .modified-date-label {}
+
+    &--description {}
+
+    &--bio {}
+
+    &--edit {}
+}

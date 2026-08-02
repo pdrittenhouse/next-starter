@@ -1,4 +1,5 @@
 import styles from './figure.module.scss';
+import { cx } from '@/lib/cx';
 
 export type CaptionPosition = 'before' | 'after';
 
@@ -16,11 +17,7 @@ export interface FigureProps {
 }
 
 function buildClasses(extra: string[] = [], otherClasses?: string): string {
-  return ['figure', ...extra, otherClasses ?? null]
-    .filter(Boolean)
-    .sort()
-    .join(' ')
-    .trim();
+  return cx(styles, 'figure', ...extra, otherClasses);
 }
 
 export function Figure({

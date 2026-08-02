@@ -4,6 +4,7 @@ import React, { useId, useState, useRef, useEffect } from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './dropdown.module.scss';
+import { cx } from '@/lib/cx';
 
 export type DropdownDirection = 'up' | 'down' | 'left' | 'right';
 export type DropdownAutoClose = 'true' | 'false' | 'inside' | 'outside';
@@ -179,7 +180,7 @@ function resolveItemClass(element: DropdownItemElement, extra?: string): string 
   } else {
     base = 'dropdown-item';
   }
-  return [base, extra].filter(Boolean).join(' ');
+  return cx(styles, base, extra);
 }
 
 // ─── Component ──────────────────────────────────────────────────────────────
@@ -238,30 +239,28 @@ export function Dropdown({
       ? 'dropstart'
       : direction === 'right'
       ? 'dropend'
-      : '';
+      : null;
 
-  const wrapperClasses = [
+  const wrapperClasses = cx(
+    styles,
     buttonGroup ? 'btn-group' : 'dropdown',
     directionClass,
-    buttonGroup && buttonGroupSize ? `btn-group-${buttonGroupSize}` : '',
-    buttonGroup && buttonGroupDisplay ? WRAPPER_DISPLAY_CLASS[buttonGroupDisplay] : '',
+    buttonGroup && buttonGroupSize ? `btn-group-${buttonGroupSize}` : null,
+    buttonGroup && buttonGroupDisplay ? WRAPPER_DISPLAY_CLASS[buttonGroupDisplay] : null,
     className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   // ── Menu classes ─────────────────────────────────────────────────────────
-  const menuClasses = [
+  const menuClasses = cx(
+    styles,
     'dropdown-menu',
-    dark ? 'dropdown-menu-dark' : '',
-    backgroundColor ? `bg-${backgroundColor}` : '',
-    textColor ? `text-${textColor}` : '',
-    menuAlign === 'end' ? 'dropdown-menu-end' : '',
-    show ? 'show' : '',
+    dark ? 'dropdown-menu-dark' : null,
+    backgroundColor ? `bg-${backgroundColor}` : null,
+    textColor ? `text-${textColor}` : null,
+    menuAlign === 'end' ? 'dropdown-menu-end' : null,
+    show ? 'show' : null,
     menuClassName,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   // Close on inside-menu click when autoClose allows it.
   const handleMenuClick = () => {

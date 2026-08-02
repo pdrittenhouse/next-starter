@@ -4,6 +4,7 @@ import { Button } from '@/stories/atoms/button/Button';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './card-grid.module.scss';
+import { cx } from '@/lib/cx';
 
 // ---------------------------------------------------------------------------
 // Card sub-types
@@ -232,7 +233,8 @@ function Card({
   className,
 }: CardProps) {
   // --- Build card root class list (mirrors Twig card_classes) ---
-  const cardClasses = [
+  const cardClasses = cx(
+    styles,
     'card',
     card_width ? `w-${card_width}` : null,
     text_alignment ? `text-${text_alignment}` : null,
@@ -247,10 +249,7 @@ function Card({
     card_image?.src ? 'has-img' : null,
     no_border ? 'no-border' : null,
     className || null,
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  );
 
   // --- Card root inline style ---
   const cardStyle: React.CSSProperties =
@@ -268,35 +267,30 @@ function Card({
 
   // --- Inner content tree ---
   const cardInner = (
-    <div className="card-wrapper">
+    <div className={cx(styles, 'card-wrapper')}>
       {/* Front face */}
       <div
-        className="front"
+        className={cx(styles, 'front')}
         style={
           flip_card && background_image
             ? { backgroundImage: `url('${background_image}')` }
             : undefined
         }
       >
-        <div className="card-content-wrapper-outer">
-          <div className="card-content-wrapper-inner">
+        <div className={cx(styles, 'card-content-wrapper-outer')}>
+          <div className={cx(styles, 'card-content-wrapper-inner')}>
 
             {/* Header slot */}
             {hasHeaderSlot && (
               <div
-                className={[
-                  'card-header',
-                  no_header_padding ? 'p-0' : null,
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
+                className={cx(styles, 'card-header', no_header_padding ? 'p-0' : null)}
               >
                 {(card_icon?.className || card_label) && (
-                  <div className="card-lead">
+                  <div className={cx(styles, 'card-lead')}>
                     {card_icon?.className && (
-                      <div className="card-icon">
+                      <div className={cx(styles, 'card-icon')}>
                         <span
-                          className={`card-icon-el ${card_icon.className}`}
+                          className={cx(styles, 'card-icon-el', card_icon.className)}
                           aria-hidden={card_icon.ariaLabel ? undefined : 'true'}
                           aria-label={card_icon.ariaLabel}
                         />
@@ -304,12 +298,7 @@ function Card({
                     )}
                     {card_label && (
                       <span
-                        className={[
-                          'card-label',
-                          inherit_color ? 'text-reset' : null,
-                        ]
-                          .filter(Boolean)
-                          .join(' ')}
+                        className={cx(styles, 'card-label', inherit_color ? 'text-reset' : null)}
                       >
                         {card_label}
                       </span>
@@ -319,20 +308,17 @@ function Card({
 
                 {/* Explicit card-header text */}
                 {card_header && (
-                  <div className="card-header-text">{card_header}</div>
+                  <div className={cx(styles, 'card-header-text')}>{card_header}</div>
                 )}
 
                 {/* Image — top position */}
                 {card_image_location === 'top' && card_image?.src && (
                   <div
-                    className={[
+                    className={cx(
+                      styles,
                       'card-image',
-                      !card_image_overlay && card_image_overlay_text
-                        ? 'has-image-overlay'
-                        : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
+                      !card_image_overlay && card_image_overlay_text ? 'has-image-overlay' : null,
+                    )}
                   >
                     <Image
                       variant={card_image.variant}
@@ -342,15 +328,10 @@ function Card({
                       height={card_image.height}
                       sizes={card_image.sizes}
                       loading={card_image.loading}
-                      className={[
-                        'card-img-top',
-                        card_image.className,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      className={cx(styles, 'card-img-top', card_image.className)}
                     />
                     {!card_image_overlay && card_image_overlay_text && (
-                      <div className="card-img-overlay card-img-overlay--text">
+                      <div className={cx(styles, 'card-img-overlay', 'card-img-overlay--text')}>
                         <p>{card_image_overlay_text}</p>
                       </div>
                     )}
@@ -361,46 +342,28 @@ function Card({
 
             {/* Card content (intro + body) */}
             <div
-              className={[
+              className={cx(
+                styles,
                 'card-content',
-                card_image_overlay && !card_image_overlay_text
-                  ? 'card-img-overlay'
-                  : null,
+                card_image_overlay && !card_image_overlay_text ? 'card-img-overlay' : null,
                 no_body_padding ? 'p-0' : null,
-              ]
-                .filter(Boolean)
-                .join(' ')}
+              )}
             >
               {/* Intro: title + subtitle */}
               {(card_title || card_subtitle) && (
                 <div
-                  className={[
-                    'card-intro',
-                    no_body_padding ? 'p-0' : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
+                  className={cx(styles, 'card-intro', no_body_padding ? 'p-0' : null)}
                 >
                   {card_title && (
                     <h4
-                      className={[
-                        'card-title',
-                        inherit_color ? 'text-reset' : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      className={cx(styles, 'card-title', inherit_color ? 'text-reset' : null)}
                     >
                       {card_title}
                     </h4>
                   )}
                   {card_subtitle && (
                     <h6
-                      className={[
-                        'card-subtitle',
-                        inherit_color ? 'text-reset' : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      className={cx(styles, 'card-subtitle', inherit_color ? 'text-reset' : null)}
                     >
                       {card_subtitle}
                     </h6>
@@ -411,22 +374,16 @@ function Card({
               {/* Body: text, link, button */}
               {hasBodySlot && (
                 <div
-                  className={[
-                    'card-body',
-                    no_body_padding ? 'p-0' : null,
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
+                  className={cx(styles, 'card-body', no_body_padding ? 'p-0' : null)}
                 >
                   {card_text && (
                     <div
-                      className={[
+                      className={cx(
+                        styles,
                         'card-text',
                         text_color ? text_color : null,
                         inherit_color ? 'text-reset' : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      )}
                       dangerouslySetInnerHTML={{ __html: card_text }}
                     />
                   )}
@@ -435,12 +392,7 @@ function Card({
                   {card_link && !card_linked && (
                     <a
                       href={card_link}
-                      className={[
-                        'card-link',
-                        inherit_color ? 'text-reset' : null,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      className={cx(styles, 'card-link', inherit_color ? 'text-reset' : null)}
                       target={card_link_target}
                     >
                       {card_link_text}
@@ -451,12 +403,11 @@ function Card({
                   {card_button && (
                     <Button
                       {...card_button}
-                      className={[
+                      className={cx(
+                        styles,
                         inherit_color ? 'text-reset' : null,
                         card_button.className,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      ) || undefined}
                     />
                   )}
                 </div>
@@ -466,28 +417,18 @@ function Card({
             {/* Footer slot */}
             {hasFooterSlot && (
               <div
-                className={[
-                  'card-footer',
-                  no_footer_padding ? 'p-0' : null,
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
+                className={cx(styles, 'card-footer', no_footer_padding ? 'p-0' : null)}
               >
                 {card_footer && (
                   <div
-                    className={[
-                      'card-footer-content',
-                      inherit_color ? 'text-reset' : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
+                    className={cx(styles, 'card-footer-content', inherit_color ? 'text-reset' : null)}
                     dangerouslySetInnerHTML={{ __html: card_footer }}
                   />
                 )}
 
                 {/* Image — bottom position */}
                 {card_image_location === 'bottom' && card_image?.src && (
-                  <div className="card-image">
+                  <div className={cx(styles, 'card-image')}>
                     <Image
                       variant={card_image.variant}
                       src={card_image.src}
@@ -496,12 +437,7 @@ function Card({
                       height={card_image.height}
                       sizes={card_image.sizes}
                       loading={card_image.loading}
-                      className={[
-                        'card-img-bottom',
-                        card_image.className,
-                      ]
-                        .filter(Boolean)
-                        .join(' ')}
+                      className={cx(styles, 'card-img-bottom', card_image.className)}
                     />
                   </div>
                 )}
@@ -515,16 +451,16 @@ function Card({
       {/* Back face (flip card only) */}
       {flip_card && (
         <div
-          className="back"
+          className={cx(styles, 'back')}
           style={
             back_background_image
               ? { backgroundImage: `url('${back_background_image}')` }
               : undefined
           }
         >
-          <div className="card-content-wrapper-outer">
-            <div className="card-content-wrapper-inner">
-              <div className={`card-back-content${inherit_color ? ' text-reset' : ''}`} />
+          <div className={cx(styles, 'card-content-wrapper-outer')}>
+            <div className={cx(styles, 'card-content-wrapper-inner')}>
+              <div className={cx(styles, 'card-back-content', inherit_color ? 'text-reset' : null)} />
             </div>
           </div>
         </div>
@@ -589,16 +525,11 @@ export function CardGrid({
   gridClassName,
 }: CardGridProps) {
   // --- Outer wrapper classes (mirrors card_grid_classes in Twig) ---
-  const wrapperClasses = [
-    'card-grid-wrapper',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  const wrapperClasses = cx(styles, 'card-grid-wrapper', className);
 
   // --- Inner grid classes (mirrors grid_classes in Twig) ---
-  const gridClasses = [
+  const gridClasses = cx(
+    styles,
     `card-${type}`,
     type === 'row' ? 'row' : null,
     columns && type === 'row' ? `row-cols-${columns}` : null,
@@ -609,10 +540,7 @@ export function CardGrid({
       ? `vertical-offset vertical-offset-${vertical_offset}`
       : null,
     gridClassName,
-  ]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  );
 
   // --- Placecard spans: fills orphan cells in the last flex row ---
   // Twig: {% for i in 1..columns - 2 %} — renders columns - 2 placecards.
@@ -625,7 +553,7 @@ export function CardGrid({
       data-pattern="timberland/card-grid"
     >
       {card_grid_title && (
-        <h2 className="card-grid--title">{card_grid_title}</h2>
+        <h2 className={cx(styles, 'card-grid--title')}>{card_grid_title}</h2>
       )}
 
       <div className={gridClasses}>
@@ -633,7 +561,7 @@ export function CardGrid({
           <Card key={card.card_id ?? index} {...card} />
         ))}
         {Array.from({ length: placecardCount }, (_, i) => (
-          <span key={`placecard-${i}`} className="placecard" aria-hidden="true" />
+          <span key={`placecard-${i}`} className={cx(styles, 'placecard')} aria-hidden="true" />
         ))}
       </div>
     </div>

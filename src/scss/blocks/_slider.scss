@@ -1,0 +1,62 @@
+@use "variables" as *;
+.block-slider {
+
+  &.equal-height-slides {
+
+    .slide {
+      min-height: 100%;
+    }
+
+    &.flickity-carousel--wrapper {
+
+      .flickity-carousel {
+      
+        .carousel-cell {
+          @include flexbox();
+          @include flex-flow(column nowrap);
+    
+          >.card:first-child:last-child,
+          >.block-card:first-child:last-child {
+            @include flex(1 1 100%);
+            @include flexbox();
+            @include flex-flow(row nowrap);
+    
+            .card-wrapper,
+            .front,
+            .back {
+              @include flex(1 1 100%);
+              @include flexbox();
+              @include flex-flow(row nowrap);
+            }
+    
+            .card-content-wrapper-outer {
+              @include flex(1 1 100%);
+            }
+    
+            .card-content-wrapper-inner {
+              // @include flex(1 1 100%);
+            }
+          }
+        }
+      }
+    }
+
+    &.slick-carousel-wrapper {
+
+      .slick-carousel {}
+
+      .slick-track {
+        @include flexbox;
+      }
+
+      .slick-slide {
+        height: inherit !important;
+
+        > div,
+        .block-slide {
+          height: 100%;
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import styles from './form.module.scss';
+import { cx } from '@/lib/cx';
 
 export interface FormProps {
   /** Specifies the name of the form. */
@@ -32,7 +33,7 @@ export interface FormProps {
 }
 
 function buildClasses(extra?: string): string {
-  return ['form', extra ?? null].filter(Boolean).join(' ');
+  return cx(styles, 'form', extra);
 }
 
 /**
@@ -78,8 +79,8 @@ export function Form({
     >
       {hasHeader && (
         <header>
-          {heading && <h2 className="form-title">{heading}</h2>}
-          {intro && <div className="form-intro">{intro}</div>}
+          {heading && <h2 className={cx(styles, 'form-title')}>{heading}</h2>}
+          {intro && <div className={cx(styles, 'form-intro')}>{intro}</div>}
         </header>
       )}
 

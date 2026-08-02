@@ -1,4 +1,5 @@
 import styles from './skip-nav.module.scss';
+import { cx } from '@/lib/cx';
 
 export interface SkipNavProps {
   /** Text for the skip nav link — maps to `text` in the Twig pattern. */
@@ -14,12 +15,7 @@ export interface SkipNavProps {
 }
 
 function buildClasses(skipNavClasses?: string[], className?: string): string {
-  return [
-    'skip-nav',
-    'screen-reader-text',
-    ...(skipNavClasses ?? []),
-    className ?? null,
-  ].filter(Boolean).join(' ');
+  return cx(styles, 'skip-nav', 'screen-reader-text', ...(skipNavClasses ?? []), className);
 }
 
 export function SkipNav({

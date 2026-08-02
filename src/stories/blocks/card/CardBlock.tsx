@@ -14,6 +14,8 @@ import type {
 import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import styles from './card.module.scss';
+import { cx } from '@/lib/cx';
 
 // ─── ACF field interfaces ──────────────────────────────────────────────────────
 
@@ -276,7 +278,7 @@ function resolveButton(data: CardBlockData): ButtonProps | undefined {
     target,
     label: link?.title,
     nowrap: btn.nowrap ?? false,
-    className: 'card-button',
+    className: cx(styles, 'card-button'),
   };
 }
 
@@ -382,15 +384,14 @@ export async function CardBlock({ block }: CardBlockProps) {
         ? `card-${data.horizontal_layout.horizontal_card_layout}`
         : null;
 
-  const extraClasses = [
+  const extraClasses = cx(
+    styles,
     'block-card',
     layoutClass,
     alignClass,
     data.vertically_center_content ? 'vertically-center-content' : null,
     attrs.className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
   // ─── Icon ───────────────────────────────────────────────────────────────────
   const icon = resolveIcon(data.card_icon);

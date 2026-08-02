@@ -2,6 +2,8 @@ import { Breadcrumb } from '@/stories/atoms/breadcrumb/Breadcrumb';
 import type { BreadcrumbItem } from '@/stories/atoms/breadcrumb/Breadcrumb';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import styles from './breadcrumb.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF field values for the breadcrumb block, as they appear in attributesJSON.data.
@@ -83,7 +85,7 @@ export async function BreadcrumbBlock({ block }: BreadcrumbBlockProps) {
     return null;
   }
 
-  const blockClasses = ['block-breadcrumb', attrs.className].filter(Boolean).join(' ');
+  const blockClasses = cx(styles, 'block-breadcrumb', attrs.className);
 
   return (
     <div className={blockClasses}>

@@ -4,6 +4,7 @@ import type { SocialNavItem } from '@/stories/organisms/social-nav/SocialNav';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './social-share.module.scss';
+import { cx } from '@/lib/cx';
 
 type SocialService = 'facebook' | 'twitter' | 'linkedin' | 'reddit' | 'email' | 'copy';
 
@@ -129,7 +130,7 @@ export async function SocialShareBlock({ block }: SocialShareBlockProps) {
       ? 'justify-content-between'
       : undefined;
 
-  const blockClasses = ['block-social-share', attrs.className].filter(Boolean).join(' ');
+  const blockClasses = cx(styles, 'block-social-share', attrs.className);
 
   return (
     <div className={blockClasses || undefined}>

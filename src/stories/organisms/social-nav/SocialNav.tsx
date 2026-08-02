@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './social-nav.module.scss';
+import { cx } from '@/lib/cx';
 import { isFontAwesome, isBootstrapIcon, isCustomIcon } from '@/lib/icons/iconType';
 import { SvgIcon } from '@/stories/atoms/svg/SvgIcon';
 
@@ -20,18 +21,18 @@ function renderIconNode(
     : undefined;
 
   if (isFontAwesome(icon)) {
-    const iconCls = [icon, color ? `color-fill--${color}` : null].filter(Boolean).join(' ');
+    const iconCls = cx(styles, icon, color ? `color-fill--${color}` : null);
     return (
-      <span className="icon" style={spanStyle}>
+      <span className={cx(styles, 'icon')} style={spanStyle}>
         <i className={iconCls} aria-hidden="true" />
       </span>
     );
   }
 
   if (isBootstrapIcon(icon)) {
-    const iconCls = [icon, color ? `text-${color}` : null].filter(Boolean).join(' ');
+    const iconCls = cx(styles, icon, color ? `text-${color}` : null);
     return (
-      <span className="icon" style={spanStyle}>
+      <span className={cx(styles, 'icon')} style={spanStyle}>
         <i className={iconCls} aria-hidden="true" />
       </span>
     );
@@ -177,7 +178,8 @@ export function SocialNav({
   const showIcons = !hideIcons;
 
   // Mirror Twig: merge all classes → sort → join → trim
-  const containerCls = [
+  const containerCls = cx(
+    styles,
     'social-nav',
     hideLabels ? 'hide-labels' : null,
     hideIcons ? 'hide-icons' : null,
@@ -191,10 +193,7 @@ export function SocialNav({
     showIcons && bulletIconPosition === 'after' ? 'bullet-icons--after' : null,
     ...navClasses,
     otherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .sort()
-    .join(' ');
+  );
 
   return (
     <div
@@ -210,16 +209,14 @@ export function SocialNav({
         const effectiveIconPos = item.iconPosition ?? bulletIconPosition;
 
         // Mirror Twig class-merge → sort → join on each nav_item
-        const itemCls = [
+        const itemCls = cx(
+          styles,
           'list-item',
           `list-item--item-${itemCount}`,
           'social-nav-item',
           ...(item.itemClasses ?? []),
           item.itemOtherClasses ?? null,
-        ]
-          .filter(Boolean)
-          .sort()
-          .join(' ');
+        );
 
         // Mirror Twig inline style on the anchor when icons are shown
         const linkStyle: React.CSSProperties | undefined =
@@ -235,13 +232,13 @@ export function SocialNav({
         const anchor = (
           <a
             href={item.url}
-            className="social-nav-link"
+            className={cx(styles, 'social-nav-link')}
             target={item.target ?? '_self'}
             title={linkTitle}
             aria-label={linkTitle}
             {...(linkStyle ? { style: linkStyle } : {})}
           >
-            <span className="label">{item.label}</span>
+            <span className={cx(styles, 'label')}>{item.label}</span>
           </a>
         );
 

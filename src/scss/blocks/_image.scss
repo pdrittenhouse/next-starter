@@ -1,0 +1,16 @@
+@use "variables" as *;
+// Block: image - Frontend Styles
+// This file is compiled to style.css and loaded on both frontend and editor
+// Use this for styles that should appear everywhere
+
+.image-block {
+    display: inline-block;
+
+    picture {
+        display: block;
+    }
+
+    img {
+        max-width: 100%;
+    }
+}

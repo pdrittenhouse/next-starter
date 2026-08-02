@@ -1,4 +1,6 @@
 import React from 'react';
+import styles from './svg.module.scss';
+import { cx } from '@/lib/cx';
 import { SvgIcon } from './SvgIcon';
 import { Svg } from './Svg';
 import { isFontAwesome, isPhosphor, isBootstrapIcon, isCustomIcon } from '@/lib/icons/iconType';
@@ -67,19 +69,19 @@ function IconNode({
   svgClassName,
 }: Pick<SvgLinkProps, 'icon' | 'path' | 'type' | 'fill' | 'width' | 'height' | 'colorOriginal' | 'fallback' | 'alt' | 'svgClassName'>) {
   const iconSizeStyle: React.CSSProperties | undefined = width ? { fontSize: width } : undefined;
-  const linkSvgCls = ['svg--link', svgClassName].filter(Boolean).join(' ') || undefined;
+  const linkSvgCls = cx(styles, 'svg--link', svgClassName);
 
   if (icon) {
     if (isFontAwesome(icon)) {
-      const cls = [icon, fill ? `color-fill--${fill}` : null].filter(Boolean).join(' ');
-      return <span className="icon" style={iconSizeStyle}><i className={cls} aria-hidden="true" /></span>;
+      const cls = cx(styles, icon, fill ? `color-fill--${fill}` : null);
+      return <span className={cx(styles, 'icon')} style={iconSizeStyle}><i className={cls} aria-hidden="true" /></span>;
     }
     if (isPhosphor(icon)) {
-      return <span className="icon" style={iconSizeStyle}><i className={icon} aria-hidden="true" /></span>;
+      return <span className={cx(styles, 'icon')} style={iconSizeStyle}><i className={icon} aria-hidden="true" /></span>;
     }
     if (isBootstrapIcon(icon)) {
-      const cls = [icon, fill ? `text-${fill}` : null].filter(Boolean).join(' ');
-      return <span className="icon" style={iconSizeStyle}><i className={cls} aria-hidden="true" /></span>;
+      const cls = cx(styles, icon, fill ? `text-${fill}` : null);
+      return <span className={cx(styles, 'icon')} style={iconSizeStyle}><i className={cls} aria-hidden="true" /></span>;
     }
     if (isCustomIcon(icon)) {
       return <SvgIcon name={icon} fill={fill} width={width} height={height} className={linkSvgCls} />;
@@ -124,12 +126,12 @@ export function SvgLink({
   return (
     <a
       href={url}
-      className={['svg--link', className].filter(Boolean).join(' ') || undefined}
+      className={cx(styles, 'svg--link', className)}
       target={target}
       data-pattern="timberland/svg"
     >
       {position === 'before' && <IconNode {...iconProps} />}
-      {text && <span className="svg--link-text">{text}</span>}
+      {text && <span className={cx(styles, 'svg--link-text')}>{text}</span>}
       {position === 'after' && <IconNode {...iconProps} />}
     </a>
   );

@@ -1,0 +1,33 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as BreadcrumbBlockStories from './BreadcrumbBlock.stories';
+
+<Meta of={BreadcrumbBlockStories} />
+
+# Breadcrumb
+
+Breadcrumb block that renders a navigation trail via the Breadcrumb atom. Trail items are resolved in priority order: first from the `items` ACF repeater (headless-explicit), then from `show_home` config fields. Returns `null` when no items can be resolved.
+
+## Usage
+
+```tsx
+import { BreadcrumbBlock } from '@/stories/blocks/breadcrumb/BreadcrumbBlock';
+
+<BreadcrumbBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `divider` | text | Separator character between items (default `»`) |
+| `label` | text | Optional prefix label for the current/last item |
+| `show_home` | true_false | Prepend a Home link when no repeater items exist |
+| `text_home` | text | Label for the home link (default `Home`) |
+| `home_link` | url | URL for the home link (default `/`) |
+| `show_categories` | true_false | Include taxonomy ancestors in the trail (WP render only) |
+| `text_404` | text | Label used for a 404 trail item (default `404`) |
+| `items` | repeater | Pre-built trail items for headless delivery; each row has `text` and `url` |
+
+<Canvas>
+  <Story of={BreadcrumbBlockStories.Default} />
+</Canvas>

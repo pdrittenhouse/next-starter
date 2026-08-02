@@ -2,6 +2,7 @@ import { Jumbotron } from '@/stories/molecules/jumbotron/Jumbotron';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './hero-unit.module.scss';
+import { cx } from '@/lib/cx';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 interface HeroUnitImage {
@@ -97,9 +98,7 @@ export async function HeroUnitBlock({ block }: HeroUnitBlockProps) {
       ? `text-${data.color.theme_color}`
       : null;
 
-  const className = ['block-hero-unit', bgClass, textClass, attrs.className]
-    .filter(Boolean)
-    .join(' ');
+  const className = cx(styles, 'block-hero-unit', bgClass, textClass, attrs.className);
 
   // Inline side image
   const imageSrc =

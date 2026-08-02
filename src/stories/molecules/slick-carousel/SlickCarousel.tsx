@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import styles from './slick-carousel.module.scss';
+import { cx } from '@/lib/cx';
 
 export interface SlickResponsiveBreakpoint {
   breakpoint: number;
@@ -125,11 +126,12 @@ export function SlickCarousel({
   const uid = useId().replace(/:/g, '');
   const carouselId = id ?? `slickSlider${uid}`;
 
-  const wrapperClasses = [
+  const wrapperClasses = cx(
+    styles,
     'slick-carousel-wrapper',
-    customControls ? 'show-custom-controls' : null,
+    customControls && 'show-custom-controls',
     className,
-  ].filter(Boolean).join(' ');
+  );
 
   return (
     <div
@@ -170,12 +172,12 @@ export function SlickCarousel({
       data-easing={easing}
       data-cssease={cssEase}
     >
-      <div id={carouselId} className="slick-carousel">
+      <div id={carouselId} className={cx(styles, 'slick-carousel')}>
         {slides.map((slide, i) => (
           <div key={i}>{slide}</div>
         ))}
       </div>
-      <div className="slick-carousel-controls" />
+      <div className={cx(styles, 'slick-carousel-controls')} />
     </div>
   );
 }

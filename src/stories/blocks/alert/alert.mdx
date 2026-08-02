@@ -1,0 +1,50 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as AlertBlockStories from './AlertBlock.stories';
+
+<Meta of={AlertBlockStories} />
+
+# Alert
+
+Alert block that renders a Bootstrap alert via the Alert atom. Supports a title, body message, footer, link, dismissal, close-button position, text alignment, and an optional layout modifier class.
+
+## Usage
+
+```tsx
+import { AlertBlock } from '@/stories/blocks/alert/AlertBlock';
+
+<AlertBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `alert_title` | text | Optional heading rendered inside `.alert-heading` |
+| `alert_message` | textarea | Primary alert body text |
+| `alert_footer` | textarea | Secondary text rendered after a `<hr>` divider |
+| `alert_link` | link | Optional link object (`url`, `title`, `target`) |
+| `alert_status` | select | Bootstrap contextual color: `info`, `success`, `warning`, `danger` |
+| `dismissable` | true_false | Adds `alert-dismissible` and a close button |
+| `close_position` | select | Position of the close button: `top` or `bottom` |
+| `text_align_text_align` | select | Text alignment clone field: `start`, `center`, or `end` |
+| `alert_layout_alert_layout` | select | Layout modifier appended as `alert-{layout}` |
+| `show_inner_blocks` | true_false | Render inner blocks inside the alert |
+| `inner_blocks_position` | select | Inner blocks position relative to message: `top` or `bottom` |
+
+## Stories
+
+<Canvas>
+  <Story of={AlertBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={AlertBlockStories.Success} />
+</Canvas>
+
+<Canvas>
+  <Story of={AlertBlockStories.Warning} />
+</Canvas>
+
+<Canvas>
+  <Story of={AlertBlockStories.Danger} />
+</Canvas>

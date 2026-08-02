@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image } from '@/stories/atoms/image/Image';
 import styles from './branding.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Branding molecule — mirrors the Twig pattern at:
@@ -93,21 +94,15 @@ function buildWrapperClasses(
   logoBgImgSrc?: string,
   otherClasses?: string | string[],
 ): string {
-  const classes: string[] = ['branding'];
-
-  if (logoSvgInline) {
-    classes.push('logo-type--svg');
-  } else if (logoBgImgSrc) {
-    classes.push('logo-type--bg');
-  }
-
-  if (otherClasses) {
-    const extras = Array.isArray(otherClasses) ? otherClasses : [otherClasses];
-    classes.push(...extras.filter(Boolean));
-  }
-
-  // Sort mirrors the Twig `sort` filter
-  return [...new Set(classes)].sort().join(' ');
+  const extras = otherClasses
+    ? (Array.isArray(otherClasses) ? otherClasses : [otherClasses])
+    : [];
+  return cx(
+    styles,
+    'branding',
+    logoSvgInline ? 'logo-type--svg' : logoBgImgSrc ? 'logo-type--bg' : null,
+    ...extras.filter(Boolean),
+  );
 }
 
 /**
@@ -157,13 +152,12 @@ export function Branding({
 
   if (logoSvgInline) {
     // Inline SVG — mirrors @atoms/svg/_svg.tpl.twig
-    const svgClass = [
+    const svgClass = cx(
+      styles,
       'svg',
       'branding--logo-img',
-      colorOriginal ? 'svg--color-original' : '',
-    ]
-      .filter(Boolean)
-      .join(' ');
+      colorOriginal && 'svg--color-original',
+    );
     logoContent = (
       <span
         className={svgClass}
@@ -181,7 +175,7 @@ export function Branding({
         alt={altText}
         width={width}
         height={height}
-        className="branding--logo-img"
+        className={cx(styles, 'branding--logo-img')}
       />
     );
   } else if (logoImgSrc) {
@@ -193,7 +187,7 @@ export function Branding({
         alt={altText}
         width={width}
         height={height}
-        className="branding--logo-img"
+        className={cx(styles, 'branding--logo-img')}
       />
     );
   }
@@ -205,7 +199,7 @@ export function Branding({
       data-pattern="timberland/branding"
     >
       {/* Site logo */}
-      <div className="branding--site-logo">
+      <div className={cx(styles, 'branding--site-logo')}>
         <LinkEl {...(linkProps as any)}>
           {logoContent}
         </LinkEl>
@@ -213,7 +207,7 @@ export function Branding({
 
       {/* Site name */}
       {siteName && !hideSiteName && (
-        <NameEl className="branding--site-name">
+        <NameEl className={cx(styles, 'branding--site-name')}>
           <a title="Home" href={url} rel="home" aria-label={siteName}>
             {siteName}
           </a>
@@ -222,7 +216,7 @@ export function Branding({
 
       {/* Site slogan */}
       {siteSlogan && !hideSiteSlogan && (
-        <p className="lead branding--site-slogan">
+        <p className={cx(styles, 'lead', 'branding--site-slogan')}>
           {siteSlogan}
         </p>
       )}

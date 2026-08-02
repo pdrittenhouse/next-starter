@@ -1,0 +1,51 @@
+@use "variables" as *;
+.block-social-share {
+  position: relative;
+
+  &--list {}
+
+  .social-nav-item {
+
+    &.service-facebook {}
+
+    &.service-twitter {}
+
+    &.service-linkedin {}
+
+    &.service-reddit {}
+
+    &.service-email {}
+
+    &.service-copy {}
+  }
+
+  .icon,
+  .svg-icon {}
+
+  .social-nav-link {}
+
+  .copied {
+    text-align: center;
+    pointer-events: none;
+    transition: opacity linear 300ms;
+    will-change: opacity;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .5);
+
+    &.hide {
+      opacity: 0;
+    }
+
+    &-content {
+      background-color: var(--white);
+      padding: 30px;
+
+      i {}
+
+      strong {
+        display: block;
+      }
+    }
+  }
+}

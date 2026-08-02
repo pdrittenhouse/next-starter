@@ -5,6 +5,8 @@ import type { ButtonProps } from '@/stories/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import type React from 'react';
+import styles from './button-group.module.scss';
+import { cx } from '@/lib/cx';
 
 // ---------------------------------------------------------------------------
 // ACF field shapes — mirrors the nested ACF group/repeater fields stored in
@@ -254,7 +256,7 @@ export async function ButtonGroupBlock({ block, children }: ButtonGroupBlockProp
 
   const groups = mapGroups(data.button_groups);
   const wrapperStyle = buildWrapperStyle(data);
-  const blockClasses = ['button-group-block', attrs.className].filter(Boolean).join(' ') || undefined;
+  const blockClasses = cx(styles, 'button-group-block', attrs.className);
 
   if (groups.length === 0) {
     if (!children) return null;

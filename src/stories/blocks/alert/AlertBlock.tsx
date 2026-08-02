@@ -2,6 +2,8 @@ import { Alert } from '@/stories/atoms/alert/Alert';
 import type { AlertStatus } from '@/stories/atoms/alert/Alert';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import styles from './alert.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF field values for the alert block, as they appear in attributesJSON.data.
@@ -57,9 +59,7 @@ export async function AlertBlock({ block }: AlertBlockProps) {
       ? `alert-${data.alert_layout_alert_layout}`
       : null;
 
-  const blockClasses = ['block-alert', layoutModifier, attrs.className]
-    .filter(Boolean)
-    .join(' ');
+  const blockClasses = cx(styles, 'block-alert', layoutModifier, attrs.className);
 
   return (
     <Alert
@@ -71,7 +71,7 @@ export async function AlertBlock({ block }: AlertBlockProps) {
       dismissable={data.dismissable ?? false}
       closePosition={data.close_position ?? 'top'}
       alertTextAlign={data.text_align_text_align ?? undefined}
-      className={blockClasses || undefined}
+      className={blockClasses}
     />
   );
 }

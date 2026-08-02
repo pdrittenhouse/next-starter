@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './button-group.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Wrapper display utility variants — maps to Bootstrap d-* classes.
@@ -145,17 +146,14 @@ export function ButtonGroup({
   toolbarClassName,
   groups,
 }: ButtonGroupProps) {
-  const wrapperClasses = [
+  const wrapperClasses = cx(
+    styles,
     'button-group--wrapper',
     WRAPPER_DISPLAY_CLASS[wrapperDisplay] ?? 'd-inline-block',
     wrapperClassName,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
 
-  const toolbarClasses = ['btn-toolbar', toolbarClassName]
-    .filter(Boolean)
-    .join(' ');
+  const toolbarClasses = cx(styles, 'btn-toolbar', toolbarClassName);
 
   const groupElements = groups.map((group, groupIndex) => {
     // Mirror Twig displayGrid resolution logic:
@@ -179,7 +177,8 @@ export function ButtonGroup({
         : [];
 
     // Mirror Twig button_group_classes merge + sort + join logic
-    const groupClasses = [
+    const groupClasses = cx(
+      styles,
       vertical ? 'btn-group-vertical' : 'button-group',
       displayGrid ? 'display-grid' : 'display-group',
       displayGrid ? 'd-grid' : 'btn-group',
@@ -187,9 +186,7 @@ export function ButtonGroup({
       ...breakpointClasses,
       size ? `btn-group-${size}` : null,
       group.className,
-    ]
-      .filter(Boolean)
-      .join(' ');
+    );
 
     return (
       <div
@@ -209,10 +206,10 @@ export function ButtonGroup({
     <div className={wrapperClasses} data-pattern="timberland/button-group">
       {/* heading block — mirrors {% block heading %} */}
       {(title || description) && (
-        <div className="button-group--heading">
-          {title && <h2 className="button-group--title">{title}</h2>}
+        <div className={cx(styles, 'button-group--heading')}>
+          {title && <h2 className={cx(styles, 'button-group--title')}>{title}</h2>}
           {description && (
-            <div className="button-group--description">{description}</div>
+            <div className={cx(styles, 'button-group--description')}>{description}</div>
           )}
         </div>
       )}

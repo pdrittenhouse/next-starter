@@ -5,6 +5,8 @@ import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
 import { Video, type VideoFormat, type VideoPreload, type VideoQuality } from '@/stories/atoms/video/Video';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import styles from './video.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * ACF field values for the video block, as they appear in attributesJSON.data.
@@ -170,7 +172,7 @@ export async function VideoBlock({ block }: VideoBlockProps) {
     margin: data.margin,
   });
   const hasWrapperStyle = !!wrapperStyle;
-  const blockClassName = ['video-block', attrs.className].filter(Boolean).join(' ');
+  const blockClassName = cx(styles, 'video-block', attrs.className);
 
   const videoEl = (
     <Video

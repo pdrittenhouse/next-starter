@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './pagination.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * A single pagination page item.
@@ -87,34 +88,31 @@ export function Pagination({
   otherClasses,
 }: PaginationProps) {
   // Mirror Twig: build class array → filter falsy → sort → join → trim
-  const paginationClasses = [
+  const paginationClasses = cx(
+    styles,
     'pagination',
     size ? `pagination-${size}` : null,
-    otherClasses ?? null,
-  ]
-    .filter(Boolean)
-    .sort()
-    .join(' ')
-    .trim();
+    otherClasses,
+  );
 
   return (
     <nav aria-label={title} data-pattern="timberland/pagination">
       <ul className={paginationClasses}>
 
-        <li className="page-item btn prev">
-          <a className="page-link" href={prevLink} aria-label="Previous">
+        <li className={cx(styles, 'page-item', 'btn', 'prev')}>
+          <a className={cx(styles, 'page-link')} href={prevLink} aria-label="Previous">
             {pageIcon && <span aria-hidden="true">&laquo;</span>}
-            <span className={pageIcon ? 'sr-only' : 'button-label'}>Previous</span>
+            <span className={cx(styles, pageIcon ? 'sr-only' : 'button-label')}>Previous</span>
           </a>
         </li>
 
         {pageItems.map((item, index) => (
           <li
             key={`page-item-${index}`}
-            className={['page-item', item.active ? 'active' : ''].filter(Boolean).join(' ')}
+            className={cx(styles, 'page-item', item.active && 'active')}
           >
             <a
-              className="page-link"
+              className={cx(styles, 'page-link')}
               href={item.link}
               {...(item.active ? { 'aria-current': 'page' as const } : {})}
             >
@@ -123,10 +121,10 @@ export function Pagination({
           </li>
         ))}
 
-        <li className="page-item btn next">
-          <a className="page-link" href={nextLink} aria-label="Next">
+        <li className={cx(styles, 'page-item', 'btn', 'next')}>
+          <a className={cx(styles, 'page-link')} href={nextLink} aria-label="Next">
             {pageIcon && <span aria-hidden="true">&raquo;</span>}
-            <span className={pageIcon ? 'sr-only' : 'button-label'}>Next</span>
+            <span className={cx(styles, pageIcon ? 'sr-only' : 'button-label')}>Next</span>
           </a>
         </li>
 

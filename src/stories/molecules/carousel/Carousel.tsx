@@ -5,6 +5,7 @@ import { Carousel as BsCarousel } from 'react-bootstrap';
 import { Image } from '@/stories/atoms/image/Image';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import styles from './carousel.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Slide image — all ImageProps except `className`, plus an optional
@@ -122,9 +123,7 @@ export function Carousel({
   const [activeIndex, setActiveIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
   // Extra classes passed from props (React Bootstrap adds carousel/slide/fade/dark itself).
-  const extraClasses = [...carouselClasses, carouselOtherClasses, className]
-    .filter(Boolean)
-    .join(' ');
+  const extraClasses = cx(styles, ...carouselClasses, carouselOtherClasses, className) || undefined;
 
   // Map 'false' string to null (React Bootstrap uses null to disable auto-cycle).
   const resolvedInterval = interval === 'false' ? null : interval;
@@ -146,7 +145,7 @@ export function Carousel({
       wrap={wrap}
       interval={resolvedInterval}
       variant={dark ? 'dark' : undefined}
-      className={extraClasses || undefined}
+      className={extraClasses}
       data-pattern="timberland/carousel"
     >
       {slides.map((slide, i) => (
@@ -156,14 +155,7 @@ export function Carousel({
             return (
               <Image
                 {...imageProps}
-                className={[
-                  'carousel--image',
-                  'd-block',
-                  'w-100',
-                  imageOtherClasses ?? null,
-                ]
-                  .filter(Boolean)
-                  .join(' ')}
+                className={cx(styles, 'carousel--image', 'd-block', 'w-100', imageOtherClasses)}
               />
             );
           })()}
@@ -171,10 +163,10 @@ export function Carousel({
           {(slide.label || slide.caption) && (
             <BsCarousel.Caption>
               {slide.label && (
-                <h5 className="carousel--label">{slide.label}</h5>
+                <h5 className={cx(styles, 'carousel--label')}>{slide.label}</h5>
               )}
               {slide.caption && (
-                <p className="carousel--caption">{slide.caption}</p>
+                <p className={cx(styles, 'carousel--caption')}>{slide.caption}</p>
               )}
             </BsCarousel.Caption>
           )}

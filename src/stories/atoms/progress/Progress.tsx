@@ -1,4 +1,5 @@
 import styles from './progress.module.scss';
+import { cx } from '@/lib/cx';
 
 export interface ProgressBarConfig {
   /** Unique ID for the bar element. Provide one for correct accessibility linkage. */
@@ -42,38 +43,29 @@ export interface ProgressProps {
   className?: string;
 }
 
-function buildWrapperClasses(extra?: string, others?: string): string {
-  return [
-    'progress--wrapper',
-    others ?? null,
-    extra ?? null,
-  ].filter(Boolean).join(' ');
-}
-
 function buildBootstrapBarClasses(bar: ProgressBarConfig): string {
-  return [
+  return cx(
+    styles,
     'progress-bar',
     bar.color ? `bg-${bar.color}` : null,
     bar.striped ? 'progress-bar-striped' : null,
     bar.striped && bar.animate ? 'progress-bar-animated' : null,
     ...(bar.progressBarClasses ?? []),
-    bar.progressBarOtherClasses ?? null,
-  ].filter(Boolean).join(' ');
+    bar.progressBarOtherClasses,
+  );
 }
 
 function buildHtml5BarClasses(bar: ProgressBarConfig): string {
-  return [
+  return cx(
+    styles,
     'progress--bar',
     ...(bar.progressBarClasses ?? []),
-    bar.progressBarOtherClasses ?? null,
-  ].filter(Boolean).join(' ');
+    bar.progressBarOtherClasses,
+  );
 }
 
 function buildContainerClasses(extra: string[], others?: string): string {
-  return [
-    ...extra,
-    others ?? null,
-  ].filter(Boolean).join(' ');
+  return cx(styles, ...extra, others);
 }
 
 // Fallback ID mirrors the Twig's auto-generated progressBar_ prefix.
@@ -92,11 +84,13 @@ export function Progress({
   height,
   className,
 }: ProgressProps) {
-  const wrapperCls = buildWrapperClasses(className, progressWrapperOtherClasses);
-
-  const additionalWrapperClasses = progressWrapperClasses.length
-    ? ' ' + progressWrapperClasses.join(' ')
-    : '';
+  const wrapperCls = cx(
+    styles,
+    'progress--wrapper',
+    progressWrapperOtherClasses,
+    ...progressWrapperClasses,
+    className,
+  );
 
   if (!bootstrapProgress) {
     const containerCls = buildContainerClasses(
@@ -109,7 +103,7 @@ export function Progress({
 
     return (
       <div
-        className={wrapperCls + additionalWrapperClasses}
+        className={wrapperCls}
         data-pattern="timberland/progress"
       >
         {progressBars.map((bar, i) => {
@@ -124,7 +118,7 @@ export function Progress({
             <div key={barId} className={containerCls} style={containerStyle}>
               {bar.showLabel && (
                 <label
-                  className="progress--label"
+                  className={cx(styles, 'progress--label')}
                   htmlFor={barId}
                   id={`${barId}-label`}
                 >
@@ -158,7 +152,7 @@ export function Progress({
 
   return (
     <div
-      className={wrapperCls + additionalWrapperClasses}
+      className={wrapperCls}
       data-pattern="timberland/progress"
     >
       <div className={outerCls} style={outerStyle}>

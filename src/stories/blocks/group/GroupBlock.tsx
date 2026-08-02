@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './group.module.scss';
+import { cx } from '@/lib/cx';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 
 interface GroupBlockData extends AcfBlockStyleData {
@@ -18,7 +19,7 @@ export async function GroupBlock({ block, children }: GroupBlockProps) {
   const data = (attrs?.data ?? {}) as GroupBlockData;
 
   const { style: blockStyle, bgClass } = buildAcfBlockStyle(data);
-  const blockClasses = ['block-group', bgClass, attrs.className].filter(Boolean).join(' ');
+  const blockClasses = cx(styles, 'block-group', bgClass, attrs.className);
 
   const fallbackHtml = block.renderedHtml ?? '';
   if (!children && !fallbackHtml) return null;

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './video.module.scss';
+import { cx } from '@/lib/cx';
 
 export type VideoFormat = 'youtube' | 'vimeo' | 'iframe';
 export type VideoPreload = 'none' | 'auto' | 'meta';
@@ -273,7 +274,8 @@ export function Video({
   children,
   ...embedProps
 }: VideoProps) {
-  const wrapperClasses = [
+  const wrapperClasses = cx(
+    styles,
     'video',
     format ? `video-format--${format}` : null,
     aspectRatio === 'wide'
@@ -284,8 +286,8 @@ export function Video({
     controls ? 'has-controls' : null,
     format === 'youtube' && !suggested ? 'hide-suggested' : null,
     autoplay ? 'has-autoplay' : null,
-    className ?? null,
-  ].filter(Boolean).join(' ');
+    className,
+  );
 
   const wrapperStyle: React.CSSProperties = width ? { width } : {};
 
@@ -328,9 +330,9 @@ export function Video({
       style={wrapperStyle || undefined}
       data-yt-id={dataYtId}
     >
-      {title && <h2 className="video-title">{title}</h2>}
+      {title && <h2 className={cx(styles, 'video-title')}>{title}</h2>}
 
-      <div className="video-responsive">
+      <div className={cx(styles, 'video-responsive')}>
         {isEmbed && embedSrc ? (
           <iframe
             width="100%"

@@ -1,4 +1,5 @@
 import styles from './breadcrumb.module.scss';
+import { cx } from '@/lib/cx';
 
 export interface BreadcrumbItem {
   text: string;
@@ -25,7 +26,7 @@ export function Breadcrumb({
   className,
   listStyle,
 }: BreadcrumbProps) {
-  const olClasses = ['breadcrumb', className].filter(Boolean).join(' ');
+  const olClasses = cx(styles, 'breadcrumb', className);
 
   const navStyle = divider
     ? ({ '--bs-breadcrumb-divider': `'${divider}'` } as React.CSSProperties)
@@ -46,7 +47,7 @@ export function Breadcrumb({
             return (
               <li
                 key={index}
-                className="breadcrumb-item active is-active"
+                className={cx(styles, 'breadcrumb-item', 'active', 'is-active')}
                 aria-current="page"
               >
                 {label ? `${label} ` : ''}
@@ -56,7 +57,7 @@ export function Breadcrumb({
           }
 
           return (
-            <li key={index} className="breadcrumb-item">
+            <li key={index} className={cx(styles, 'breadcrumb-item')}>
               <a href={item.url}>{item.text}</a>
             </li>
           );

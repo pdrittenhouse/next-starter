@@ -1,0 +1,50 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TableBlockStories from './TableBlock.stories';
+
+<Meta of={TableBlockStories} />
+
+# Table
+
+Table block that maps ACF styling fields to the Table atom. Bootstrap modifiers (striped, hover, bordered, borderless, small, responsive) and appearance settings (variant, caption, vertical align) are read from ACF. Structural content (thead/tbody/tfoot rows) is provided by `acf/table-head`, `acf/table-body`, and `acf/table-foot` inner blocks; the block falls back to `renderedHtml` when inner blocks are not resolved.
+
+## Usage
+
+```tsx
+import { TableBlock } from '@/stories/blocks/table/TableBlock';
+
+<TableBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `table_id.id` | text | Explicit HTML id for the `<table>` element |
+| `table_id.id_gen` | text | Auto-generated id suffix (produces `table-{slug}`) |
+| `table_striped` | true_false | Alternate row shading |
+| `table_hover` | true_false | Hover highlight on rows |
+| `table_bordered` | true_false | Add borders to all cells |
+| `table_borderless` | true_false | Remove all cell borders |
+| `table_small` | true_false | Compact cell padding |
+| `table_responsive` | select | Responsive breakpoint: `true`, `sm`, `md`, `lg`, `xl`, `xxl` |
+| `table_vertical_align` | select | Vertical cell alignment: `top`, `middle`, `bottom` |
+| `table_border_collapse` | true_false | Collapse border spacing |
+| `table_border_spacing` | number | Custom border spacing in pixels |
+| `table_variant.color` | select | Color mode: `palette` or `custom` |
+| `table_variant.theme_color` | select | Bootstrap contextual color name (when `palette`) |
+| `table_variant.custom_color` | text | Custom hex color (when `custom`) |
+| `caption_group.caption` | text | Caption text rendered in `<caption>` |
+| `caption_group.caption_top` | true_false | Position caption above the table |
+| `margin` | group | Block-level margin (top/bottom/left/right, auto or px) |
+| `padding` | group | Block-level padding |
+| `width` | group | Block-level width: `value`+`unit`, `min_width`, `max_width` |
+
+## Stories
+
+<Canvas>
+  <Story of={TableBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={TableBlockStories.Bordered} />
+</Canvas>

@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './badge.module.scss';
+import { cx } from '@/lib/cx';
 
 export type BadgeColor =
   | 'primary'
@@ -29,12 +30,13 @@ export interface BadgeProps {
 }
 
 function buildClasses(pill: boolean, color: BadgeColor, extra?: string): string {
-  return [
+  return cx(
+    styles,
     'badge',
     pill ? 'rounded-pill' : null,
     `bg-${color}`,
-    extra ?? null,
-  ].filter(Boolean).join(' ');
+    extra,
+  );
 }
 
 export function Badge({

@@ -1,0 +1,271 @@
+@use "variables" as *;
+.posts-loop {
+  // Loading overlay styles
+  position: relative;
+
+  &.loading {
+    &:before {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    &:hover,
+    &:hover:before {
+      cursor: not-allowed;
+    }
+  }
+
+  &:before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .5);
+    transition: opacity 200ms ease-in-out;
+    will-change: opacity;
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  > .spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    // transform: translate(-50%, -50%);
+    z-index: 6;
+  }
+
+  ////////////////////////////////
+  // ELEMENTS
+  ////////////////////////////////
+
+  // Featured Image
+  &--featured-image--wrapper {}
+
+  &--post-thumbnail {
+
+    img {}
+  }
+
+  // Post Title
+  &--post-title--wrapper {
+
+    a {}
+  }
+
+  &--post-title {}
+
+  // Post Excerpt
+  &--post-excerpt--wrapper {}
+
+  &--post-excerpt {}
+
+  // Post Content
+  &--post-content--wrapper {}
+
+  &--post-content {}
+
+  // Post Link
+  &--post-link--wrapper {}
+
+  &--post-link--label {}
+
+  &--post-link {}
+
+  &--post-url {}
+
+  // Post Authors
+  &--post-author--wrapper {}
+
+  &--post-author {}
+
+  &--post-author--gravatar {
+
+    img {}
+  }
+
+  &--post-author--label {}
+
+  &--post-author--link {}
+
+  &--post-author--name {}
+
+  &--post-author--email {}
+
+  // Post Date
+  &--post-date--wrapper {}
+
+  &--post-date--label {}
+
+  &--date--link {}
+
+  &--post-date {}
+
+  // Post Modified
+  &--post-modified--wrapper {}
+
+  &--post-modified--label {}
+
+  &--post-modified--link {}
+
+  &--post-modified--date {}
+
+  &--post-modified--separator {}
+
+  &--post-modified--author {}
+
+  &--post-modified--author-email {}
+
+  // Post Type
+  &--post-type--wrapper {}
+
+  &--post-type--label {}
+
+  &--post-type--link {}
+
+  &--post-type {}
+
+  // Parent
+  &--post-parent--wrapper {}
+
+  &--post-parent--label {}
+
+  &--post-parent-link {}
+
+  &--post-parent {}
+
+  // Children
+  &--post-children--wrapper {}
+
+  &--post-children--label {}
+
+  &--child--link {}
+
+  &--child {}
+
+  //Comment Count
+  &--comment-count--wrapper {}
+
+  &--comment-count--label {}
+
+  &--comment-count {}
+
+  // Terms
+  &--terms--wrapper {}
+
+  &--terms--label {}
+
+  &--term--link {}
+
+  &--term {}
+
+  // Categories
+  &--categories--wrapper {}
+
+  &--categories--label {}
+
+  &--category--link {}
+
+  &--category {}
+
+  // Tags
+  &--tags--wrapper {}
+
+  &--tags--label {}
+
+  &--tag--link {}
+
+  &--tag {}
+
+
+  ////////////////////////////////
+  // PATTERNS
+  ////////////////////////////////
+
+  // Card
+  &--card {}
+
+  // Card Grid
+  &--card-grid {}
+
+  // Slider
+  &--carousel {
+
+    &.equal-height-slides {
+
+      .slide {
+        min-height: 100%;
+      }
+
+      .flickity-carousel {
+
+        .carousel-cell {
+          @include flexbox();
+          @include flex-flow(column nowrap);
+
+          > .card:first-child:last-child,
+          > .block-card:first-child:last-child {
+            @include flex(1 1 100%);
+            @include flexbox();
+            @include flex-flow(row nowrap);
+
+            .card-wrapper,
+            .front,
+            .back {
+              @include flex(1 1 100%);
+              @include flexbox();
+              @include flex-flow(row nowrap);
+            }
+
+            .card-content-wrapper-outer {
+              @include flex(1 1 100%);
+            }
+
+            .card-content-wrapper-inner {
+              // @include flex(1 1 100%);
+            }
+          }
+        }
+      }
+
+      .slick-carousel-wrapper {
+
+        .slick-carousel {}
+
+        .slick-track {
+          @include flexbox;
+        }
+
+        .slick-slide {
+          height: inherit !important;
+
+          > div,
+          .block-slide {
+            height: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  &--slide {
+
+    &.full-height-cards {
+      // @include flexbox;
+      // @include flex-flow(row nowrap);
+
+      .posts-loop--card {
+        // @include flex(1 1 100%);
+        min-height: 100%
+      }
+    }
+  }
+
+  // List
+  &--post-list {}
+
+  &--post-list--item {}
+}

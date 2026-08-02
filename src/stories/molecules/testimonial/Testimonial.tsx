@@ -2,6 +2,7 @@ import React from 'react';
 import { Image } from '@/stories/atoms/image/Image';
 import type { ImageVariant } from '@/stories/atoms/image/Image';
 import styles from './testimonial.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Testimonial image props — mirrors the image object from the Twig pattern.
@@ -66,15 +67,12 @@ export function Testimonial({
 }: TestimonialProps) {
   // Mirror the Twig class-building logic:
   // testimonial_classes|merge(['testimonial', testimonial_other_classes])
-  const testimonialClasses = ['testimonial', className]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  const testimonialClasses = cx(styles, 'testimonial', className);
 
   return (
     <div className={testimonialClasses} data-pattern="timberland/testimonial">
       {image?.src && (
-        <figure className="testimonial-image">
+        <figure className={cx(styles, 'testimonial-image')}>
           <Image
             variant={image.variant}
             src={image.src}
@@ -87,20 +85,20 @@ export function Testimonial({
           />
         </figure>
       )}
-      <div className="testimonial-body">
-        {title && <h2 className="testimonial-title">{title}</h2>}
+      <div className={cx(styles, 'testimonial-body')}>
+        {title && <h2 className={cx(styles, 'testimonial-title')}>{title}</h2>}
         {quote && (
-          <blockquote className="testimonial-quote">
+          <blockquote className={cx(styles, 'testimonial-quote')}>
             <i className="fas fa-quote-left" aria-hidden="true"></i>
             {quote}
             <i className="fas fa-quote-right" aria-hidden="true"></i>
           </blockquote>
         )}
         {(author || descriptor) && (
-          <div className="testimonial-meta">
-            {author && <span className="testimonial-author">{author}</span>}
+          <div className={cx(styles, 'testimonial-meta')}>
+            {author && <span className={cx(styles, 'testimonial-author')}>{author}</span>}
             {descriptor && (
-              <span className="testimonial-descriptor">{descriptor}</span>
+              <span className={cx(styles, 'testimonial-descriptor')}>{descriptor}</span>
             )}
           </div>
         )}

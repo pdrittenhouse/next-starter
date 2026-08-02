@@ -1,0 +1,28 @@
+@use "variables" as *;
+.block-branding {
+  margin: 0 auto;
+  max-width: 100%;
+
+  &.branding {
+
+    .site-header & {
+      //margin: 0 auto;
+      margin: 0;
+    }
+  }
+
+  .branding--site-logo {
+    height: 100%;
+    margin: 0 auto;
+    display: inline-block;
+
+    > a {
+      display: block;
+      height: 100%;
+    }
+  }
+
+  .branding--logo-img {
+    height: 100%;
+  }
+}

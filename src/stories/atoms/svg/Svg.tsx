@@ -1,4 +1,5 @@
 import styles from './svg.module.scss';
+import { cx } from '@/lib/cx';
 
 export type SvgType = 'inline' | 'object' | 'picture';
 
@@ -22,14 +23,13 @@ export interface SvgProps {
 }
 
 function buildClasses(colorOriginal?: boolean, fill?: string, extra?: string): string {
-  return [
+  return cx(
+    styles,
     'svg',
     !colorOriginal ? 'svg--colorable' : null,
     fill ? `text-${fill}` : null,
-    extra ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    extra,
+  );
 }
 
 export function Svg({

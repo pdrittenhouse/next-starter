@@ -4,6 +4,7 @@ import { Button } from '@/stories/atoms/button/Button';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
 import styles from './jumbotron.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Props for the Jumbotron molecule — mirrors the Twig pattern at
@@ -77,16 +78,15 @@ export const Jumbotron = ({
   className,
 }: JumbotronProps) => {
   // ── Root element classes (mirrors Twig jumbotron_classes merge + sort + trim) ──
-  const rootClasses = [
+  const rootClasses = cx(
+    styles,
     'jumbotron',
-    image ? 'has-image' : null,
-    imageLeft ? 'image-left' : null,
-    removeContainer ? 'no-container' : null,
-    verticalCenter ? 'vertical-center' : null,
-    className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    image && 'has-image',
+    imageLeft && 'image-left',
+    removeContainer && 'no-container',
+    verticalCenter && 'vertical-center',
+    className,
+  );
 
   // ── Inline background-image style (mirrors Twig jumbotron_styles merge) ──
   const rootStyle: React.CSSProperties | undefined = bgImage
@@ -96,13 +96,8 @@ export const Jumbotron = ({
   // ── Container class (mirrors Twig's container_breakpoint logic) ───────────
   const breakpointSuffix = containerBreakpoint ? `-${containerBreakpoint}` : '';
   const containerClass = fluid
-    ? [
-        'container-fluid',
-        maxWidthFluidContainer ? 'max-width-fluid-container' : null,
-      ]
-        .filter(Boolean)
-        .join(' ')
-    : `container${breakpointSuffix}`;
+    ? cx(styles, 'container-fluid', maxWidthFluidContainer && 'max-width-fluid-container')
+    : cx(styles, `container${breakpointSuffix}`);
 
   // ── CTA visibility guard — mirrors Twig: {% if button_text or button_link %} ──
   const hasCta = !!(cta && (cta.label ?? cta.href ?? cta.children));
@@ -111,19 +106,19 @@ export const Jumbotron = ({
   const inner = (
     <>
       {image && (
-        <div className="jumbotron--image">
+        <div className={cx(styles, 'jumbotron--image')}>
           <Image {...image} />
         </div>
       )}
-      <div className="jumbotron--content">
-        {label && <span className="jumbotron--label">{label}</span>}
-        {title && <h1 className="jumbotron--title">{title}</h1>}
-        {subtitle && <h2 className="jumbotron--subtitle">{subtitle}</h2>}
+      <div className={cx(styles, 'jumbotron--content')}>
+        {label && <span className={cx(styles, 'jumbotron--label')}>{label}</span>}
+        {title && <h1 className={cx(styles, 'jumbotron--title')}>{title}</h1>}
+        {subtitle && <h2 className={cx(styles, 'jumbotron--subtitle')}>{subtitle}</h2>}
         {text && (
           // Twig renders {{ jumbotron_text }} unescaped — mirror that here.
           // eslint-disable-next-line react/no-danger
           <div
-            className="jumbotron--text"
+            className={cx(styles, 'jumbotron--text')}
             dangerouslySetInnerHTML={{ __html: text }}
           />
         )}
@@ -139,17 +134,17 @@ export const Jumbotron = ({
       data-pattern="timberland/jumbotron"
       {...(id ? { id } : {})}
     >
-      <span className="bg bg-top" />
+      <span className={cx(styles, 'bg', 'bg-top')} />
 
       {removeContainer ? (
         inner
       ) : (
         <div className={containerClass}>
-          <div className="row">{inner}</div>
+          <div className={cx(styles, 'row')}>{inner}</div>
         </div>
       )}
 
-      <span className="bg bg-bottom" />
+      <span className={cx(styles, 'bg', 'bg-bottom')} />
     </div>
   );
 };

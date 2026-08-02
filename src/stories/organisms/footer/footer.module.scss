@@ -1,6 +1,11 @@
 @use "variables" as *;
 @use "printing/03-organisms/footer";
 
+:global(.footer-social-nav) {
+  --social-nav-item: var(--footer-social-nav-item);
+  --social-nav-item-hover: var(--footer-social-nav-item-hover);
+}
+
 .footerSearch {
   fieldset {
     border: 0;

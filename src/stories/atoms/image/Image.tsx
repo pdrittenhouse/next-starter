@@ -1,5 +1,6 @@
 import NextImage from 'next/image';
 import styles from './image.module.scss';
+import { cx } from '@/lib/cx';
 
 /**
  * Image rendering variants — mirrors the Twig pattern's `variant` parameter.
@@ -48,12 +49,13 @@ export interface ImageProps {
 }
 
 function buildClasses(variant: ImageVariant, extra?: string): string {
-  return [
+  return cx(
+    styles,
     'image',
     variant !== 'bg' ? 'img-fluid' : null,
     `image--${variant}`,
-    extra ?? null,
-  ].filter(Boolean).join(' ');
+    extra,
+  );
 }
 
 /**
@@ -104,7 +106,7 @@ export function Image({
         className={[cls, arClass].filter(Boolean).join(' ')}
         style={{ position: 'relative' }}
       >
-        <div className="content">
+        <div className={cx(styles, 'content')}>
           <NextImage
             src={src}
             alt={alt}

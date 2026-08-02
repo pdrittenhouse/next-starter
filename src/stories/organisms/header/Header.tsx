@@ -6,6 +6,7 @@ import { Nav, NavProps } from '@/stories/molecules/nav/Nav';
 import { Button, ButtonProps } from '@/stories/atoms/button/Button';
 import { SvgIcon } from '@/stories/atoms/svg/SvgIcon';
 import styles from './header.module.scss';
+import { cx } from '@/lib/cx';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -206,53 +207,52 @@ export interface HeaderProps {
 // ---------------------------------------------------------------------------
 
 /**
- * Build the sorted, deduplicated class string for the `<header>` element.
+ * Build the sorted, deduplicated class string for the `<header>` element via cx.
  * Mirrors the Twig `sort | join | trim` logic.
  */
 function buildHeaderClasses(
   navbarBreakpoint?: NavbarBreakpoint,
   otherClasses?: string | string[],
 ): string {
-  const base = ['site-header', 'navbar'];
+  const parts: (string | null | undefined | false)[] = ['site-header', 'navbar'];
 
   if (navbarBreakpoint) {
-    base.push(`navbar-expand-${navbarBreakpoint}`);
+    parts.push(`navbar-expand-${navbarBreakpoint}`);
   }
 
   if (otherClasses) {
     const extras = Array.isArray(otherClasses) ? otherClasses : [otherClasses];
-    base.push(...extras.filter(Boolean));
+    parts.push(...extras.filter(Boolean));
   }
 
-  return [...new Set(base)].sort().join(' ');
+  return cx(styles, ...parts);
 }
 
 /**
- * Build the sorted, deduplicated class string for the alert bar.
+ * Build the class string for the alert bar via cx.
  */
 function buildAlertClasses(alertOtherClasses?: string | string[]): string {
-  const base = ['site-header--alert'];
+  const parts: (string | null | undefined | false)[] = ['site-header--alert'];
 
   if (alertOtherClasses) {
     const extras = Array.isArray(alertOtherClasses)
       ? alertOtherClasses
       : [alertOtherClasses];
-    base.push(...extras.filter(Boolean));
+    parts.push(...extras.filter(Boolean));
   }
 
-  return [...new Set(base)].sort().join(' ');
+  return cx(styles, ...parts);
 }
 
 /**
- * Build the class string for the navbar-toggler button.
- * Mirrors the Twig nav_toggle block, which embeds the button atom —
- * producing `btn btn-default button` plus the hamburger classes.
+ * Build the class string for the navbar-toggler button via cx.
+ * Mirrors the Twig nav_toggle block.
  */
 function buildTogglerClasses(
   hamburgerAnimation?: string,
   navbarTogglerClasses?: string | string[],
 ): string {
-  const base = [
+  const parts: (string | null | undefined | false)[] = [
     'btn',
     'btn-default',
     'button',
@@ -265,10 +265,10 @@ function buildTogglerClasses(
     const extras = Array.isArray(navbarTogglerClasses)
       ? navbarTogglerClasses
       : [navbarTogglerClasses];
-    base.push(...extras.filter(Boolean));
+    parts.push(...extras.filter(Boolean));
   }
 
-  return base.filter(Boolean).join(' ');
+  return cx(styles, ...parts);
 }
 
 // ---------------------------------------------------------------------------
@@ -320,10 +320,11 @@ export function Header({
 
   const headerClasses = buildHeaderClasses(navbarBreakpoint, otherClasses);
   const alertClasses = buildAlertClasses(alertOtherClasses);
-  const togglerClasses = [
+  const togglerClasses = cx(
+    styles,
     buildTogglerClasses(hamburgerAnimation, navbarTogglerClasses),
     !navOpen ? 'collapsed' : null,
-  ].filter(Boolean).join(' ');
+  );
 
   const headerStyle: React.CSSProperties | undefined = backgroundImage
     ? { backgroundImage: `url(${backgroundImage})` }
@@ -331,7 +332,7 @@ export function Header({
 
   return (
     <>
-    <a href="#content" className="skip-nav visually-hidden-focusable">
+    <a href="#content" className={cx(styles, 'skip-nav', 'visually-hidden-focusable')}>
       {skipNavLabel}
     </a>
     <header
@@ -341,16 +342,16 @@ export function Header({
       style={headerStyle}
       data-pattern="timberland/header"
     >
-      <div className="site-header--wrapper">
+      <div className={cx(styles, 'site-header--wrapper')}>
 
         {/* ---------------------------------------------------------------- */}
         {/* Alert bar                                                         */}
         {/* ---------------------------------------------------------------- */}
         {alertContent && (
           <div className={alertClasses}>
-            <div className="site-header--container">
-              <div className="site-header--row">
-                <div className="site-header--column">
+            <div className={cx(styles, 'site-header--container')}>
+              <div className={cx(styles, 'site-header--row')}>
+                <div className={cx(styles, 'site-header--column')}>
                   {alertContent}
                 </div>
               </div>
@@ -362,28 +363,26 @@ export function Header({
         {/* Nav top                                                           */}
         {/* ---------------------------------------------------------------- */}
         {navTopContent && (
-          <div className="site-header--nav-top">
-            <div className="site-header--row">
-              {navTopContent}
-            </div>
+          <div className={cx(styles, 'site-header--nav-top')}>
+            {navTopContent}
           </div>
         )}
 
         {/* ---------------------------------------------------------------- */}
         {/* Main header content row                                           */}
         {/* ---------------------------------------------------------------- */}
-        <div className="site-header--content">
-          <div className="site-header--container">
-            <div className="site-header--row">
+        <div className={cx(styles, 'site-header--content')}>
+          <div className={cx(styles, 'site-header--container')}>
+            <div className={cx(styles, 'site-header--row')}>
 
               {/* Branding ------------------------------------------------- */}
-              <div className="site-header--branding">
+              <div className={cx(styles, 'site-header--branding')}>
                 {brand && <Branding {...brand} />}
                 {coBrand && <Branding {...coBrand} />}
               </div>
 
               {/* Navigation ------------------------------------------------ */}
-              <div className="site-header--navigation">
+              <div className={cx(styles, 'site-header--navigation')}>
 
                 {/* Hamburger toggler */}
                 <button
@@ -395,40 +394,40 @@ export function Header({
                   aria-expanded={navOpen}
                   aria-label="Toggle navigation"
                 >
-                  <span className="hamburger-box">
-                    <span className="hamburger-inner" />
+                  <span className={cx(styles, 'hamburger-box')}>
+                    <span className={cx(styles, 'hamburger-inner')} />
                   </span>
                 </button>
 
                 {/* Mobile CTA — immediately before .navbar-collapse */}
                 {mobileNavCta && (
-                  <div className={['button-wrapper--mobile', mobileNavCtaWrapperClasses].filter(Boolean).join(' ')}>
+                  <div className={cx(styles, 'button-wrapper--mobile', mobileNavCtaWrapperClasses)}>
                     <Button {...mobileNavCta} />
                   </div>
                 )}
 
-                <div className="site-header--row">
+                <div className={cx(styles, 'site-header--row')}>
                   {/* Collapsible nav panel */}
                   <Collapse in={navOpen}>
-                    <div className="navbar-collapse" id="siteNav">
-                      <div className="site-header--navbar-wrapper">
-                        <div className="site-header--row">
+                    <div className={cx(styles, 'navbar-collapse')} id="siteNav">
+                      <div className={cx(styles, 'site-header--navbar-wrapper')}>
+                        <div className={cx(styles, 'site-header--row')}>
 
                           {/* Secondary nav + social ------------------------ */}
-                          <div className="site-header--secondary-nav">
+                          <div className={cx(styles, 'site-header--secondary-nav')}>
                             {secondaryNav && (
                               <Nav
                                 navbarBreakpoint={navbarBreakpoint}
                                 {...secondaryNav}
                               />
                             )}
-                            <div className={['site-header--social-nav', socialNavWrapperClasses].filter(Boolean).join(' ')}>
+                            <div className={cx(styles, 'site-header--social-nav', socialNavWrapperClasses)}>
                               {socialNavContent}
                             </div>
                           </div>
 
                           {/* Primary nav + CTA ----------------------------- */}
-                          <div className="site-header--primary-nav">
+                          <div className={cx(styles, 'site-header--primary-nav')}>
                             {primaryNav && (
                               <Nav
                                 navbarBreakpoint={navbarBreakpoint}
@@ -436,40 +435,40 @@ export function Header({
                               />
                             )}
                             {primaryNavCta && (
-                              <div className="button-wrapper">
+                              <div className={cx(styles, 'button-wrapper')}>
                                 <Button {...primaryNavCta} />
                               </div>
                             )}
                           </div>
 
                           {/* Search ---------------------------------------- */}
-                          <div className="site-header--search">
+                          <div className={cx(styles, 'site-header--search')}>
                             {showSearch && (() => {
                               const searchForm = (
                                 <form
                                   name="searchform"
                                   id="headerSearch"
-                                  className="searchform placeholder-black"
+                                  className={cx(styles, 'searchform', 'placeholder-black')}
                                   role="search"
                                   action="/"
                                   method="get"
                                   autoComplete="off"
                                 >
                                   <div>
-                                    <label className="screen-reader-text" htmlFor="s">Search</label>
+                                    <label className={cx(styles, 'screen-reader-text')} htmlFor="s">Search</label>
                                     <input
                                       type="text"
                                       name="s"
                                       id="s"
-                                      className="search-field"
+                                      className={cx(styles, 'search-field')}
                                       placeholder="Search"
                                     />
                                     <button
                                       type="submit"
-                                      className="btn btn-black btn-default btn-lg button search-submit text-nowrap"
+                                      className={cx(styles, 'btn', 'btn-black', 'btn-default', 'btn-lg', 'button', 'search-submit', 'text-nowrap')}
                                       aria-label="Submit"
                                     >
-                                      <SvgIcon name="search" fill="white" width="16px" height="16px" className="search-icon" />
+                                      <SvgIcon name="search" fill="white" width="16px" height="16px" className={cx(styles, 'search-icon')} />
                                     </button>
                                   </div>
                                 </form>
@@ -498,9 +497,9 @@ export function Header({
         {/* Additional content slot                                           */}
         {/* ---------------------------------------------------------------- */}
         {additionalContent && (
-          <div className="site-header--container">
-            <div className="site-header--row">
-              <div className="site-header--column">
+          <div className={cx(styles, 'site-header--container')}>
+            <div className={cx(styles, 'site-header--row')}>
+              <div className={cx(styles, 'site-header--column')}>
                 {additionalContent}
               </div>
             </div>

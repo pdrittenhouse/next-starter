@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './alert.module.scss';
+import { cx } from '@/lib/cx';
 
 export type AlertStatus =
   | 'info'
@@ -88,7 +89,8 @@ export function Alert({
     (!!alertTitle && !alertPrimary && !alertSecondary) ||
     (!!alertPrimary && !alertTitle && !alertSecondary);
 
-  const alertClasses = [
+  const alertClasses = cx(
+    styles,
     'mb-0',
     'alert',
     `alert-${status}`,
@@ -98,10 +100,8 @@ export function Alert({
     'show',
     alertTextAlign ? `text-${alertTextAlign}` : null,
     dFlex ? 'd-flex' : null,
-    className ?? null,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    className,
+  );
 
   const ariaProps =
     alertType === 'error'
@@ -116,9 +116,7 @@ export function Alert({
         <a
           href="#"
           role="button"
-          className={['close', closeIsSingle ? 'd-inline-block' : null]
-            .filter(Boolean)
-            .join(' ')}
+          className={cx(styles, 'close', closeIsSingle ? 'd-inline-block' : null)}
           onClick={handleDismiss}
           aria-label="Close"
         >
@@ -130,9 +128,9 @@ export function Alert({
 
       {alertTitle &&
         (hasBodyContent ? (
-          <h2 className="alert-heading">
+          <h2 className={cx(styles, 'alert-heading')}>
             {alertLink ? (
-              <a href={alertLink} className="alert-link">
+              <a href={alertLink} className={cx(styles, 'alert-link')}>
                 {alertTitle}
               </a>
             ) : (
@@ -140,9 +138,9 @@ export function Alert({
             )}
           </h2>
         ) : (
-          <p className="alert-text mb-0 d-inline-block w-100">
+          <p className={cx(styles, 'alert-text', 'mb-0', 'd-inline-block', 'w-100')}>
             {alertLink ? (
-              <a href={alertLink} className="alert-link">
+              <a href={alertLink} className={cx(styles, 'alert-link')}>
                 {alertTitle}
               </a>
             ) : (
@@ -153,17 +151,16 @@ export function Alert({
 
       {alertPrimary && (
         <p
-          className={[
+          className={cx(
+            styles,
             'alert-text',
             !alertSecondary ? 'mb-0' : null,
             !alertTitle && !alertSecondary ? 'd-inline-block' : null,
             !alertTitle && !alertSecondary ? 'w-100' : null,
-          ]
-            .filter(Boolean)
-            .join(' ')}
+          )}
         >
           {alertLink && !alertTitle ? (
-            <a href={alertLink} className="alert-link">
+            <a href={alertLink} className={cx(styles, 'alert-link')}>
               {alertPrimary}
             </a>
           ) : (
@@ -185,7 +182,7 @@ export function Alert({
         <a
           href="#"
           role="button"
-          className="close"
+          className={cx(styles, 'close')}
           onClick={handleDismiss}
           aria-label="Close"
         >
