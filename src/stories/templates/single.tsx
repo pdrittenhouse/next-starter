@@ -55,13 +55,15 @@ interface SingleTemplateProps {
     commentStatus?: string;
     editorBlocks?: EditorBlock[];
   };
+  /** Per-post container override — when true, blocks self-supply .container divs. */
+  removeContentContainerPerPost?: boolean;
 }
 
 /**
  * Single post/CPT template.
  * Mirrors: templates/pages/single.twig
  */
-export async function SingleTemplate({ node }: SingleTemplateProps) {
+export async function SingleTemplate({ node, removeContentContainerPerPost }: SingleTemplateProps) {
   const postType = node.contentTypeName ?? node.__typename?.toLowerCase() ?? 'post';
   const author = node.author?.node;
   const formattedDate = node.date
@@ -108,7 +110,7 @@ export async function SingleTemplate({ node }: SingleTemplateProps) {
                 <div className="article-content--column">
                   <div className="article-body">
                     {node.editorBlocks?.length
-                      ? <BlockRenderer blocks={buildBlockTree(node.editorBlocks)} />
+                      ? <BlockRenderer blocks={buildBlockTree(node.editorBlocks)} context={removeContentContainerPerPost ? { removeContentContainerPerPost } : undefined} />
                       : <div dangerouslySetInnerHTML={{ __html: node.content ?? '' }} />
                     }
                   </div>

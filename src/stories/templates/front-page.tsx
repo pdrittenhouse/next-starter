@@ -10,6 +10,8 @@ interface FrontPageTemplateProps {
     contentWrapperStyle?: string;
     editorBlocks?: EditorBlock[];
   };
+  /** Per-post container override — when true, blocks self-supply .container divs. */
+  removeContentContainerPerPost?: boolean;
 }
 
 /**
@@ -19,7 +21,7 @@ interface FrontPageTemplateProps {
  * Used when Reading Settings → "Your homepage displays" is set to "A static page".
  * For the blog posts index (showOnFront='posts'), see home.tsx (HomeTemplate).
  */
-export async function FrontPageTemplate({ node }: FrontPageTemplateProps) {
+export async function FrontPageTemplate({ node, removeContentContainerPerPost }: FrontPageTemplateProps) {
   const wrapperStyle = parseCssStyle(node.contentWrapperStyle);
   const blocks = node.editorBlocks?.length ? buildBlockTree(node.editorBlocks) : null;
 
@@ -31,7 +33,7 @@ export async function FrontPageTemplate({ node }: FrontPageTemplateProps) {
             <div className="homepage-content--row">
               <div className="homepage-content--column">
                 {blocks
-                  ? <BlockRenderer blocks={blocks} />
+                  ? <BlockRenderer blocks={blocks} context={removeContentContainerPerPost ? { removeContentContainerPerPost } : undefined} />
                   : node.content && (
                     <div
                       className="homepage-content"

@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './section.module.scss';
+import { cx } from '@/lib/cx';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 
@@ -117,9 +118,7 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
   const textClass =
     data.color === 'palette' && data.theme_color ? `text-${data.theme_color}` : null;
 
-  const sectionClasses = ['block-section', layoutMod, bgClass, textClass, attrs.className]
-    .filter(Boolean)
-    .join(' ');
+  const sectionClasses = cx(styles, 'block-section', layoutMod, bgClass, textClass, attrs.className);
 
   const sectionStyle: CSSProperties = {
     ...acfStyle,
@@ -130,20 +129,24 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
   const innerBlocks: EditorBlock[] = block.innerBlocks ?? [];
   const fallbackHtml = block.renderedHtml ?? '';
 
-  // The container div is only rendered when "Disable Content Containers" is enabled
-  // globally (options.remove_content_containers in WP). When that option is off the
-  // body carries `include-content-containers` and CSS handles the container styling.
-  const { removeContentContainers } = await getContentWrapperOptions();
-  const showContainer = data.container === true && removeContentContainers === true;
+  // The container div renders when either the global "Disable Content Containers" option
+  // is on, OR the per-post remove_content_container field overrides it for this page.
+  // Mirrors framework: fields.container == true AND (options.remove_content_containers
+  // OR block_post.custom['remove_content_container'])
+  const { removeContentContainers: globalRCC } = await getContentWrapperOptions();
+  const perPostRCC = (block as any)._context?.removeContentContainerPerPost === true;
+  const removeContentContainers = (globalRCC === true) || perPostRCC;
+  const showContainer = data.container === true && removeContentContainers;
 
   // When this section adds a container, render inner blocks directly with
   // parentContainerSet context so nested RowBlocks skip their own container.
+  // Also preserve perPostRCC so deeply-nested blocks still self-supply containers.
   // Dynamic import breaks the SectionBlock → BlockRenderer → BLOCK_MAP →
   // SectionBlock circular dependency at module-init time.
   let innerContent: ReactNode;
   if (showContainer && innerBlocks.length > 0) {
     const { BlockRenderer } = await import('@/stories/templates/partials/block-renderer');
-    innerContent = <BlockRenderer blocks={innerBlocks} context={{ parentContainerSet: true }} />;
+    innerContent = <BlockRenderer blocks={innerBlocks} context={{ parentContainerSet: true, removeContentContainerPerPost: perPostRCC }} />;
   } else {
     innerContent = children ?? (fallbackHtml ? <div dangerouslySetInnerHTML={{ __html: fallbackHtml }} /> : null);
   }
@@ -167,11 +170,11 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
     >
       {data.include_overlay && (
         <span
-          className={['overlay', overlayBgClass, overlayGradientClass].filter(Boolean).join(' ')}
+          className={cx(styles, 'overlay', overlayBgClass, overlayGradientClass)}
           style={Object.keys(overlayStyle).length > 0 ? overlayStyle : undefined}
         />
       )}
-      <div className="block-section--wrapper">
+      <div className={cx(styles, 'block-section--wrapper')}>
         {containerClasses ? (
           <div className={containerClasses}>
             {innerContent}

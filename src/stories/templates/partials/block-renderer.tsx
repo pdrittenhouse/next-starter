@@ -5,6 +5,9 @@ export type { EditorBlock };
 
 export interface BlockRenderContext {
   parentContainerSet?: boolean;
+  /** Per-post/page override forwarded from the page template — activates block-level
+   *  container rendering even when the global "Disable Content Containers" is off. */
+  removeContentContainerPerPost?: boolean;
 }
 
 interface BlockRendererProps {
@@ -32,8 +35,13 @@ export function BlockRenderer({ blocks, context }: BlockRendererProps) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const Comp = Component as any;
           const blockWithCtx = context ? { ...block, _context: context } : block;
+          // Preserve removeContentContainerPerPost for nested blocks (parentContainerSet
+          // is block-specific and must not cascade beyond where it was set).
+          const childContext: BlockRenderContext | undefined = context?.removeContentContainerPerPost
+            ? { removeContentContainerPerPost: context.removeContentContainerPerPost }
+            : undefined;
           const children = innerBlocks.length > 0
-            ? <BlockRenderer blocks={innerBlocks} />
+            ? <BlockRenderer blocks={innerBlocks} context={childContext} />
             : undefined;
           return <Comp key={block.clientId} block={blockWithCtx}>{children}</Comp>;
         }

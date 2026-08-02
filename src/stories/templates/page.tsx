@@ -59,6 +59,9 @@ interface PageTemplateProps {
     } | null;
     editorBlocks?: EditorBlock[];
   };
+  /** Per-post container override — when true, blocks self-supply .container divs
+   *  even if global "Disable Content Containers" is off. */
+  removeContentContainerPerPost?: boolean;
 }
 
 /**
@@ -91,7 +94,7 @@ function getLayoutVariant(templateName?: string): string {
  * - Centered Logo Header Layout → centered header
  * - Header Side Layout → side-positioned header
  */
-export function PageTemplate({ node }: PageTemplateProps) {
+export function PageTemplate({ node, removeContentContainerPerPost }: PageTemplateProps) {
   const templateName = node.template?.templateName;
   const layoutVariant = getLayoutVariant(templateName);
   const mainClasses = `${node.mainClasses ?? 'content-wrapper'} ${layoutVariant}`.trim();
@@ -113,7 +116,7 @@ export function PageTemplate({ node }: PageTemplateProps) {
                 <div className="article-content--column">
                   <div className="article-body">
                     {node.editorBlocks?.length
-                      ? <BlockRenderer blocks={buildBlockTree(node.editorBlocks)} />
+                      ? <BlockRenderer blocks={buildBlockTree(node.editorBlocks)} context={removeContentContainerPerPost ? { removeContentContainerPerPost } : undefined} />
                       : <div dangerouslySetInnerHTML={{ __html: node.content ?? '' }} />
                     }
                   </div>

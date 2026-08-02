@@ -176,10 +176,12 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     if (!previewNode) {
       notFound();
     }
+    const previewPerPostRCC = previewNode?.settingsPageOptions?.removeContentContainer === true ||
+                              previewNode?.settingsPostOptions?.removeContentContainer === true;
     const previewTemplate = resolveTemplate(previewNode, false, false);
-    if (previewTemplate === 'single') return <SingleTemplate node={previewNode} />;
+    if (previewTemplate === 'single') return <SingleTemplate node={previewNode} removeContentContainerPerPost={previewPerPostRCC} />;
     if (previewTemplate === 'archive') return <ArchiveTemplate node={previewNode} />;
-    return <PageTemplate node={previewNode} />;
+    return <PageTemplate node={previewNode} removeContentContainerPerPost={previewPerPostRCC} />;
   }
 
   // Date-based archives — detect /YYYY/, /YYYY/MM/, /YYYY/MM/DD/ patterns
@@ -245,6 +247,10 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
   }
 
   const template = resolveTemplate(node, isHomepage, false);
+
+  // Per-post container override — mirrors WP TemplateHelpers remove_content_container.
+  const perPostRCC = node?.settingsPageOptions?.removeContentContainer === true ||
+                     node?.settingsPostOptions?.removeContentContainer === true;
 
   // Attempt to resolve a manifest tree for this template so TemplateRenderer
   // can drive the layout. Falls back to the static template components when
@@ -337,24 +343,25 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
         editorBlocks={buildBlockTree(node.editorBlocks ?? [])}
         content={node.content ?? undefined}
         sidebarSlug={node.sidebarSlug ?? null}
+        removeContentContainerPerPost={perPostRCC}
       />
     );
   }
 
   switch (template) {
     case 'front-page':
-      return <FrontPageTemplate node={node} />;
+      return <FrontPageTemplate node={node} removeContentContainerPerPost={perPostRCC} />;
     case 'single':
-      return <SingleTemplate node={node} />;
+      return <SingleTemplate node={node} removeContentContainerPerPost={perPostRCC} />;
     case 'page':
-      return <PageTemplate node={node} />;
+      return <PageTemplate node={node} removeContentContainerPerPost={perPostRCC} />;
     case 'archive':
       return <ArchiveTemplate node={node} />;
     case 'author':
       return <AuthorTemplate slug={node.slug} name={node.name} />;
     default:
       // Fallback: render as page
-      return <PageTemplate node={node} />;
+      return <PageTemplate node={node} removeContentContainerPerPost={perPostRCC} />;
   }
 }
 

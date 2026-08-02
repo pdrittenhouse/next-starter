@@ -13,6 +13,8 @@ interface TemplateRendererProps {
   content?: string | null;
   /** Resolved widget-area slug for the sidebar slot (e.g. 'primary_sidebar'). */
   sidebarSlug?: string | null;
+  /** Per-post container override forwarded to BlockRenderer. */
+  removeContentContainerPerPost?: boolean;
 }
 
 // Walks the manifest tree and renders registered PATTERN_MAP components.
@@ -20,14 +22,14 @@ interface TemplateRendererProps {
 // Twig-only concerns (html_head, foot, etc.) and are skipped.
 // Unregistered patterns use a generic HTML shell derived from the PHP-rendered
 // outer element (element + className + id) so their children still recurse.
-export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug }: TemplateRendererProps) {
+export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug, removeContentContainerPerPost }: TemplateRendererProps) {
   return (
     <>
       {tree.map((node, i) => {
         if (node.type === 'slot') {
           if (node.name === 'content') {
             if (editorBlocks.length > 0) {
-              return <BlockRenderer key="content" blocks={editorBlocks} />;
+              return <BlockRenderer key="content" blocks={editorBlocks} context={removeContentContainerPerPost ? { removeContentContainerPerPost } : undefined} />;
             }
             if (content) {
               return <div key="content" dangerouslySetInnerHTML={{ __html: content }} />;
@@ -43,7 +45,7 @@ export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug
         if (node.type === 'element') {
           const Tag = (node.element ?? 'div') as ElementType;
           const childContent = node.children?.length ? (
-            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} sidebarSlug={sidebarSlug} />
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} sidebarSlug={sidebarSlug} removeContentContainerPerPost={removeContentContainerPerPost} />
           ) : null;
           return (
             <Tag
