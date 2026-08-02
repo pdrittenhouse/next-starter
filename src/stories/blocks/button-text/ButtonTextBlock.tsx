@@ -15,9 +15,9 @@ export async function ButtonTextBlock({ block }: ButtonTextBlockProps) {
   const data: ButtonTextBlockData = attrs?.data ?? {};
 
   if (data.button_text) {
-    return <span>{data.button_text}</span>;
+    return <span className="button--label">{data.button_text}</span>;
   }
 
   if (!block.renderedHtml) return null;
-  return <span dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />;
+  return <span className="button--label" dangerouslySetInnerHTML={{ __html: block.renderedHtml }} />;
 }
