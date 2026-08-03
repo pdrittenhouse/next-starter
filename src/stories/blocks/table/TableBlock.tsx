@@ -84,8 +84,8 @@ interface TableBlockData {
   width?: {
     width?: {
       width?: { value?: string; unit?: string };
-      min_width?: string;
-      max_width?: string;
+      min_width?: number | null;
+      max_width?: number | null;
     };
   };
 }
