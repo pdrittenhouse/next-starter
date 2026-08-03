@@ -174,6 +174,13 @@ console.log(`[sync-tokens] Fetching ${url}`);
 let tokens;
 try {
   const res = await fetch(url);
+  if (res.status === 404) {
+    // WP theme hasn't been built yet — scssVariables.json is missing on the server.
+    // Treat the same as TIMBERLAND_API_URL not set: write placeholders and continue.
+    ensurePlaceholder();
+    console.warn(`[sync-tokens] HTTP 404 — WP theme not built yet (run \`npm run build\` in the WP theme). Using placeholders.`);
+    process.exit(0);
+  }
   if (!res.ok) {
     console.error(`[sync-tokens] HTTP ${res.status} ${res.statusText} — aborting.`);
     process.exit(1);
