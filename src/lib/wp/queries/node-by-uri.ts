@@ -108,6 +108,8 @@ export const GET_NODE_BY_URI = gql`
         mainClasses
         contentWrapperStyle
         sidebarSlug
+        sidebarCol
+        sidebarBp
         settingsPostOptions {
           headerPosition
           hidePageHeader
@@ -217,6 +219,8 @@ export const GET_NODE_BY_URI = gql`
         mainClasses
         contentWrapperStyle
         sidebarSlug
+        sidebarCol
+        sidebarBp
         settingsPageOptions {
           headerPosition
           hidePageHeader
