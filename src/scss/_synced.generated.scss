@@ -20,249 +20,30 @@ $link-hover-color: null !default;
 $btn-border-radius: null !default;
 $body-bg: null !default;
 $body-color: null !default;
-$font-size-base: 1rem !default;
-$font-size-lg: 1.25rem !default;
-$font-size-sm: 0.875rem !default;
+$font-size-base: null !default;
+$font-size-lg: null !default;
+$font-size-sm: null !default;
 
 // --- Font stack tokens ---
-$font-stack-serif: Georgia, Times, "Times New Roman", serif !default;
-$font-stack-sans-serif: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$font-stack-base: Georgia, Times, "Times New Roman", serif !default;
-$font-stack-headings: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
-$font-stack-monospace: Courier, monospace !default;
-$font-stack-code: Courier, monospace !default;
-$font-stack-buttons: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$font-stack-serif: null !default;
+$font-stack-sans-serif: null !default;
+$font-stack-base: null !default;
+$font-stack-headings: null !default;
+$font-stack-monospace: null !default;
+$font-stack-code: null !default;
+$font-stack-buttons: null !default;
 
 // --- Font weight tokens ---
-$font-weight-light: 300 !default;
-$font-weight-normal: 400 !default;
-$font-weight-bold: 700 !default;
+$font-weight-light: null !default;
+$font-weight-normal: null !default;
+$font-weight-bold: null !default;
 
 // --- Synced map tokens ---
-$grid-breakpoints: (
-  "xs": 0,
-  "sm": 24.375em,
-  "md": 33.75em,
-  "lg": 48em,
-  "xl": 62em,
-  "xxl": 64em,
-  "xxxl": 87.5em,
-  "xxxxl": 106.75em,
-  "xxxxxl": 143.75em,
-) !default;
-$container-max-widths: (
-  "sm": 23.125rem,
-  "md": 36rem,
-  "lg": 46.25rem,
-  "xl": 60rem,
-  "xxl": 73.25rem,
-  "xxxl": 90rem,
-  "xxxxl": 111.25rem,
-  "xxxxxl": 150rem,
-) !default;
-$spacers: (
-  0: 0,
-  1: 0.125rem,
-  2: 0.25rem,
-  3: 0.5rem,
-  4: 0.625rem,
-  5: 0.75rem,
-  6: 1rem,
-  7: 1.25rem,
-  8: 1.5rem,
-  9: 1.75rem,
-  10: 2rem,
-  11: 2.25rem,
-  12: 2.5rem,
-  13: 2.75rem,
-  14: 3rem,
-  15: 4rem,
-  16: 5rem,
-  17: 6rem,
-  18: 7rem,
-  19: 8rem,
-  20: 9rem,
-  21: 10rem,
-  22: 11rem,
-  23: 12rem,
-  24: 18rem,
-  25: 20rem,
-  26: 24rem,
-  27: 26rem,
-  28: 28rem,
-  29: 30rem,
-  30: 32rem,
-  31: 34rem,
-  32: 36rem,
-  33: 38rem,
-  34: 40rem,
-  35: 50rem,
-  36: 60rem,
-  37: 70rem,
-  38: 80rem,
-  39: 90rem,
-  40: 100rem,
-) !default;
-$theme-colors: (
-  "primary": rgb(0, 40, 104),
-  "secondary": rgb(192, 32, 51),
-  "tertiary": rgb(205, 94, 40),
-  "quaternary": rgb(253, 215, 0),
-  "quinary": rgb(14, 30, 64),
-  "senary": rgb(96, 96, 96),
-  "septenary": rgb(112, 112, 112),
-  "octonary": rgb(0, 40, 104),
-  "nonary": rgb(192, 32, 51),
-  "denary": rgb(14, 30, 64),
-  "success": rgb(144, 238, 144),
-  "info": rgb(255, 255, 0),
-  "warning": rgb(255, 192, 203),
-  "danger": rgb(255, 0, 0),
-  "light": rgb(137, 137, 137),
-  "dark": rgb(128, 128, 128),
-  "white": rgb(255, 255, 255),
-  "black": rgb(0, 0, 0),
-  "gray": rgb(129, 129, 129),
-  "gray-dark": rgb(128, 128, 128),
-  "gray-light": rgb(137, 137, 137),
-  "gray-ultralight": rgb(236, 236, 236),
-  "san-marino": rgb(66, 103, 178),
-  "azure-radiance": rgb(0, 120, 255),
-  "bright-turquoise": rgb(0, 198, 255),
-  "dodger-blue": rgb(29, 161, 242),
-  "woodsmoke": rgb(20, 23, 26),
-  "pale-sky": rgb(101, 119, 134),
-  "cadet-blue": rgb(170, 184, 194),
-  "mystic": rgb(225, 232, 237),
-  "catskill-white": rgb(245, 248, 250),
-  "royal-blue": rgb(64, 93, 230),
-  "royal-blue-dark": rgb(88, 81, 219),
-  "royal-purple": rgb(131, 58, 180),
-  "medium-red-violet": rgb(193, 53, 132),
-  "cerise-red": rgb(225, 48, 108),
-  "torch-red": rgb(253, 29, 29),
-  "flamingo": rgb(245, 96, 64),
-  "crusta": rgb(247, 119, 55),
-  "yellow-orange": rgb(252, 175, 69),
-  "salomie": rgb(255, 220, 128),
-  "red": rgb(255, 0, 0),
-  "mine-shaft": rgb(40, 40, 40),
-  "cerulean-blue": rgb(40, 103, 178),
-  "green-spring": rgb(173, 178, 173),
-  "iron": rgb(204, 208, 212),
-  "midnight-blue": rgb(0, 40, 104),
-  "blue-zodiac": rgb(14, 30, 64),
-  "cardinal": rgb(192, 32, 51),
-  "piper": rgb(205, 94, 40),
-  "school-bus-yellow": rgb(253, 215, 0),
-  "scorpion": rgb(96, 96, 96),
-  "dove-gray": rgb(112, 112, 112),
-) !default;
-$c-palette: (
-  "white": (
-    "base": rgb(255, 255, 255),
-  ),
-  "black": (
-    "base": rgb(0, 0, 0),
-  ),
-  "gray": (
-    "base": rgb(129, 129, 129),
-    "dark": rgb(128, 128, 128),
-    "light": rgb(137, 137, 137),
-    "ultralight": rgb(236, 236, 236),
-  ),
-  "san-marino": (
-    "base": rgb(66, 103, 178),
-  ),
-  "azure-radiance": (
-    "base": rgb(0, 120, 255),
-  ),
-  "bright-turquoise": (
-    "base": rgb(0, 198, 255),
-  ),
-  "dodger-blue": (
-    "base": rgb(29, 161, 242),
-  ),
-  "woodsmoke": (
-    "base": rgb(20, 23, 26),
-  ),
-  "pale-sky": (
-    "base": rgb(101, 119, 134),
-  ),
-  "cadet-blue": (
-    "base": rgb(170, 184, 194),
-  ),
-  "mystic": (
-    "base": rgb(225, 232, 237),
-  ),
-  "catskill-white": (
-    "base": rgb(245, 248, 250),
-  ),
-  "royal-blue": (
-    "base": rgb(64, 93, 230),
-    "dark": rgb(88, 81, 219),
-  ),
-  "royal-purple": (
-    "base": rgb(131, 58, 180),
-  ),
-  "medium-red-violet": (
-    "base": rgb(193, 53, 132),
-  ),
-  "cerise-red": (
-    "base": rgb(225, 48, 108),
-  ),
-  "torch-red": (
-    "base": rgb(253, 29, 29),
-  ),
-  "flamingo": (
-    "base": rgb(245, 96, 64),
-  ),
-  "crusta": (
-    "base": rgb(247, 119, 55),
-  ),
-  "yellow-orange": (
-    "base": rgb(252, 175, 69),
-  ),
-  "salomie": (
-    "base": rgb(255, 220, 128),
-  ),
-  "red": (
-    "base": rgb(255, 0, 0),
-  ),
-  "mine-shaft": (
-    "base": rgb(40, 40, 40),
-  ),
-  "cerulean-blue": (
-    "base": rgb(40, 103, 178),
-  ),
-  "green-spring": (
-    "base": rgb(173, 178, 173),
-  ),
-  "iron": (
-    "base": rgb(204, 208, 212),
-  ),
-  "midnight-blue": (
-    "base": rgb(0, 40, 104),
-  ),
-  "blue-zodiac": (
-    "base": rgb(14, 30, 64),
-  ),
-  "cardinal": (
-    "base": rgb(192, 32, 51),
-  ),
-  "piper": (
-    "base": rgb(205, 94, 40),
-  ),
-  "school-bus-yellow": (
-    "base": rgb(253, 215, 0),
-  ),
-  "scorpion": (
-    "base": rgb(96, 96, 96),
-  ),
-  "dove-gray": (
-    "base": rgb(112, 112, 112),
-  ),
-) !default;
+$grid-breakpoints: null !default;
+$container-max-widths: null !default;
+$spacers: null !default;
+$theme-colors: null !default;
+$c-palette: null !default;
 $z-indexes: null !default;
 
 // --- Transition duration tokens ---

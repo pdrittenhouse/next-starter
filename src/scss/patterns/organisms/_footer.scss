@@ -118,7 +118,9 @@
   .include-footer-containers.max-width-footer-container & {
 
     .site-footer--container {
-      @include make-container-max-widths;
+      @include media-breakpoint-up(lg) {
+        @include make-container-max-widths;
+      }
     }
   }
 
