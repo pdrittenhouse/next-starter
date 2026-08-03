@@ -56,9 +56,9 @@ interface VideoBlockData {
   cc_default?: boolean;
   video_width?: {
     width?: {
-      width?: { value?: string | number; unit?: string };
-      min_width?: string | number;
-      max_width?: string | number;
+      width?: { value?: string; unit?: string };
+      min_width?: number | null;
+      max_width?: number | null;
     };
   };
   poster?: {
