@@ -1,1 +1,23 @@
-@use "variables" as *;
+.sidebar {
+  overflow: auto;
+
+  .sidebar-content {}
+
+  .dynamic-sidebar-header_alerts_widget_area {}
+
+  .dynamic-sidebar-header_widget_area {}
+
+  .dynamic-sidebar-primary_sidebar {}
+
+  .dynamic-sidebar-secondary_sidebar {}
+
+  .dynamic-sidebar-tertiary_sidebar {}
+
+  .dynamic-sidebar-footer_widget_area {}
+
+  .dynamic-sidebar-post_footer_widget_area {}
+
+  img {
+    width: 100%;
+  }
+}

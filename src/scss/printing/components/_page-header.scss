@@ -1,1 +1,40 @@
 @use "variables" as *;
+
+.page-header {
+
+  &.include-content-containers {
+
+    .page-header--container {
+      @include make-container;
+    }
+
+    .page-header--row {
+      @include make-row;
+    }
+
+    .page-header--content {
+      @include make-col-ready;
+      @include make-col(12);
+    }
+  }
+
+  &.include-content-containers.max-width-content-container {
+
+    .page-header--container {
+      @include make-container-max-widths;
+    }
+  }
+
+  &.include-content-containers.max-width-fluid-containers {
+
+    .page-header--container {
+      max-width: map-get($container-max-widths, nth(map-keys($container-max-widths), -1));
+    }
+  }
+
+  .article-image {}
+
+  .article-title {
+    margin: 0;
+  }
+}
