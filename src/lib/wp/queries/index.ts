@@ -50,7 +50,7 @@ export { GET_ALL_PLUGINS } from './plugins';
 export { GET_REGISTERED_SCRIPTS, GET_REGISTERED_STYLESHEETS, GET_THEME_ENQUEUED_ASSETS } from './enqueued-assets';
 
 // Widgets & Patterns
-export { GET_WIDGET_AREAS, GET_WIDGET_AREA_BLOCKS } from './widgets';
+export { GET_WIDGET_AREAS, GET_WIDGET_AREA_BLOCKS, GET_WIDGET_AREA, GET_CUSTOM_WIDGET_AREAS } from './widgets';
 export { GET_BLOCK_PATTERNS } from './patterns';
 
 // Introspection
