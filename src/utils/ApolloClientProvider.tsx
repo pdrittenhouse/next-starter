@@ -28,7 +28,15 @@ const authLink = setContext((_request, previousContext) => {
 
 const client = new ApolloClient({
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+        typePolicies: {
+            Query: {
+                fields: {
+                    generalSettings: { merge: true },
+                },
+            },
+        },
+    }),
     devtools: { enabled: process.env.NODE_ENV === 'development' },
 });
 
