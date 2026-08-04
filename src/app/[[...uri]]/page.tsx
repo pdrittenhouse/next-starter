@@ -286,37 +286,78 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
 
       // front-page.twig wraps its content slot in homepage-specific structural divs.
       // The manifest tree doesn't include those wrappers, so we inject them here
-      // to match the WP output: homepage-content-wrapper > container > row > column.
+      // to match the WP output. Per-template structures mirror the Twig templates:
+      //   front-page → homepage-content-wrapper > container > row > column
+      //   page/single → article.post-type-{type} > section.article-content >
+      //                 article-content--container > row > column > article-body
       // The sidebar (when configured) is injected as a Bootstrap column sibling
       // inside the row — the manifest never includes a sidebar slot, so we add it here.
       const contentSlotNodes = innerSlots.filter(n => n.type === 'slot' && n.name === 'content');
-      const wrappedContent: TimberlandTreeNode[] = template === 'front-page'
-        ? [{
+      let wrappedContent: TimberlandTreeNode[];
+      if (template === 'front-page') {
+        wrappedContent = [{
+          type: 'element',
+          element: 'section',
+          className: 'homepage-content-wrapper',
+          children: [{
             type: 'element',
-            element: 'section',
-            className: 'homepage-content-wrapper',
+            element: 'div',
+            className: 'homepage-content--container',
             children: [{
               type: 'element',
               element: 'div',
-              className: 'homepage-content--container',
+              className: 'homepage-content--row',
+              children: [
+                {
+                  type: 'element',
+                  element: 'div',
+                  className: 'homepage-content--column',
+                  children: contentSlotNodes,
+                },
+                ...(node.sidebarSlug ? [{ type: 'slot' as const, name: 'sidebar' }] : []),
+              ],
+            }],
+          }],
+        }];
+      } else if (template === 'page' || template === 'single') {
+        const postTypeClass = `post-type-${node.contentTypeName ?? (template === 'page' ? 'page' : 'post')}`;
+        wrappedContent = [{
+          type: 'element',
+          element: 'article',
+          className: postTypeClass,
+          children: [{
+            type: 'element',
+            element: 'section',
+            className: 'article-content',
+            children: [{
+              type: 'element',
+              element: 'div',
+              className: 'article-content--container',
               children: [{
                 type: 'element',
                 element: 'div',
-                className: 'homepage-content--row',
+                className: 'article-content--row',
                 children: [
                   {
                     type: 'element',
                     element: 'div',
-                    className: 'homepage-content--column',
-                    children: contentSlotNodes,
+                    className: 'article-content--column',
+                    children: [{
+                      type: 'element',
+                      element: 'div',
+                      className: 'article-body',
+                      children: contentSlotNodes,
+                    }],
                   },
-                  // Sidebar column — rendered by TemplateRenderer as SidebarPattern.
                   ...(node.sidebarSlug ? [{ type: 'slot' as const, name: 'sidebar' }] : []),
                 ],
               }],
             }],
-          }]
-        : contentSlotNodes;
+          }],
+        }];
+      } else {
+        wrappedContent = contentSlotNodes;
+      }
 
       const mainChildren: TimberlandTreeNode[] = [
         {
