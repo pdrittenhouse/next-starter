@@ -18,6 +18,8 @@ interface PageTemplateProps {
     mainClasses?: string;
     contentWrapperStyle?: string;
     sidebarSlug?: string | null;
+    sidebarCol?: number | null;
+    sidebarBp?: string | null;
     template?: {
       templateName?: string;
     } | null;
@@ -121,13 +123,18 @@ export function PageTemplate({ node, removeContentContainerPerPost }: PageTempla
                     }
                   </div>
                 </div>
+                {node.sidebarSlug && (
+                  <SidebarPattern
+                    slug={node.sidebarSlug}
+                    className={`col-${node.sidebarBp ?? 'lg'}-${node.sidebarCol ?? 3}`}
+                  />
+                )}
               </div>
             </div>
           </section>
         )}
       </article>
       </div>
-      {node.sidebarSlug && <SidebarPattern slug={node.sidebarSlug} />}
     </main>
   );
 }

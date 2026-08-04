@@ -25,6 +25,8 @@ interface SingleTemplateProps {
     mainClasses?: string;
     contentWrapperStyle?: string;
     sidebarSlug?: string | null;
+    sidebarCol?: number | null;
+    sidebarBp?: string | null;
     author?: {
       node: {
         id: string;
@@ -115,6 +117,12 @@ export async function SingleTemplate({ node, removeContentContainerPerPost }: Si
                     }
                   </div>
                 </div>
+                {node.sidebarSlug && (
+                  <SidebarPattern
+                    slug={node.sidebarSlug}
+                    className={`col-${node.sidebarBp ?? 'lg'}-${node.sidebarCol ?? 3}`}
+                  />
+                )}
               </div>
             </div>
           </section>
@@ -221,7 +229,6 @@ export async function SingleTemplate({ node, removeContentContainerPerPost }: Si
         />
       </article>
       </div>
-      {node.sidebarSlug && <SidebarPattern slug={node.sidebarSlug} />}
     </main>
   );
 }

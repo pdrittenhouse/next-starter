@@ -1,1 +1,46 @@
 @use "variables" as *;
+
+.post-type-page {
+
+  .include-content-containers & {
+
+    .article-content--container {
+      @include make-container;
+    }
+
+    .article-content--row {
+      @include make-row;
+    }
+
+    .article-content--column {
+      @include make-col-ready;
+      @include make-col(12);
+    }
+  }
+
+  @each $name, $width in $grid-breakpoints {
+    .include-content-containers.navbar-bp-#{$name} .sidebar-active & {
+
+      .article-content--column {
+
+        @include media-breakpoint-up($name) {
+          @include make-col;
+        }
+      }
+    }
+  }
+
+  .include-content-containers.max-width-content-container & {
+
+    .article-content--container {
+      @include make-container-max-widths;
+    }
+  }
+
+  .include-content-containers.max-width-fluid-containers & {
+
+    .article-content--container {
+      max-width: map-get($container-max-widths, nth(map-keys($container-max-widths), -1));
+    }
+  }
+}
