@@ -275,7 +275,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       : contentIdx;
 
     const sidebarColClass = node.sidebarSlug
-      ? `col-${node.sidebarBp ?? 'lg'}-${node.sidebarCol ?? 3}`
+      ? `col col-${node.sidebarBp ?? 'lg'}-${node.sidebarCol ?? 3}`
       : null;
 
     let structuredTree: TimberlandTreeNode[];
