@@ -13,6 +13,8 @@ interface TemplateRendererProps {
   content?: string | null;
   /** Resolved widget-area slug for the sidebar slot (e.g. 'primary_sidebar'). */
   sidebarSlug?: string | null;
+  /** Bootstrap column class passed to SidebarPattern, e.g. 'col-lg-3'. */
+  sidebarColClass?: string;
   /** Per-post container override forwarded to BlockRenderer. */
   removeContentContainerPerPost?: boolean;
 }
@@ -22,7 +24,7 @@ interface TemplateRendererProps {
 // Twig-only concerns (html_head, foot, etc.) and are skipped.
 // Unregistered patterns use a generic HTML shell derived from the PHP-rendered
 // outer element (element + className + id) so their children still recurse.
-export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug, removeContentContainerPerPost }: TemplateRendererProps) {
+export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug, sidebarColClass, removeContentContainerPerPost }: TemplateRendererProps) {
   return (
     <>
       {tree.map((node, i) => {
@@ -37,7 +39,7 @@ export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug
             return null;
           }
           if (node.name === 'sidebar' && sidebarSlug) {
-            return <SidebarPattern key="sidebar" slug={sidebarSlug} />;
+            return <SidebarPattern key="sidebar" slug={sidebarSlug} className={sidebarColClass} />;
           }
           return null;
         }
@@ -45,7 +47,7 @@ export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug
         if (node.type === 'element') {
           const Tag = (node.element ?? 'div') as ElementType;
           const childContent = node.children?.length ? (
-            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} sidebarSlug={sidebarSlug} removeContentContainerPerPost={removeContentContainerPerPost} />
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} sidebarSlug={sidebarSlug} sidebarColClass={sidebarColClass} removeContentContainerPerPost={removeContentContainerPerPost} />
           ) : null;
           return (
             <Tag
@@ -61,7 +63,7 @@ export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug
 
         if (node.type === 'pattern') {
           const childContent = node.children?.length ? (
-            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} sidebarSlug={sidebarSlug} />
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} sidebarSlug={sidebarSlug} sidebarColClass={sidebarColClass} />
           ) : null;
 
           const Component = PATTERN_MAP[node.slug ?? ''];

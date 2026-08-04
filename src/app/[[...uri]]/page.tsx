@@ -274,6 +274,10 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       ? sidebarIdx
       : contentIdx;
 
+    const sidebarColClass = node.sidebarSlug
+      ? `col-${node.sidebarBp ?? 'lg'}-${node.sidebarCol ?? 3}`
+      : null;
+
     let structuredTree: TimberlandTreeNode[];
     if (contentIdx !== -1) {
       const preMain = tree.slice(0, contentIdx);
@@ -283,6 +287,8 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       // front-page.twig wraps its content slot in homepage-specific structural divs.
       // The manifest tree doesn't include those wrappers, so we inject them here
       // to match the WP output: homepage-content-wrapper > container > row > column.
+      // The sidebar (when configured) is injected as a Bootstrap column sibling
+      // inside the row — the manifest never includes a sidebar slot, so we add it here.
       const contentSlotNodes = innerSlots.filter(n => n.type === 'slot' && n.name === 'content');
       const wrappedContent: TimberlandTreeNode[] = template === 'front-page'
         ? [{
@@ -297,12 +303,16 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
                 type: 'element',
                 element: 'div',
                 className: 'homepage-content--row',
-                children: [{
-                  type: 'element',
-                  element: 'div',
-                  className: 'homepage-content--column',
-                  children: contentSlotNodes,
-                }],
+                children: [
+                  {
+                    type: 'element',
+                    element: 'div',
+                    className: 'homepage-content--column',
+                    children: contentSlotNodes,
+                  },
+                  // Sidebar column — rendered by TemplateRenderer as SidebarPattern.
+                  ...(node.sidebarSlug ? [{ type: 'slot' as const, name: 'sidebar' }] : []),
+                ],
               }],
             }],
           }]
@@ -316,8 +326,6 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
           style: node.contentWrapperStyle ?? null,
           children: wrappedContent,
         },
-        // sidebar slot is a sibling of the wrapper, still inside <main>
-        ...innerSlots.filter(n => n.type === 'slot' && n.name === 'sidebar'),
       ];
 
       structuredTree = [
@@ -342,6 +350,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
         editorBlocks={buildBlockTree(node.editorBlocks ?? [])}
         content={node.content ?? undefined}
         sidebarSlug={node.sidebarSlug ?? null}
+        sidebarColClass={sidebarColClass ?? undefined}
         removeContentContainerPerPost={perPostRCC}
       />
     );
