@@ -8,14 +8,8 @@ import styles from './SidebarPattern.module.scss';
 import { cx } from '@/lib/cx';
 
 const getWidgetAreaBlocks = cache(async (slug: string) => {
-  console.log('[SidebarPattern] fetching widgetAreaBlocks for slug:', slug);
-  const result = await fetchGraphQL(print(GET_WIDGET_AREA_BLOCKS), { slug }).catch((err) => {
-    console.error('[SidebarPattern] fetch error:', err);
-    return { data: null };
-  });
-  const blocks = (result.data as any)?.widgetAreaBlocks ?? null;
-  console.log('[SidebarPattern] blocks returned:', blocks?.length ?? 0, blocks?.length ? `(first: ${blocks[0]?.name})` : '(empty)');
-  return blocks;
+  const { data } = await fetchGraphQL(print(GET_WIDGET_AREA_BLOCKS), { slug }).catch(() => ({ data: null }));
+  return (data as any)?.widgetAreaBlocks ?? null;
 });
 
 interface SidebarPatternProps {

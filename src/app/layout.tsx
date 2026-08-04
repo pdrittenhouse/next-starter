@@ -128,10 +128,10 @@ export default async function RootLayout({
   const headerOpts = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions;
   const headerPosition: string | null = headerOpts?.headerPosition ?? null;
   const shrinkHeader: boolean = headerOpts?.shrinkHeader ?? false;
-  const navbarBreakpoint: string = headerOpts?.navbarBreakpoint ?? 'lg';
+  const rawBp = headerOpts?.navbarBreakpoint;
+  const navbarBreakpoint: string = (Array.isArray(rawBp) ? rawBp[0] : rawBp) ?? 'lg';
   const removeContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.removeContentContainers === true;
-  console.log('[layout] headerOpts:', JSON.stringify(headerOpts));
-  console.log('[layout] navbarBreakpoint:', navbarBreakpoint, '| removeContentContainers:', removeContentContainers);
+
   const bodyClasses = [
     headerPosition ? `${headerPosition}-header-enabled` : 'static-header-enabled',
     shrinkHeader ? 'shrink-header-enabled' : null,
@@ -143,7 +143,6 @@ export default async function RootLayout({
     'max-width-content-container',
     'max-width-footer-container',
   ].filter(Boolean).join(' ');
-  console.log('[layout] bodyClasses:', bodyClasses);
 
   return (
       <html lang="en">

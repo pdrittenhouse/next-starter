@@ -247,10 +247,6 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
   }
 
   const template = resolveTemplate(node, isHomepage, false);
-  console.log('[page] uri:', uri, '| template:', template, '| __typename:', node?.__typename);
-  console.log('[page] sidebarSlug:', node?.sidebarSlug, '| sidebarBp:', node?.sidebarBp, '| sidebarCol:', node?.sidebarCol);
-  console.log('[page] mainClasses:', node?.mainClasses);
-
   // Per-post container override — mirrors WP TemplateHelpers remove_content_container.
   const perPostRCC = node?.settingsPageOptions?.removeContentContainer === true ||
                      node?.settingsPostOptions?.removeContentContainer === true;
