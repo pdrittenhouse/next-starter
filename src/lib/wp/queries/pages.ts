@@ -400,6 +400,9 @@ export const GET_FRONT_PAGE_BY_ID = gql`
       }
       mainClasses
       contentWrapperStyle
+      sidebarSlug
+      sidebarCol
+      sidebarBp
     }
   }
 `;

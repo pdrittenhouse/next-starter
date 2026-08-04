@@ -66,6 +66,7 @@ export default async function RootLayout({
         settingsHeaderOptions {
           headerPosition
           shrinkHeader
+          navbarBreakpoint
         }
       }
       themeGeneralOptions {
@@ -127,12 +128,14 @@ export default async function RootLayout({
   const headerOpts = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions;
   const headerPosition: string | null = headerOpts?.headerPosition ?? null;
   const shrinkHeader: boolean = headerOpts?.shrinkHeader ?? false;
+  const navbarBreakpoint: string = headerOpts?.navbarBreakpoint ?? 'lg';
   const removeContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.removeContentContainers === true;
   const bodyClasses = [
     headerPosition ? `${headerPosition}-header-enabled` : 'static-header-enabled',
     shrinkHeader ? 'shrink-header-enabled' : null,
     customBackgroundCss ? 'custom-background' : null,
     removeContentContainers !== true ? 'include-content-containers' : null,
+    `navbar-bp-${navbarBreakpoint}`,
     'include-header-containers',
     'include-footer-containers',
     'max-width-content-container',
