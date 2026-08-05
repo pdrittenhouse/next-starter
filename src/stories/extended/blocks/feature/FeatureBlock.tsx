@@ -1,8 +1,127 @@
-// TODO: implement — mirrors acf/feature block in timberland-extended plugin
+import { Feature } from '@/stories/extended/patterns/molecules/Feature';
+import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import styles from './feature.module.scss';
+import { cx } from '@/lib/cx';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
+
+interface FeatureImage {
+  image_type?: 'file' | 'url' | null;
+  image?: {
+    url?: string | null;
+    alt?: string | null;
+    width?: number | null;
+    height?: number | null;
+  } | null;
+  image_url?: string | null;
+}
+
+interface FeatureBlockData extends Pick<AcfBlockStyleData, 'height' | 'padding' | 'margin' | 'border' | 'border_radius' | 'box_shadow'> {
+  heading?: string | null;
+  label?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  text?: string | null;
+  image?: FeatureImage | null;
+  image_right?: boolean;
+  caption?: string | null;
+  caption_position?: 'before' | 'after' | null;
+  vertical?: boolean;
+  vertical_center?: boolean;
+  linked?: boolean;
+  link?: { url?: string | null; target?: string | null } | null;
+  show_button?: boolean;
+  button?: {
+    link?: { title?: string | null; url?: string | null; target?: string | null } | null;
+    style?: string | null;
+    size?: string | null;
+    outline?: boolean;
+  } | null;
+  include_container?: boolean;
+  full_width?: boolean;
+  max_width_fluid_container?: boolean;
+  container_breakpoint?: { breakpoint?: string | null } | null;
+  bg_color?: { bg_color?: string | null; bg_theme_color?: string | null; bg_custom_color?: string | null } | null;
+  text_color?: { color?: string | null; theme_color?: string | null } | null;
+  layout?: { feature_layout?: string | null } | null;
+}
 
 export async function FeatureBlock({ block }: { block: EditorBlock }) {
-  return (
-    <div dangerouslySetInnerHTML={{ __html: block.renderedHtml ?? '' }} />
+  const attrs = parseBlockAttributes(block) as { data?: FeatureBlockData; className?: string };
+  const data: FeatureBlockData = attrs?.data ?? {};
+
+  if (!data.title && !data.heading && !data.text && !data.image) {
+    return <div dangerouslySetInnerHTML={{ __html: block.renderedHtml ?? '' }} />;
+  }
+
+  const { style: blockStyle } = buildAcfBlockStyle(data);
+
+  const bgClass =
+    data.bg_color?.bg_color === 'palette' && data.bg_color.bg_theme_color
+      ? `bg-${data.bg_color.bg_theme_color}`
+      : null;
+  const textClass =
+    data.text_color?.color === 'palette' && data.text_color.theme_color
+      ? `text-${data.text_color.theme_color}`
+      : null;
+  const layoutClass =
+    data.layout?.feature_layout && data.layout.feature_layout !== 'default'
+      ? `feature-${data.layout.feature_layout}`
+      : null;
+  const className = cx(styles, 'block-feature', bgClass, textClass, layoutClass, attrs.className);
+
+  const imageSrc =
+    data.image?.image_type === 'file'
+      ? (data.image?.image?.url ?? undefined)
+      : (data.image?.image_url ?? undefined);
+
+  const imageProps = imageSrc
+    ? {
+        src: imageSrc,
+        alt: data.image?.image?.alt ?? '',
+        width: data.image?.image?.width ?? undefined,
+        height: data.image?.image?.height ?? undefined,
+        loading: 'lazy' as const,
+      }
+    : undefined;
+
+  const buttonProps =
+    data.show_button && (data.button?.link?.title || data.button?.link?.url)
+      ? {
+          label: data.button!.link?.title ?? undefined,
+          href: data.button!.link?.url ?? undefined,
+          target: data.button!.link?.target ?? undefined,
+          variant: (data.button!.style && data.button!.style !== 'custom' ? data.button!.style : undefined) as any,
+          size: data.button!.size as any,
+          outline: data.button!.outline,
+        }
+      : undefined;
+
+  const feature = (
+    <Feature
+      includeContainer={data.include_container}
+      fullWidth={data.full_width}
+      containerBreakpoint={data.container_breakpoint?.breakpoint ?? undefined}
+      maxWidthFluidContainer={data.max_width_fluid_container}
+      vertical={data.vertical}
+      verticalCenter={data.vertical_center}
+      imageRight={data.image_right}
+      image={imageProps}
+      caption={data.caption ?? undefined}
+      captionPosition={data.caption_position ?? undefined}
+      heading={data.heading ?? undefined}
+      label={data.label ?? undefined}
+      title={data.title ?? undefined}
+      subtitle={data.subtitle ?? undefined}
+      description={data.text ?? undefined}
+      linked={data.linked}
+      link={data.link?.url ?? undefined}
+      target={data.link?.target ?? undefined}
+      button={buttonProps}
+      className={className || undefined}
+    />
   );
+
+  if (blockStyle) return <div style={blockStyle}>{feature}</div>;
+  return feature;
 }
