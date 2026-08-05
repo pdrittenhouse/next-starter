@@ -1,7 +1,7 @@
 import type { ComponentType, ReactNode } from 'react';
-import { HeaderPattern } from '@/stories/patterns/HeaderPattern';
-import { FooterPattern } from '@/stories/patterns/FooterPattern';
-import { TravelingCtaPattern } from '@/stories/patterns/TravelingCtaPattern';
+import { HeaderPattern } from '@/stories/templates/partials/wrapper/HeaderPattern';
+import { FooterPattern } from '@/stories/templates/partials/wrapper/FooterPattern';
+import { TravelingCtaPattern } from '@/stories/templates/partials/wrapper/TravelingCtaPattern';
 import { isTimberlandExtendedActive } from '@/lib/wp/detection';
 import { EXTENDED_PATTERN_MAP } from '@/lib/registries/EXTENDED_PATTERN_MAP';
 

@@ -3,7 +3,7 @@ import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { PageHeader } from './partials/page-header';
 import { BlockRenderer } from './partials/block-renderer';
-import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
+import { SidebarPattern } from '@/stories/templates/partials/wrapper/SidebarPattern';
 
 interface PageTemplateProps {
   node: {

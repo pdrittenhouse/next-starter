@@ -2,7 +2,7 @@ import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import type { EditorBlock } from '@/types/blocks';
 import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { BlockRenderer } from './partials/block-renderer';
-import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
+import { SidebarPattern } from '@/stories/templates/partials/wrapper/SidebarPattern';
 
 interface FrontPageTemplateProps {
   node: {

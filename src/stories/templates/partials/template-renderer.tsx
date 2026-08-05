@@ -4,7 +4,7 @@ import type { EditorBlock } from '@/types/blocks';
 import { getPatternMap } from '@/lib/registries/PATTERN_MAP';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { BlockRenderer } from './block-renderer';
-import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
+import { SidebarPattern } from '@/stories/templates/partials/wrapper/SidebarPattern';
 
 interface TemplateRendererProps {
   tree: TimberlandTreeNode[];
