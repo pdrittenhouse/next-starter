@@ -3,7 +3,6 @@ import { Image } from '@/stories/atoms/image/Image';
 import { Button } from '@/stories/atoms/button/Button';
 import type { ImageProps } from '@/stories/atoms/image/Image';
 import type { ButtonProps } from '@/stories/atoms/button/Button';
-import { cx } from '@/lib/cx';
 
 /**
  * Props for the Feature molecule — mirrors the Twig pattern at
@@ -88,15 +87,14 @@ export const Feature = ({
     ? `container-fluid${maxWidthFluidContainer ? ' max-width-fluid-container' : ''}`
     : `container${breakpointSuffix}`;
 
-  const rootClasses = cx(
-    null,
+  const rootClasses = [
     'feature',
     image && 'has-image',
     verticalCenter && 'vertical-center',
     vertical && 'feature-vertical',
     imageRight && 'feature-image-right',
     className,
-  );
+  ].filter(Boolean).join(' ');
 
   const hasButton = !!(button && (button.label ?? button.href ?? button.children));
 

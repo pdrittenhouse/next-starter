@@ -40,6 +40,7 @@ interface SectionBlockData {
   overlay_bg?: { bg_color?: string | null; bg_theme_color?: string | null; bg_custom_color?: string | null };
   gradient_overlay?: boolean;
   overlay_opacity?: number | null;
+  section_element?: 'section' | 'div' | 'aside' | null;
 }
 
 interface SectionBlockProps {
@@ -163,8 +164,12 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
     data.gradient_overlay === true && blockGradient ? `gradient-${blockGradient}` : null;
   const overlayStyle = buildOverlayStyle(data, blockStyleGradient);
 
+  const Tag = (data.section_element === 'div' || data.section_element === 'aside')
+    ? data.section_element
+    : 'section';
+
   return (
-    <section
+    <Tag
       className={sectionClasses || undefined}
       style={Object.keys(sectionStyle).length > 0 ? sectionStyle : undefined}
     >
@@ -181,6 +186,6 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
           </div>
         ) : innerContent}
       </div>
-    </section>
+    </Tag>
   );
 }
