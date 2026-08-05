@@ -1,11 +1,11 @@
 import type { BlockComponent } from '@/lib/registries/BLOCK_MAP';
-import { FeatureBlock } from '@/stories/blocks/extended/feature/FeatureBlock';
-import { HighlightGridBlock } from '@/stories/blocks/extended/highlight-grid/HighlightGridBlock';
-import { LogoGridBlock } from '@/stories/blocks/extended/logo-grid/LogoGridBlock';
-import { LogoSliderBlock } from '@/stories/blocks/extended/logo-slider/LogoSliderBlock';
-import { PriceBlock } from '@/stories/blocks/extended/price/PriceBlock';
-import { PromoBlock } from '@/stories/blocks/extended/promo/PromoBlock';
-import { TravelingCtaBlock } from '@/stories/blocks/extended/traveling-cta/TravelingCtaBlock';
+import { FeatureBlock } from '@/stories/extended/blocks/feature/FeatureBlock';
+import { HighlightGridBlock } from '@/stories/extended/blocks/highlight-grid/HighlightGridBlock';
+import { LogoGridBlock } from '@/stories/extended/blocks/logo-grid/LogoGridBlock';
+import { LogoSliderBlock } from '@/stories/extended/blocks/logo-slider/LogoSliderBlock';
+import { PriceBlock } from '@/stories/extended/blocks/price/PriceBlock';
+import { PromoBlock } from '@/stories/extended/blocks/promo/PromoBlock';
+import { TravelingCtaBlock } from '@/stories/extended/blocks/traveling-cta/TravelingCtaBlock';
 
 // Maps the 7 timberland-extended plugin block slugs to headless React components.
 // Merged into BLOCK_MAP at runtime (via getBlockMap()) when the plugin is active.
