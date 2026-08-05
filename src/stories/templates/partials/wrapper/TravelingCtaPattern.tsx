@@ -1,8 +1,8 @@
 import { cache } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
-import { TravelingCta } from '@/stories/molecules/traveling-cta/TravelingCta';
-import type { TravelingCtaItem } from '@/stories/molecules/traveling-cta/TravelingCta';
+import { TravelingCta } from '@/stories/patterns/molecules/traveling-cta/TravelingCta';
+import type { TravelingCtaItem } from '@/stories/patterns/molecules/traveling-cta/TravelingCta';
 import { GET_TRAVELING_CTA_OPTIONS } from '@/lib/wp/queries/acf-options';
 
 const VALID_VARIANTS = [

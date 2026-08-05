@@ -1,9 +1,9 @@
 import { cache } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
-import { Header } from '@/stories/organisms/header/Header';
-import { SocialNav } from '@/stories/organisms/social-nav/SocialNav';
-import type { SocialNavItem } from '@/stories/organisms/social-nav/SocialNav';
+import { Header } from '@/stories/patterns/organisms/header/Header';
+import { SocialNav } from '@/stories/patterns/organisms/social-nav/SocialNav';
+import type { SocialNavItem } from '@/stories/patterns/organisms/social-nav/SocialNav';
 import { menuItemsToNavItems } from '@/lib/wp/utils/menuToNavItems';
 import { acfButtonToProps } from '@/lib/wp/utils/acfButtonToProps';
 import GET_CUSTOMIZER_SETTINGS from '@/lib/wp/queries/customizer-settings';
@@ -12,8 +12,8 @@ import { GET_MENU_BY_LOCATION } from '@/lib/wp/queries/menus';
 import { GET_WIDGET_AREA_BLOCKS } from '@/lib/wp/queries/widgets';
 import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { BlockRenderer } from '@/stories/templates/partials/block-renderer';
-import type { NavbarBreakpoint } from '@/stories/organisms/header/Header';
-import type { BrandingProps } from '@/stories/molecules/branding/Branding';
+import type { NavbarBreakpoint } from '@/stories/patterns/organisms/header/Header';
+import type { BrandingProps } from '@/stories/patterns/molecules/branding/Branding';
 
 const getCustomizerSettings = cache(async () => {
   const { data } = await fetchGraphQL<{ customizerSettings: any; generalSettings: any }>(

@@ -1,8 +1,8 @@
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
-import { Table } from '@/stories/atoms/table/Table';
+import { Table } from '@/stories/patterns/atoms/table/Table';
 import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';
-import type { TableVariant, TableResponsive, VerticalAlign } from '@/stories/atoms/table/Table';
+import type { TableVariant, TableResponsive, VerticalAlign } from '@/stories/patterns/atoms/table/Table';
 import styles from './table.module.scss';
 import { cx } from '@/lib/cx';
 

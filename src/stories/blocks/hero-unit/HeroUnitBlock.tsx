@@ -1,4 +1,4 @@
-import { Jumbotron } from '@/stories/molecules/jumbotron/Jumbotron';
+import { Jumbotron } from '@/stories/patterns/molecules/jumbotron/Jumbotron';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './hero-unit.module.scss';

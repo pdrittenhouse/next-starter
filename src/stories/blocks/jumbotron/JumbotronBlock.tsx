@@ -1,11 +1,11 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
-import { Jumbotron } from '@/stories/molecules/jumbotron/Jumbotron';
+import { Jumbotron } from '@/stories/patterns/molecules/jumbotron/Jumbotron';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
-import type { ImageProps } from '@/stories/atoms/image/Image';
-import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
+import type { ImageProps } from '@/stories/patterns/atoms/image/Image';
+import type { ButtonProps, ButtonVariant } from '@/stories/patterns/atoms/button/Button';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import styles from './jumbotron.module.scss';
 import { cx } from '@/lib/cx';

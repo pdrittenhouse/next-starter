@@ -1,5 +1,5 @@
-import { TravelingCta } from '@/stories/molecules/traveling-cta/TravelingCta';
-import type { TravelingCtaItem, TravelingCtaAlignment } from '@/stories/molecules/traveling-cta/TravelingCta';
+import { TravelingCta } from '@/stories/patterns/molecules/traveling-cta/TravelingCta';
+import type { TravelingCtaItem, TravelingCtaAlignment } from '@/stories/patterns/molecules/traveling-cta/TravelingCta';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 

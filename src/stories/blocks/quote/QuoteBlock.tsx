@@ -1,5 +1,5 @@
-import { Blockquote } from '@/stories/molecules/blockquote/Blockquote';
-import type { CitationImageProps } from '@/stories/molecules/blockquote/Blockquote';
+import { Blockquote } from '@/stories/patterns/molecules/blockquote/Blockquote';
+import type { CitationImageProps } from '@/stories/patterns/molecules/blockquote/Blockquote';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './quote.module.scss';

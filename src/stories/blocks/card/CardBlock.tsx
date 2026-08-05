@@ -1,7 +1,7 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
-import { Card } from '@/stories/organisms/card/Card';
+import { Card } from '@/stories/patterns/organisms/card/Card';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import type {
   CardBackground,
@@ -10,8 +10,8 @@ import type {
   CardImageLocation,
   CardLinkTarget,
   CardIconProps,
-} from '@/stories/organisms/card/Card';
-import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
+} from '@/stories/patterns/organisms/card/Card';
+import type { ButtonProps, ButtonVariant } from '@/stories/patterns/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './card.module.scss';

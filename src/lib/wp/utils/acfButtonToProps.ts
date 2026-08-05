@@ -1,4 +1,4 @@
-import type { ButtonProps, ButtonVariant, ButtonToggle } from '@/stories/atoms/button/Button';
+import type { ButtonProps, ButtonVariant, ButtonToggle } from '@/stories/patterns/atoms/button/Button';
 
 const VALID_VARIANTS: ButtonVariant[] = [
   'default', 'primary', 'secondary', 'tertiary', 'quaternary', 'quinary', 'senary',

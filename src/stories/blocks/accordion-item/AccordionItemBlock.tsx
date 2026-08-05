@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Button } from '@/stories/atoms/button/Button';
+import { Button } from '@/stories/patterns/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './accordion-item.module.scss';

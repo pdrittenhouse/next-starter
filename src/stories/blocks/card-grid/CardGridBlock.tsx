@@ -1,9 +1,9 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
-import { CardGrid } from '@/stories/organisms/card-grid/CardGrid';
-import type { CardProps, CardImageProps } from '@/stories/organisms/card-grid/CardGrid';
-import type { ButtonProps, ButtonVariant } from '@/stories/atoms/button/Button';
+import { CardGrid } from '@/stories/patterns/organisms/card-grid/CardGrid';
+import type { CardProps, CardImageProps } from '@/stories/patterns/organisms/card-grid/CardGrid';
+import type { ButtonProps, ButtonVariant } from '@/stories/patterns/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';

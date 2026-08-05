@@ -1,4 +1,4 @@
-import type { NavItem } from '@/stories/molecules/nav/Nav';
+import type { NavItem } from '@/stories/patterns/molecules/nav/Nav';
 
 interface WpMenuItemNode {
   id: string;

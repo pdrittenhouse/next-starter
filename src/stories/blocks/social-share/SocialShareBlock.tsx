@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
-import { SocialNav } from '@/stories/organisms/social-nav/SocialNav';
-import type { SocialNavItem } from '@/stories/organisms/social-nav/SocialNav';
+import { SocialNav } from '@/stories/patterns/organisms/social-nav/SocialNav';
+import type { SocialNavItem } from '@/stories/patterns/organisms/social-nav/SocialNav';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './social-share.module.scss';

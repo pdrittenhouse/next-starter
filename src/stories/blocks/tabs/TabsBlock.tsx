@@ -1,8 +1,8 @@
 import type { EditorBlock } from '@/types/blocks';
 import { parseBlockAttributes } from '@/types/blocks';
 import { parseAcfRepeater } from '@/lib/wp/utils/parseAcfRepeater';
-import { Tabs } from '@/stories/molecules/tabs/Tabs';
-import type { TabItem } from '@/stories/molecules/tabs/Tabs';
+import { Tabs } from '@/stories/patterns/molecules/tabs/Tabs';
+import type { TabItem } from '@/stories/patterns/molecules/tabs/Tabs';
 import styles from './tabs.module.scss';
 import { cx } from '@/lib/cx';
 

@@ -1,5 +1,5 @@
-import { Offcanvas } from '@/stories/molecules/offcanvas/Offcanvas';
-import type { OffcanvasPlacement, OffcanvasBreakpoint } from '@/stories/molecules/offcanvas/Offcanvas';
+import { Offcanvas } from '@/stories/patterns/molecules/offcanvas/Offcanvas';
+import type { OffcanvasPlacement, OffcanvasBreakpoint } from '@/stories/patterns/molecules/offcanvas/Offcanvas';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './offcanvas.module.scss';

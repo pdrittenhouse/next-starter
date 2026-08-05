@@ -1,5 +1,5 @@
-import { Breadcrumb } from '@/stories/atoms/breadcrumb/Breadcrumb';
-import type { BreadcrumbItem } from '@/stories/atoms/breadcrumb/Breadcrumb';
+import { Breadcrumb } from '@/stories/patterns/atoms/breadcrumb/Breadcrumb';
+import type { BreadcrumbItem } from '@/stories/patterns/atoms/breadcrumb/Breadcrumb';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './breadcrumb.module.scss';

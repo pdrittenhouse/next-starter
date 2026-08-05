@@ -2,7 +2,7 @@ import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
-import { Video, type VideoFormat, type VideoPreload, type VideoQuality } from '@/stories/atoms/video/Video';
+import { Video, type VideoFormat, type VideoPreload, type VideoQuality } from '@/stories/patterns/atoms/video/Video';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './video.module.scss';

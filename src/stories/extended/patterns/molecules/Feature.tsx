@@ -1,8 +1,8 @@
 import React from 'react';
-import { Image } from '@/stories/atoms/image/Image';
-import { Button } from '@/stories/atoms/button/Button';
-import type { ImageProps } from '@/stories/atoms/image/Image';
-import type { ButtonProps } from '@/stories/atoms/button/Button';
+import { Image } from '@/stories/patterns/atoms/image/Image';
+import { Button } from '@/stories/patterns/atoms/button/Button';
+import type { ImageProps } from '@/stories/patterns/atoms/image/Image';
+import type { ButtonProps } from '@/stories/patterns/atoms/button/Button';
 
 /**
  * Props for the Feature molecule — mirrors the Twig pattern at

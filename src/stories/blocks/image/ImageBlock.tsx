@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
-import { Image, type ImageVariant } from '@/stories/atoms/image/Image';
+import { Image, type ImageVariant } from '@/stories/patterns/atoms/image/Image';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';

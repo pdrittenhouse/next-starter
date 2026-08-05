@@ -1,4 +1,4 @@
-import { Branding } from '@/stories/molecules/branding/Branding';
+import { Branding } from '@/stories/patterns/molecules/branding/Branding';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';

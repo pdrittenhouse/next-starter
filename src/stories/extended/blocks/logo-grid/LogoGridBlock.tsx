@@ -1,4 +1,4 @@
-import { Image } from '@/stories/atoms/image/Image';
+import { Image } from '@/stories/patterns/atoms/image/Image';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './logo-grid.module.scss';

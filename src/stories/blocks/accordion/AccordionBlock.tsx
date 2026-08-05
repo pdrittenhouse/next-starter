@@ -1,6 +1,6 @@
-import { Accordion } from '@/stories/molecules/accordion/Accordion';
-import type { AccordionItem } from '@/stories/molecules/accordion/Accordion';
-import type { ButtonVariant } from '@/stories/atoms/button/Button';
+import { Accordion } from '@/stories/patterns/molecules/accordion/Accordion';
+import type { AccordionItem } from '@/stories/patterns/molecules/accordion/Accordion';
+import type { ButtonVariant } from '@/stories/patterns/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle } from '@/lib/wp/utils/buildAcfBlockStyle';

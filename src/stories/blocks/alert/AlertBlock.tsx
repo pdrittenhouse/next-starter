@@ -1,5 +1,5 @@
-import { Alert } from '@/stories/atoms/alert/Alert';
-import type { AlertStatus } from '@/stories/atoms/alert/Alert';
+import { Alert } from '@/stories/patterns/atoms/alert/Alert';
+import type { AlertStatus } from '@/stories/patterns/atoms/alert/Alert';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './alert.module.scss';

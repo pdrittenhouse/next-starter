@@ -1,7 +1,7 @@
 import type React from 'react';
-import { SlickCarousel } from '@/stories/molecules/slick-carousel/SlickCarousel';
-import { FlickityCarousel } from '@/stories/molecules/flickity-carousel/FlickityCarousel';
-import { Image } from '@/stories/atoms/image/Image';
+import { SlickCarousel } from '@/stories/patterns/molecules/slick-carousel/SlickCarousel';
+import { FlickityCarousel } from '@/stories/patterns/molecules/flickity-carousel/FlickityCarousel';
+import { Image } from '@/stories/patterns/atoms/image/Image';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './logo-slider.module.scss';

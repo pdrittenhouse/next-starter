@@ -1,8 +1,8 @@
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
-import { Modal } from '@/stories/molecules/modal/Modal';
-import type { ModalSize, ModalFullscreenBreakpoint } from '@/stories/molecules/modal/Modal';
-import type { ButtonVariant } from '@/stories/atoms/button/Button';
+import { Modal } from '@/stories/patterns/molecules/modal/Modal';
+import type { ModalSize, ModalFullscreenBreakpoint } from '@/stories/patterns/molecules/modal/Modal';
+import type { ButtonVariant } from '@/stories/patterns/atoms/button/Button';
 import styles from './modal.module.scss';
 import { cx } from '@/lib/cx';
 

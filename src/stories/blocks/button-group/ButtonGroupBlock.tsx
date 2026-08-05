@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { ButtonGroup } from '@/stories/molecules/button-group/ButtonGroup';
-import type { ButtonGroupItem, WrapperDisplay } from '@/stories/molecules/button-group/ButtonGroup';
-import type { ButtonProps } from '@/stories/atoms/button/Button';
+import { ButtonGroup } from '@/stories/patterns/molecules/button-group/ButtonGroup';
+import type { ButtonGroupItem, WrapperDisplay } from '@/stories/patterns/molecules/button-group/ButtonGroup';
+import type { ButtonProps } from '@/stories/patterns/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import type React from 'react';
