@@ -6,7 +6,7 @@
 // .site-content { z-index: z(site-content); }
 // .site-footer { z-index: z(site-footer; }
 // @link https://engageinteractive.co.uk/blog/time-saving-sass-functions
-@use "./synced.generated" as s;
+@use "./design-tokens-sync.generated" as s;
 
 $_z-indexes-local: (
   'toast',

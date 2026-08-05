@@ -12,8 +12,8 @@
  * Block components can also @use "blocks/{slug}" directly in .module.scss files.
  *
  * Writes:
- *   src/scss/blocks/_{slug}.scss              (one per block, overwritten on each run)
- *   src/scss/blocks/_manifest.generated.json
+ *   src/scss/blocks/_{slug}.scss                    (one per block, overwritten on each run)
+ *   src/scss/manifests/_block-manifest.generated.json
  *
  * Change detection:
  *   Compares against the stored manifest. New blocks are logged; removed blocks
@@ -33,7 +33,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 
 const BLOCKS_DIR    = join(root, 'src', 'scss', 'blocks');
-const MANIFEST_FILE = join(BLOCKS_DIR, '_manifest.generated.json');
+const MANIFESTS_DIR = join(root, 'src', 'scss', 'manifests');
+const MANIFEST_FILE = join(MANIFESTS_DIR, '_block-manifest.generated.json');
 
 // ---------------------------------------------------------------------------
 // Environment
@@ -81,6 +82,7 @@ function readManifest() {
 // ---------------------------------------------------------------------------
 function ensurePlaceholders() {
   ensureDir(BLOCKS_DIR);
+  ensureDir(MANIFESTS_DIR);
 
   const manifest = readManifest();
   if (!manifest) return;
@@ -156,9 +158,10 @@ if (prevSlugs !== null) {
 }
 
 // ---------------------------------------------------------------------------
-// Ensure directory exists
+// Ensure directories exist
 // ---------------------------------------------------------------------------
 ensureDir(BLOCKS_DIR);
+ensureDir(MANIFESTS_DIR);
 
 // ---------------------------------------------------------------------------
 // Write block SCSS files

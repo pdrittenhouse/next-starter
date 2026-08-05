@@ -3,7 +3,7 @@
 @use "../functions/colors" as *;
 @use "../colors" as *;
 @use "../type" as *;
-@use "../synced.generated" as s;
+@use "../design-tokens-sync.generated" as s;
 
 // Bootstrap variable customization
 // See all variables available at: src/libs/bootstrap/scss/_variables.scss

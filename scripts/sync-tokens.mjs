@@ -3,7 +3,7 @@
  * Fetches compiled SCSS design tokens from the WordPress REST API
  * (GET /wp-json/timberland/v1/design-tokens) and writes two files:
  *
- *   src/scss/non-printing/_synced.generated.scss
+ *   src/scss/_design-tokens.generated.scss
  *     Scalar Bootstrap variables (from scssBootstrap key)
  *     $font-size-base/lg/sm      (from fontSizes key)
  *     $font-stack-*              (from fontFamilies key)
@@ -34,7 +34,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
-const OUT          = join(root, 'src', 'scss', '_synced.generated.scss');
+const OUT          = join(root, 'src', 'scss', '_design-tokens.generated.scss');
 const OUT_PRINTING = join(root, 'src', 'scss', 'printing', '_synced-css-variables.scss');
 
 // Bootstrap scalar variables. Always written — null if WP theme doesn't set them.

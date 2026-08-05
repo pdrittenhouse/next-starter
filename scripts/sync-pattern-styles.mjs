@@ -5,15 +5,15 @@
  * them into src/scss/patterns/{level}/{name}.scss.
  *
  * Writes:
- *   src/scss/patterns/{level}/_{name}.scss     (one per pattern, e.g. atoms/_button.scss)
- *   src/scss/patterns/_blocks.generated.json   (block → pattern slug mapping)
- *   src/scss/patterns/_manifest.generated.json (previous-state manifest for change detection)
+ *   src/scss/patterns/{level}/_{name}.scss              (one per pattern, e.g. atoms/_button.scss)
+ *   src/scss/manifests/_block-patterns.generated.json  (block → pattern slug mapping)
+ *   src/scss/manifests/_pattern-manifest.generated.json (previous-state manifest for change detection)
  *
  * Files never touched: anything not in the API response.
  *
  * Change detection:
  *   On each run the script compares the incoming pattern list against
- *   _manifest.generated.json (written by the previous run). New patterns
+ *   _pattern-manifest.generated.json (written by the previous run). New patterns
  *   are logged so developers know to wire up component CSS imports. Removed
  *   patterns are overwritten with an empty stub so existing @use references
  *   compile but produce no styles — a clear signal to clean up.
@@ -32,8 +32,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 
 const PATTERNS_DIR   = join(root, 'src', 'scss', 'patterns');
-const MANIFEST_FILE  = join(PATTERNS_DIR, '_manifest.generated.json');
-const BLOCKS_FILE    = join(PATTERNS_DIR, '_blocks.generated.json');
+const MANIFESTS_DIR  = join(root, 'src', 'scss', 'manifests');
+const MANIFEST_FILE  = join(MANIFESTS_DIR, '_pattern-manifest.generated.json');
+const BLOCKS_FILE    = join(MANIFESTS_DIR, '_block-patterns.generated.json');
 
 const LEVEL_DIRS = ['atoms', 'molecules', 'organisms', 'templates', 'pages'];
 
@@ -83,6 +84,7 @@ function readManifest() {
 // ---------------------------------------------------------------------------
 function ensurePlaceholders() {
   ensureDir(PATTERNS_DIR);
+  ensureDir(MANIFESTS_DIR);
   for (const level of LEVEL_DIRS) ensureDir(join(PATTERNS_DIR, level));
 
   const manifest = readManifest();
@@ -166,6 +168,7 @@ if (prevPatterns !== null) {
 // Ensure directories exist
 // ---------------------------------------------------------------------------
 ensureDir(PATTERNS_DIR);
+ensureDir(MANIFESTS_DIR);
 for (const level of LEVEL_DIRS) ensureDir(join(PATTERNS_DIR, level));
 
 // ---------------------------------------------------------------------------
@@ -190,7 +193,7 @@ console.log('[sync-pattern-styles] Wrote ' + fileCount + ' pattern files.');
 // Write blocks mapping
 // ---------------------------------------------------------------------------
 writeFileSync(BLOCKS_FILE, JSON.stringify(blocks, null, 2) + '\n', 'utf8');
-console.log('[sync-pattern-styles] Wrote _blocks.generated.json (' + Object.keys(blocks).length + ' block mappings).');
+console.log('[sync-pattern-styles] Wrote _block-patterns.generated.json (' + Object.keys(blocks).length + ' block mappings).');
 
 // ---------------------------------------------------------------------------
 // Update manifest
