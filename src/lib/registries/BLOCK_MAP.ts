@@ -40,6 +40,8 @@ import { TableHeadBlock } from '@/stories/blocks/table-head/TableHeadBlock';
 import { TableRowBlock } from '@/stories/blocks/table-row/TableRowBlock';
 import { TabsBlock } from '@/stories/blocks/tabs/TabsBlock';
 import { VideoBlock } from '@/stories/blocks/video/VideoBlock';
+import { isTimberlandExtendedActive } from '@/lib/wp/detection';
+import { EXTENDED_BLOCK_MAP } from '@/lib/registries/EXTENDED_BLOCK_MAP';
 
 // Accepts both sync and async function components — Next.js App Router server
 // components are async by nature and don't satisfy React's ComponentType.
@@ -55,6 +57,7 @@ export type BlockComponent = (props: { block: any; children?: ReactNode }) => Re
 // Blocks not in this map fall through to dangerouslySetInnerHTML using
 // renderedHtml — they pick up styles from @wordpress/block-library imported via
 // src/scss/printing/wordpress/blocks/wp-core/_image.scss (and peer files).
+
 export const BLOCK_MAP: Record<string, BlockComponent> = {
   'acf/accordion': AccordionBlock,
   'acf/accordion-item': AccordionItemBlock,
@@ -98,3 +101,8 @@ export const BLOCK_MAP: Record<string, BlockComponent> = {
   'acf/tabs': TabsBlock,
   'acf/video': VideoBlock,
 };
+
+export async function getBlockMap(): Promise<Record<string, BlockComponent>> {
+  const isExtended = await isTimberlandExtendedActive();
+  return isExtended ? { ...BLOCK_MAP, ...EXTENDED_BLOCK_MAP } : BLOCK_MAP;
+}

@@ -1,0 +1,11 @@
+// Plugin block styles — all timberland-extended blocks are included.
+// To remove a block, comment out its @use line.
+// To add style overrides for a block, replace its @use with a @forward pointing
+// to a custom _{slug}.scss in this directory containing your overrides.
+@use "feature" as *;
+@use "highlight-grid" as *;
+@use "logo-grid" as *;
+@use "logo-slider" as *;
+@use "price" as *;
+@use "promo" as *;
+@use "traveling-cta" as *;

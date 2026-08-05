@@ -1,7 +1,7 @@
 import type { ElementType } from 'react';
 import type { TimberlandTreeNode } from '@/lib/wp/types/template-manifest';
 import type { EditorBlock } from '@/types/blocks';
-import { PATTERN_MAP } from '@/lib/registries/PATTERN_MAP';
+import { getPatternMap } from '@/lib/registries/PATTERN_MAP';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { BlockRenderer } from './block-renderer';
 import { SidebarPattern } from '@/stories/patterns/SidebarPattern';
@@ -24,7 +24,8 @@ interface TemplateRendererProps {
 // Twig-only concerns (html_head, foot, etc.) and are skipped.
 // Unregistered patterns use a generic HTML shell derived from the PHP-rendered
 // outer element (element + className + id) so their children still recurse.
-export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug, sidebarColClass, removeContentContainerPerPost }: TemplateRendererProps) {
+export async function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug, sidebarColClass, removeContentContainerPerPost }: TemplateRendererProps) {
+  const patternMap = await getPatternMap();
   return (
     <>
       {tree.map((node, i) => {
@@ -66,7 +67,7 @@ export function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug
             <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} sidebarSlug={sidebarSlug} sidebarColClass={sidebarColClass} />
           ) : null;
 
-          const Component = PATTERN_MAP[node.slug ?? ''];
+          const Component = patternMap[node.slug ?? ''];
           if (Component) {
             return <Component key={node.slug ?? i}>{childContent}</Component>;
           }

@@ -1,5 +1,5 @@
 import type { EditorBlock } from '@/types/blocks';
-import { BLOCK_MAP } from '@/lib/registries/BLOCK_MAP';
+import { getBlockMap } from '@/lib/registries/BLOCK_MAP';
 
 export type { EditorBlock };
 
@@ -24,11 +24,12 @@ interface BlockRendererProps {
 // The optional `context` prop is injected into each block as `_context` so child
 // components can read parent state without prop drilling. Inner blocks always
 // start with fresh context (not inherited from the parent level).
-export function BlockRenderer({ blocks, context }: BlockRendererProps) {
+export async function BlockRenderer({ blocks, context }: BlockRendererProps) {
+  const blockMap = await getBlockMap();
   return (
     <>
       {blocks.map(block => {
-        const Component = BLOCK_MAP[block.name];
+        const Component = blockMap[block.name];
         const innerBlocks: EditorBlock[] = block.innerBlocks ?? [];
 
         if (Component) {
