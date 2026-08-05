@@ -1,0 +1,40 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as TravelingCtaBlockStories from './TravelingCtaBlock.stories';
+
+<Meta of={TravelingCtaBlockStories} />
+
+# Traveling CTA
+
+Traveling CTA block from the timberland-extended plugin. Renders a sticky call-to-action bar that appears when the user scrolls past a waypoint. Supports container width, reverse item order, background color, border, border radius, alignment, padding, and per-item auto width.
+
+## Usage
+
+```tsx
+import { TravelingCtaBlock } from '@/stories/extended/blocks/traveling-cta/TravelingCtaBlock';
+
+<TravelingCtaBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `traveling_ctas` | repeater | CTA items (each a `cta` clone) |
+| `hide_traveling_cta` | select | Breakpoint at which to hide the bar |
+| `include_tcta_container` | true_false | Wrap items in a Bootstrap container |
+| `tcta_full_width` | true_false | Expand bar to full viewport width |
+| `max_width_fluid_container` | true_false | Cap the fluid container at max-width |
+| `container_breakpoint` | clone | Responsive breakpoint for the container |
+| `tcta_reverse_order` | true_false | Reverse the order of CTA items |
+| `tcta_auto_width` | true_false | Allow items to size to their natural width |
+| `tcta_bg_color` | clone | Bar background color |
+| `tcta_border` | clone | Bar border |
+| `tcta_border_radius` | clone | Bar border radius |
+| `tcta_alignment` | clone | Item alignment within the bar |
+| `tcta_padding` | clone | Bar padding |
+
+## Stories
+
+<Canvas>
+  <Story of={TravelingCtaBlockStories.Default} />
+</Canvas>

@@ -1,0 +1,39 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as LogoGridBlockStories from './LogoGridBlock.stories';
+
+<Meta of={LogoGridBlockStories} />
+
+# Logo Grid
+
+Logo Grid block from the timberland-extended plugin. Renders a static grid of partner or client logos with optional title and intro text. Each logo supports custom width and height. An optional grayscale filter can be applied to all logos.
+
+## Usage
+
+```tsx
+import { LogoGridBlock } from '@/stories/extended/blocks/logo-grid/LogoGridBlock';
+
+<LogoGridBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `title` | text | Optional heading above the logo grid |
+| `intro` | textarea | Optional intro text below the title |
+| `logos` | repeater | List of logos |
+| `logos[].logo` | clone | Logo image (file or URL) |
+| `logos[].width` | number | Override logo display width (px) |
+| `logos[].height` | number | Override logo display height (px) |
+| `grayscale` | true_false | Apply grayscale filter to all logos |
+| `lazy_loading` | clone | Lazy-load image setting |
+
+## Stories
+
+<Canvas>
+  <Story of={LogoGridBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={LogoGridBlockStories.Grayscale} />
+</Canvas>

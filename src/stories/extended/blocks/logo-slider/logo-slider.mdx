@@ -1,0 +1,53 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as LogoSliderBlockStories from './LogoSliderBlock.stories';
+
+<Meta of={LogoSliderBlockStories} />
+
+# Logo Slider
+
+Logo Slider block from the timberland-extended plugin. Renders a Slick or Flickity carousel of logos. Each slide supports a link, custom dimensions, and a new-tab toggle. Configurable autoplay, looping, arrows, dot nav, dragging, fade, and responsive breakpoints.
+
+## Usage
+
+```tsx
+import { LogoSliderBlock } from '@/stories/extended/blocks/logo-slider/LogoSliderBlock';
+
+<LogoSliderBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `logos` | repeater | Slide items |
+| `logos[].logo` | image | Logo image |
+| `logos[].width` | number | Override logo display width (px) |
+| `logos[].height` | number | Override logo display height (px) |
+| `logos[].link` | url | Optional link URL for the logo |
+| `logos[].open_in_new_tab` | true_false | Open logo link in a new tab |
+| `slider` | select | Slider library: Slick or Flickity |
+| `logo_count` | select / number | Logos visible at once (select for Flickity, number for Slick) |
+| `scroll_count` | number | Logos to scroll per interaction (Slick) |
+| `grayscale_images` | true_false | Apply grayscale filter to all logos |
+| `draggable` | true_false | Enable mouse drag |
+| `free_scroll` | true_false | Enable free scroll momentum (Flickity) |
+| `loop` | true_false | Loop continuously |
+| `auto_play` | true_false | Enable autoplay |
+| `autoplay_speed` | number | Autoplay delay in milliseconds |
+| `pause_on_hover` | true_false | Pause autoplay on hover |
+| `fade` | true_false | Fade transition instead of slide (Slick) |
+| `adaptive_height` | true_false | Adjust height to current slide (Slick) |
+| `show_arrows` | true_false | Show prev/next arrow controls |
+| `show_dot_nav` | true_false | Show dot navigation |
+| `speed` | number | Transition speed in milliseconds |
+| `alignment` | select | Slide alignment |
+| `center_mode` | true_false | Center the active slide |
+| `variable_width` | true_false | Allow slides of variable width |
+| `responsive` | repeater | Responsive breakpoint overrides |
+| `lazy_loading` | clone | Lazy-load image setting |
+
+## Stories
+
+<Canvas>
+  <Story of={LogoSliderBlockStories.Default} />
+</Canvas>

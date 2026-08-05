@@ -1,0 +1,41 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as PriceBlockStories from './PriceBlock.stories';
+
+<Meta of={PriceBlockStories} />
+
+# Price
+
+Price block from the timberland-extended plugin. Renders a structured pricing display with currency symbol, whole amount, decimal separator, change amount, frequency, and optional label and terms text. Supports style variants and text alignment.
+
+## Usage
+
+```tsx
+import { PriceBlock } from '@/stories/extended/blocks/price/PriceBlock';
+
+<PriceBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `label` | text | Optional label above the price (e.g. plan name) |
+| `symbol` | text | Currency symbol (e.g. `$`, `€`) |
+| `whole_amount` | number | Whole number portion of the price |
+| `separator` | text | Decimal separator (e.g. `.`) |
+| `change_amount` | number | Decimal/cents portion of the price |
+| `frequency_separator` | text | Separator before frequency (e.g. `/`) |
+| `frequency` | text | Billing frequency label (e.g. `month`, `year`) |
+| `terms` | text | Fine print below the price |
+| `style` | select | Visual style variant |
+| `align` | select | Text alignment: `left`, `center`, `right` |
+
+## Stories
+
+<Canvas>
+  <Story of={PriceBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={PriceBlockStories.WithLabel} />
+</Canvas>

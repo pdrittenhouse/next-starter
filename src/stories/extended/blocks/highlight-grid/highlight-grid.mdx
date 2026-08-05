@@ -1,0 +1,33 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as HighlightGridBlockStories from './HighlightGridBlock.stories';
+
+<Meta of={HighlightGridBlockStories} />
+
+# Highlight Grid
+
+Highlight Grid block from the timberland-extended plugin. Renders a grid of highlight items, each with an image, title, and label. The `item_type` toggle switches between image-led and text-led display variants. Supports lazy loading.
+
+## Usage
+
+```tsx
+import { HighlightGridBlock } from '@/stories/extended/blocks/highlight-grid/HighlightGridBlock';
+
+<HighlightGridBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `items` | repeater | Grid items |
+| `items[].item_type` | true_false | Toggle between image-first and text-first layout |
+| `items[].title` | text | Item heading |
+| `items[].image` | image | Item image |
+| `items[].label` | text | Eyebrow label above the title |
+| `lazy_loading` | clone | Lazy-load image setting |
+
+## Stories
+
+<Canvas>
+  <Story of={HighlightGridBlockStories.Default} />
+</Canvas>

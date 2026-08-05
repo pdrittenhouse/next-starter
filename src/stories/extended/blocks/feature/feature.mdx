@@ -1,0 +1,59 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as FeatureBlockStories from './FeatureBlock.stories';
+
+<Meta of={FeatureBlockStories} />
+
+# Feature
+
+Feature block from the timberland-extended plugin. Renders a side-by-side or vertical panel with an image, heading, subtitle, body copy, and optional button. Supports full-width/contained layout, background and text colors, padding, margin, border, box shadow, and lazy loading.
+
+## Usage
+
+```tsx
+import { FeatureBlock } from '@/stories/extended/blocks/feature/FeatureBlock';
+
+<FeatureBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `heading` | text | Block-level heading |
+| `title` | text | Primary feature title |
+| `subtitle` | textarea | Secondary text below the title |
+| `text` | wysiwyg | Body copy |
+| `label` | text | Eyebrow label above the title |
+| `image` | clone | Feature image (file or URL) |
+| `image_right` | true_false | Place image on the right side |
+| `caption` | textarea | Image caption text |
+| `caption_position` | select | Caption placement relative to the image |
+| `vertical` | true_false | Stack image above content |
+| `vertical_center` | true_false | Vertically center content within the block |
+| `linked` | true_false | Wrap the entire feature in an anchor |
+| `show_button` | true_false | Show the button below the body text |
+| `button` | clone | Button settings (style, size, link, etc.) |
+| `include_container` | true_false | Wrap in a Bootstrap container |
+| `full_width` | true_false | Expand to full viewport width |
+| `max_width_fluid_container` | true_false | Cap the fluid container at max-width |
+| `container_breakpoint` | clone | Responsive breakpoint for the container |
+| `bg_color` | clone | Background color (palette or custom) |
+| `text_color` | clone | Text color (palette or custom) |
+| `inherit_color` | true_false | Inherit color from parent block |
+| `padding` | clone | Block padding (top/right/bottom/left) |
+| `margin` | clone | Block margin (top/right/bottom/left, auto or px) |
+| `height` | clone | Block height |
+| `border` | clone | Border width, style, color |
+| `border_radius` | clone | Corner border radius |
+| `box_shadow` | clone | Box shadow |
+| `lazy_loading` | clone | Lazy-load image setting |
+
+## Stories
+
+<Canvas>
+  <Story of={FeatureBlockStories.Default} />
+</Canvas>
+
+<Canvas>
+  <Story of={FeatureBlockStories.Vertical} />
+</Canvas>

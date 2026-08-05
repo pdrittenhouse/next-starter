@@ -1,0 +1,57 @@
+import { Meta, Canvas, Story } from '@storybook/blocks';
+import * as PromoBlockStories from './PromoBlock.stories';
+
+<Meta of={PromoBlockStories} />
+
+# Promo
+
+Promo block from the timberland-extended plugin. Renders 1–2 promotional panels side by side, each with an image, title, body text, and one or more buttons. Supports background and text colors, border, border radius, and box shadow per panel, plus container and margin/padding options.
+
+## Usage
+
+```tsx
+import { PromoBlock } from '@/stories/extended/blocks/promo/PromoBlock';
+
+<PromoBlock block={block} />
+```
+
+## ACF Fields
+
+| Field | Type | Description |
+|---|---|---|
+| `promo_count` | button_group | Number of promo panels: 1 or 2 |
+| `include_container` | true_false | Wrap in a Bootstrap container |
+| `full_width` | true_false | Expand to full viewport width |
+| `max_width_fluid_container` | true_false | Cap the fluid container at max-width |
+| `container_breakpoint` | clone | Responsive breakpoint for the container |
+| `margin` | clone | Block margin (top/right/bottom/left) |
+| `padding` | clone | Block padding (top/right/bottom/left) |
+| `promo_1_image` | clone | Promo 1 image |
+| `promo_1_title` | text | Promo 1 heading |
+| `promo_1_text` | textarea | Promo 1 body text |
+| `promo_1_buttons` | repeater | Promo 1 buttons (each a `button` clone) |
+| `promo_1_bg_color` | clone | Promo 1 background color |
+| `promo_1_color` | clone | Promo 1 text color |
+| `promo_1_border` | clone | Promo 1 border |
+| `promo_1_border_radius` | clone | Promo 1 border radius |
+| `promo_1_box_shadow` | clone | Promo 1 box shadow |
+| `promo_2_image` | clone | Promo 2 image |
+| `promo_2_title` | text | Promo 2 heading |
+| `promo_2_text` | textarea | Promo 2 body text |
+| `promo_2_buttons` | repeater | Promo 2 buttons (each a `button` clone) |
+| `promo_2_bg_color` | clone | Promo 2 background color |
+| `promo_2_color` | clone | Promo 2 text color |
+| `promo_2_border` | clone | Promo 2 border |
+| `promo_2_border_radius` | clone | Promo 2 border radius |
+| `promo_2_box_shadow` | clone | Promo 2 box shadow |
+| `lazy_loading` | clone | Lazy-load image setting |
+
+## Stories
+
+<Canvas>
+  <Story of={PromoBlockStories.Single} />
+</Canvas>
+
+<Canvas>
+  <Story of={PromoBlockStories.Double} />
+</Canvas>
