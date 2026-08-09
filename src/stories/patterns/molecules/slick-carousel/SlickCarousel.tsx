@@ -1,4 +1,6 @@
-import React, { useId } from 'react';
+'use client';
+
+import React, { useId, useRef, useEffect } from 'react';
 import styles from './slick-carousel.module.scss';
 import { cx } from '@/lib/cx';
 
@@ -125,6 +127,101 @@ export function SlickCarousel({
 }: SlickCarouselProps) {
   const uid = useId().replace(/:/g, '');
   const carouselId = id ?? `slickSlider${uid}`;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const convertValue = (value: string): string | number | boolean => {
+      if (!isNaN(Number(value)) && value !== '') return parseInt(value, 10);
+      if (value === 'true') return true;
+      if (value === 'false') return false;
+      return value;
+    };
+
+    let $wrapper: any;
+    (async () => {
+      const jq = (await import('jquery')).default;
+      (window as any).jQuery = jq;
+      (window as any).$ = jq;
+      await import('slick-carousel');
+      const $ = jq as any;
+
+      const responsiveSettings: any[] = JSON.parse(wrapper.dataset.responsive ?? '[]');
+      responsiveSettings.forEach(item => {
+        item.breakpoint = convertValue(String(item.breakpoint));
+        Object.keys(item.settings).forEach(k => {
+          item.settings[k] = convertValue(String(item.settings[k]));
+        });
+      });
+
+      const isCustomControls = wrapper.dataset.customcontrols === 'true';
+      const controlsWrap = $(wrapper).find('.slick-carousel-controls');
+
+      const opts: Record<string, any> = {
+        accessibility:    false,
+        adaptiveHeight:   adaptiveHeight ?? false,
+        autoplay:         autoplay ?? false,
+        autoplaySpeed:    autoplaySpeed,
+        arrows:           arrows,
+        asNavFor:         asNavFor,
+        prevArrow:        '<button type="button" class="slick-prev">Previous</button>',
+        nextArrow:        '<button type="button" class="slick-next">Next</button>',
+        centerMode:       centerMode ?? false,
+        centerPadding:    centerPadding,
+        dots:             dots ?? false,
+        draggable:        draggable ?? false,
+        fade:             fade ?? false,
+        focusOnSelect:    focusOnSelect ?? false,
+        easing:           easing,
+        cssEase:          cssEase,
+        edgeFriction:     edgeFriction,
+        infinite:         infinite ?? false,
+        initialSlide:     initialSlide,
+        lazyLoad:         'ondemand',
+        mobileFirst:      true,
+        pauseOnFocus:     pauseOnFocus ?? false,
+        pauseOnHover:     pauseOnHover ?? false,
+        pauseOnDotsHover: pauseOnDotsHover ?? false,
+        respondTo:        'window',
+        responsive:       responsiveSettings,
+        rows:             rows,
+        slidesPerRow:     slidesPerRow,
+        slidesToShow:     slidesToShow,
+        slidesToScroll:   slidesToScroll,
+        speed:            speed,
+        swipe:            swipe ?? false,
+        swipeToSlide:     swipeToSlide ?? false,
+        touchMove:        touchMove ?? false,
+        touchThreshold:   touchThreshold,
+        useCSS:           true,
+        useTransform:     true,
+        variableWidth:    variableWidth ?? false,
+        vertical:         vertical ?? false,
+        verticalSwiping:  verticalSwiping ?? false,
+        rtl:              rtl ?? false,
+        waitForAnimate:   true,
+        zIndex:           2,
+      };
+
+      if (isCustomControls) {
+        opts.appendArrows = controlsWrap;
+        opts.appendDots   = controlsWrap;
+        responsiveSettings.forEach(item => {
+          item.settings.appendArrows = controlsWrap;
+          item.settings.appendDots   = controlsWrap;
+        });
+        opts.responsive = responsiveSettings;
+      }
+
+      $wrapper = $(wrapper).find('.slick-carousel').slick(opts);
+    })();
+
+    return () => {
+      try { $wrapper?.slick('unslick'); } catch (_) {}
+    };
+  }, []);
 
   const wrapperClasses = cx(
     styles,
@@ -135,6 +232,7 @@ export function SlickCarousel({
 
   return (
     <div
+      ref={wrapperRef}
       className={wrapperClasses}
       data-pattern="timberland/slick-carousel"
       data-customcontrols={customControls ? 'true' : ''}

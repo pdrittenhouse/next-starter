@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useRef, useEffect } from 'react';
 import { Video } from '@/stories/patterns/atoms/video/Video';
 import { Button } from '@/stories/patterns/atoms/button/Button';
 import type { VideoProps } from '@/stories/patterns/atoms/video/Video';
@@ -134,6 +136,46 @@ export const VideoPromo = ({
   video,
   ctas,
 }: VideoPromoProps) => {
+  const promoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const promo = promoRef.current;
+    if (!promo) return;
+    const btn     = promo.querySelector<HTMLElement>('.video-promo--play');
+    const share   = promo.querySelector<HTMLElement>('.share-button');
+    const vid     = promo.querySelector<HTMLVideoElement>('video');
+    const youtube = promo.querySelector<HTMLIFrameElement>('.image-format--youtube iframe');
+    const vimeo   = promo.querySelector<HTMLIFrameElement>('.image-format--vimeo iframe');
+
+    btn?.addEventListener('click', () => {
+      vid?.play();
+      youtube?.contentWindow?.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+      vimeo?.contentWindow?.postMessage('{"method":"play"}', '*');
+    });
+
+    if (vid) {
+      vid.addEventListener('play',  () => { btn?.classList.add('hide');    share?.classList.add('video-playing'); });
+      vid.addEventListener('pause', () => { btn?.classList.remove('hide'); share?.classList.remove('video-playing'); });
+      vid.addEventListener('ended', () => { btn?.classList.remove('hide'); share?.classList.remove('video-playing'); });
+
+      let played = false;
+      vid.removeAttribute('controls');
+      vid.addEventListener('play',  () => { played = true; });
+      vid.addEventListener('ended', () => { played = false; vid.removeAttribute('controls'); });
+      vid.addEventListener('mouseenter', () => { if (played && !vid.hasAttribute('controls')) vid.setAttribute('controls', ''); });
+      vid.addEventListener('mouseleave', () => { if (played) vid.removeAttribute('controls'); });
+
+      const poster = vid.getAttribute('poster') ?? '';
+      vid.addEventListener('ended', () => {
+        if (!vid.hasAttribute('loop')) vid.removeAttribute('autoplay');
+        vid.load();
+        if (poster) vid.setAttribute('poster', poster);
+      });
+      vid.addEventListener('play',  () => vid.removeAttribute('poster'));
+      vid.addEventListener('pause', () => { if (poster) vid.setAttribute('poster', poster); });
+    }
+  }, []);
+
   // ── Root classes (mirrors Twig video_promo_classes merge + sort + trim) ──────
   const rootClasses = cx(styles, 'video-promo', className);
 
@@ -159,6 +201,7 @@ export const VideoPromo = ({
 
   return (
     <div
+      ref={promoRef}
       className={rootClasses}
       data-pattern="timberland/video-promo"
     >

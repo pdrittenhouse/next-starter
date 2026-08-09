@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Collapse } from 'react-bootstrap';
 import { Branding, BrandingProps } from '@/stories/patterns/molecules/branding/Branding';
 import { Nav, NavProps } from '@/stories/patterns/molecules/nav/Nav';
@@ -317,6 +317,75 @@ export function Header({
   additionalContent,
 }: HeaderProps) {
   const [navOpen, setNavOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    // ── Sticky / shrink header ────────────────────────────────────────────────
+    const onScrollShrink = () => {
+      const offset = header.offsetHeight;
+      document.body.classList.toggle('header-shrunk', window.scrollY > offset);
+    };
+    document.addEventListener('scroll', onScrollShrink, { passive: true });
+
+    // ── Scroll direction classes ──────────────────────────────────────────────
+    let lastSt = window.scrollY;
+    if (lastSt <= 0) document.body.classList.add('scroll-top');
+    const onScrollDir = () => {
+      const current = window.scrollY;
+      if (current <= 0) {
+        document.body.classList.add('scroll-top');
+        document.body.classList.remove('scroll-down', 'scroll-up');
+      } else {
+        document.body.classList.remove('scroll-top');
+        if (current > lastSt) {
+          document.body.classList.add('scroll-down');
+          document.body.classList.remove('scroll-up');
+        } else if (current < lastSt) {
+          document.body.classList.add('scroll-up');
+          document.body.classList.remove('scroll-down');
+        }
+      }
+      lastSt = current <= 0 ? 0 : current;
+    };
+    document.addEventListener('scroll', onScrollDir, { passive: true });
+
+    // ── Hidden header (body.hide-header) ──────────────────────────────────────
+    let cleanupHidden: (() => void) | undefined;
+    if (document.body.classList.contains('hide-header')) {
+      const handleHide = () => {
+        const offset = header.offsetHeight;
+        if (window.scrollY > offset) {
+          document.body.style.paddingTop = offset + 'px';
+          document.body.classList.add('header-hidden');
+          header.querySelectorAll<HTMLElement>('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+          header.querySelectorAll<HTMLElement>('.dropdown-toggle[aria-expanded="true"]').forEach(t => {
+            t.setAttribute('aria-expanded', 'false');
+            t.classList.remove('show');
+          });
+          document.body.classList.remove('mega-menu-open');
+        } else {
+          document.body.style.paddingTop = '';
+          document.body.classList.remove('header-hidden');
+        }
+      };
+      handleHide();
+      document.addEventListener('scroll', handleHide, { passive: true });
+      window.addEventListener('resize',   handleHide, { passive: true });
+      cleanupHidden = () => {
+        document.removeEventListener('scroll', handleHide);
+        window.removeEventListener('resize',   handleHide);
+      };
+    }
+
+    return () => {
+      document.removeEventListener('scroll', onScrollShrink);
+      document.removeEventListener('scroll', onScrollDir);
+      cleanupHidden?.();
+    };
+  }, []);
 
   const headerClasses = buildHeaderClasses(navbarBreakpoint, otherClasses);
   const alertClasses = buildAlertClasses(alertOtherClasses);
@@ -337,6 +406,7 @@ export function Header({
       {skipNavLabel}
     </a>
     <header
+      ref={headerRef}
       className={headerClasses}
       role="banner"
       id={headerId}

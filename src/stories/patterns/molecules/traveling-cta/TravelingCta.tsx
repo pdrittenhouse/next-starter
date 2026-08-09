@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useRef, useEffect } from 'react';
 import { Button } from '@/stories/patterns/atoms/button/Button';
 import type { ButtonProps } from '@/stories/patterns/atoms/button/Button';
 import styles from './traveling-cta.module.scss';
@@ -152,6 +154,21 @@ export const TravelingCta = ({
     return null;
   }
 
+  const ctaRef = useRef<HTMLElement>(null);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    const tcta   = ctaRef.current;
+    const header = document.getElementById('siteHeader') ?? document.querySelector<HTMLElement>('.site-header');
+    if (!tcta) return;
+    if (!header) { tcta.classList.add('show'); return; }
+    const observer = new IntersectionObserver(([entry]) => {
+      tcta.classList.toggle('show', !entry.isIntersecting);
+    });
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
   // ── Section classes (mirrors Twig section_classes merge + sort + trim) ──────
   const sectionClasses = cx(
     styles,
@@ -244,6 +261,7 @@ export const TravelingCta = ({
 
   return (
     <section
+      ref={ctaRef}
       className={sectionClasses}
       {...(sectionStyle ? { style: sectionStyle } : {})}
       data-pattern="timberland/traveling-cta"

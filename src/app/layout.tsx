@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from 'next/script';
 import { print } from 'graphql';
+import { PatternInit } from '@/lib/js/PatternInit';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import '../scss/global.scss';
 // Phosphor Icons — CSS-only package; loaded here so the bundler resolves font URLs
@@ -162,6 +163,7 @@ export default async function RootLayout({
             <div aria-hidden="true" style={{ display: 'none' }} dangerouslySetInnerHTML={{ __html: spritemapSvg }} />
           )}
           {children}
+          <PatternInit />
           {/* Adobe Fonts async — loads after page paint, no render-blocking.
               Fonts swap in with font-display:swap (set per-font in the Typekit dashboard). */}
           {typekitId && (

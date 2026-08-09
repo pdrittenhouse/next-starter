@@ -418,6 +418,40 @@ export function Nav({
   toggleOpenMenus = false,
 }: NavProps) {
   const uid = useId().replace(/:/g, '');
+  const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav || !relativeMegaMenu) return;
+
+    const BS_BP: Record<string, number> = { sm:576, md:768, lg:992, xl:1200, xxl:1400 };
+    const getBreakpointPx = () => navbarBreakpoint ? (BS_BP[navbarBreakpoint] ?? 0) : 0;
+    const isDesktop = () => window.innerWidth >= getBreakpointPx();
+
+    const positionMegaMenus = () => {
+      nav.querySelectorAll<HTMLElement>('.nav-item.has-mega-menu').forEach(item => {
+        const dropdown = item.querySelector<HTMLElement>('.mega-menu-dropdown');
+        if (!dropdown) return;
+        if (isDesktop()) {
+          const offsetLeft = item.getBoundingClientRect().left;
+          dropdown.style.transform = `translateX(-${offsetLeft}px)`;
+          dropdown.style.width = '100vw';
+        } else {
+          dropdown.style.transform = '';
+          dropdown.style.width = '';
+        }
+      });
+    };
+
+    // Re-position on open (Bootstrap dropdown events bubble from the nav element)
+    nav.addEventListener('show.bs.dropdown', positionMegaMenus);
+    window.addEventListener('resize', positionMegaMenus);
+
+    return () => {
+      nav.removeEventListener('show.bs.dropdown', positionMegaMenus);
+      window.removeEventListener('resize', positionMegaMenus);
+    };
+  }, [relativeMegaMenu, navbarBreakpoint]);
 
   const navbarCls = cx(
     styles,
@@ -443,6 +477,7 @@ export function Nav({
       )}
 
       <nav
+        ref={navRef}
         className={navbarCls}
         id={navbarId}
         {...(navbarAriaLabel ? { 'aria-label': navbarAriaLabel } : {})}

@@ -1,4 +1,6 @@
-import React, { useId } from 'react';
+'use client';
+
+import React, { useId, useRef, useEffect } from 'react';
 import styles from './flickity-carousel.module.scss';
 import { cx } from '@/lib/cx';
 
@@ -93,6 +95,86 @@ export function FlickityCarousel({
 }: FlickityCarouselProps) {
   const uid = useId().replace(/:/g, '');
   const carouselId = id ?? `flickityCarousel${uid}`;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    const carousel = wrapper.querySelector<HTMLElement>('.flickity-carousel');
+    if (!carousel) return;
+
+    const FOCUSABLE = 'a, button, input, select, textarea, [tabindex]';
+    const syncFocus = (el: HTMLElement) => {
+      el.querySelectorAll<HTMLElement>(`[aria-hidden="true"] ${FOCUSABLE}`).forEach(f => f.setAttribute('tabindex', '-1'));
+      el.querySelectorAll<HTMLElement>(`:not([aria-hidden="true"]) > ${FOCUSABLE}`).forEach(f => f.removeAttribute('tabindex'));
+    };
+
+    let flkty: any;
+    import('flickity').then(({ default: Flickity }) => {
+      flkty = new Flickity(carousel, {
+        draggable:            draggable ?? true,
+        freeScroll:           freeScroll ?? false,
+        wrapAround:           wrapAround ?? false,
+        groupCells:           groupCells ?? false,
+        autoPlay:             autoPlay ?? false,
+        pauseAutoPlayOnHover: pauseAutoPlayOnHover ?? true,
+        fullscreen:           fullscreen ?? false,
+        fade:                 fade ?? false,
+        adaptiveHeight:       adaptiveHeight ?? false,
+        watchCSS:             true,
+        asNavFor,
+        hash:                 true,
+        dragThreshold,
+        selectedAttraction,
+        friction,
+        freeScrollFriction,
+        imagesLoaded:         true,
+        lazyLoad:             true,
+        cellSelector,
+        initialIndex:         initialIndex ?? 0,
+        accessibility:        true,
+        setGallerySize:       setGallerySize !== false,
+        resize:               true,
+        cellAlign,
+        contain:              contain ?? false,
+        percentPosition:      percentPosition ?? false,
+        rightToLeft:          rightToLeft ?? false,
+        prevNextButtons:      prevNextButtons ?? true,
+        pageDots:             pageDots ?? true,
+        arrowShape: 'M50.7,74.3l2.2-2.2c0.5-0.5,0.5-1.4,0-1.9L35.6,52.9h38.1c0.7,0,1.3-0.6,1.3-1.3v-3.1c0-0.7-0.6-1.3-1.3-1.3H35.6 l17.3-17.3c0.5-0.5,0.5-1.4,0-1.9l-2.2-2.2c-0.5-0.5-1.4-0.5-1.9,0L25.4,49.1c-0.5,0.5-0.5,1.4,0,1.9l23.4,23.4 C49.3,74.8,50.1,74.8,50.7,74.3z',
+      });
+
+      syncFocus(carousel);
+      flkty.on('select', () => syncFocus(carousel));
+
+      const cellsButtonGroup = wrapper.querySelector<HTMLElement>('.button--group-cells');
+      const prevBtn = wrapper.querySelector<HTMLButtonElement>('.button--previous');
+      const nextBtn = wrapper.querySelector<HTMLButtonElement>('.button--next');
+
+      if (cellsButtonGroup) {
+        const btns = [...cellsButtonGroup.children] as HTMLElement[];
+        flkty.on('select', () => {
+          cellsButtonGroup.querySelector('.is-selected')?.classList.remove('is-selected');
+          btns[flkty.selectedIndex]?.classList.add('is-selected');
+        });
+        cellsButtonGroup.addEventListener('click', (e: MouseEvent) => {
+          const idx = btns.indexOf(e.target as HTMLElement);
+          if (idx >= 0) flkty.select(idx);
+        });
+        prevBtn?.addEventListener('click', () => flkty.previous());
+        nextBtn?.addEventListener('click', () => flkty.next());
+      }
+
+      [...carousel.querySelectorAll<HTMLElement>('.carousel-cell')].forEach((cell, i) => {
+        cell.addEventListener('click', () => flkty.select(i));
+      });
+
+      flkty.on('fullscreenChange', () => document.body.classList.toggle('is-fullscreen'));
+      if (autoPlay) flkty.on('pointerUp', () => flkty.player.play());
+    });
+
+    return () => { flkty?.destroy(); };
+  }, []);
 
   const wrapperClasses = cx(
     styles,
@@ -109,6 +191,7 @@ export function FlickityCarousel({
 
   return (
     <div
+      ref={wrapperRef}
       className={wrapperClasses}
       data-pattern="timberland/flickity-carousel"
     >
