@@ -24,13 +24,67 @@ function renderPost(post: PostNode, pattern: string): string {
   const title = post.title ?? '';
   const excerpt = post.excerpt ?? '';
   const img = post.featuredImage?.node;
-  const imgHtml = img
+  const imgTag = img
+    ? `<img src="${img.sourceUrl ?? ''}" alt="${img.altText ?? ''}" class="img-fluid">`
+    : '';
+  const imgCardTop = img
     ? `<a href="${uri}" class="card--image-link"><img src="${img.sourceUrl ?? ''}" alt="${img.altText ?? ''}" class="card-img-top"></a>`
     : '';
+
   if (pattern === 'list') {
     return `<li class="posts-loop--post-list-item list-group-item"><a href="${uri}">${title}</a></li>`;
   }
-  return `<div class="posts-loop--post card h-100">${imgHtml}<div class="card-body"><h3 class="card-title h5"><a href="${uri}">${title}</a></h3>${excerpt ? `<div class="card-text">${excerpt}</div>` : ''}</div></div>`;
+  if (pattern === 'carousel') {
+    return `<div class="carousel-item posts-loop--post">`
+      + (imgTag ? `<figure class="carousel-image">${imgTag}</figure>` : '')
+      + `<div class="carousel-caption"><h3 class="h5"><a href="${uri}">${title}</a></h3>`
+      + (excerpt ? `<div>${excerpt}</div>` : '')
+      + `</div></div>`;
+  }
+  if (pattern === 'card-grid') {
+    return `<div class="col"><div class="posts-loop--post card h-100">`
+      + imgCardTop
+      + `<div class="card-body"><h3 class="card-title h5"><a href="${uri}">${title}</a></h3>`
+      + (excerpt ? `<div class="card-text">${excerpt}</div>` : '')
+      + `</div></div></div>`;
+  }
+  if (pattern === 'feature') {
+    return `<div class="feature posts-loop--post${img ? ' has-image' : ''}"><div class="feature-wrapper">`
+      + (imgTag ? `<figure class="feature-image" role="figure">${imgTag}</figure>` : '')
+      + `<div class="feature-body"><div class="feature-content">`
+      + `<h2 class="feature-title"><a href="${uri}">${title}</a></h2>`
+      + (excerpt ? `<div class="feature-description">${excerpt}</div>` : '')
+      + `</div></div></div></div>`;
+  }
+  if (pattern === 'promo') {
+    return `<div class="promo promo--1-up posts-loop--post"><div class="row"><div class="col"><div class="promo-1">`
+      + (imgTag ? `<div class="promo-image">${imgTag}</div>` : '')
+      + `<div class="promo-content"><div class="promo-intro">`
+      + `<h2 class="promo-title"><a href="${uri}">${title}</a></h2>`
+      + (excerpt ? `<div class="promo-text">${excerpt}</div>` : '')
+      + `</div></div></div></div></div></div>`;
+  }
+  // default: card
+  return `<div class="posts-loop--post card h-100">`
+    + imgCardTop
+    + `<div class="card-body"><h3 class="card-title h5"><a href="${uri}">${title}</a></h3>`
+    + (excerpt ? `<div class="card-text">${excerpt}</div>` : '')
+    + `</div></div>`;
+}
+
+function getInsertTarget(wrapper: HTMLElement, pattern: string): HTMLElement | null {
+  const postsWrapper = wrapper.querySelector<HTMLElement>('.posts-loop--posts-wrapper');
+  if (!postsWrapper) return null;
+  if (pattern === 'list') {
+    return postsWrapper.querySelector<HTMLElement>('.posts-loop--post-list') ?? postsWrapper;
+  }
+  if (pattern === 'carousel') {
+    return postsWrapper.querySelector<HTMLElement>('.carousel-inner') ?? postsWrapper;
+  }
+  if (pattern === 'card-grid') {
+    return postsWrapper.querySelector<HTMLElement>('.card-grid .row') ?? postsWrapper;
+  }
+  return postsWrapper;
 }
 
 export function PostsLoopClient() {
@@ -63,7 +117,6 @@ export function PostsLoopClient() {
       const search = (fields.search as string) ?? null;
 
       let cursor: string | null = null;
-
       const baseBody = { perPage, categoryId, tagId, authorName, search };
 
       fetch('/api/posts-loop', {
@@ -87,9 +140,7 @@ export function PostsLoopClient() {
                 body: JSON.stringify({ ...baseBody, cursor }),
               });
               const d: { nodes: PostNode[]; pageInfo: PageInfo } = await res.json();
-              const postsWrapper = wrapper.querySelector<HTMLElement>('.posts-loop--posts-wrapper');
-              const listEl = pattern === 'list' ? postsWrapper?.querySelector<HTMLElement>('.posts-loop--post-list') : null;
-              const target = listEl ?? postsWrapper;
+              const target = getInsertTarget(wrapper, pattern);
               if (target && d.nodes?.length) {
                 target.insertAdjacentHTML('beforeend', d.nodes.map(n => renderPost(n, pattern)).join(''));
               }

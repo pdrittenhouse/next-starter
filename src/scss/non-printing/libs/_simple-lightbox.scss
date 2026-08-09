@@ -1,0 +1,30 @@
+// Simple Lightbox variable overrides.
+// To use: install simple-lightbox npm package, then @use this file before
+// @use-ing simple-lightbox's own SCSS entry point.
+// Values mirror the defaults in the timberland WP framework.
+
+$sl-font-family: $font-stack-base;
+$sl-overlay-background: #fff;
+$sl-navigation-color: #000;
+$sl-caption-color: #fff;
+$sl-caption-background: #000;
+$sl-overlay-opacity: 0.7;
+
+$sl-counter-fontsize: 1rem;
+$sl-caption-fontsize: 1rem;
+$sl-close-fontsize: 3rem;
+
+$sl-breakpoint-medium: 576px;
+$sl-breakpoint-large:  1172px;
+
+$sl-arrow-fontsize-small:  2rem;
+$sl-arrow-fontsize-medium: 3rem;
+$sl-arrow-fontsize-large:  3rem;
+$sl-img-border-small:  0 none;
+$sl-img-border-medium: 0 none;
+$sl-img-border-large:  0 none;
+$sl-iframe-border-small:  0 none;
+$sl-iframe-border-medium: 0 none;
+$sl-iframe-border-large:  0 none;
+
+$add-vendor-prefixes: true !default;

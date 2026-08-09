@@ -105,23 +105,25 @@ export interface NavProps {
 }
 
 // ---------------------------------------------------------------------------
-// Bootstrap breakpoint map (mirrors $grid-breakpoints defaults)
+// Bootstrap breakpoint map — reads from window.__WP_BREAKPOINTS when available
+// so the hover-dropdown media queries reflect the actual site's token values.
+// Falls back to Bootstrap defaults on SSR and when tokens are not injected.
 // ---------------------------------------------------------------------------
 
-const BS_BREAKPOINTS: Record<string, string> = {
-  sm: '576px',
-  md: '768px',
-  lg: '992px',
-  xl: '1200px',
-  xxl: '1400px',
-};
+function getWpBreakpoints(): Record<string, number> {
+  if (typeof window !== 'undefined' && (window as any).__WP_BREAKPOINTS) {
+    return (window as any).__WP_BREAKPOINTS as Record<string, number>;
+  }
+  return { sm: 576, md: 768, lg: 992, xl: 1200, xxl: 1400 };
+}
 
 // ---------------------------------------------------------------------------
 // Helper: hover-dropdown inline <style> block
 // ---------------------------------------------------------------------------
 
 function buildHoverStyles(navUid: string, breakpoint: string): string {
-  const bpValue = BS_BREAKPOINTS[breakpoint] ?? '992px';
+  const bpPx = getWpBreakpoints()[breakpoint] ?? 992;
+  const bpValue = `${bpPx}px`;
   const sel = `.navbar-nav.navbar-${navUid}.dropdown-hover > ul > .dropdown,\n  .navbar-nav.navbar-${navUid}.dropdown-hover > ol > .dropdown,\n  .navbar-nav.navbar-${navUid}.dropdown-hover > div > .dropdown`;
 
   return `
@@ -428,8 +430,7 @@ export function Nav({
     const nav = navRef.current;
     if (!nav || !relativeMegaMenu) return;
 
-    const BS_BP: Record<string, number> = { sm:576, md:768, lg:992, xl:1200, xxl:1400 };
-    const getBreakpointPx = () => navbarBreakpoint ? (BS_BP[navbarBreakpoint] ?? 0) : 0;
+    const getBreakpointPx = () => navbarBreakpoint ? (getWpBreakpoints()[navbarBreakpoint] ?? 0) : 0;
     const isDesktop = () => window.innerWidth >= getBreakpointPx();
 
     const positionMegaMenus = () => {
