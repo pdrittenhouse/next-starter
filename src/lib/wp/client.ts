@@ -11,7 +11,7 @@
  *   - Build-time data fetching
  */
 
-import { getWpConfig, buildAuthHeader, type WpConfig } from './config';
+import { getWpConfig, buildAuthHeader, resolveGraphqlUrl, resolveRestUrl, type WpConfig } from './config';
 
 export interface GraphQLResponse<T = Record<string, unknown>> {
   data?: T;
@@ -27,6 +27,8 @@ export interface FetchGraphQLOptions {
   signal?: AbortSignal;
   /** Next.js fetch options (revalidate, tags, etc.) */
   next?: Record<string, unknown>;
+  /** For multisite: request host used to route to the correct WP endpoint. */
+  host?: string;
 }
 
 /**
@@ -47,8 +49,9 @@ export async function fetchGraphQL<T = Record<string, unknown>>(
   options: FetchGraphQLOptions = {},
 ): Promise<GraphQLResponse<T>> {
   const config = getWpConfig();
+  const graphqlUrl = options.host ? resolveGraphqlUrl(options.host) : config.graphqlUrl;
 
-  if (!config.graphqlUrl) {
+  if (!graphqlUrl) {
     throw new Error('[wp] No GraphQL URL configured. Set WP_GRAPHQL_URL in your environment.');
   }
 
@@ -75,7 +78,7 @@ export async function fetchGraphQL<T = Record<string, unknown>>(
     fetchOptions.next = options.next;
   }
 
-  const response = await fetch(config.graphqlUrl, fetchOptions);
+  const response = await fetch(graphqlUrl, fetchOptions);
 
   if (!response.ok) {
     throw new Error(`[wp] GraphQL request failed: ${response.status} ${response.statusText}`);
@@ -93,6 +96,8 @@ export interface FetchWpRestOptions {
   signal?: AbortSignal;
   /** Next.js fetch options (revalidate, tags, etc.) */
   next?: Record<string, unknown>;
+  /** For multisite: request host used to route to the correct WP endpoint. */
+  host?: string;
 }
 
 /**
@@ -110,13 +115,14 @@ export async function fetchWpRest<T = unknown>(
   options: FetchWpRestOptions = {},
 ): Promise<T> {
   const config = getWpConfig();
+  const restUrl = options.host ? resolveRestUrl(options.host) : config.restUrl;
 
-  if (!config.restUrl) {
+  if (!restUrl) {
     throw new Error('[wp] No REST base URL configured. Set NEXT_PUBLIC_WP_GRAPHQL_URL in your environment.');
   }
 
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  const url = `${config.restUrl}/wp-json${normalizedPath}`;
+  const url = `${restUrl}/wp-json${normalizedPath}`;
 
   const headers: Record<string, string> = { ...options.headers };
 
@@ -162,8 +168,9 @@ export function createWpClient(configOverride?: Partial<WpConfig>) {
     ): Promise<GraphQLResponse<T>> => {
       const config = getWpConfig();
       const mergedConfig = { ...config, ...configOverride };
+      const graphqlUrl = options.host ? resolveGraphqlUrl(options.host) : mergedConfig.graphqlUrl;
 
-      if (!mergedConfig.graphqlUrl) {
+      if (!graphqlUrl) {
         throw new Error('[wp] No GraphQL URL configured.');
       }
 
@@ -190,7 +197,7 @@ export function createWpClient(configOverride?: Partial<WpConfig>) {
         fetchOptions.next = options.next;
       }
 
-      return fetch(mergedConfig.graphqlUrl, fetchOptions)
+      return fetch(graphqlUrl, fetchOptions)
         .then((res) => {
           if (!res.ok) throw new Error(`[wp] GraphQL request failed: ${res.status} ${res.statusText}`);
           return res.json() as Promise<GraphQLResponse<T>>;

@@ -25,6 +25,7 @@ import {
   GET_ALL_PRODUCTS, GET_PRODUCT_CATEGORIES, GET_ALL_ORDERS, GET_ALL_COUPONS, GET_SHOP_SETTINGS,
 } from "@/lib/wp/queries";
 import { THEME_OPTIONS_FIELDS, camelToLabel, taxonomyLabel } from "@/lib/wp/utils";
+import { getWpConfig } from "@/lib/wp/config";
 import { DynamicPostType } from "../../components/DynamicPostType";
 import { DynamicTaxonomy } from "../../components/DynamicTaxonomy";
 import { DynamicThemeOptions } from "../../components/DynamicThemeOptions";
@@ -185,6 +186,23 @@ export const Page: React.FC = () => {
                 </div>
                 <div className={styles.dataWrapper}>
                   <h5>All Query Data</h5>
+
+                  <h6>Environment</h6>
+                  {(() => {
+                    const wpConfig = getWpConfig();
+                    return (
+                      <details>
+                        <summary>WP Config</summary>
+                        <pre>{JSON.stringify({
+                          graphqlUrl: wpConfig.graphqlUrl,
+                          authConfigured: !!(wpConfig.authUser && wpConfig.authPassword),
+                          multisite: wpConfig.sites?.length
+                            ? { enabled: true, sites: wpConfig.sites }
+                            : { enabled: false, note: 'Set NEXT_PUBLIC_WP_SITES to enable multisite routing' },
+                        }, null, 2)}</pre>
+                      </details>
+                    );
+                  })()}
 
                   <br />
                   <h6>Introspection</h6>
