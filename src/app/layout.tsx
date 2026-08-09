@@ -12,6 +12,7 @@ import '@phosphor-icons/web/regular';
 import { gql } from '@apollo/client';
 import { fetchGraphQL } from '@/lib/wp/client';
 import GET_SPRITEMAP_ICONS from '@/lib/wp/queries/spritemap-icons';
+import GET_DESIGN_TOKENS from '@/lib/wp/queries/design-tokens';
 
 // Font loading patterns:
 //
@@ -78,7 +79,7 @@ export default async function RootLayout({
     }
   `;
 
-  const [cssResult, spritemapResult] = await Promise.allSettled([
+  const [cssResult, spritemapResult, tokensResult] = await Promise.allSettled([
     fetchGraphQL<{
       customizerCss: string | null;
       fontOptionsCss: string | null;
@@ -97,12 +98,28 @@ export default async function RootLayout({
     fetchGraphQL<{ spritemapIcons: { spritemap: string | null; url: string | null; scss: string | null } | null }>(
       print(GET_SPRITEMAP_ICONS),
     ),
+    fetchGraphQL<{ designTokens: Array<{ name: string; value: string }> | null }>(print(GET_DESIGN_TOKENS)),
   ]);
 
   const cssData = cssResult.status === 'fulfilled' ? (cssResult.value as any)?.data : null;
   const spritemapSvg: string | null = spritemapResult.status === 'fulfilled'
     ? ((spritemapResult.value as any)?.data?.spritemapIcons?.spritemap ?? null)
     : null;
+
+  const designTokens: Array<{ name: string; value: string }> =
+    tokensResult.status === 'fulfilled' ? ((tokensResult.value as any)?.data?.designTokens ?? []) : [];
+  const BP_KEYS = ['sm', 'md', 'lg', 'xl', 'xxl'];
+  const bpFromTokens: Record<string, number> = {};
+  for (const t of designTokens) {
+    const m = t.name.match(/(?:grid-?breakpoints?[-_]|breakpoint[-_])(.+)$/i);
+    if (m && BP_KEYS.includes(m[1].toLowerCase())) {
+      const px = parseInt(t.value);
+      if (!isNaN(px)) bpFromTokens[m[1].toLowerCase()] = px;
+    }
+  }
+  const wpBreakpoints: Record<string, number> = Object.keys(bpFromTokens).length === BP_KEYS.length
+    ? bpFromTokens
+    : { sm: 576, md: 768, lg: 992, xl: 1200, xxl: 1400 };
 
   const bgSettings = cssData?.customizerSettings;
   const customBackgroundCss = (bgSettings?.backgroundImage || bgSettings?.backgroundColor)
@@ -157,6 +174,11 @@ export default async function RootLayout({
           {globalCss && (
             <style dangerouslySetInnerHTML={{ __html: globalCss }} />
           )}
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__WP_BREAKPOINTS=${JSON.stringify(wpBreakpoints)};`,
+            }}
+          />
         </head>
         <body className={bodyClasses} data-bs-spy="scroll" data-bs-target="#primaryNavigation">
           {spritemapSvg && (
