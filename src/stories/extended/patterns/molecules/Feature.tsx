@@ -51,6 +51,8 @@ export interface FeatureProps {
   button?: ButtonProps;
   /** Extra CSS class names on the root element. */
   className?: string;
+  /** Inline styles applied to the root element (e.g. background-image from block settings). */
+  customStyle?: React.CSSProperties;
 }
 
 /**
@@ -81,6 +83,7 @@ export const Feature = ({
   target = '_self',
   button,
   className,
+  customStyle,
 }: FeatureProps) => {
   const breakpointSuffix = containerBreakpoint ? `-${containerBreakpoint}` : '';
   const containerClass = fullWidth
@@ -142,7 +145,7 @@ export const Feature = ({
   );
 
   const inner = (
-    <div className={rootClasses} {...(id ? { id } : {})} data-pattern="timberland/feature">
+    <div className={rootClasses} {...(id ? { id } : {})} {...(customStyle ? { style: customStyle } : {})} data-pattern="timberland/feature">
       {heading && (
         <header>
           <h2 className="feature-heading">{heading}</h2>

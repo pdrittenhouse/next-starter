@@ -51,6 +51,14 @@ export interface JumbotronProps {
   cta?: ButtonProps;
   /** Extra CSS class names appended to the root element. Twig: `jumbotron_other_classes`. */
   className?: string;
+  /** Additional inline CSS styles applied to the root element. */
+  customStyle?: React.CSSProperties;
+  /** Extra data-* attributes spread onto the root element (used for bg-video). */
+  customAttributes?: Record<string, string>;
+  /** CSS classes for the overlay span. Renders the span when set. */
+  overlayClass?: string;
+  /** Inline style for the overlay span. */
+  overlayStyle?: React.CSSProperties;
 }
 
 /**
@@ -76,6 +84,10 @@ export const Jumbotron = ({
   image,
   cta,
   className,
+  customStyle,
+  customAttributes,
+  overlayClass,
+  overlayStyle,
 }: JumbotronProps) => {
   // ── Root element classes (mirrors Twig jumbotron_classes merge + sort + trim) ──
   const rootClasses = cx(
@@ -89,9 +101,10 @@ export const Jumbotron = ({
   );
 
   // ── Inline background-image style (mirrors Twig jumbotron_styles merge) ──
-  const rootStyle: React.CSSProperties | undefined = bgImage
-    ? { backgroundImage: `url(${bgImage})` }
-    : undefined;
+  const rootStyle: React.CSSProperties | undefined =
+    bgImage || customStyle
+      ? { ...(bgImage ? { backgroundImage: `url(${bgImage})` } : {}), ...(customStyle ?? {}) }
+      : undefined;
 
   // ── Container class (mirrors Twig's container_breakpoint logic) ───────────
   const breakpointSuffix = containerBreakpoint ? `-${containerBreakpoint}` : '';
@@ -133,8 +146,12 @@ export const Jumbotron = ({
       style={rootStyle}
       data-pattern="timberland/jumbotron"
       {...(id ? { id } : {})}
+      {...(customAttributes ?? {})}
     >
       <span className={cx(styles, 'bg', 'bg-top')} />
+      {overlayClass && (
+        <span className={overlayClass} style={overlayStyle} />
+      )}
 
       {removeContainer ? (
         inner

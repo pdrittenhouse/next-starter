@@ -1,3 +1,4 @@
+import React from 'react';
 import { Feature } from '@/stories/extended/patterns/molecules/Feature';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
@@ -44,6 +45,44 @@ interface FeatureBlockData extends Pick<AcfBlockStyleData, 'height' | 'padding' 
   bg_color?: { bg_color?: string | null; bg_theme_color?: string | null; bg_custom_color?: string | null } | null;
   text_color?: { color?: string | null; theme_color?: string | null } | null;
   layout?: { feature_layout?: string | null } | null;
+  bg_image?: {
+    bg_image_type?: 'file' | 'url' | null;
+    bg_image?: { url?: string | null } | null;
+    bg_image_url?: string | null;
+    bg_horizontal_position?: string | null;
+    custom_bg_horizontal_position?: string | null;
+    bg_vertical_position?: string | null;
+    custom_bg_vertical_position?: string | null;
+    bg_size?: string | null;
+    custom_bg_size?: string | null;
+    bg_repeat?: string | null;
+    bg_attachment?: string | null;
+  };
+  id?: { id?: string | null; id_gen?: string | null };
+  innerblocks_location?: 'image' | 'content' | null;
+}
+
+function buildFeatureBgImageStyle(bgImage: FeatureBlockData['bg_image']): React.CSSProperties {
+  if (!bgImage) return {};
+  const style: React.CSSProperties = {};
+  const url =
+    bgImage.bg_image_type === 'file' && bgImage.bg_image?.url
+      ? bgImage.bg_image.url
+      : bgImage.bg_image_type === 'url' && bgImage.bg_image_url
+        ? bgImage.bg_image_url
+        : null;
+  if (url) style.backgroundImage = `url('${url}')`;
+  const size = bgImage.bg_size === 'custom' && bgImage.custom_bg_size
+    ? bgImage.custom_bg_size : bgImage.bg_size ?? null;
+  if (size) style.backgroundSize = size;
+  const hPos = bgImage.bg_horizontal_position === 'custom' && bgImage.custom_bg_horizontal_position
+    ? bgImage.custom_bg_horizontal_position : bgImage.bg_horizontal_position ?? null;
+  const vPos = bgImage.bg_vertical_position === 'custom' && bgImage.custom_bg_vertical_position
+    ? bgImage.custom_bg_vertical_position : bgImage.bg_vertical_position ?? null;
+  if (hPos || vPos) style.backgroundPosition = `${hPos ?? ''} ${vPos ?? ''}`.trim();
+  if (bgImage.bg_repeat) style.backgroundRepeat = bgImage.bg_repeat;
+  if (bgImage.bg_attachment) style.backgroundAttachment = bgImage.bg_attachment;
+  return style;
 }
 
 export async function FeatureBlock({ block }: { block: EditorBlock }) {
@@ -53,6 +92,10 @@ export async function FeatureBlock({ block }: { block: EditorBlock }) {
   if (!data.title && !data.heading && !data.text && !data.image) {
     return <div dangerouslySetInnerHTML={{ __html: block.renderedHtml ?? '' }} />;
   }
+
+  const featureId = data.id?.id ?? (data.id?.id_gen ? `feature${data.id.id_gen}` : undefined);
+  const featureBgStyle = buildFeatureBgImageStyle(data.bg_image);
+  const hasBgStyle = Object.keys(featureBgStyle).length > 0;
 
   const { style: blockStyle } = buildAcfBlockStyle(data);
 
@@ -99,6 +142,7 @@ export async function FeatureBlock({ block }: { block: EditorBlock }) {
 
   const feature = (
     <Feature
+      id={featureId}
       includeContainer={data.include_container}
       fullWidth={data.full_width}
       containerBreakpoint={data.container_breakpoint?.breakpoint ?? undefined}
@@ -119,6 +163,7 @@ export async function FeatureBlock({ block }: { block: EditorBlock }) {
       target={data.link?.target ?? undefined}
       button={buttonProps}
       className={className || undefined}
+      customStyle={hasBgStyle ? featureBgStyle : undefined}
     />
   );
 

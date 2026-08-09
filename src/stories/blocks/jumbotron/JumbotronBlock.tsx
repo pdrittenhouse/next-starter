@@ -120,6 +120,33 @@ interface JumbotronBlockData {
   include_overlay?: boolean;
   /** Background video mode — suppresses the bg image URL. Twig: `fields.bg_video`. */
   bg_video?: boolean;
+  bg_mp4?: string | null;
+  bg_webm?: string | null;
+  bg_ogv?: string | null;
+  bg_loop?: boolean;
+  bg_muted?: boolean;
+  bg_autoplay?: boolean;
+  bg_resizing?: boolean;
+  bg_horizontal_position?: number | null;
+  bg_vertical_position?: number | null;
+  bg_video_classes?: string | null;
+  jumbotron_text_color?: {
+    color?: string | null;
+    theme_color?: string | null;
+    custom_color?: string | null;
+  };
+  layout?: {
+    jumbotron_layout?: string | null;
+    gradient?: string | null;
+  };
+  overlay_bg?: {
+    bg_color?: string | null;
+    bg_theme_color?: string | null;
+    bg_custom_color?: string | null;
+  };
+  gradient_overlay?: boolean;
+  overlay_opacity?: number | null;
+  innerblocks_location?: 'image' | 'content' | null;
   /** Block-level height (standard AcfBlockStyleData shape). */
   height?: AcfBlockStyleData['height'];
   /** Block-level border (standard AcfBlockStyleData shape). */
@@ -205,6 +232,88 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
     }
   }
 
+  // Compute bg_image CSS extras
+  const bgImageCustomStyle: React.CSSProperties = {};
+  if (!data.bg_video && bgImgData) {
+    const size = bgImgData.bg_size === 'custom' && bgImgData.custom_bg_size
+      ? bgImgData.custom_bg_size : bgImgData.bg_size ?? null;
+    if (size) bgImageCustomStyle.backgroundSize = size;
+    const hPos = bgImgData.bg_horizontal_position === 'custom' && bgImgData.custom_bg_horizontal_position
+      ? bgImgData.custom_bg_horizontal_position : bgImgData.bg_horizontal_position ?? null;
+    const vPos = bgImgData.bg_vertical_position === 'custom' && bgImgData.custom_bg_vertical_position
+      ? bgImgData.custom_bg_vertical_position : bgImgData.bg_vertical_position ?? null;
+    if (hPos || vPos) bgImageCustomStyle.backgroundPosition = `${hPos ?? ''} ${vPos ?? ''}`.trim();
+    if (bgImgData.bg_repeat) bgImageCustomStyle.backgroundRepeat = bgImgData.bg_repeat;
+    if (bgImgData.bg_attachment) bgImageCustomStyle.backgroundAttachment = bgImgData.bg_attachment;
+  }
+
+  const jumboBgColorStyle: React.CSSProperties = {};
+  if (!data.bg_video && data.jumbotron_bg_color?.bg_color === 'custom' && (data.jumbotron_bg_color as any)?.bg_custom_color) {
+    jumboBgColorStyle.backgroundColor = (data.jumbotron_bg_color as any).bg_custom_color;
+  }
+  const jumboTextStyle: React.CSSProperties = {};
+  if (data.jumbotron_text_color?.color === 'custom' && data.jumbotron_text_color.custom_color) {
+    jumboTextStyle.color = data.jumbotron_text_color.custom_color;
+  }
+  const customStyle: React.CSSProperties | undefined =
+    Object.keys({ ...bgImageCustomStyle, ...jumboBgColorStyle, ...jumboTextStyle }).length > 0
+      ? { ...bgImageCustomStyle, ...jumboBgColorStyle, ...jumboTextStyle }
+      : undefined;
+
+  // bg_video data-* attributes
+  const bgVideoAttrs: Record<string, string> = {};
+  if (data.bg_video) {
+    if (data.bg_mp4) bgVideoAttrs['data-mp4'] = data.bg_mp4;
+    if (data.bg_webm) bgVideoAttrs['data-webm'] = data.bg_webm;
+    if (data.bg_ogv) bgVideoAttrs['data-ogv'] = data.bg_ogv;
+    const poster = bgImgData?.bg_image_type === 'url' && bgImgData.bg_image_url
+      ? bgImgData.bg_image_url
+      : bgMediaResult?.data?.mediaItem?.sourceUrl ?? null;
+    if (poster) bgVideoAttrs['data-poster'] = poster;
+    bgVideoAttrs['data-loop'] = data.bg_loop === true ? 'true' : 'false';
+    bgVideoAttrs['data-muted'] = data.bg_muted === true ? 'true' : 'false';
+    bgVideoAttrs['data-autoplay'] = data.bg_autoplay === true ? 'true' : 'false';
+    bgVideoAttrs['data-resizing'] = data.bg_resizing === true ? 'true' : 'false';
+    const hpos = data.bg_horizontal_position ?? 0;
+    const vpos = data.bg_vertical_position ?? 0;
+    bgVideoAttrs['data-position'] = `${hpos}% ${vpos}%`;
+    const bgColor = data.jumbotron_bg_color?.bg_color === 'custom' && (data.jumbotron_bg_color as any)?.bg_custom_color
+      ? (data.jumbotron_bg_color as any).bg_custom_color
+      : data.jumbotron_bg_color?.bg_color === 'palette' && (data.jumbotron_bg_color as any)?.bg_theme_color
+      ? `var(--${(data.jumbotron_bg_color as any).bg_theme_color})`
+      : 'transparent';
+    bgVideoAttrs['data-bg-color'] = bgColor;
+    if (data.bg_video_classes) bgVideoAttrs['data-video-classes'] = data.bg_video_classes;
+  }
+  const customAttributes = Object.keys(bgVideoAttrs).length > 0 ? bgVideoAttrs : undefined;
+
+  // Layout + color classes
+  const layoutMod = data.layout?.jumbotron_layout && data.layout.jumbotron_layout !== 'default'
+    ? `jumbotron-${data.layout.jumbotron_layout}` : null;
+  const gradientClass = data.layout?.jumbotron_layout &&
+    ['gradient-overlay-center','gradient-overlay-left','gradient-overlay-right'].includes(data.layout.jumbotron_layout) &&
+    data.layout.gradient ? `gradient-${data.layout.gradient}` : null;
+  const bgColorClass = !data.bg_video && data.jumbotron_bg_color?.bg_color === 'palette' && (data.jumbotron_bg_color as any)?.bg_theme_color
+    ? `bg-${(data.jumbotron_bg_color as any).bg_theme_color}` : null;
+  const textColorClass = data.jumbotron_text_color?.color === 'palette' && data.jumbotron_text_color.theme_color
+    ? `text-${data.jumbotron_text_color.theme_color}` : null;
+
+  // Overlay
+  const overlayBgClass = data.overlay_bg?.bg_color === 'palette' && data.overlay_bg.bg_theme_color
+    ? `bg-${data.overlay_bg.bg_theme_color}` : null;
+  const overlayGradientClass = data.gradient_overlay === true && (attrs as any).gradient
+    ? `gradient-${(attrs as any).gradient}` : null;
+  const overlayClass = data.include_overlay
+    ? ['overlay', overlayBgClass, overlayGradientClass].filter(Boolean).join(' ')
+    : undefined;
+  const overlayStyle: React.CSSProperties | undefined = (() => {
+    const s: React.CSSProperties = {};
+    if (data.overlay_bg?.bg_color === 'custom' && data.overlay_bg.bg_custom_color) s.backgroundColor = data.overlay_bg.bg_custom_color;
+    if (data.gradient_overlay === true && (attrs as any).style?.color?.gradient) s.background = (attrs as any).style.color.gradient;
+    if (data.overlay_opacity != null) s.opacity = data.overlay_opacity;
+    return Object.keys(s).length > 0 ? s : undefined;
+  })();
+
   // Resolve inline side image props.
   let image: ImageProps | undefined;
   if (sideImgData?.image_type === 'url' && sideImgData.image_url) {
@@ -286,7 +395,7 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
   // headless context, so container presence is driven solely by the block field).
   const removeContainer = !data.jumbotron_container;
 
-  const className = cx(styles, 'block-jumbotron', attrs.className) || undefined;
+  const className = cx(styles, 'block-jumbotron', layoutMod, gradientClass, bgColorClass, textColorClass, attrs.className) || undefined;
 
   // Block-level styles — remap jumbotron_* fields to standard AcfBlockStyleData names
   const { style: blockStyle, bgClass } = buildAcfBlockStyle({
@@ -298,6 +407,7 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
     margin:        data.jumbotron_margin,
     bg_color:      data.jumbotron_bg_color,
   });
+  const effectiveBgClass = data.bg_video ? null : bgClass;
 
   const jumbotronEl = (
     <Jumbotron
@@ -316,12 +426,16 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
       image={image}
       cta={cta}
       className={className}
+      customStyle={customStyle}
+      customAttributes={customAttributes}
+      overlayClass={overlayClass}
+      overlayStyle={overlayStyle}
     />
   );
 
-  if (blockStyle || bgClass) {
+  if (blockStyle || effectiveBgClass) {
     return (
-      <div className={bgClass || undefined} style={blockStyle}>
+      <div className={effectiveBgClass || undefined} style={blockStyle}>
         {jumbotronEl}
       </div>
     );

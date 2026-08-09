@@ -20,7 +20,7 @@ interface PromoButtonData {
 }
 
 interface PromoBlockData {
-  promo_count?: '1' | '2' | null;
+  promo_count?: 'one' | 'two' | null;
   include_container?: boolean;
   full_width?: boolean;
   max_width_fluid_container?: boolean;
@@ -67,7 +67,7 @@ export async function PromoBlock({ block }: { block: EditorBlock }) {
 
   const promo1Src = resolveImageSrc(data.promo_1_image);
   const promo2Src = resolveImageSrc(data.promo_2_image);
-  const showPromo2 = data.promo_count === '2' && (data.promo_2_title || promo2Src || data.promo_2_text);
+  const showPromo2 = data.promo_count === 'two' && (data.promo_2_title || promo2Src || data.promo_2_text);
 
   return (
     <div className={className}>
