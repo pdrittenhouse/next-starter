@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
@@ -130,6 +131,29 @@ export interface CardBlockData extends Pick<AcfBlockStyleData, 'width' | 'height
   card_bg_color?: AcfBgColorField | null;
   card_text_color?: AcfColorField | null;
   card_border_color?: AcfColorField | null;
+  card_border?: {
+    top?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    bottom?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    left?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    right?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+  };
+  card_border_radius?: {
+    top_left?: number | null;
+    top_right?: number | null;
+    bottom_left?: number | null;
+    bottom_right?: number | null;
+  };
+  card_box_shadow?: {
+    horizontal_offset?: number | null;
+    vertical_offset?: number | null;
+    blur?: number | null;
+    spread?: number | null;
+    inset?: boolean;
+    color?: { color?: string | null; theme_color?: string | null; custom_color?: string | null };
+  };
+  card_padding?: {
+    padding?: { top?: number | null; bottom?: number | null; left?: number | null; right?: number | null };
+  };
   remove_card_border?: boolean;
   remove_card_header_padding?: boolean;
   remove_card_body_padding?: boolean;
@@ -282,6 +306,45 @@ function resolveButton(data: CardBlockData): ButtonProps | undefined {
   };
 }
 
+function buildCardCustomStyle(data: CardBlockData): CSSProperties | undefined {
+  const style: CSSProperties = {};
+  const p = data.card_padding?.padding;
+  if (p?.top != null) style.paddingTop = `${p.top}px`;
+  if (p?.bottom != null) style.paddingBottom = `${p.bottom}px`;
+  if (p?.left != null) style.paddingLeft = `${p.left}px`;
+  if (p?.right != null) style.paddingRight = `${p.right}px`;
+  const r = data.card_border_radius;
+  if (r?.top_left != null) style.borderTopLeftRadius = `${r.top_left}px`;
+  if (r?.top_right != null) style.borderTopRightRadius = `${r.top_right}px`;
+  if (r?.bottom_left != null) style.borderBottomLeftRadius = `${r.bottom_left}px`;
+  if (r?.bottom_right != null) style.borderBottomRightRadius = `${r.bottom_right}px`;
+  const s = data.card_box_shadow;
+  if (s && (s.horizontal_offset != null || s.vertical_offset != null || s.blur != null || s.spread != null)) {
+    const shadowColor =
+      s.color?.color === 'palette' && s.color.theme_color ? `var(--${s.color.theme_color})`
+      : s.color?.color === 'custom' && s.color.custom_color ? s.color.custom_color
+      : '';
+    const inset = s.inset ? 'inset' : '';
+    style.boxShadow = `${s.horizontal_offset ?? 0}px ${s.vertical_offset ?? 0}px ${s.blur ?? 0}px ${s.spread ?? 0}px ${shadowColor} ${inset}`.trim();
+  }
+  if (!data.remove_card_border && data.card_border) {
+    const b = data.card_border;
+    for (const side of ['top', 'bottom', 'left', 'right'] as const) {
+      const bs = b[side];
+      if (!bs) continue;
+      const cssKey = side.charAt(0).toUpperCase() + side.slice(1) as 'Top' | 'Bottom' | 'Left' | 'Right';
+      if (bs.width != null) (style as any)[`border${cssKey}Width`] = `${bs.width}px`;
+      if (bs.style) (style as any)[`border${cssKey}Style`] = bs.style;
+      const color =
+        bs.color === 'custom' && bs.custom_color ? bs.custom_color
+        : bs.color === 'palette' && bs.theme_color ? `var(--${bs.theme_color})`
+        : null;
+      if (color) (style as any)[`border${cssKey}Color`] = color;
+    }
+  }
+  return Object.keys(style).length > 0 ? style : undefined;
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 /**
@@ -351,6 +414,8 @@ export async function CardBlock({ block }: CardBlockProps) {
     borderColorField?.color === 'palette' && borderColorField.theme_color
       ? (borderColorField.theme_color as CardBorder)
       : undefined;
+
+  const cardCustomStyle = buildCardCustomStyle(data);
 
   const inheritColor =
     ((textColorField?.color === 'palette' && !!textColorField.theme_color) ||
@@ -463,6 +528,7 @@ export async function CardBlock({ block }: CardBlockProps) {
       icon={icon}
       button={button}
       className={extraClasses}
+      cardCustomStyle={cardCustomStyle}
     />
   );
 

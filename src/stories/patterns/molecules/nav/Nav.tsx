@@ -102,6 +102,8 @@ export interface NavProps {
   containerRelativeMenu?: boolean;
   /** Add `toggle-open-menus` behaviour class. */
   toggleOpenMenus?: boolean;
+  /** HTML `role` attribute for the `<nav>` element. */
+  navRole?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -422,6 +424,7 @@ export function Nav({
   relativeMegaMenu = false,
   containerRelativeMenu = false,
   toggleOpenMenus = false,
+  navRole,
 }: NavProps) {
   const uid = useId().replace(/:/g, '');
   const navRef = useRef<HTMLElement>(null);
@@ -486,6 +489,7 @@ export function Nav({
         className={navbarCls}
         id={navbarId}
         {...(navbarAriaLabel ? { 'aria-label': navbarAriaLabel } : {})}
+        {...(navRole ? { role: navRole } : {})}
         data-pattern="timberland/nav"
       >
         {items.length > 0 && (

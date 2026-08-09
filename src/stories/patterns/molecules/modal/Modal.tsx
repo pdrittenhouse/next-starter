@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useId, useState } from 'react';
-import { Modal as BsModal } from 'react-bootstrap';
+import React, { useId, useMemo, useState } from 'react';
+import { Modal as BsModal, ModalDialog } from 'react-bootstrap';
 import { Button } from '@/stories/patterns/atoms/button/Button';
 import type { ButtonVariant } from '@/stories/patterns/atoms/button/Button';
 import styles from './modal.module.scss';
@@ -177,6 +177,8 @@ export interface ModalProps {
   className?: string;
   /** Additional CSS class names for the `.modal-dialog` element. */
   modalDialogClassName?: string;
+  /** Inline CSS style for the `.modal-dialog` element. */
+  modalDialogStyle?: React.CSSProperties;
   /** Additional CSS class names for the `.modal-content` element. */
   modalContentClassName?: string;
   /** Additional CSS class names for the `.modal-title` element. */
@@ -215,11 +217,22 @@ export function Modal({
   modalButton,
   className,
   modalDialogClassName,
+  modalDialogStyle,
   modalContentClassName,
   modalTitleClassName,
   modalBodyClassName,
 }: ModalProps) {
   const [show, setShow] = useState(false);
+
+  // When a dialog style is provided, create a custom dialog component that applies
+  // it to the .modal-dialog element while delegating all class-building to ModalDialog.
+  const dialogAs = useMemo((): React.ElementType | undefined => {
+    if (!modalDialogStyle) return undefined;
+    const style = modalDialogStyle;
+    return function StyledModalDialog(props: React.ComponentPropsWithoutRef<typeof ModalDialog>) {
+      return <ModalDialog {...props} style={style} />;
+    };
+  }, [modalDialogStyle]);
 
   const generated = useId().replace(/:/g, '');
   const modalId = propModalId || `modal_${generated}`;
@@ -320,6 +333,7 @@ export function Modal({
         className={modalExtraClasses}
         dialogClassName={modalDialogClassName}
         contentClassName={contentClasses}
+        {... (dialogAs ? { dialogAs } : {})}
       >
         {/* Header */}
         {showHeader && (

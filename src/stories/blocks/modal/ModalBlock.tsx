@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { Modal } from '@/stories/patterns/molecules/modal/Modal';
@@ -91,6 +92,14 @@ interface ModalBlockData {
   // --- Modal colours ---
   modal_bg_color?: AcfColorField;
   modal_text_color?: AcfColorField;
+  modal_margin?: {
+    margin?: {
+      top?: { top?: number | null; auto?: boolean };
+      bottom?: { bottom?: number | null; auto?: boolean };
+      left?: { left?: number | null; auto?: boolean };
+      right?: { right?: number | null; auto?: boolean };
+    };
+  };
 
   // --- Header close button ---
   /** Show the close (X) button in the modal header. */
@@ -185,6 +194,22 @@ export async function ModalBlock({ block }: ModalBlockProps) {
   const backgroundColor = resolvePaletteColor(data.modal_bg_color);
   const textColor = resolvePaletteColor(data.modal_text_color);
 
+  // --- Modal dialog margin ---
+  const modalMargin = data.modal_margin?.margin;
+  const modalDialogStyle: CSSProperties = {};
+  if (modalMargin?.top?.auto) modalDialogStyle.marginTop = 'auto';
+  else if (modalMargin?.top?.top != null && modalMargin.top.top >= 0)
+    modalDialogStyle.marginTop = `${modalMargin.top.top}px`;
+  if (modalMargin?.bottom?.auto) modalDialogStyle.marginBottom = 'auto';
+  else if (modalMargin?.bottom?.bottom != null && modalMargin.bottom.bottom >= 0)
+    modalDialogStyle.marginBottom = `${modalMargin.bottom.bottom}px`;
+  if (modalMargin?.left?.auto) modalDialogStyle.marginLeft = 'auto';
+  else if (modalMargin?.left?.left != null && modalMargin.left.left >= 0)
+    modalDialogStyle.marginLeft = `${modalMargin.left.left}px`;
+  if (modalMargin?.right?.auto) modalDialogStyle.marginRight = 'auto';
+  else if (modalMargin?.right?.right != null && modalMargin.right.right >= 0)
+    modalDialogStyle.marginRight = `${modalMargin.right.right}px`;
+
   // --- Trigger button ---
   const triggerBtn = data.trigger_button;
   const modalButton = triggerBtn
@@ -278,6 +303,7 @@ export async function ModalBlock({ block }: ModalBlockProps) {
       showModalButton={data.trigger}
       modalButton={modalButton}
       className={blockClasses}
+      modalDialogStyle={Object.keys(modalDialogStyle).length > 0 ? modalDialogStyle : undefined}
     />
   );
 }

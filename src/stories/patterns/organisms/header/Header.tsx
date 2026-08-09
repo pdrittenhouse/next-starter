@@ -103,8 +103,8 @@ export interface HeaderProps {
 
   /**
    * Hamburger animation style. Maps to `hamburger--{animation}`.
-   * Mirrors `options.hamburger_animation | default('boring')` in the Twig.
-   * @default 'boring'
+   * Mirrors `options.hamburger_animation | default('collapse')` in the Twig.
+   * @default 'collapse'
    */
   hamburgerAnimation?: string;
 
@@ -258,7 +258,7 @@ function buildTogglerClasses(
     'button',
     'navbar-toggler',
     'hamburger',
-    `hamburger--${hamburgerAnimation ?? 'boring'}`,
+    `hamburger--${hamburgerAnimation ?? 'collapse'}`,
   ];
 
   if (navbarTogglerClasses) {

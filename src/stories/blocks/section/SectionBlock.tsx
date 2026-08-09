@@ -40,6 +40,44 @@ interface SectionBlockData {
   overlay_bg?: { bg_color?: string | null; bg_theme_color?: string | null; bg_custom_color?: string | null };
   gradient_overlay?: boolean;
   overlay_opacity?: number | null;
+  col_gap?: { value?: number | string | null; unit?: string | null };
+  vertical_alignment?: {
+    vert_align?: Array<{ breakpoint?: string | null; alignment?: string | null }>;
+  };
+  bg_image?: {
+    bg_image_type?: 'file' | 'url' | null;
+    bg_image?: { url?: string | null } | null;
+    bg_image_url?: string | null;
+    bg_horizontal_position?: string | null;
+    custom_bg_horizontal_position?: string | null;
+    bg_vertical_position?: string | null;
+    custom_bg_vertical_position?: string | null;
+    bg_size?: string | null;
+    custom_bg_size?: string | null;
+    bg_repeat?: string | null;
+    bg_attachment?: string | null;
+  };
+  bg_video?: boolean;
+  bg_mp4?: string | null;
+  bg_webm?: string | null;
+  bg_ogv?: string | null;
+  jumbotron_bg_image?: {
+    bg_image_type?: 'file' | 'url' | null;
+    bg_image?: { url?: string | null } | null;
+    bg_image_url?: string | null;
+  };
+  bg_loop?: boolean;
+  bg_muted?: boolean;
+  bg_autoplay?: boolean;
+  bg_resizing?: boolean;
+  bg_horizontal_position?: number | null;
+  bg_vertical_position?: number | null;
+  jumbotron_bg_color?: {
+    bg_color?: string | null;
+    bg_theme_color?: string | null;
+    bg_custom_color?: string | null;
+  };
+  bg_video_classes?: string | null;
   section_element?: 'section' | 'div' | 'aside' | null;
 }
 
@@ -87,6 +125,76 @@ function buildOverlayStyle(
   return style;
 }
 
+function buildBgImageStyle(
+  bgImage: SectionBlockData['bg_image'],
+  isBgVideo: boolean,
+): CSSProperties {
+  if (isBgVideo || !bgImage) return {};
+  const style: CSSProperties = {};
+  const url =
+    bgImage.bg_image_type === 'file' && bgImage.bg_image?.url
+      ? bgImage.bg_image.url
+      : bgImage.bg_image_type === 'url' && bgImage.bg_image_url
+        ? bgImage.bg_image_url
+        : null;
+  if (url) style.backgroundImage = `url('${url}')`;
+  const size = bgImage.bg_size === 'custom' && bgImage.custom_bg_size
+    ? bgImage.custom_bg_size
+    : bgImage.bg_size ?? undefined;
+  if (size) style.backgroundSize = size;
+  const hPos = bgImage.bg_horizontal_position === 'custom' && bgImage.custom_bg_horizontal_position
+    ? bgImage.custom_bg_horizontal_position
+    : bgImage.bg_horizontal_position ?? undefined;
+  const vPos = bgImage.bg_vertical_position === 'custom' && bgImage.custom_bg_vertical_position
+    ? bgImage.custom_bg_vertical_position
+    : bgImage.bg_vertical_position ?? undefined;
+  if (hPos || vPos) style.backgroundPosition = `${hPos ?? ''} ${vPos ?? ''}`.trim();
+  if (bgImage.bg_repeat) style.backgroundRepeat = bgImage.bg_repeat;
+  if (bgImage.bg_attachment) style.backgroundAttachment = bgImage.bg_attachment;
+  return style;
+}
+
+function buildBgVideoProps(data: SectionBlockData): Record<string, string> {
+  if (!data.bg_video) return {};
+  const props: Record<string, string> = {};
+  if (data.bg_mp4) props['data-mp4'] = data.bg_mp4;
+  if (data.bg_webm) props['data-webm'] = data.bg_webm;
+  if (data.bg_ogv) props['data-ogv'] = data.bg_ogv;
+  const poster =
+    data.jumbotron_bg_image?.bg_image_type === 'file' && data.jumbotron_bg_image?.bg_image?.url
+      ? data.jumbotron_bg_image.bg_image.url
+      : data.jumbotron_bg_image?.bg_image_type === 'url' && data.jumbotron_bg_image?.bg_image_url
+        ? data.jumbotron_bg_image.bg_image_url
+        : null;
+  if (poster) props['data-poster'] = poster;
+  props['data-loop'] = data.bg_loop === true ? 'true' : 'false';
+  props['data-muted'] = data.bg_muted === true ? 'true' : 'false';
+  props['data-autoplay'] = data.bg_autoplay === true ? 'true' : 'false';
+  props['data-resizing'] = data.bg_resizing === true ? 'true' : 'false';
+  const hpos = data.bg_horizontal_position ?? 0;
+  const vpos = data.bg_vertical_position ?? 0;
+  props['data-position'] = `${hpos}% ${vpos}%`;
+  const bgColor =
+    data.jumbotron_bg_color?.bg_color === 'custom' && data.jumbotron_bg_color.bg_custom_color
+      ? data.jumbotron_bg_color.bg_custom_color
+      : data.jumbotron_bg_color?.bg_color === 'palette' && data.jumbotron_bg_color.bg_theme_color
+        ? `var(--${data.jumbotron_bg_color.bg_theme_color})`
+        : 'transparent';
+  props['data-bg-color'] = bgColor;
+  if (data.bg_video_classes) props['data-video-classes'] = data.bg_video_classes;
+  return props;
+}
+
+function buildVerticalAlignmentClasses(va: SectionBlockData['vertical_alignment']): string[] {
+  if (!va?.vert_align?.length) return [];
+  return va.vert_align
+    .filter(item => item.alignment)
+    .map(item => {
+      const bp = item.breakpoint ? `-${item.breakpoint}` : '';
+      return `align-items${bp}-${item.alignment}`;
+    });
+}
+
 export async function SectionBlock({ block, children }: SectionBlockProps) {
   const attrs = parseBlockAttributes(block) as {
     data?: SectionBlockData;
@@ -104,7 +212,7 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
       : null;
 
   // Remap section-specific field names to standard AcfBlockStyleData shape
-  const { style: acfStyle, bgClass } = buildAcfBlockStyle({
+  const { style: acfStyle, bgClass: acfBgClass } = buildAcfBlockStyle({
     height:        data.height,
     padding:       data.padding,
     border:        data.section_border,
@@ -112,6 +220,7 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
     box_shadow:    data.section_box_shadow,
     bg_color:      data.section_bg_color,
   });
+  const bgClass = data.bg_video ? null : acfBgClass;
 
   // Section uses a shallower margin structure (top/bottom only, no inner margin wrapper)
   const marginStyle = resolveSectionMargin(data.margin);
@@ -119,11 +228,19 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
   const textClass =
     data.color === 'palette' && data.theme_color ? `text-${data.theme_color}` : null;
 
+  const bgImageStyle = buildBgImageStyle(data.bg_image, data.bg_video ?? false);
+  const bgVideoProps = buildBgVideoProps(data);
+  const vaClasses = buildVerticalAlignmentClasses(data.vertical_alignment);
+  const colGapStyle: CSSProperties = data.col_gap?.value != null
+    ? { columnGap: `${data.col_gap.value}${data.col_gap.unit ?? ''}` }
+    : {};
+
   const sectionClasses = cx(styles, 'block-section', layoutMod, bgClass, textClass, attrs.className);
 
   const sectionStyle: CSSProperties = {
     ...acfStyle,
     ...marginStyle,
+    ...bgImageStyle,
     ...(data.color === 'custom' && data.custom_color ? { color: data.custom_color } : {}),
   };
 
@@ -172,6 +289,7 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
     <Tag
       className={sectionClasses || undefined}
       style={Object.keys(sectionStyle).length > 0 ? sectionStyle : undefined}
+      {...bgVideoProps}
     >
       {data.include_overlay && (
         <span
@@ -179,7 +297,10 @@ export async function SectionBlock({ block, children }: SectionBlockProps) {
           style={Object.keys(overlayStyle).length > 0 ? overlayStyle : undefined}
         />
       )}
-      <div className={cx(styles, 'block-section--wrapper')}>
+      <div
+        className={cx(styles, 'block-section--wrapper', ...vaClasses)}
+        style={Object.keys(colGapStyle).length > 0 ? colGapStyle : undefined}
+      >
         {containerClasses ? (
           <div className={containerClasses}>
             {innerContent}

@@ -38,10 +38,59 @@ interface SliderBlockData extends Pick<AcfBlockStyleData, 'width' | 'padding' | 
   keyboard?: boolean;
   slides_to_show?: number | null;
   slides_to_scroll?: number | null;
+  // Flickity additional
+  selected_attraction?: number | null;
+  friction?: number | null;
+  free_scroll_friction?: number | null;
+  percent_position?: boolean;
+  arrow_shape?: string | null;
+  show_custom_controls?: boolean;
+  // Slick additional
+  rows?: number | null;
+  slides_per_row?: number | null;
+  center_mode?: boolean;
+  center_padding?: { value?: number | null; unit?: string | null };
+  vertical?: boolean;
+  vertical_swiping?: boolean;
+  focus_on_select?: boolean;
+  pause_on_focus?: boolean;
+  pause_on_dots_hover?: boolean;
+  swipe_to_slide?: boolean;
+  touch_move?: boolean;
+  speed?: number | null;
+  variable_width?: boolean;
+  edge_friction?: number | null;
+  easing?: string | null;
+  css_ease?: string | null;
+  // Slick responsive breakpoints (ACF repeater)
+  responsive?: Array<{
+    breakpoint?: number | null;
+    settings?: Array<{
+      setting?: string | null;
+      value_type?: string | null;
+      value?: string | number | null;
+    }>;
+  }>;
 }
 
 interface SliderBlockProps {
   block: EditorBlock;
+}
+
+function buildSlickResponsive(
+  responsive: SliderBlockData['responsive'],
+): Array<{ breakpoint: number; settings: Record<string, unknown> }> {
+  if (!responsive?.length) return [];
+  return responsive
+    .filter(item => item.breakpoint != null)
+    .map(item => {
+      const settings: Record<string, unknown> = {};
+      for (const s of item.settings ?? []) {
+        if (!s.setting) continue;
+        settings[s.setting] = s.value_type === 'int' ? Number(s.value) : s.value;
+      }
+      return { breakpoint: item.breakpoint!, settings };
+    });
 }
 
 export async function SliderBlock({ block }: SliderBlockProps) {
@@ -102,6 +151,11 @@ export async function SliderBlock({ block }: SliderBlockProps) {
         rightToLeft={data.right_to_left}
         dragThreshold={data.drag_threshold ?? undefined}
         columns={data.columns ?? undefined}
+        selectedAttraction={data.selected_attraction ?? undefined}
+        friction={data.friction ?? undefined}
+        freeScrollFriction={data.free_scroll_friction ?? undefined}
+        percentPosition={data.percent_position}
+        showControls={data.show_custom_controls}
       />
     );
   } else if (data.slider === 'slick') {
@@ -123,6 +177,24 @@ export async function SliderBlock({ block }: SliderBlockProps) {
         swipe={data.swipe}
         rtl={data.right_to_left}
         pauseOnHover={data.pause_on_hover}
+        rows={data.rows ?? undefined}
+        slidesPerRow={data.slides_per_row ?? undefined}
+        centerMode={data.center_mode}
+        centerPadding={data.center_padding?.value != null ? `${data.center_padding.value}${data.center_padding.unit ?? 'px'}` : undefined}
+        vertical={data.vertical}
+        verticalSwiping={data.vertical_swiping}
+        focusOnSelect={data.focus_on_select}
+        pauseOnFocus={data.pause_on_focus}
+        pauseOnDotsHover={data.pause_on_dots_hover}
+        swipeToSlide={data.swipe_to_slide}
+        touchMove={data.touch_move}
+        speed={data.speed ?? undefined}
+        variableWidth={data.variable_width}
+        edgeFriction={data.edge_friction ?? undefined}
+        easing={data.easing ?? undefined}
+        cssEase={data.css_ease ?? undefined}
+        customControls={data.show_custom_controls}
+        responsive={buildSlickResponsive(data.responsive)}
       />
     );
   } else if (block.renderedHtml) {

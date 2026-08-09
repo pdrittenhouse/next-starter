@@ -111,6 +111,8 @@ export interface CardProps {
    * Maps to background_image in Twig.
    */
   backgroundImage?: string;
+  /** Additional inline styles applied to the card wrapper element. */
+  cardCustomStyle?: React.CSSProperties;
 
   // ─── Header area ───────────────────────────────────────────────────────────
   /**
@@ -283,6 +285,7 @@ export function Card({
   noBorder = false,
   inheritColor = false,
   backgroundImage,
+  cardCustomStyle,
   icon,
   label,
   header,
@@ -330,10 +333,10 @@ export function Card({
 
   // ─── Inline styles ──────────────────────────────────────────────────────────
   // Non-flip: background image on the card wrapper itself.
-  const cardStyle: React.CSSProperties =
-    !flipCard && backgroundImage
-      ? { backgroundImage: `url('${backgroundImage}')` }
-      : {};
+  const cardStyle: React.CSSProperties = {
+    ...((!flipCard && backgroundImage) ? { backgroundImage: `url('${backgroundImage}')` } : {}),
+    ...(cardCustomStyle ?? {}),
+  };
 
   // Flip front/back background images on their respective face divs.
   const frontStyle: React.CSSProperties =
