@@ -291,7 +291,11 @@ function NavItemEntry({
         )}
 
         {!hasMegaMenu && hasChildren && item.items && (
-          <SubMenuTag className={subMenuClasses} id={toggleTargetId}>
+          <SubMenuTag
+            className={subMenuClasses}
+            id={toggleTargetId}
+            {...(depth === 0 && isOpen ? { style: { top: '100%', left: '0' } } : {})}
+          >
             {item.items.map((child, childIndex) => (
               <NavItemEntry
                 key={`${baseId}-${depth + 1}-${childIndex}`}
