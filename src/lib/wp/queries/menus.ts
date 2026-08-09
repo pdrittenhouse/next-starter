@@ -17,6 +17,7 @@ export const GET_ALL_MENUS = gql`
                 description
                 locations
                 menuItemId
+                megaMenuPanelId
                 order
                 path
                 target
@@ -98,6 +99,7 @@ export const GET_MENU_BY_LOCATION = gql`
               cssClasses
               description
               menuItemId
+              megaMenuPanelId
               order
               path
               target

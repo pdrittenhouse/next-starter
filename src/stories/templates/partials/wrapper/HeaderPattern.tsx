@@ -9,6 +9,7 @@ import { acfButtonToProps } from '@/lib/wp/utils/acfButtonToProps';
 import GET_CUSTOMIZER_SETTINGS from '@/lib/wp/queries/customizer-settings';
 import { GET_HEADER_OPTIONS, GET_HEADER_LAYOUT_OPTIONS, GET_CO_BRAND } from '@/lib/wp/queries/acf-options';
 import { GET_MENU_BY_LOCATION } from '@/lib/wp/queries/menus';
+import { GET_MEGA_MENU_PANEL_BY_ID } from '@/lib/wp/queries/mega-menu-panels';
 import { GET_WIDGET_AREA_BLOCKS } from '@/lib/wp/queries/widgets';
 import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { BlockRenderer } from '@/stories/templates/partials/block-renderer';
@@ -58,6 +59,14 @@ const getMenuByLocation = cache(async (location: string) => {
   return (data as any)?.menus?.nodes?.[0] ?? null;
 });
 
+const getMegaMenuPanel = cache(async (id: number) => {
+  const { data } = await fetchGraphQL<{ megaMenuPanel: any }>(
+    print(GET_MEGA_MENU_PANEL_BY_ID),
+    { id: String(id) },
+  ).catch(() => ({ data: null }));
+  return (data as any)?.megaMenuPanel?.content ?? null;
+});
+
 export async function HeaderPattern() {
   const [
     customizer, headerOptions, layout, coBrandData,
@@ -76,6 +85,25 @@ export async function HeaderPattern() {
   ]);
 
   if (headerOptions?.hideHeader) return null;
+
+  // ── Mega menu panel content ──────────────────────────────────────────
+  const _panelEdges = [
+    ...(primaryMenu?.menuItems?.edges ?? []),
+    ...(secondaryMenu?.menuItems?.edges ?? []),
+  ];
+  const _panelIds = [...new Set(
+    _panelEdges
+      .map(({ node }: any) => node.megaMenuPanelId)
+      .filter((id: any): id is number => typeof id === 'number' && id > 0),
+  )];
+
+  const panelContentMap: Record<number, string> = {};
+  if (_panelIds.length) {
+    const _panelContents = await Promise.all(_panelIds.map(getMegaMenuPanel));
+    for (let i = 0; i < _panelIds.length; i++) {
+      if (_panelContents[i]) panelContentMap[_panelIds[i]] = _panelContents[i];
+    }
+  }
 
   // ── Navbar breakpoint ────────────────────────────────────────────────
   const rawBp = Array.isArray(headerOptions?.navbarBreakpoint)
@@ -203,7 +231,7 @@ export async function HeaderPattern() {
   const secondaryNavVisibility = visClass(layoutOpts.hideSecondaryNav);
   const secondaryNavItems = secondaryMenu?.menuItems?.edges?.length
     ? {
-        items: menuItemsToNavItems(secondaryMenu.menuItems.edges),
+        items: menuItemsToNavItems(secondaryMenu.menuItems.edges, panelContentMap),
         navId: 'secondaryNav',
         navbarBreakpoint: 'xs',
         navOtherClasses: ['secondary-nav', secondaryNavVisibility].filter(Boolean).join(' ') || undefined,
@@ -213,7 +241,7 @@ export async function HeaderPattern() {
   const primaryNavVisibility = visClass(layoutOpts.hidePrimaryNav);
   const primaryNavItems = primaryMenu?.menuItems?.edges?.length
     ? {
-        items: menuItemsToNavItems(primaryMenu.menuItems.edges),
+        items: menuItemsToNavItems(primaryMenu.menuItems.edges, panelContentMap),
         navbarId: 'primaryNavigation',
         navId: 'primaryNav',
         navOtherClasses: ['primary-nav', primaryNavVisibility].filter(Boolean).join(' ') || undefined,

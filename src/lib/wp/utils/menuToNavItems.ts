@@ -11,6 +11,7 @@ interface WpMenuItemNode {
   cssClasses?: string[] | null;
   description?: string | null;
   menuItemId?: number | null;
+  megaMenuPanelId?: number | null;
 }
 
 interface WpMenuItemEdge {
@@ -20,14 +21,21 @@ interface WpMenuItemEdge {
 /**
  * Converts WPGraphQL's flat menuItems.edges array (with parentId references)
  * into a nested NavItem tree suitable for the Nav molecule.
+ *
+ * Pass a `panelContentMap` (databaseId → rendered HTML) to populate `megaMenu`
+ * on items that reference a mega menu panel post.
  */
-export function menuItemsToNavItems(edges: WpMenuItemEdge[]): NavItem[] {
+export function menuItemsToNavItems(
+  edges: WpMenuItemEdge[],
+  panelContentMap: Record<number, string> = {},
+): NavItem[] {
   if (!edges?.length) return [];
 
   type TreeNode = NavItem & { _id: string; _parentId: string | null };
   const map = new Map<string, TreeNode>();
 
   for (const { node } of edges) {
+    const panelContent = node.megaMenuPanelId ? panelContentMap[node.megaMenuPanelId] : undefined;
     map.set(node.id, {
       _id: node.id,
       _parentId: node.parentId || null,
@@ -37,6 +45,7 @@ export function menuItemsToNavItems(edges: WpMenuItemEdge[]): NavItem[] {
       linkTarget: node.target || undefined,
       description: node.description || undefined,
       linkId: undefined,
+      megaMenu: panelContent ? { enabled: true, content: panelContent } : undefined,
       items: [],
     });
   }

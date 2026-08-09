@@ -11,6 +11,7 @@ export interface WpMenuItem {
   description?: string;
   locations?: string[];
   menuItemId?: number;
+  megaMenuPanelId?: number;
   order?: number;
   path?: string;
   target?: string;
