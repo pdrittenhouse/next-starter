@@ -1,3 +1,4 @@
+import React from 'react';
 import { cache } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
@@ -30,6 +31,21 @@ export async function TravelingCtaPattern() {
     rawHideOn === 'both' || rawHideOn === 'desktop' || rawHideOn === 'mobile'
       ? (rawHideOn as 'both' | 'desktop' | 'mobile')
       : undefined;
+
+  const tctaBgThemeColor =
+    opts.tctaBgColor?.bgColor === 'palette' && opts.tctaBgColor?.bgThemeColor
+      ? opts.tctaBgColor.bgThemeColor
+      : undefined;
+
+  const alignment = opts.tctaAlignment?.horAlign
+    ?.map((a: any) => ({ breakpoint: a.breakpoint ?? undefined, alignment: a.alignment ?? 'center' }))
+    ?.filter((a: any) => !!a.alignment) ?? undefined;
+
+  const wrapperStyle: React.CSSProperties = {};
+  if (opts.tctaPadding?.padding?.top != null) wrapperStyle.paddingTop = `${opts.tctaPadding.padding.top}px`;
+  if (opts.tctaPadding?.padding?.bottom != null) wrapperStyle.paddingBottom = `${opts.tctaPadding.padding.bottom}px`;
+  if (opts.tctaPadding?.padding?.left != null) wrapperStyle.paddingLeft = `${opts.tctaPadding.padding.left}px`;
+  if (opts.tctaPadding?.padding?.right != null) wrapperStyle.paddingRight = `${opts.tctaPadding.padding.right}px`;
 
   const travelingCtas: TravelingCtaItem[] = (opts.travelingCtas ?? []).map((cta: any): TravelingCtaItem => {
     const rawVariant = Array.isArray(cta.style) ? cta.style[0] : cta.style;
@@ -65,6 +81,12 @@ export async function TravelingCtaPattern() {
     <TravelingCta
       hideOn={hideOn}
       autoWidth={opts.tctaAutoWidth ?? false}
+      includeContainer={opts.includeTctaContainer ?? false}
+      fullWidth={opts.tctaFullWidth ?? false}
+      reverseOrder={opts.tctaReverseOrder ?? false}
+      bgThemeColor={tctaBgThemeColor}
+      alignment={alignment?.length ? alignment : undefined}
+      wrapperStyle={Object.keys(wrapperStyle).length ? wrapperStyle : undefined}
       travelingCtas={travelingCtas}
     />
   );

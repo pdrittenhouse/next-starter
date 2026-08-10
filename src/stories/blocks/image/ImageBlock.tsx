@@ -56,6 +56,9 @@ interface ImageBlockData extends AcfBlockStyleData {
   alt_text?: string | null;
   caption?: string | null;
   overlay_text?: string | null;
+  overlay_bg_color?: { bg_color?: string | null; bg_theme_color?: string | null; bg_custom_color?: string | null } | null;
+  trigger_modal?: boolean;
+  modal_id?: string | null;
   link?: { url?: string; title?: string; target?: string } | null;
   object_fit?: string | null;
 }
@@ -171,23 +174,43 @@ export async function ImageBlock({ block }: ImageBlockProps) {
     />
   );
 
-  // Optional link wrapper — mirrors {% if link and link.url %}
-  const linkedImage = data.link?.url ? (
-    <a
-      href={data.link.url}
-      target={data.link.target ?? undefined}
-      title={data.link.title ?? undefined}
-      rel={data.link.target === '_blank' ? 'noopener noreferrer' : undefined}
-    >
-      {imageEl}
-    </a>
+  // Link wrapper — trigger_modal takes precedence over link.url
+  const showLink = data.trigger_modal === true || !!data.link?.url;
+  const linkedImage = showLink ? (
+    data.trigger_modal ? (
+      // eslint-disable-next-line react/jsx-no-target-blank
+      <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target={`#${data.modal_id}`}>
+        {imageEl}
+      </a>
+    ) : (
+      <a
+        href={data.link!.url}
+        target={data.link!.target ?? undefined}
+        title={data.link!.title ?? undefined}
+        rel={data.link!.target === '_blank' ? 'noopener noreferrer' : undefined}
+      >
+        {imageEl}
+      </a>
+    )
   ) : imageEl;
+
+  const overlayBgClass =
+    data.overlay_bg_color?.bg_color === 'palette' && data.overlay_bg_color?.bg_theme_color
+      ? `bg-${data.overlay_bg_color.bg_theme_color}`
+      : null;
+  const overlayBgStyle: CSSProperties | undefined =
+    data.overlay_bg_color?.bg_color === 'custom' && data.overlay_bg_color?.bg_custom_color
+      ? { backgroundColor: data.overlay_bg_color.bg_custom_color }
+      : undefined;
 
   // Optional overlay text — mirrors {% if overlay_text %}
   const withOverlay = data.overlay_text ? (
     <div className={cx(styles, 'image-overlay-wrapper', 'position-relative')}>
       {linkedImage}
-      <div className={cx(styles, 'image-overlay', 'image-overlay--text', 'position-absolute', 'top-0', 'start-0', 'w-100', 'h-100', 'd-flex', 'align-items-center', 'justify-content-center')}>
+      <div
+        className={cx(styles, 'image-overlay', 'image-overlay--text', 'position-absolute', 'top-0', 'start-0', 'w-100', 'h-100', 'd-flex', 'align-items-center', 'justify-content-center', overlayBgClass)}
+        style={overlayBgStyle}
+      >
         <div
           className={cx(styles, 'overlay-text-content', 'p-3', 'text-center')}
           dangerouslySetInnerHTML={{ __html: data.overlay_text }}

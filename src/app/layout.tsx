@@ -69,11 +69,20 @@ export default async function RootLayout({
           headerPosition
           shrinkHeader
           navbarBreakpoint
+          removeHeaderContainers
+          includeMenuOverlay
+        }
+      }
+      themeFooterOptions {
+        settingsFooterOptions {
+          stickyFooter
+          removeFooterContainers
         }
       }
       themeGeneralOptions {
         settingsThemeGeneralOptions {
           removeContentContainers
+          bodyClasses
         }
       }
     }
@@ -149,6 +158,14 @@ export default async function RootLayout({
   const rawBp = headerOpts?.navbarBreakpoint;
   const navbarBreakpoint: string = (Array.isArray(rawBp) ? rawBp[0] : rawBp) ?? 'lg';
   const removeContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.removeContentContainers === true;
+  const removeHeaderContainers = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions?.removeHeaderContainers === true;
+  const includeMenuOverlay = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions?.includeMenuOverlay === true;
+  const removeFooterContainers = (cssData as any)?.themeFooterOptions?.settingsFooterOptions?.removeFooterContainers === true;
+  const stickyFooter = (cssData as any)?.themeFooterOptions?.settingsFooterOptions?.stickyFooter === true;
+  const wpBodyClasses: string | null = [
+    (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.bodyClasses ?? null,
+    includeMenuOverlay ? 'has-menu-overlays' : null,
+  ].filter(Boolean).join(' ') || null;
 
   const bodyClasses = [
     headerPosition ? `${headerPosition}-header-enabled` : 'static-header-enabled',
@@ -156,10 +173,12 @@ export default async function RootLayout({
     customBackgroundCss ? 'custom-background' : null,
     removeContentContainers !== true ? 'include-content-containers' : null,
     `navbar-bp-${navbarBreakpoint}`,
-    'include-header-containers',
-    'include-footer-containers',
+    removeHeaderContainers !== true ? 'include-header-containers' : null,
+    removeFooterContainers !== true ? 'include-footer-containers' : null,
+    stickyFooter ? 'sticky-footer' : null,
     'max-width-content-container',
     'max-width-footer-container',
+    wpBodyClasses ?? null,
   ].filter(Boolean).join(' ');
 
   return (

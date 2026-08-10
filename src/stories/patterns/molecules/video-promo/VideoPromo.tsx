@@ -113,6 +113,11 @@ export interface VideoPromoProps {
    * Twig: `video_promo_ctas`.
    */
   ctas?: ButtonProps[];
+  /**
+   * Additional HTML attributes spread onto the root element.
+   * Twig: `video_promo_other_attributes`.
+   */
+  otherAttributes?: Record<string, string>;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -135,6 +140,7 @@ export const VideoPromo = ({
   introColor,
   video,
   ctas,
+  otherAttributes,
 }: VideoPromoProps) => {
   const promoRef = useRef<HTMLDivElement>(null);
 
@@ -204,6 +210,7 @@ export const VideoPromo = ({
       ref={promoRef}
       className={rootClasses}
       data-pattern="timberland/video-promo"
+      {...(otherAttributes ?? {})}
     >
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       {hasHeader && (

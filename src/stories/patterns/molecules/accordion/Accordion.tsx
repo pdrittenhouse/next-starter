@@ -38,6 +38,8 @@ export interface AccordionItem {
   itemOtherClasses?: string;
   /** Explicit HTML id for the accordion-item wrapper. Auto-generated when omitted. */
   itemId?: string;
+  /** Additional HTML attributes for the accordion-item wrapper. Mirrors accordion_item_other_attributes. */
+  itemOtherAttributes?: Record<string, string>;
 }
 
 /**
@@ -96,6 +98,7 @@ function AccordionItemComponent({
     <div
       className={itemClasses}
       {...(item.itemId ? { id: item.itemId } : {})}
+      {...(item.itemOtherAttributes ?? {})}
     >
       <HeaderTag className={cx(styles, 'accordion-header')} id={headerId}>
         <Button

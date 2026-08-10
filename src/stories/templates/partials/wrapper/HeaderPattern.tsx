@@ -228,6 +228,10 @@ export async function HeaderPattern() {
   // ── Navigation ───────────────────────────────────────────────────────
   // navId, navOtherClasses, and navbarBreakpoint mirror header.twig:274–284
   // (secondary) and header.twig:312–323 (primary).
+  const hoverDropdown = headerOptions?.hoverDropdown === true;
+  const toggleOpenMenus = headerOptions?.toggleMenus === true;
+  const navbarOverlayClass = headerOptions?.includeMenuOverlay === true ? 'has-overlay' : undefined;
+
   const secondaryNavVisibility = visClass(layoutOpts.hideSecondaryNav);
   const secondaryNavItems = secondaryMenu?.menuItems?.edges?.length
     ? {
@@ -235,6 +239,7 @@ export async function HeaderPattern() {
         navId: 'secondaryNav',
         navbarBreakpoint: 'xs',
         navOtherClasses: ['secondary-nav', secondaryNavVisibility].filter(Boolean).join(' ') || undefined,
+        hoverDropdown,
       }
     : undefined;
 
@@ -246,6 +251,9 @@ export async function HeaderPattern() {
         navId: 'primaryNav',
         navOtherClasses: ['primary-nav', primaryNavVisibility].filter(Boolean).join(' ') || undefined,
         relativeMegaMenu: !!(headerOptions?.enableMegaMenus && headerOptions?.navItemRelative),
+        hoverDropdown,
+        toggleOpenMenus,
+        navbarOtherClasses: navbarOverlayClass,
       }
     : undefined;
 

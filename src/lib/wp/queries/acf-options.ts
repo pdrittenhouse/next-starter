@@ -41,6 +41,12 @@ export const GET_THEME_GENERAL_OPTIONS = gql`
           gtmConsentCookieName
         }
         gaMeasurementId
+        bodyClasses
+        fluidContentContainers
+        maxWidthFluidContainers
+        removePageHeaderContainers
+        postDisplay
+        gridColumns
       }
     }
   }
@@ -71,6 +77,10 @@ export const GET_HEADER_OPTIONS = gql`
         enableMegaMenus
         navItemRelative
         containerRelative
+        hoverDropdown
+        toggleMenus
+        includeMenuOverlay
+        removeHeaderContainers
         siteHeaderLayout {
           headerLayout
         }
@@ -141,6 +151,9 @@ export const GET_FOOTER_OPTIONS = gql`
     themeFooterOptions {
       settingsFooterOptions {
         hideFooterContent
+        stickyFooter
+        removeFooterContainers
+        fluidFooterContainers
         footerLogoUseOriginalColor
         footerLogoHeight
         siteFooterLayout {
@@ -186,6 +199,28 @@ export const GET_TRAVELING_CTA_OPTIONS = gql`
       settingsFooterOptions {
         hideTravelingCta
         tctaAutoWidth
+        includeTctaContainer
+        tctaFullWidth
+        tctaReverseOrder
+        tctaBgColor {
+          bgColor
+          bgThemeColor
+          bgCustomColor
+        }
+        tctaAlignment {
+          horAlign {
+            breakpoint
+            alignment
+          }
+        }
+        tctaPadding {
+          padding {
+            top
+            bottom
+            left
+            right
+          }
+        }
         travelingCtas {
           link { title url target }
           style
