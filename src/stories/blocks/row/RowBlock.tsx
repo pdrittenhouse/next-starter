@@ -17,8 +17,8 @@ interface AlignEntry {
 interface RowBlockData {
   vert_gutters?: { gutters?: GutterEntry[] };
   hor_gutters?: { gutters?: GutterEntry[] };
-  vertical_alignment?: { vert_align?: AlignEntry[] };
-  horizontal_alignment?: { hor_align?: AlignEntry[] };
+  vert_align?: AlignEntry[];
+  hor_align?: AlignEntry[];
   container?: boolean;
   full_width?: boolean;
   container_breakpoint?: { breakpoint?: string | null };
@@ -80,8 +80,8 @@ export async function RowBlock({ block, children }: RowBlockProps) {
 
   const vertGutters = buildGutterClasses(data.vert_gutters?.gutters, 'gy');
   const horGutters = buildGutterClasses(data.hor_gutters?.gutters, 'gx');
-  const vertAlign = buildAlignClasses(data.vertical_alignment?.vert_align, 'align-items');
-  const horAlign = buildAlignClasses(data.horizontal_alignment?.hor_align, 'justify-content');
+  const vertAlign = buildAlignClasses(data.vert_align, 'align-items');
+  const horAlign = buildAlignClasses(data.hor_align, 'justify-content');
 
   // When this row adds a container, className goes to the container div (Twig: container_classes).
   // When it doesn't, className goes to the row div (Twig: row_classes when fields.container != true).

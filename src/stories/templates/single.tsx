@@ -3,6 +3,7 @@ import { print } from 'graphql';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_ADJACENT_POSTS } from '@/lib/wp/queries';
+import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 import type { EditorBlock } from '@/types/blocks';
 import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { PageHeader } from './partials/page-header';
@@ -96,6 +97,8 @@ export async function SingleTemplate({ node, removeContentContainerPerPost }: Si
 
   const wrapperStyle = parseCssStyle(node.contentWrapperStyle);
 
+  const { removePageHeaderContainers } = await getContentWrapperOptions();
+
   return (
     <main id="content" className={node.mainClasses ?? 'content-wrapper'}>
       <div className="wrapper" style={wrapperStyle}>
@@ -103,6 +106,7 @@ export async function SingleTemplate({ node, removeContentContainerPerPost }: Si
         <PageHeader
           title={node.title}
           thumbnail={node.featuredImage?.node}
+          removeContainer={removePageHeaderContainers ?? false}
         />
 
         {(node.editorBlocks?.length || node.content) && (

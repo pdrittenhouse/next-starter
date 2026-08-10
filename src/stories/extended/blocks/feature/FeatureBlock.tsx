@@ -44,6 +44,7 @@ interface FeatureBlockData extends Pick<AcfBlockStyleData, 'height' | 'padding' 
   container_breakpoint?: { breakpoint?: string | null } | null;
   bg_color?: { bg_color?: string | null; bg_theme_color?: string | null; bg_custom_color?: string | null } | null;
   text_color?: { color?: string | null; theme_color?: string | null } | null;
+  inherit_color?: boolean;
   layout?: { feature_layout?: string | null } | null;
   bg_image?: {
     bg_image_type?: 'file' | 'url' | null;
@@ -107,11 +108,12 @@ export async function FeatureBlock({ block }: { block: EditorBlock }) {
     data.text_color?.color === 'palette' && data.text_color.theme_color
       ? `text-${data.text_color.theme_color}`
       : null;
+  const inheritColorClass = data.inherit_color ? 'inherit-color' : null;
   const layoutClass =
     data.layout?.feature_layout && data.layout.feature_layout !== 'default'
       ? `feature-${data.layout.feature_layout}`
       : null;
-  const className = cx(styles, 'block-feature', bgClass, textClass, layoutClass, attrs.className);
+  const className = cx(styles, 'block-feature', bgClass, textClass, inheritColorClass, layoutClass, attrs.className);
 
   const imageSrc =
     data.image?.image_type === 'file'

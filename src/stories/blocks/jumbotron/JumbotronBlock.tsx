@@ -126,7 +126,7 @@ interface JumbotronBlockData {
   bg_loop?: boolean;
   bg_muted?: boolean;
   bg_autoplay?: boolean;
-  bg_resizing?: boolean;
+  bg_auto_resize?: boolean;
   bg_horizontal_position?: number | null;
   bg_vertical_position?: number | null;
   bg_video_classes?: string | null;
@@ -139,7 +139,7 @@ interface JumbotronBlockData {
     jumbotron_layout?: string | null;
     gradient?: string | null;
   };
-  overlay_bg?: {
+  overlay_bg_copy?: {
     bg_color?: string | null;
     bg_theme_color?: string | null;
     bg_custom_color?: string | null;
@@ -273,7 +273,7 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
     bgVideoAttrs['data-loop'] = data.bg_loop === true ? 'true' : 'false';
     bgVideoAttrs['data-muted'] = data.bg_muted === true ? 'true' : 'false';
     bgVideoAttrs['data-autoplay'] = data.bg_autoplay === true ? 'true' : 'false';
-    bgVideoAttrs['data-resizing'] = data.bg_resizing === true ? 'true' : 'false';
+    bgVideoAttrs['data-resizing'] = data.bg_auto_resize === true ? 'true' : 'false';
     const hpos = data.bg_horizontal_position ?? 0;
     const vpos = data.bg_vertical_position ?? 0;
     bgVideoAttrs['data-position'] = `${hpos}% ${vpos}%`;
@@ -299,8 +299,8 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
     ? `text-${data.jumbotron_text_color.theme_color}` : null;
 
   // Overlay
-  const overlayBgClass = data.overlay_bg?.bg_color === 'palette' && data.overlay_bg.bg_theme_color
-    ? `bg-${data.overlay_bg.bg_theme_color}` : null;
+  const overlayBgClass = data.overlay_bg_copy?.bg_color === 'palette' && data.overlay_bg_copy.bg_theme_color
+    ? `bg-${data.overlay_bg_copy.bg_theme_color}` : null;
   const overlayGradientClass = data.gradient_overlay === true && (attrs as any).gradient
     ? `gradient-${(attrs as any).gradient}` : null;
   const overlayClass = data.include_overlay
@@ -308,7 +308,7 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
     : undefined;
   const overlayStyle: React.CSSProperties | undefined = (() => {
     const s: React.CSSProperties = {};
-    if (data.overlay_bg?.bg_color === 'custom' && data.overlay_bg.bg_custom_color) s.backgroundColor = data.overlay_bg.bg_custom_color;
+    if (data.overlay_bg_copy?.bg_color === 'custom' && data.overlay_bg_copy.bg_custom_color) s.backgroundColor = data.overlay_bg_copy.bg_custom_color;
     if (data.gradient_overlay === true && (attrs as any).style?.color?.gradient) s.background = (attrs as any).style.color.gradient;
     if (data.overlay_opacity != null) s.opacity = data.overlay_opacity;
     return Object.keys(s).length > 0 ? s : undefined;

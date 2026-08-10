@@ -213,6 +213,24 @@ export const GET_POST_BY_SLUG = gql`
           }
         }
         postSeoNoindex
+        pageSidebar
+        removePageHeaderContainer
+        fluidHeaderContainer
+        fluidContentContainer
+        fluidFooterContainer
+        pageEnableAos
+        pageEnableAnimateCss
+        pageEnableSvgjs
+        pageEnableWowjs
+        pageEnableScrollMagic
+        pageEnableScrollReveal
+        pageEnableJarallax
+        pageEnableParallaxjs
+        pageEnableAnimejs
+        pageEnableLottie
+        pageEnableZdog
+        pageEnableChartjs
+        pageEnableD3
       }
     }
   }
@@ -489,6 +507,7 @@ export const GET_PREVIEW_POST = gql`
         }
         mainClasses
         contentWrapperStyle
+        sidebarSlug
         seo {
           title
           description
@@ -511,6 +530,7 @@ export const GET_PREVIEW_POST = gql`
         }
         mainClasses
         contentWrapperStyle
+        sidebarSlug
         seo {
           title
           description

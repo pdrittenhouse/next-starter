@@ -77,11 +77,14 @@ export default async function RootLayout({
         settingsFooterOptions {
           stickyFooter
           removeFooterContainers
+          fluidFooterContainers
         }
       }
       themeGeneralOptions {
         settingsThemeGeneralOptions {
           removeContentContainers
+          fluidContentContainers
+          maxWidthFluidContainers
           bodyClasses
         }
       }
@@ -158,9 +161,12 @@ export default async function RootLayout({
   const rawBp = headerOpts?.navbarBreakpoint;
   const navbarBreakpoint: string = (Array.isArray(rawBp) ? rawBp[0] : rawBp) ?? 'lg';
   const removeContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.removeContentContainers === true;
+  const fluidContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.fluidContentContainers === true;
+  const maxWidthFluidContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.maxWidthFluidContainers === true;
   const removeHeaderContainers = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions?.removeHeaderContainers === true;
   const includeMenuOverlay = (cssData as any)?.themeHeaderOptions?.settingsHeaderOptions?.includeMenuOverlay === true;
   const removeFooterContainers = (cssData as any)?.themeFooterOptions?.settingsFooterOptions?.removeFooterContainers === true;
+  const fluidFooterContainers = (cssData as any)?.themeFooterOptions?.settingsFooterOptions?.fluidFooterContainers === true;
   const stickyFooter = (cssData as any)?.themeFooterOptions?.settingsFooterOptions?.stickyFooter === true;
   const wpBodyClasses: string | null = [
     (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.bodyClasses ?? null,
@@ -175,9 +181,11 @@ export default async function RootLayout({
     `navbar-bp-${navbarBreakpoint}`,
     removeHeaderContainers !== true ? 'include-header-containers' : null,
     removeFooterContainers !== true ? 'include-footer-containers' : null,
+    fluidFooterContainers ? 'fluid-footer-containers' : null,
     stickyFooter ? 'sticky-footer' : null,
-    'max-width-content-container',
-    'max-width-footer-container',
+    fluidContentContainers ? 'fluid-content-containers' : null,
+    maxWidthFluidContainers !== true ? 'max-width-content-container' : null,
+    maxWidthFluidContainers !== true ? 'max-width-footer-container' : null,
     wpBodyClasses ?? null,
   ].filter(Boolean).join(' ');
 

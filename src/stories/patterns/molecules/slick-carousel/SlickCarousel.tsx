@@ -70,6 +70,8 @@ export interface SlickCarouselProps {
   pauseOnHover?: boolean;
   /** Pause auto-play when a dot is hovered. */
   pauseOnDotsHover?: boolean;
+  /** Enable keyboard (accessibility) navigation. Maps to Slick's `accessibility` option. */
+  keyboard?: boolean;
   /** Enable touch/swipe. */
   swipe?: boolean;
   /** Allow drag directly to any slide. */
@@ -117,6 +119,7 @@ export function SlickCarousel({
   pauseOnFocus,
   pauseOnHover,
   pauseOnDotsHover,
+  keyboard,
   swipe,
   swipeToSlide,
   touchMove,
@@ -160,7 +163,7 @@ export function SlickCarousel({
       const controlsWrap = $(wrapper).find('.slick-carousel-controls');
 
       const opts: Record<string, any> = {
-        accessibility:    false,
+        accessibility:    keyboard ?? false,
         adaptiveHeight:   adaptiveHeight ?? false,
         autoplay:         autoplay ?? false,
         autoplaySpeed:    autoplaySpeed,
@@ -263,6 +266,7 @@ export function SlickCarousel({
       data-pauseonfocus={pauseOnFocus ? 'true' : 'false'}
       data-pauseonhover={pauseOnHover ? 'true' : 'false'}
       data-pauseondotshover={pauseOnDotsHover ? 'true' : 'false'}
+      data-keyboard={keyboard ? 'true' : 'false'}
       data-swipe={swipe ? 'true' : 'false'}
       data-swipetoslide={swipeToSlide ? 'true' : 'false'}
       data-touchmove={touchMove ? 'true' : 'false'}

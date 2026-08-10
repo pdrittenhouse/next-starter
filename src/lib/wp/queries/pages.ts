@@ -202,6 +202,24 @@ export const GET_PAGE_BY_URI = gql`
           }
         }
         pageSeoNoindex
+        pageSidebar
+        removePageHeaderContainer
+        fluidHeaderContainer
+        fluidContentContainer
+        fluidFooterContainer
+        pageEnableAos
+        pageEnableAnimateCss
+        pageEnableSvgjs
+        pageEnableWowjs
+        pageEnableScrollMagic
+        pageEnableScrollReveal
+        pageEnableJarallax
+        pageEnableParallaxjs
+        pageEnableAnimejs
+        pageEnableLottie
+        pageEnableZdog
+        pageEnableChartjs
+        pageEnableD3
       }
     }
   }
@@ -397,6 +415,24 @@ export const GET_FRONT_PAGE_BY_ID = gql`
           }
         }
         pageSeoNoindex
+        pageSidebar
+        removePageHeaderContainer
+        fluidHeaderContainer
+        fluidContentContainer
+        fluidFooterContainer
+        pageEnableAos
+        pageEnableAnimateCss
+        pageEnableSvgjs
+        pageEnableWowjs
+        pageEnableScrollMagic
+        pageEnableScrollReveal
+        pageEnableJarallax
+        pageEnableParallaxjs
+        pageEnableAnimejs
+        pageEnableLottie
+        pageEnableZdog
+        pageEnableChartjs
+        pageEnableD3
       }
       mainClasses
       contentWrapperStyle

@@ -6,7 +6,6 @@ import { Card } from '@/stories/patterns/organisms/card/Card';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import type {
   CardBackground,
-  CardBorder,
   CardTextColor,
   CardImageLocation,
   CardLinkTarget,
@@ -113,6 +112,7 @@ export interface CardBlockData extends Pick<AcfBlockStyleData, 'width' | 'height
   };
 
   // ─── Card image ─────────────────────────────────────────────────────────────
+  include_image?: boolean;
   image?: AcfCardImageField | null;
   image_position?: 'top' | 'bottom';
   image_overlay?: boolean;
@@ -130,7 +130,6 @@ export interface CardBlockData extends Pick<AcfBlockStyleData, 'width' | 'height
   // ─── Appearance ─────────────────────────────────────────────────────────────
   card_bg_color?: AcfBgColorField | null;
   card_text_color?: AcfColorField | null;
-  card_border_color?: AcfColorField | null;
   card_border?: {
     top?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
     bottom?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
@@ -168,6 +167,18 @@ export interface CardBlockData extends Pick<AcfBlockStyleData, 'width' | 'height
   back_bg_color?: AcfBgColorField | null;
   back_text_color?: AcfColorField | null;
   back_border_color?: AcfColorField | null;
+  card_back_border?: {
+    top?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    bottom?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    left?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    right?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+  };
+  back_border_radius?: {
+    top_left?: number | null;
+    top_right?: number | null;
+    bottom_left?: number | null;
+    bottom_right?: number | null;
+  };
 
   // ─── Card icon ──────────────────────────────────────────────────────────────
   card_icon?: {
@@ -409,12 +420,6 @@ export async function CardBlock({ block }: CardBlockProps) {
       ? (textColorField.theme_color as CardTextColor)
       : undefined;
 
-  const borderColorField = data.card_border_color;
-  const border: CardBorder | undefined =
-    borderColorField?.color === 'palette' && borderColorField.theme_color
-      ? (borderColorField.theme_color as CardBorder)
-      : undefined;
-
   const cardCustomStyle = buildCardCustomStyle(data);
 
   const inheritColor =
@@ -494,7 +499,6 @@ export async function CardBlock({ block }: CardBlockProps) {
       footer={footerContent}
       background={background}
       textColor={textColor}
-      border={border}
       noBorder={data.remove_card_border ?? false}
       noHeaderPadding={data.remove_card_header_padding ?? false}
       noBodyPadding={data.remove_card_body_padding ?? false}
@@ -512,6 +516,9 @@ export async function CardBlock({ block }: CardBlockProps) {
       imageLocation={imageLocation}
       imageOverlay={data.image_overlay ?? false}
       imageOverlayText={data.image_overlay_text ?? undefined}
+      includeImage={data.include_image ?? false}
+      cardBackBorder={data.card_back_border}
+      backBorderRadius={data.back_border_radius}
       image={
         cardImageSrc
           ? {

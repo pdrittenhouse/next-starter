@@ -47,6 +47,25 @@ export const GET_THEME_GENERAL_OPTIONS = gql`
         removePageHeaderContainers
         postDisplay
         gridColumns
+        includeBootstrapJs
+        includePopper
+        includeAlpineJs
+        includeGsap
+        includeGsapScrollTrigger
+        includeGsapSplitText
+        includeSwiper
+        includeLottie
+        includeFancybox
+        includeIsotope
+        includeCountUp
+        includeParallax
+        includeTypeIt
+        hidePageHeaders
+        hideFeaturedImages
+        hidePageTitles
+        hideSidebars
+        leftSidebar
+        defaultSidebar
       }
     }
   }
@@ -307,16 +326,21 @@ export const GET_MENU_WIDGET_OPTIONS = gql`
 `;
 
 /**
- * Minimal query for the "Disable Content Containers" setting in Theme General Options.
- * Used by SectionBlock and RowBlock to decide whether to render their own .container div.
- * When removeContentContainers is false (default), the body carries the
- * `include-content-containers` class and CSS handles container styling.
+ * Fetch the content-wrapper container settings from Theme General Options.
+ * Used by ContentWrapperPattern / page templates to determine container behavior
+ * and by SectionBlock and RowBlock to decide whether to render their own .container div.
+ *
+ * removeContentContainers — when true, block-level containers are omitted
+ *   (CSS no longer driven by body `include-content-containers` class).
+ * removePageHeaderContainers — when true, the page-header element should
+ *   receive `remove-page-header-containers` to opt out of container styling.
  */
 export const GET_CONTENT_WRAPPER_OPTIONS = gql`
   query GetContentWrapperOptions {
     themeGeneralOptions {
       settingsThemeGeneralOptions {
         removeContentContainers
+        removePageHeaderContainers
       }
     }
   }

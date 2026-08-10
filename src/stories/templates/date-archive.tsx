@@ -1,6 +1,7 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_POSTS_BY_DATE } from '@/lib/wp/queries';
+import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 import { PageHeader } from './partials/page-header';
 import { Tease } from './partials/tease';
 import { Pagination } from './partials/pagination';
@@ -25,15 +26,18 @@ export async function DateArchiveTemplate({ year, month, day }: DateArchiveTempl
   if (month) variables.month = month;
   if (day) variables.day = day;
 
-  const { data } = await fetchGraphQL<{
-    posts: {
-      pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; endCursor: string; startCursor: string };
-      edges: { node: any }[];
-    };
-  }>(print(GET_POSTS_BY_DATE), variables);
+  const [postsResult, { removePageHeaderContainers }] = await Promise.all([
+    fetchGraphQL<{
+      posts: {
+        pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; endCursor: string; startCursor: string };
+        edges: { node: any }[];
+      };
+    }>(print(GET_POSTS_BY_DATE), variables),
+    getContentWrapperOptions(),
+  ]);
 
-  const posts = data?.posts?.edges ?? [];
-  const pageInfo = data?.posts?.pageInfo;
+  const posts = postsResult.data?.posts?.edges ?? [];
+  const pageInfo = postsResult.data?.posts?.pageInfo;
 
   // Build title: "March 2024" or "March 15, 2024" or "2024"
   let title = `${year}`;
@@ -46,7 +50,7 @@ export async function DateArchiveTemplate({ year, month, day }: DateArchiveTempl
   return (
     <main id="content" className="content-wrapper">
       <div className="wrapper">
-      <PageHeader title={title} />
+      <PageHeader title={title} removeContainer={removePageHeaderContainers ?? false} />
 
       <div className="post-listing">
         <div className="container">

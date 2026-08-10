@@ -1,6 +1,7 @@
 import type { EditorBlock } from '@/types/blocks';
 import { buildBlockTree } from '@/lib/wp/utils/blockTree';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
+import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 import { PageHeader } from './partials/page-header';
 import { BlockRenderer } from './partials/block-renderer';
 import { SidebarPattern } from '@/stories/templates/partials/wrapper/SidebarPattern';
@@ -96,11 +97,13 @@ function getLayoutVariant(templateName?: string): string {
  * - Centered Logo Header Layout → centered header
  * - Header Side Layout → side-positioned header
  */
-export function PageTemplate({ node, removeContentContainerPerPost }: PageTemplateProps) {
+export async function PageTemplate({ node, removeContentContainerPerPost }: PageTemplateProps) {
   const templateName = node.template?.templateName;
   const layoutVariant = getLayoutVariant(templateName);
   const mainClasses = `${node.mainClasses ?? 'content-wrapper'} ${layoutVariant}`.trim();
   const wrapperStyle = parseCssStyle(node.contentWrapperStyle);
+
+  const { removePageHeaderContainers } = await getContentWrapperOptions();
 
   return (
     <main id="content" className={mainClasses}>
@@ -109,6 +112,7 @@ export function PageTemplate({ node, removeContentContainerPerPost }: PageTempla
         <PageHeader
           title={node.title}
           thumbnail={node.featuredImage?.node}
+          removeContainer={removePageHeaderContainers ?? false}
         />
 
         {(node.editorBlocks?.length || node.content) && (

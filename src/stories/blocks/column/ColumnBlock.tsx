@@ -38,7 +38,7 @@ export async function ColumnBlock({ block, children }: ColumnBlockProps) {
   // ── Breakpoint repeaters ────────────────────────────────────────────
   const colWidths  = parseAcfRepeater<ColWidthEntry>(d, 'col_width')
     .map(e => bpClass('col', e.breakpoint, e.width)).filter(Boolean) as string[];
-  const colAligns  = parseAcfRepeater<ColAlignEntry>(d, 'col_align')
+  const colAligns  = parseAcfRepeater<ColAlignEntry>(d, 'vert_align')
     .map(e => bpClass('align-self', e.breakpoint, e.alignment)).filter(Boolean) as string[];
   const colOrders  = parseAcfRepeater<ColOrderEntry>(d, 'col_order')
     .map(e => bpClass('order', e.breakpoint, e.order)).filter(Boolean) as string[];

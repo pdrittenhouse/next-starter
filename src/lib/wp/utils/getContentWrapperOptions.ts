@@ -5,6 +5,7 @@ import { GET_CONTENT_WRAPPER_OPTIONS } from '@/lib/wp/queries/acf-options';
 
 export interface ContentWrapperOptions {
   removeContentContainers?: boolean | null;
+  removePageHeaderContainers?: boolean | null;
 }
 
 // React cache() deduplicates this call within a single server request, so both

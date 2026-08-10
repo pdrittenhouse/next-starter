@@ -69,7 +69,7 @@ interface SectionBlockData {
   bg_loop?: boolean;
   bg_muted?: boolean;
   bg_autoplay?: boolean;
-  bg_resizing?: boolean;
+  bg_auto_resize?: boolean;
   bg_horizontal_position?: number | null;
   bg_vertical_position?: number | null;
   jumbotron_bg_color?: {
@@ -78,7 +78,6 @@ interface SectionBlockData {
     bg_custom_color?: string | null;
   };
   bg_video_classes?: string | null;
-  section_element?: 'section' | 'div' | 'aside' | null;
 }
 
 interface SectionBlockProps {
@@ -170,7 +169,7 @@ function buildBgVideoProps(data: SectionBlockData): Record<string, string> {
   props['data-loop'] = data.bg_loop === true ? 'true' : 'false';
   props['data-muted'] = data.bg_muted === true ? 'true' : 'false';
   props['data-autoplay'] = data.bg_autoplay === true ? 'true' : 'false';
-  props['data-resizing'] = data.bg_resizing === true ? 'true' : 'false';
+  props['data-resizing'] = data.bg_auto_resize === true ? 'true' : 'false';
   const hpos = data.bg_horizontal_position ?? 0;
   const vpos = data.bg_vertical_position ?? 0;
   props['data-position'] = `${hpos}% ${vpos}%`;

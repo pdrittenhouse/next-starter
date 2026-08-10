@@ -13,6 +13,8 @@ interface SliderBlockData extends Pick<AcfBlockStyleData, 'width' | 'padding' | 
   // Shared options
   arrows?: boolean;
   dots?: boolean;
+  /** Total number of slides (used for dot/indicator count). Leave empty for auto. */
+  slide_count?: number | null;
   fade?: boolean;
   loop?: boolean;
   autoplay?: boolean;
@@ -22,6 +24,11 @@ interface SliderBlockData extends Pick<AcfBlockStyleData, 'width' | 'padding' | 
   adaptive_height?: boolean;
   as_nav_for?: string | null;
   right_to_left?: boolean;
+  // Bootstrap-specific
+  /** Dark-variant Bootstrap carousel. */
+  dark?: boolean;
+  /** Bootstrap: start cycling automatically on load (requires autoplay). */
+  auto_start?: boolean;
   // Flickity-specific
   draggable?: boolean;
   free_scroll?: boolean;
@@ -89,7 +96,7 @@ function buildSlickResponsive(
         if (!s.setting) continue;
         settings[s.setting] = s.value_type === 'int' ? Number(s.value) : s.value;
       }
-      return { breakpoint: item.breakpoint!, settings };
+      return { breakpoint: Number(item.breakpoint!), settings };
     });
 }
 
@@ -174,6 +181,7 @@ export async function SliderBlock({ block }: SliderBlockProps) {
         initialSlide={data.initial_slide ?? undefined}
         slidesToShow={data.slides_to_show ?? undefined}
         slidesToScroll={data.slides_to_scroll ?? undefined}
+        keyboard={data.keyboard}
         swipe={data.swipe}
         rtl={data.right_to_left}
         pauseOnHover={data.pause_on_hover}

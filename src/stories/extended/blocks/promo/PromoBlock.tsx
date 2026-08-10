@@ -1,6 +1,7 @@
 import { Promo } from '@/stories/extended/patterns/molecules/Promo';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
+import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
 import styles from './promo.module.scss';
 import { cx } from '@/lib/cx';
 
@@ -19,20 +20,42 @@ interface PromoButtonData {
   } | null;
 }
 
+interface PromoPanelStyle {
+  bg_color?: { bg_color?: string | null; bg_theme_color?: string | null } | null;
+  color?: { color?: string | null; theme_color?: string | null } | null;
+  border?: AcfBlockStyleData['border'];
+  border_radius?: AcfBlockStyleData['border_radius'];
+  box_shadow?: AcfBlockStyleData['box_shadow'];
+}
+
 interface PromoBlockData {
   promo_count?: 'one' | 'two' | null;
   include_container?: boolean;
   full_width?: boolean;
   max_width_fluid_container?: boolean;
   container_breakpoint?: { breakpoint?: string | null } | null;
+  margin?: AcfBlockStyleData['margin'];
+  padding?: AcfBlockStyleData['padding'];
+  // Promo 1
   promo_1_image?: PromoImageData | null;
   promo_1_title?: string | null;
   promo_1_text?: string | null;
   promo_1_buttons?: PromoButtonData[] | null;
+  promo_1_bg_color?: PromoPanelStyle['bg_color'];
+  promo_1_color?: PromoPanelStyle['color'];
+  promo_1_border?: AcfBlockStyleData['border'];
+  promo_1_border_radius?: AcfBlockStyleData['border_radius'];
+  promo_1_box_shadow?: AcfBlockStyleData['box_shadow'];
+  // Promo 2
   promo_2_image?: PromoImageData | null;
   promo_2_title?: string | null;
   promo_2_text?: string | null;
   promo_2_buttons?: PromoButtonData[] | null;
+  promo_2_bg_color?: PromoPanelStyle['bg_color'];
+  promo_2_color?: PromoPanelStyle['color'];
+  promo_2_border?: AcfBlockStyleData['border'];
+  promo_2_border_radius?: AcfBlockStyleData['border_radius'];
+  promo_2_box_shadow?: AcfBlockStyleData['box_shadow'];
 }
 
 function resolveImageSrc(img?: PromoImageData | null) {
@@ -63,6 +86,7 @@ export async function PromoBlock({ block }: { block: EditorBlock }) {
     return <div dangerouslySetInnerHTML={{ __html: block.renderedHtml ?? '' }} />;
   }
 
+  const { style: blockStyle } = buildAcfBlockStyle({ margin: data.margin, padding: data.padding });
   const className = cx(styles, 'block-promo', attrs.className);
 
   const promo1Src = resolveImageSrc(data.promo_1_image);
@@ -70,7 +94,7 @@ export async function PromoBlock({ block }: { block: EditorBlock }) {
   const showPromo2 = data.promo_count === 'two' && (data.promo_2_title || promo2Src || data.promo_2_text);
 
   return (
-    <div className={className}>
+    <div className={className} style={blockStyle ?? undefined}>
       <Promo
         container={data.include_container && !data.full_width}
         containerFluid={data.full_width}

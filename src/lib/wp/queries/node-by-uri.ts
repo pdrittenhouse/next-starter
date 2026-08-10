@@ -131,6 +131,24 @@ export const GET_NODE_BY_URI = gql`
             }
           }
           postSeoNoindex
+          pageSidebar
+          removePageHeaderContainer
+          fluidHeaderContainer
+          fluidContentContainer
+          fluidFooterContainer
+          pageEnableAos
+          pageEnableAnimateCss
+          pageEnableSvgjs
+          pageEnableWowjs
+          pageEnableScrollMagic
+          pageEnableScrollReveal
+          pageEnableJarallax
+          pageEnableParallaxjs
+          pageEnableAnimejs
+          pageEnableLottie
+          pageEnableZdog
+          pageEnableChartjs
+          pageEnableD3
         }
       }
       ... on Page {
@@ -242,6 +260,24 @@ export const GET_NODE_BY_URI = gql`
             }
           }
           pageSeoNoindex
+          pageSidebar
+          removePageHeaderContainer
+          fluidHeaderContainer
+          fluidContentContainer
+          fluidFooterContainer
+          pageEnableAos
+          pageEnableAnimateCss
+          pageEnableSvgjs
+          pageEnableWowjs
+          pageEnableScrollMagic
+          pageEnableScrollReveal
+          pageEnableJarallax
+          pageEnableParallaxjs
+          pageEnableAnimejs
+          pageEnableLottie
+          pageEnableZdog
+          pageEnableChartjs
+          pageEnableD3
         }
       }
       ... on Category {

@@ -1,6 +1,7 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_POSTS_PAGINATED } from '@/lib/wp/queries';
+import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 import { PageHeader } from './partials/page-header';
 import { Tease } from './partials/tease';
 import { Pagination } from './partials/pagination';
@@ -15,23 +16,26 @@ interface AuthorTemplateProps {
  * Mirrors: templates/pages/author.twig → archive.twig
  */
 export async function AuthorTemplate({ slug, name }: AuthorTemplateProps) {
-  const { data } = await fetchGraphQL<{
-    posts: {
-      pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; endCursor: string; startCursor: string };
-      edges: { node: any }[];
-    };
-  }>(print(GET_POSTS_PAGINATED), {
-    first: 10,
-    authorName: slug,
-  });
+  const [postsResult, { removePageHeaderContainers }] = await Promise.all([
+    fetchGraphQL<{
+      posts: {
+        pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; endCursor: string; startCursor: string };
+        edges: { node: any }[];
+      };
+    }>(print(GET_POSTS_PAGINATED), {
+      first: 10,
+      authorName: slug,
+    }),
+    getContentWrapperOptions(),
+  ]);
 
-  const posts = data?.posts?.edges ?? [];
-  const pageInfo = data?.posts?.pageInfo;
+  const posts = postsResult.data?.posts?.edges ?? [];
+  const pageInfo = postsResult.data?.posts?.pageInfo;
 
   return (
     <main id="content" className="content-wrapper">
       <div className="wrapper">
-      <PageHeader title={name ?? slug} />
+      <PageHeader title={name ?? slug} removeContainer={removePageHeaderContainers ?? false} />
 
       <div className="post-listing">
         <div className="container">

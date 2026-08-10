@@ -36,6 +36,44 @@ interface AcfFullscreenBreakpointField {
 }
 
 /**
+ * ACF icon sub-field — a single icon slot from the Module: Icon clone group.
+ * Field names follow ACF prefix_name=1 convention (e.g. icon_left.type).
+ */
+interface AcfIconSubField {
+  /** Icon render type: 'custom' (SVG sprite) or 'font-awesome'. Absent means no icon. */
+  type?: string | null;
+  /** SVG sprite identifier when type='custom'. */
+  icon?: string | null;
+  /** Font Awesome style prefix (e.g. 'fas', 'far') when type='font-awesome'. */
+  fa_icon_style?: string | null;
+  /** Font Awesome icon class name (e.g. 'fa-arrow-right') when type='font-awesome'. */
+  fa_icon?: string | null;
+  /** Icon size in pixels. */
+  size?: number | null;
+  /** Icon colour — text colour sub-object (color / theme_color / custom_color). */
+  icon_color?: AcfColorField | null;
+  /** Vertical translate offset in pixels. */
+  vertical_offset?: number | null;
+  /** Horizontal translate offset in pixels. */
+  horizontal_offset?: number | null;
+}
+
+/**
+ * ACF icon group — wraps left and right icon slots with visibility toggles.
+ * Used by trigger_icon, header_close_icon, and footer_close_icon on the modal block.
+ */
+interface AcfIconGroupField {
+  /** Show the left icon slot. */
+  show_left_icon?: boolean;
+  /** Left icon slot data (Module: Icon clone sub-fields). */
+  icon_left?: AcfIconSubField;
+  /** Show the right icon slot. */
+  show_right_icon?: boolean;
+  /** Right icon slot data (Module: Icon clone sub-fields). */
+  icon_right?: AcfIconSubField;
+}
+
+/**
  * Shared shape for the three button clone groups used in the modal block:
  * trigger_button, header_close_button, footer_button.
  *
@@ -119,9 +157,17 @@ interface ModalBlockData {
   /** Show the dismiss button in the modal footer. */
   footer_close?: boolean;
   /** Footer close button label text (separate field, not part of footer_button clone group). */
-  footer_button_text?: string | null;
+  footer_close_button_text?: string | null;
   /** Footer close button style clone group. */
   footer_button?: AcfButtonField;
+
+  // --- Icon groups ---
+  /** Left/right icon slots rendered inside the trigger button. */
+  trigger_icon?: AcfIconGroupField;
+  /** Left/right icon slots rendered inside the header close button. */
+  header_close_icon?: AcfIconGroupField;
+  /** Left/right icon slots rendered inside the footer close button. */
+  footer_close_icon?: AcfIconGroupField;
 
   // --- Layout ---
   layout?: { modal_layout?: string };
@@ -222,6 +268,8 @@ export async function ModalBlock({ block }: ModalBlockProps) {
         disabled: triggerBtn.disabled,
         nowrap: triggerBtn.nowrap,
         className: triggerBtn.classes,
+        iconLeft: data.trigger_icon?.show_left_icon ? data.trigger_icon.icon_left : undefined,
+        iconRight: data.trigger_icon?.show_right_icon ? data.trigger_icon.icon_right : undefined,
       }
     : data.trigger_text
     ? { label: data.trigger_text }
@@ -240,6 +288,8 @@ export async function ModalBlock({ block }: ModalBlockProps) {
         // 'white' close → Bootstrap btn-close-white variant
         whiteClose: headerCloseBtn.close === 'white',
         className: headerCloseBtn.classes,
+        iconLeft: data.header_close_icon?.show_left_icon ? data.header_close_icon.icon_left : undefined,
+        iconRight: data.header_close_icon?.show_right_icon ? data.header_close_icon.icon_right : undefined,
       }
     : undefined;
 
@@ -247,7 +297,7 @@ export async function ModalBlock({ block }: ModalBlockProps) {
   const footerBtn = data.footer_button;
   const modalCloseFooter = footerBtn
     ? {
-        label: data.footer_button_text ?? undefined,
+        label: data.footer_close_button_text ?? undefined,
         variant: resolveButtonVariant(footerBtn.style),
         size: footerBtn.size,
         outline: footerBtn.outline,
@@ -255,9 +305,11 @@ export async function ModalBlock({ block }: ModalBlockProps) {
         // 'white' close icon variant (footer is a regular btn, not btn-close, but keep parity)
         whiteClose: footerBtn.close === 'white',
         className: footerBtn.classes,
+        iconLeft: data.footer_close_icon?.show_left_icon ? data.footer_close_icon.icon_left : undefined,
+        iconRight: data.footer_close_icon?.show_right_icon ? data.footer_close_icon.icon_right : undefined,
       }
-    : data.footer_button_text
-    ? { label: data.footer_button_text }
+    : data.footer_close_button_text
+    ? { label: data.footer_close_button_text }
     : undefined;
 
   // --- Body / footer HTML content ---
