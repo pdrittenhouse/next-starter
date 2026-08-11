@@ -198,6 +198,7 @@ export const GET_POST_BY_SLUG = gql`
         hideFeaturedImage
         hidePageTitle
         hideSidebar
+        leftSidebar
         hideTravelingCta
         headerAlertMessage
         alertLayout
