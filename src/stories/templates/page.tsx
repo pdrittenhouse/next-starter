@@ -100,7 +100,16 @@ function getLayoutVariant(templateName?: string): string {
 export async function PageTemplate({ node, removeContentContainerPerPost }: PageTemplateProps) {
   const templateName = node.template?.templateName;
   const layoutVariant = getLayoutVariant(templateName);
-  const mainClasses = `${node.mainClasses ?? 'content-wrapper'} ${layoutVariant}`.trim();
+  // Per-page container override is applied here on <main> rather than on <body> because
+  // Next.js App Router runs RootLayout once per layout boundary — page-specific data is
+  // only available inside the page's own Server Component (i.e. here), not in layout.tsx.
+  // Adding remove-content-containers to <main> lets the theme's CSS handle the override
+  // at the content scope without requiring a body-class change from a child component.
+  const mainClasses = [
+    node.mainClasses ?? 'content-wrapper',
+    layoutVariant,
+    removeContentContainerPerPost ? 'remove-content-containers' : null,
+  ].filter(Boolean).join(' ');
   const wrapperStyle = parseCssStyle(node.contentWrapperStyle);
 
   const { removePageHeaderContainers } = await getContentWrapperOptions();

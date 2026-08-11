@@ -160,6 +160,10 @@ export default async function RootLayout({
   const shrinkHeader: boolean = headerOpts?.shrinkHeader ?? false;
   const rawBp = headerOpts?.navbarBreakpoint;
   const navbarBreakpoint: string = (Array.isArray(rawBp) ? rawBp[0] : rawBp) ?? 'lg';
+  // Global "Disable Content Containers" flag. When false the body gets include-content-containers.
+  // Per-page overrides (settingsPageOptions / settingsPostOptions removeContentContainer) cannot
+  // be applied here because RootLayout has no access to page-level data. Instead, PageTemplate
+  // and SingleTemplate add remove-content-containers to <main> when the per-page flag is set.
   const removeContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.removeContentContainers === true;
   const fluidContentContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.fluidContentContainers === true;
   const maxWidthFluidContainers = (cssData as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.maxWidthFluidContainers === true;

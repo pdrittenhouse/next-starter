@@ -1,37 +1,16 @@
 import { gql } from "@apollo/client";
 
 /**
- * Fetch global theme identity, analytics, and verification codes.
+ * Fetch global theme settings: analytics, performance, security, layout, and style defaults.
  * Powered by the "Theme General Options" ACF options page.
  * Requires WPGraphQL for ACF with show_in_graphql enabled on this group.
- *
- * Image fields (orgLogo, siteOgImage) return MediaItem — request subfields.
- * orgSameAs returns a textarea; parse as newline-delimited URLs for schema.org sameAs.
  */
 export const GET_THEME_GENERAL_OPTIONS = gql`
   query GetThemeGeneralOptions {
     themeGeneralOptions {
       settingsThemeGeneralOptions {
-        orgName
-        orgLogo {
-          node {
-            sourceUrl
-            altText
-          }
-        }
-        siteOgImage {
-          node {
-            sourceUrl
-            altText
-          }
-        }
-        orgSameAs
-        llmsEnabled
-        llmsAbout
         enableGtm
         enableDirectGa
-        enableOnetrust
-        onetrustDomainScriptId
         googleSiteVerification
         bingSiteVerification
         facebookDomainVerification
@@ -47,25 +26,164 @@ export const GET_THEME_GENERAL_OPTIONS = gql`
         removePageHeaderContainers
         postDisplay
         gridColumns
-        includeBootstrapJs
-        includePopper
-        includeAlpineJs
-        includeGsap
-        includeGsapScrollTrigger
-        includeGsapSplitText
-        includeSwiper
-        includeLottie
-        includeFancybox
-        includeIsotope
-        includeCountUp
-        includeParallax
-        includeTypeIt
+        disableGfLayout
+        gfMobileNum {
+          formId
+          fieldId
+        }
+        enableServiceWorker
+        enableAssetPreloading
+        enableCsp
+        cspConfiguration {
+          xFrameOptions
+          enableNonce
+          connectSrc
+          fontSrc
+          mediaSrc
+          styleSrc
+          scriptSrc
+          imgSrc
+          frameSrc
+          objectSrc
+          prefetchSrc
+          frameAncestors
+          allowUnsafeInline
+          allowUnsafeEval
+          reportUri
+        }
+        enableAos
+        enableAnimateCss
+        enableSvgjs
+        enableWowjs
+        enableScrollMagic
+        enableScrollReveal
+        enableJarallax
+        enableParallaxjs
+        enableAnimejs
+        enableLottie
+        enableZdog
+        enableChartjs
+        enableD3
         hidePageHeaders
         hideFeaturedImages
         hidePageTitles
         hideSidebars
         leftSidebar
         defaultSidebar
+        bgImage {
+          bgImageType
+          bgImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails { width height }
+            }
+          }
+          bgImageUrl
+          bgSize
+          bgHorizontalPosition
+          bgVerticalPosition
+          bgRepeat
+          bgAttachment
+        }
+        contentPadding {
+          padding {
+            top
+            bottom
+            left
+            right
+          }
+        }
+        pageHeaderBgColor {
+          bgColor
+          bgThemeColor
+          bgCustomColor
+        }
+        pageHeaderBgImage {
+          bgImageType
+          bgImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails { width height }
+            }
+          }
+          bgImageUrl
+          bgSize
+          bgHorizontalPosition
+          bgVerticalPosition
+          bgRepeat
+          bgAttachment
+        }
+        pageHeaderTextColor {
+          color
+          themeColor
+          customColor
+        }
+        pageHeaderPadding {
+          padding {
+            top
+            bottom
+            left
+            right
+          }
+        }
+        pageHeaderMargin {
+          margin {
+            top { auto top }
+            bottom { auto bottom }
+            left { auto left }
+            right { auto right }
+          }
+        }
+        pageHeaderFontSize {
+          fontSize {
+            value
+            unit
+          }
+        }
+        sidebarBgColor {
+          bgColor
+          bgThemeColor
+          bgCustomColor
+        }
+        sidebarBgImage {
+          bgImageType
+          bgImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails { width height }
+            }
+          }
+          bgImageUrl
+          bgSize
+          bgHorizontalPosition
+          bgVerticalPosition
+          bgRepeat
+          bgAttachment
+        }
+        sidebarTextColor {
+          color
+          themeColor
+          customColor
+        }
+        sidebarPadding {
+          padding {
+            top
+            bottom
+            left
+            right
+          }
+        }
+        sidebarWidth {
+          width {
+            value
+            unit
+            minWidth
+            maxWidth
+          }
+        }
       }
     }
   }
@@ -98,6 +216,7 @@ export const GET_HEADER_OPTIONS = gql`
         containerRelative
         hoverDropdown
         toggleMenus
+        enableMenuIcons
         includeMenuOverlay
         removeHeaderContainers
         siteHeaderLayout {
@@ -174,7 +293,6 @@ export const GET_FOOTER_OPTIONS = gql`
         removeFooterContainers
         fluidFooterContainers
         footerLogoUseOriginalColor
-        footerLogoHeight
         siteFooterLayout {
           footerLayout
         }
@@ -220,11 +338,23 @@ export const GET_TRAVELING_CTA_OPTIONS = gql`
         tctaAutoWidth
         includeTctaContainer
         tctaFullWidth
-        tctaReverseOrder
         tctaBgColor {
           bgColor
           bgThemeColor
           bgCustomColor
+        }
+        tctaBorder {
+          top {
+            width
+            style
+            color
+            themeColor
+            customColor
+          }
+        }
+        tctaBorderRadius {
+          topLeft
+          topRight
         }
         tctaAlignment {
           horAlign {

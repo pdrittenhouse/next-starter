@@ -190,6 +190,7 @@ export const GET_PAGE_BY_URI = gql`
         leftSidebar
         hideTravelingCta
         headerAlertMessage
+        alertLayout
         removeHeaderContainer
         removeContentContainer
         removeFooterContainer
@@ -220,6 +221,30 @@ export const GET_PAGE_BY_URI = gql`
         pageEnableZdog
         pageEnableChartjs
         pageEnableD3
+        siteHeaderLayout { headerLayout }
+        siteFooterLayout { footerLayout }
+        pageBackgroundColor { bgColor bgThemeColor bgCustomColor }
+        bgImage { url alt width height }
+        pageTextColor { color themeColor customColor }
+        contentPadding { padding { top bottom left right } }
+        pageHeaderBgColor { bgColor bgThemeColor bgCustomColor }
+        pageHeaderBgImage { url alt width height }
+        pageHeaderTextColor { color themeColor customColor }
+        pageHeaderPadding { padding { top bottom left right } }
+        pageHeaderMargin {
+          margin {
+            top { auto top }
+            bottom { auto bottom }
+            left { auto left }
+            right { auto right }
+          }
+        }
+        pageHeaderFontSize { fontSize { value unit } }
+        sidebarBgColor { bgColor bgThemeColor bgCustomColor }
+        sidebarBgImage { url alt width height }
+        sidebarTextColor { color themeColor customColor }
+        sidebarPadding { padding { top bottom left right } }
+        sidebarWidth { value unit }
       }
     }
   }
@@ -403,6 +428,7 @@ export const GET_FRONT_PAGE_BY_ID = gql`
         leftSidebar
         hideTravelingCta
         headerAlertMessage
+        alertLayout
         removeHeaderContainer
         removeContentContainer
         removeFooterContainer
@@ -433,6 +459,30 @@ export const GET_FRONT_PAGE_BY_ID = gql`
         pageEnableZdog
         pageEnableChartjs
         pageEnableD3
+        siteHeaderLayout { headerLayout }
+        siteFooterLayout { footerLayout }
+        pageBackgroundColor { bgColor bgThemeColor bgCustomColor }
+        bgImage { url alt width height }
+        pageTextColor { color themeColor customColor }
+        contentPadding { padding { top bottom left right } }
+        pageHeaderBgColor { bgColor bgThemeColor bgCustomColor }
+        pageHeaderBgImage { url alt width height }
+        pageHeaderTextColor { color themeColor customColor }
+        pageHeaderPadding { padding { top bottom left right } }
+        pageHeaderMargin {
+          margin {
+            top { auto top }
+            bottom { auto bottom }
+            left { auto left }
+            right { auto right }
+          }
+        }
+        pageHeaderFontSize { fontSize { value unit } }
+        sidebarBgColor { bgColor bgThemeColor bgCustomColor }
+        sidebarBgImage { url alt width height }
+        sidebarTextColor { color themeColor customColor }
+        sidebarPadding { padding { top bottom left right } }
+        sidebarWidth { value unit }
       }
       mainClasses
       contentWrapperStyle
