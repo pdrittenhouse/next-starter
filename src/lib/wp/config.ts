@@ -33,11 +33,15 @@ export function getWpConfig(): WpConfig {
 
   const restUrl = graphqlUrl.replace(/\/graphql$/, '');
 
+  // Deliberately NOT NEXT_PUBLIC_ prefixed. That prefix inlines the value into
+  // client bundles, which compiled the WordPress application password into a
+  // publicly served JS chunk. These are read on the server only; any
+  // client-side use must go through a route handler.
   const authUser =
-    process.env.NEXT_PUBLIC_WP_AUTH_USER;
+    process.env.WP_AUTH_USER;
 
   const authPassword =
-    process.env.NEXT_PUBLIC_WP_AUTH_APP_PASSWORD;
+    process.env.WP_AUTH_APP_PASSWORD;
 
   let sites: WpSiteEntry[] | undefined;
   const sitesRaw = process.env.NEXT_PUBLIC_WP_SITES ?? '';

@@ -208,7 +208,7 @@ export const Page: React.FC = () => {
                   <h6>Introspection</h6>
                   {schemaLoading ? <p>Loading schema...</p> : schemaError ? (
                     <>
-                    <p><small>Requires either a valid <code>.env.local</code> with <code>NEXT_PUBLIC_WP_AUTH_USER</code> and <code>NEXT_PUBLIC_WP_AUTH_APP_PASSWORD</code>, or &ldquo;Enable Public Introspection&rdquo; in WP Admin &gt; GraphQL &gt; Settings.</small></p>
+                    <p><small>Requires &ldquo;Enable Public Introspection&rdquo; in WP Admin &gt; GraphQL &gt; Settings. Browser-side authenticated queries are not supported &mdash; the WP credentials are server-only (<code>WP_AUTH_USER</code> / <code>WP_AUTH_APP_PASSWORD</code>, deliberately not <code>NEXT_PUBLIC_</code>).</small></p>
                     <p><small><strong>Error:</strong> {schemaError.message}</small></p>
                     </>
                   ) : schemaData && (
