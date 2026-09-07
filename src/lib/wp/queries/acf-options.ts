@@ -31,7 +31,7 @@ export const GET_THEME_GENERAL_OPTIONS = gql`
           formId
           fieldId
         }
-        enableServiceWorker
+        featureServiceWorker
         enableAssetPreloading
         enableCsp
         cspConfiguration {
@@ -176,14 +176,7 @@ export const GET_THEME_GENERAL_OPTIONS = gql`
             right
           }
         }
-        sidebarWidth {
-          width {
-            value
-            unit
-            minWidth
-            maxWidth
-          }
-        }
+        sidebarWidth
       }
     }
   }

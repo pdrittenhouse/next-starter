@@ -122,8 +122,23 @@ export interface AcfBlockStyleData {
 
 // ─── Main builder ────────────────────────────────────────────────────────────
 
-function px(v: number | null | undefined): string | undefined {
-  return v != null && v >= 0 ? `${v}px` : undefined;
+/**
+ * Coerce an ACF numeric field value to a number, or undefined when unset.
+ *
+ * ACF returns '' — not null — for a number field that was never filled in, and
+ * '' passes BOTH `!= null` and `>= 0` in JavaScript (it coerces to 0). That is
+ * how declarations like `padding-top:px` and `box-shadow:px px px px` ended up
+ * in the rendered markup. Route every numeric ACF value through this.
+ */
+export function acfNum(v: unknown): number | undefined {
+  if (v == null || v === '') return undefined;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function px(v: unknown): string | undefined {
+  const n = acfNum(v);
+  return n != null && n >= 0 ? `${n}px` : undefined;
 }
 
 function sizeStr(v: AcfSizeValue | null | undefined): string | undefined {
@@ -196,7 +211,8 @@ export function buildAcfBlockStyle(data: AcfBlockStyleData): {
     if (!b) continue;
     const cap = (side.charAt(0).toUpperCase() + side.slice(1)) as 'Top' | 'Bottom' | 'Left' | 'Right';
 
-    if (b.width != null && b.width > 0) css[`border${cap}Width`] = `${b.width}px`;
+    const bw = acfNum(b.width);
+    if (bw != null && bw > 0)            css[`border${cap}Width`] = `${bw}px`;
     if (b.style)                         css[`border${cap}Style`] = b.style as CSSProperties['borderTopStyle'];
 
     if (b.color === 'custom' && b.custom_color) {
@@ -216,9 +232,13 @@ export function buildAcfBlockStyle(data: AcfBlockStyleData): {
   // ── Box shadow ─────────────────────────────────────────────────────────────
   const bs = data.box_shadow;
   if (bs) {
+    const hOff = acfNum(bs.horizontal_offset);
+    const vOff = acfNum(bs.vertical_offset);
+    const blur = acfNum(bs.blur);
+    const sprd = acfNum(bs.spread);
+
     const hasAny =
-      bs.horizontal_offset != null || bs.vertical_offset != null ||
-      bs.blur != null || bs.spread != null ||
+      hOff != null || vOff != null || blur != null || sprd != null ||
       (bs.color?.color === 'custom' && bs.color.custom_color) ||
       (bs.color?.color === 'palette' && bs.color.theme_color);
 
@@ -231,10 +251,10 @@ export function buildAcfBlockStyle(data: AcfBlockStyleData): {
       }
       const inset  = bs.inset ? 'inset ' : '';
       const parts  = [
-        `${bs.horizontal_offset ?? 0}px`,
-        `${bs.vertical_offset   ?? 0}px`,
-        `${bs.blur              ?? 0}px`,
-        `${bs.spread            ?? 0}px`,
+        `${hOff ?? 0}px`,
+        `${vOff ?? 0}px`,
+        `${blur ?? 0}px`,
+        `${sprd ?? 0}px`,
         shadowColor,
       ].filter(Boolean);
       css.boxShadow = `${inset}${parts.join(' ')}`;

@@ -235,11 +235,41 @@ export const GET_POST_BY_SLUG = gql`
         siteHeaderLayout { headerLayout }
         siteFooterLayout { footerLayout }
         pageBackgroundColor { bgColor bgThemeColor bgCustomColor }
-        bgImage { url alt width height }
+        bgImage {
+          bgImageType
+          bgImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails { width height }
+            }
+          }
+          bgImageUrl
+          bgSize
+          bgHorizontalPosition
+          bgVerticalPosition
+          bgRepeat
+          bgAttachment
+        }
         pageTextColor { color themeColor customColor }
         contentPadding { padding { top bottom left right } }
         pageHeaderBgColor { bgColor bgThemeColor bgCustomColor }
-        pageHeaderBgImage { url alt width height }
+        pageHeaderBgImage {
+          bgImageType
+          bgImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails { width height }
+            }
+          }
+          bgImageUrl
+          bgSize
+          bgHorizontalPosition
+          bgVerticalPosition
+          bgRepeat
+          bgAttachment
+        }
         pageHeaderTextColor { color themeColor customColor }
         pageHeaderPadding { padding { top bottom left right } }
         pageHeaderMargin {
@@ -252,10 +282,25 @@ export const GET_POST_BY_SLUG = gql`
         }
         pageHeaderFontSize { fontSize { value unit } }
         sidebarBgColor { bgColor bgThemeColor bgCustomColor }
-        sidebarBgImage { url alt width height }
+        sidebarBgImage {
+          bgImageType
+          bgImage {
+            node {
+              sourceUrl
+              altText
+              mediaDetails { width height }
+            }
+          }
+          bgImageUrl
+          bgSize
+          bgHorizontalPosition
+          bgVerticalPosition
+          bgRepeat
+          bgAttachment
+        }
         sidebarTextColor { color themeColor customColor }
         sidebarPadding { padding { top bottom left right } }
-        sidebarWidth { value unit }
+        sidebarWidth
       }
     }
   }
@@ -329,7 +374,7 @@ export const GET_POSTS_BY_AUTHOR_SLUG = gql`
  * Fetches one post before and one post after the given date.
  */
 export const GET_ADJACENT_POSTS = gql`
-  query GetAdjacentPosts($date: String!, $postType: PostObjectsConnectionOrderbyEnum = DATE) {
+  query GetAdjacentPosts($date: DateInput!, $postType: PostObjectsConnectionOrderbyEnum = DATE) {
     previous: posts(
       first: 1
       where: { hasPassword: false, dateQuery: { before: $date }, orderby: { field: $postType, order: DESC } }

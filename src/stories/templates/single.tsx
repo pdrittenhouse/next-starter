@@ -81,17 +81,37 @@ export async function SingleTemplate({ node, removeContentContainerPerPost }: Si
   let prevPost: { title: string; uri: string; date: string } | null = null;
   let nextPost: { title: string; uri: string; date: string } | null = null;
 
-  if (node.date) {
+  // WPGraphQL's dateQuery before/after take a DateInput object, not the ISO-ish
+  // string WP returns in `node.date` — split it into components, keeping the time
+  // so two posts published on the same day still order correctly.
+  const adjacentDate = (() => {
+    if (!node.date) return null;
+    const d = new Date(node.date);
+    if (Number.isNaN(d.getTime())) return null;
+    return {
+      year: d.getFullYear(),
+      month: d.getMonth() + 1,
+      day: d.getDate(),
+      hour: d.getHours(),
+      minute: d.getMinutes(),
+      second: d.getSeconds(),
+    };
+  })();
+
+  if (adjacentDate) {
     try {
-      const { data } = await fetchGraphQL<{
+      const { data, errors } = await fetchGraphQL<{
         previous: { edges: { node: { title: string; uri: string; date: string } }[] };
         next: { edges: { node: { title: string; uri: string; date: string } }[] };
-      }>(print(GET_ADJACENT_POSTS), { date: node.date });
+      }>(print(GET_ADJACENT_POSTS), { date: adjacentDate });
 
+      if (errors?.length) {
+        console.error('[single] GraphQL errors fetching adjacent posts:', errors);
+      }
       prevPost = data?.previous?.edges?.[0]?.node ?? null;
       nextPost = data?.next?.edges?.[0]?.node ?? null;
-    } catch {
-      // Silently fail — prev/next navigation is non-critical
+    } catch (e) {
+      console.error('[single] adjacent posts fetch failed:', e);
     }
   }
 

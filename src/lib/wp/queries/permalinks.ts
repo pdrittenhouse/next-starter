@@ -3,13 +3,10 @@ import {gql} from "@apollo/client";
 export const GET_PERMALINK_SETTINGS = gql`
     query GetPermalinkSettings {
       permalinkSettings {
+        id
         structure
         categoryBase
         tagBase
-        rewriteRules {
-          pattern
-          query
-        }
       }
     }
 `;

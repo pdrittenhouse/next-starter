@@ -1,3 +1,4 @@
+import { acfNum } from '@/lib/wp/utils/buildAcfBlockStyle';
 import type { ReactNode } from 'react';
 import { ButtonGroup } from '@/stories/patterns/molecules/button-group/ButtonGroup';
 import type { ButtonGroupItem, WrapperDisplay } from '@/stories/patterns/molecules/button-group/ButtonGroup';
@@ -153,14 +154,17 @@ function buildWrapperStyle(data: ButtonGroupBlockData): React.CSSProperties | un
   // Width
   const widthContainer = data.button_group_wrapper_width?.width;
   const widthValue = widthContainer?.width;
-  if (widthValue != null && widthValue.value != null && widthValue.value >= 0) {
-    style.width = `${widthValue.value}${widthValue.unit ?? 'px'}`;
+  const wVal = acfNum(widthValue?.value);
+  if (wVal != null && wVal >= 0) {
+    style.width = `${wVal}${widthValue?.unit ?? 'px'}`;
   }
-  if (widthContainer?.min_width != null && widthContainer.min_width >= 0) {
-    style.minWidth = `${widthContainer.min_width}px`;
+  const minW = acfNum(widthContainer?.min_width);
+  if (minW != null && minW >= 0) {
+    style.minWidth = `${minW}px`;
   }
-  if (widthContainer?.max_width != null && widthContainer.max_width >= 0) {
-    style.maxWidth = `${widthContainer.max_width}px`;
+  const maxW = acfNum(widthContainer?.max_width);
+  if (maxW != null && maxW >= 0) {
+    style.maxWidth = `${maxW}px`;
   }
 
   // Text alignment
@@ -172,23 +176,27 @@ function buildWrapperStyle(data: ButtonGroupBlockData): React.CSSProperties | un
   const margin = data.button_group_wrapper_margin?.margin;
   if (margin?.top?.auto) {
     style.marginTop = 'auto';
-  } else if (margin?.top?.top != null && margin.top.top >= 0) {
-    style.marginTop = `${margin.top.top}px`;
+  } else {
+    const mTop = acfNum(margin?.top?.top);
+    if (mTop != null && mTop >= 0) style.marginTop = `${mTop}px`;
   }
   if (margin?.bottom?.auto) {
     style.marginBottom = 'auto';
-  } else if (margin?.bottom?.bottom != null && margin.bottom.bottom >= 0) {
-    style.marginBottom = `${margin.bottom.bottom}px`;
+  } else {
+    const mBottom = acfNum(margin?.bottom?.bottom);
+    if (mBottom != null && mBottom >= 0) style.marginBottom = `${mBottom}px`;
   }
   if (margin?.left?.auto) {
     style.marginLeft = 'auto';
-  } else if (margin?.left?.left != null && margin.left.left >= 0) {
-    style.marginLeft = `${margin.left.left}px`;
+  } else {
+    const mLeft = acfNum(margin?.left?.left);
+    if (mLeft != null && mLeft >= 0) style.marginLeft = `${mLeft}px`;
   }
   if (margin?.right?.auto) {
     style.marginRight = 'auto';
-  } else if (margin?.right?.right != null && margin.right.right >= 0) {
-    style.marginRight = `${margin.right.right}px`;
+  } else {
+    const mRight = acfNum(margin?.right?.right);
+    if (mRight != null && mRight >= 0) style.marginRight = `${mRight}px`;
   }
 
   return Object.keys(style).length > 0 ? style : undefined;

@@ -3,7 +3,7 @@ import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './section.module.scss';
 import { cx } from '@/lib/cx';
-import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
+import { buildAcfBlockStyle, type AcfBlockStyleData, acfNum } from '@/lib/wp/utils/buildAcfBlockStyle';
 import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 
 type BgColor = AcfBlockStyleData['bg_color'];
@@ -89,9 +89,15 @@ function resolveSectionMargin(margin: SectionMargin | null | undefined): CSSProp
   if (!margin) return {};
   const style: CSSProperties = {};
   if (margin.top?.auto) style.marginTop = 'auto';
-  else if (margin.top?.top != null && margin.top.top >= 0) style.marginTop = `${margin.top.top}px`;
+  else {
+    const mTop = acfNum(margin.top?.top);
+    if (mTop != null && mTop >= 0) style.marginTop = `${mTop}px`;
+  }
   if (margin.bottom?.auto) style.marginBottom = 'auto';
-  else if (margin.bottom?.bottom != null && margin.bottom.bottom >= 0) style.marginBottom = `${margin.bottom.bottom}px`;
+  else {
+    const mBottom = acfNum(margin.bottom?.bottom);
+    if (mBottom != null && mBottom >= 0) style.marginBottom = `${mBottom}px`;
+  }
   return style;
 }
 

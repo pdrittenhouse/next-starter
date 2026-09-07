@@ -153,11 +153,41 @@ export const GET_NODE_BY_URI = gql`
           siteHeaderLayout { headerLayout }
           siteFooterLayout { footerLayout }
           pageBackgroundColor { bgColor bgThemeColor bgCustomColor }
-          bgImage { url alt width height }
+          bgImage {
+            bgImageType
+            bgImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails { width height }
+              }
+            }
+            bgImageUrl
+            bgSize
+            bgHorizontalPosition
+            bgVerticalPosition
+            bgRepeat
+            bgAttachment
+          }
           pageTextColor { color themeColor customColor }
           contentPadding { padding { top bottom left right } }
           pageHeaderBgColor { bgColor bgThemeColor bgCustomColor }
-          pageHeaderBgImage { url alt width height }
+          pageHeaderBgImage {
+            bgImageType
+            bgImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails { width height }
+              }
+            }
+            bgImageUrl
+            bgSize
+            bgHorizontalPosition
+            bgVerticalPosition
+            bgRepeat
+            bgAttachment
+          }
           pageHeaderTextColor { color themeColor customColor }
           pageHeaderPadding { padding { top bottom left right } }
           pageHeaderMargin {
@@ -170,10 +200,25 @@ export const GET_NODE_BY_URI = gql`
           }
           pageHeaderFontSize { fontSize { value unit } }
           sidebarBgColor { bgColor bgThemeColor bgCustomColor }
-          sidebarBgImage { url alt width height }
+          sidebarBgImage {
+            bgImageType
+            bgImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails { width height }
+              }
+            }
+            bgImageUrl
+            bgSize
+            bgHorizontalPosition
+            bgVerticalPosition
+            bgRepeat
+            bgAttachment
+          }
           sidebarTextColor { color themeColor customColor }
           sidebarPadding { padding { top bottom left right } }
-          sidebarWidth { value unit }
+          sidebarWidth
         }
       }
       ... on Page {
@@ -307,11 +352,41 @@ export const GET_NODE_BY_URI = gql`
           siteHeaderLayout { headerLayout }
           siteFooterLayout { footerLayout }
           pageBackgroundColor { bgColor bgThemeColor bgCustomColor }
-          bgImage { url alt width height }
+          bgImage {
+            bgImageType
+            bgImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails { width height }
+              }
+            }
+            bgImageUrl
+            bgSize
+            bgHorizontalPosition
+            bgVerticalPosition
+            bgRepeat
+            bgAttachment
+          }
           pageTextColor { color themeColor customColor }
           contentPadding { padding { top bottom left right } }
           pageHeaderBgColor { bgColor bgThemeColor bgCustomColor }
-          pageHeaderBgImage { url alt width height }
+          pageHeaderBgImage {
+            bgImageType
+            bgImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails { width height }
+              }
+            }
+            bgImageUrl
+            bgSize
+            bgHorizontalPosition
+            bgVerticalPosition
+            bgRepeat
+            bgAttachment
+          }
           pageHeaderTextColor { color themeColor customColor }
           pageHeaderPadding { padding { top bottom left right } }
           pageHeaderMargin {
@@ -324,10 +399,25 @@ export const GET_NODE_BY_URI = gql`
           }
           pageHeaderFontSize { fontSize { value unit } }
           sidebarBgColor { bgColor bgThemeColor bgCustomColor }
-          sidebarBgImage { url alt width height }
+          sidebarBgImage {
+            bgImageType
+            bgImage {
+              node {
+                sourceUrl
+                altText
+                mediaDetails { width height }
+              }
+            }
+            bgImageUrl
+            bgSize
+            bgHorizontalPosition
+            bgVerticalPosition
+            bgRepeat
+            bgAttachment
+          }
           sidebarTextColor { color themeColor customColor }
           sidebarPadding { padding { top bottom left right } }
-          sidebarWidth { value unit }
+          sidebarWidth
         }
       }
       ... on Category {

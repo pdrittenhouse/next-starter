@@ -1,3 +1,4 @@
+import { acfNum } from '@/lib/wp/utils/buildAcfBlockStyle';
 import type { CSSProperties } from 'react';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
@@ -244,17 +245,25 @@ export async function ModalBlock({ block }: ModalBlockProps) {
   const modalMargin = data.modal_margin?.margin;
   const modalDialogStyle: CSSProperties = {};
   if (modalMargin?.top?.auto) modalDialogStyle.marginTop = 'auto';
-  else if (modalMargin?.top?.top != null && modalMargin.top.top >= 0)
-    modalDialogStyle.marginTop = `${modalMargin.top.top}px`;
+  else {
+    const mTop = acfNum(modalMargin?.top?.top);
+    if (mTop != null && mTop >= 0) modalDialogStyle.marginTop = `${mTop}px`;
+  }
   if (modalMargin?.bottom?.auto) modalDialogStyle.marginBottom = 'auto';
-  else if (modalMargin?.bottom?.bottom != null && modalMargin.bottom.bottom >= 0)
-    modalDialogStyle.marginBottom = `${modalMargin.bottom.bottom}px`;
+  else {
+    const mBottom = acfNum(modalMargin?.bottom?.bottom);
+    if (mBottom != null && mBottom >= 0) modalDialogStyle.marginBottom = `${mBottom}px`;
+  }
   if (modalMargin?.left?.auto) modalDialogStyle.marginLeft = 'auto';
-  else if (modalMargin?.left?.left != null && modalMargin.left.left >= 0)
-    modalDialogStyle.marginLeft = `${modalMargin.left.left}px`;
+  else {
+    const mLeft = acfNum(modalMargin?.left?.left);
+    if (mLeft != null && mLeft >= 0) modalDialogStyle.marginLeft = `${mLeft}px`;
+  }
   if (modalMargin?.right?.auto) modalDialogStyle.marginRight = 'auto';
-  else if (modalMargin?.right?.right != null && modalMargin.right.right >= 0)
-    modalDialogStyle.marginRight = `${modalMargin.right.right}px`;
+  else {
+    const mRight = acfNum(modalMargin?.right?.right);
+    if (mRight != null && mRight >= 0) modalDialogStyle.marginRight = `${mRight}px`;
+  }
 
   // --- Trigger button ---
   const triggerBtn = data.trigger_button;

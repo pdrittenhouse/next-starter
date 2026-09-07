@@ -47,7 +47,7 @@ export const GET_ALL_USERS = gql`
  * Used by the author archive route.
  */
 export const GET_USER_BY_SLUG = gql`
-  query GetUserBySlug($slug: String!) {
+  query GetUserBySlug($slug: ID!) {
     user(id: $slug, idType: SLUG) {
       id
       databaseId

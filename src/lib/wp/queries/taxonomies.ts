@@ -17,24 +17,22 @@ export const GET_ALL_TAXONOMIES = gql`
   }
 `;
 
+// `taxonomy` resolves to a single Taxonomy, not a connection — no edges/node.
 export const GET_TAXONOMY_BY_ID = gql`
-  query GetTaxonomyById($taxonomyId: Int!) {
+  query GetTaxonomyById($taxonomyId: ID!) {
     taxonomy(id: $taxonomyId, idType: ID) {
-      edges {
-        node {
-          id
-          label
-          name
-          description
-        }
-      }
+      id
+      label
+      name
+      description
     }
   }
 `;
 
+// `taxonomies` takes a list of TaxonomyEnum values (CATEGORY, POST_TAG, ...).
 export const GET_TERMS_BY_TAXONOMY = gql`
-  query GetTermsByTaxonomy($taxonomy: ID!) {
-    terms(where: {taxonomies: $taxonomy}) {
+  query GetTermsByTaxonomy($taxonomies: [TaxonomyEnum]) {
+    terms(where: {taxonomies: $taxonomies}) {
       edges {
         node {
           description

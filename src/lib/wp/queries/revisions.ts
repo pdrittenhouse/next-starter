@@ -1,5 +1,11 @@
 import {gql} from "@apollo/client";
 
+/**
+ * `revisions` resolves to ContentNode, which carries only the fields common to
+ * every content type. `title`, `author` and the `parent*` fields live on the
+ * NodeWithTitle / NodeWithAuthor / HierarchicalContentNode interfaces, so they
+ * have to be reached through inline fragments.
+ */
 export const GET_ALL_REVISIONS = gql`
     query GetAllRevisions {
       revisions(first: 100) {
@@ -7,17 +13,23 @@ export const GET_ALL_REVISIONS = gql`
           node {
             id
             databaseId
-            title
             date
             slug
             status
-            parentDatabaseId
-            parentId
-            author {
-              node {
-                id
-                name
-                slug
+            ... on NodeWithTitle {
+              title
+            }
+            ... on HierarchicalContentNode {
+              parentDatabaseId
+              parentId
+            }
+            ... on NodeWithAuthor {
+              author {
+                node {
+                  id
+                  name
+                  slug
+                }
               }
             }
           }
