@@ -1,25 +1,28 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { SEARCH_CONTENT } from '@/lib/wp/queries';
+import { paginationArgs, type SearchParams } from '@/lib/wp/utils/paginationArgs';
 import { Tease } from './partials/tease';
 import { Pagination } from './partials/pagination';
 
 interface SearchTemplateProps {
   query: string;
+  /** Resolved searchParams from the route segment — carries the ?after / ?before cursor. */
+  searchParams?: SearchParams;
 }
 
 /**
  * Search results template.
  * Mirrors: templates/pages/search.twig
  */
-export async function SearchTemplate({ query }: SearchTemplateProps) {
+export async function SearchTemplate({ query, searchParams }: SearchTemplateProps) {
   const { data } = await fetchGraphQL<{
     contentNodes: {
       pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; endCursor: string; startCursor: string };
       edges: { node: any }[];
     };
   }>(print(SEARCH_CONTENT), {
-    first: 10,
+    ...paginationArgs(searchParams),
     search: query,
   });
 

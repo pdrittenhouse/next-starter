@@ -62,10 +62,12 @@ export const GET_ALL_CONTENT_NODES = gql`
 `;
 
 export const SEARCH_CONTENT = gql`
-    query SearchContent($first: Int = 10, $after: String, $search: String!) {
+    query SearchContent($first: Int, $after: String, $last: Int, $before: String, $search: String!) {
       contentNodes(
         first: $first
         after: $after
+        last: $last
+        before: $before
         where: {
           search: $search
           status: PUBLISH

@@ -1,12 +1,15 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_POSTS_BY_DATE } from '@/lib/wp/queries';
+import { paginationArgs, type SearchParams } from '@/lib/wp/utils/paginationArgs';
 import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 import { PageHeader } from './partials/page-header';
 import { Tease } from './partials/tease';
 import { Pagination } from './partials/pagination';
 
 interface DateArchiveTemplateProps {
+  /** Resolved searchParams from the route segment — carries the ?after / ?before cursor. */
+  searchParams?: SearchParams;
   year: number;
   month?: number;
   day?: number;
@@ -21,8 +24,8 @@ const MONTH_NAMES = [
  * Date-based archive template.
  * Handles /date/YYYY/, /date/YYYY/MM/, and /date/YYYY/MM/DD/ routes.
  */
-export async function DateArchiveTemplate({ year, month, day }: DateArchiveTemplateProps) {
-  const variables: Record<string, any> = { first: 10, year };
+export async function DateArchiveTemplate({ year, month, day, searchParams }: DateArchiveTemplateProps) {
+  const variables: Record<string, any> = { ...paginationArgs(searchParams), year };
   if (month) variables.month = month;
   if (day) variables.day = day;
 

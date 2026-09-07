@@ -7,13 +7,15 @@ import { AuthorTemplate } from '@/stories/templates/author';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 /** ISR — revalidate author pages every 60 seconds. */
 export const revalidate = 60;
 
-export default async function AuthorPage({ params }: PageProps) {
+export default async function AuthorPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
 
   const { data } = await fetchGraphQL<{ user: any }>(
     print(GET_USER_BY_SLUG),
@@ -25,7 +27,7 @@ export default async function AuthorPage({ params }: PageProps) {
     notFound();
   }
 
-  return <AuthorTemplate slug={user.slug} name={user.name} />;
+  return <AuthorTemplate slug={user.slug} name={user.name} searchParams={resolvedSearchParams} />;
 }
 
 export async function generateStaticParams() {

@@ -1,6 +1,7 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_POSTS_PAGINATED } from '@/lib/wp/queries';
+import { paginationArgs, type SearchParams } from '@/lib/wp/utils/paginationArgs';
 import { Tease } from './partials/tease';
 import { Pagination } from './partials/pagination';
 
@@ -11,13 +12,18 @@ import { Pagination } from './partials/pagination';
  * Used when Reading Settings → "Your homepage displays" is set to "Your latest posts",
  * or when a Posts Page is configured. For a static front page, see front-page.tsx.
  */
-export async function HomeTemplate() {
+interface HomeTemplateProps {
+  /** Resolved searchParams from the route segment — carries the ?after / ?before cursor. */
+  searchParams?: SearchParams;
+}
+
+export async function HomeTemplate({ searchParams }: HomeTemplateProps = {}) {
   const { data } = await fetchGraphQL<{
     posts: {
       pageInfo: { hasNextPage: boolean; hasPreviousPage: boolean; endCursor: string; startCursor: string };
       edges: { node: any }[];
     };
-  }>(print(GET_POSTS_PAGINATED), { first: 10 });
+  }>(print(GET_POSTS_PAGINATED), paginationArgs(searchParams));
 
   const posts = data?.posts?.edges ?? [];
   const pageInfo = data?.posts?.pageInfo;

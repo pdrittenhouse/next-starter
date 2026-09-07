@@ -159,7 +159,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     const searchQuery = Array.isArray(resolvedSearchParams.s)
       ? resolvedSearchParams.s[0]
       : resolvedSearchParams.s;
-    return <SearchTemplate query={searchQuery ?? ''} />;
+    return <SearchTemplate query={searchQuery ?? ''} searchParams={resolvedSearchParams} />;
   }
 
   // Preview mode — fetch draft content by ID
@@ -180,14 +180,14 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
                               previewNode?.settingsPostOptions?.removeContentContainer === true;
     const previewTemplate = resolveTemplate(previewNode, false, false);
     if (previewTemplate === 'single') return <SingleTemplate node={previewNode} removeContentContainerPerPost={previewPerPostRCC} />;
-    if (previewTemplate === 'archive') return <ArchiveTemplate node={previewNode} />;
+    if (previewTemplate === 'archive') return <ArchiveTemplate node={previewNode} searchParams={resolvedSearchParams} />;
     return <PageTemplate node={previewNode} removeContentContainerPerPost={previewPerPostRCC} />;
   }
 
   // Date-based archives — detect /YYYY/, /YYYY/MM/, /YYYY/MM/DD/ patterns
   const dateArchive = parseDateArchiveUri(uriSegments);
   if (dateArchive) {
-    return <DateArchiveTemplate {...dateArchive} />;
+    return <DateArchiveTemplate {...dateArchive} searchParams={resolvedSearchParams} />;
   }
 
   // Short-circuit paths that can never be WordPress content — static assets,
@@ -229,7 +229,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       }
     } else {
       // Blog posts index (showOnFront='posts') — home.php equivalent.
-      return <HomeTemplate />;
+      return <HomeTemplate searchParams={resolvedSearchParams} />;
     }
   } else {
     // Redirect check and node fetch run concurrently. The redirect result is
@@ -405,7 +405,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     case 'page':
       return <PageTemplate node={node} removeContentContainerPerPost={perPostRCC} />;
     case 'archive':
-      return <ArchiveTemplate node={node} />;
+      return <ArchiveTemplate node={node} searchParams={resolvedSearchParams} />;
     case 'author':
       return <AuthorTemplate slug={node.slug} name={node.name} />;
     default:

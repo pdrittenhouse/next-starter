@@ -412,10 +412,12 @@ export const GET_ADJACENT_POSTS = gql`
  */
 export const GET_POSTS_PAGINATED = gql`
   ${POST_FIELDS}
-  query GetPostsPaginated($first: Int = 10, $after: String, $categoryId: Int, $tagId: String, $authorName: String, $search: String) {
+  query GetPostsPaginated($first: Int, $after: String, $last: Int, $before: String, $categoryId: Int, $tagId: String, $authorName: String, $search: String) {
     posts(
       first: $first
       after: $after
+      last: $last
+      before: $before
       where: {
         hasPassword: false
         categoryId: $categoryId
@@ -470,10 +472,12 @@ export const GET_POSTS_PAGINATED = gql`
  */
 export const GET_POSTS_BY_DATE = gql`
   ${POST_FIELDS}
-  query GetPostsByDate($first: Int = 10, $after: String, $year: Int!, $month: Int, $day: Int) {
+  query GetPostsByDate($first: Int, $after: String, $last: Int, $before: String, $year: Int!, $month: Int, $day: Int) {
     posts(
       first: $first
       after: $after
+      last: $last
+      before: $before
       where: {
         hasPassword: false
         dateQuery: {

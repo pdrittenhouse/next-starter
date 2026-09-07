@@ -1,12 +1,15 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_POSTS_PAGINATED } from '@/lib/wp/queries';
+import { paginationArgs, type SearchParams } from '@/lib/wp/utils/paginationArgs';
 import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 import { PageHeader } from './partials/page-header';
 import { Tease } from './partials/tease';
 import { Pagination } from './partials/pagination';
 
 interface ArchiveTemplateProps {
+  /** Resolved searchParams from the route segment — carries the ?after / ?before cursor. */
+  searchParams?: SearchParams;
   node: {
     __typename?: string;
     databaseId?: number;
@@ -25,10 +28,10 @@ interface ArchiveTemplateProps {
  * Archive template for categories, tags, CPT archives.
  * Mirrors: templates/pages/archive.twig + templates/pages/index.twig
  */
-export async function ArchiveTemplate({ node }: ArchiveTemplateProps) {
+export async function ArchiveTemplate({ node, searchParams }: ArchiveTemplateProps) {
   // Build the title based on archive type
   let title = 'Archive';
-  const variables: Record<string, any> = { first: 10 };
+  const variables: Record<string, any> = { ...paginationArgs(searchParams) };
 
   switch (node.__typename) {
     case 'Category':

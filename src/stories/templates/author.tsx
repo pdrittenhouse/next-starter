@@ -1,12 +1,15 @@
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_POSTS_PAGINATED } from '@/lib/wp/queries';
+import { paginationArgs, type SearchParams } from '@/lib/wp/utils/paginationArgs';
 import { getContentWrapperOptions } from '@/lib/wp/utils/getContentWrapperOptions';
 import { PageHeader } from './partials/page-header';
 import { Tease } from './partials/tease';
 import { Pagination } from './partials/pagination';
 
 interface AuthorTemplateProps {
+  /** Resolved searchParams from the route segment — carries the ?after / ?before cursor. */
+  searchParams?: SearchParams;
   slug: string;
   name?: string;
 }
@@ -15,7 +18,7 @@ interface AuthorTemplateProps {
  * Author archive template.
  * Mirrors: templates/pages/author.twig → archive.twig
  */
-export async function AuthorTemplate({ slug, name }: AuthorTemplateProps) {
+export async function AuthorTemplate({ slug, name, searchParams }: AuthorTemplateProps) {
   const [postsResult, { removePageHeaderContainers }] = await Promise.all([
     fetchGraphQL<{
       posts: {
@@ -23,7 +26,7 @@ export async function AuthorTemplate({ slug, name }: AuthorTemplateProps) {
         edges: { node: any }[];
       };
     }>(print(GET_POSTS_PAGINATED), {
-      first: 10,
+      ...paginationArgs(searchParams),
       authorName: slug,
     }),
     getContentWrapperOptions(),
