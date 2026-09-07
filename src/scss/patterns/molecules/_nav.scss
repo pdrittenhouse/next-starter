@@ -250,6 +250,7 @@
       // Content panel - no max-width, blocks handle containers
       .mega-menu-panel {
         // padding: $spacer * 2;
+        width: 100%;
 
         // Reset block spacing at root level
         > * {

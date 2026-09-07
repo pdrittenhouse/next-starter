@@ -54,4 +54,17 @@
       }
     }
   }
+
+  &[class*="h-"],
+  &[class*="vh-"] {
+
+    .block-section--wrapper {
+      height: 100%;
+
+      > .container,
+      > .container-fluid {
+        height: 100%;
+      }
+    }
+  }
 }

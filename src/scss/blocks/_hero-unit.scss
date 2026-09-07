@@ -10,4 +10,17 @@
     > .container {
         position: relative;
     }
+
+    &[class*="h-"],
+    &[class*="vh-"] {
+
+        .hero-section--wrapper {
+            height: 100%;
+
+            > .container,
+            > .container-fluid {
+                height: 100%;
+            }
+        }
+    }
 }

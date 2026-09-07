@@ -30,7 +30,8 @@
     padding: rem-calc(0 70px);
   }
 
-  &.flickity-enabled {
+  &.flickity-enabled,
+  &.flickity-fallback-visible {
     opacity: 1;
 
     + .button--row {
