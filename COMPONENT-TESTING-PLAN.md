@@ -4,8 +4,12 @@
 > Captured 2026-09-06 so the reasoning isn't lost.
 
 Goal: automated verification that every component and block works across **all of
-its options**, and that behaviour is identical between `next-starter` and
-`astro-starter`, driven from real WordPress content.
+its options**, in each app, driven from real WordPress content.
+
+Each app is verified independently against the framework and a shared WordPress
+fixture — not against the other app. See
+[Decision: separate per-app suites](#decision-separate-per-app-suites) for why, and
+for what that trades away.
 
 ---
 
@@ -59,6 +63,40 @@ not make it the parity mechanism.
 
 ---
 
+## Decision: separate per-app suites
+
+**Decided 2026-09-07.** Each app gets its own suite, verified against the framework
+and its WordPress fixture. Neither app is the other's oracle, and there is no shared
+cross-render diff.
+
+Rationale: each app has an independent contract with WordPress. Verifying both
+against the same fixture proves both correct without coupling the suites to each
+other.
+
+What this buys:
+
+- **The divergent rendering models stop mattering.** astro-starter is pure SSR;
+  next-starter is static + 60s ISR, so next can serve content up to a minute stale
+  while astro serves live. A cross-app DOM diff would have produced false failures
+  purely from that timing skew, and would have needed both apps pinned to a known
+  snapshot to be trustworthy.
+- **No DOM-normalisation problem.** Comparing Astro output to React output would have
+  required normalising away `data-astro-source-file`, React hydration comments and
+  generated ids, and hoping the two frameworks' wrapper markup differed only
+  cosmetically. That was the plan's load-bearing unknown; this decision removes it.
+- **The suites can diverge where the frameworks do** — Storybook stays useful on the
+  next side without needing an Astro equivalent.
+
+What this gives up: **port equivalence is no longer directly tested.** Separate
+suites answer "is each app correct against WordPress?" but not "did the Astro port
+preserve the React behaviour?" A block could be wrong in both apps in the same way,
+or right in both while differing in output, and neither suite would notice. Accepted
+deliberately — the fixture assertions are expected to be specific enough that a
+genuine behavioural divergence shows up as one app failing an assertion the other
+passes.
+
+---
+
 ## Proposed layers, in value order
 
 ### 1. Schema contract check in CI
@@ -81,23 +119,23 @@ alongside the existing `blocks-scan` / `fields-copy` / `fields-list` commands.
 This is the piece that makes layers 3 and 4 possible, and the piece that currently
 does not exist in any form.
 
-### 3. Cross-render parity diff
+### 3. Per-app render assertions against the fixture
 
-Fetch the same URI from both apps, normalise away framework noise —
-`data-astro-source-file`, React hydration comments, generated ids — then diff DOM
-structure and computed class/style sets.
+For each app independently, request the fixture URIs and assert the rendered output
+against expectations derived from the WordPress content — that each block in the
+fixture produced its mapped component, that no block silently fell through to the
+`renderedHtml` default, that no dead CSS declarations were emitted, that the
+document has the structural landmarks it should.
 
-This is the direct answer to "does functionality port," because it exercises the real
-`query → buildBlockTree → BLOCK_MAP → component` path in both apps rather than
-components in isolation. A Node script; no framework required.
+This exercises the real `query → buildBlockTree → BLOCK_MAP → component` path rather
+than components in isolation, which is where every defect in the September session
+actually lived. A Node script; no framework required.
 
-It would have caught the September blank page instantly, the 121 `:px` declarations,
-and any block whose Astro port diverged from the React original.
+It would have caught the September blank page instantly (structural landmarks
+missing) and the 121 `:px` declarations (dead-declaration assertion).
 
-**Load-bearing assumption:** that the two DOMs can be normalised to a comparable
-form. If Astro and React diverge more than cosmetically in wrapper markup, the diff
-becomes noisy and has to soften into a looser structural assertion. Prove this on a
-single block before building the rest.
+Each app is checked against **WordPress**, not against the other app — see
+[Decision: separate per-app suites](#decision-separate-per-app-suites).
 
 ### 4. Behaviour, visual, and accessibility on the fixture
 
@@ -131,24 +169,30 @@ coverage from a spreadsheet into a build failure.
 
 ## Suggested first slice
 
-1. Layer 1 — schema contract check in CI
+1. Layer 1 — schema contract check in CI, both apps
 2. Layer 2 — fixture page + seed command
-3. A thin version of layer 3 over a handful of blocks, to settle the normalisation
-   question
+3. A thin version of layer 3 over a handful of blocks in one app, then mirror the
+   harness to the other
 
-If the normalisation approach holds, the remainder is mechanical.
+Layers 1 and 2 are shared groundwork; the fixture and the schema check serve both
+apps. Only layer 3 upward is duplicated per app, and the duplication is the point.
 
 ---
 
 ## Open questions
 
-- Current state of Storybook support for Astro — unverified
-- Whether Astro and React output can be normalised to a comparable DOM — unverified,
-  and layer 3 depends on it entirely
+- Current state of Storybook support for Astro — unverified. Lower stakes now that
+  the suites are independent: astro-starter can be tested through rendered pages
+  without ever gaining stories.
 - Whether the fixture should be one large page or one page per block group; one page
-  is cheaper to diff, per-block is easier to attribute failures to
+  is cheaper to render, per-block is easier to attribute failures to
 - Where CI runs, and whether it can reach a WordPress instance (the schema check and
   every layer below it need one)
+- Whether the per-app assertions can be specific enough to catch a behavioural
+  divergence between the ports, given that cross-app comparison is off the table
+
+**Resolved:** whether Astro and React output can be normalised to a comparable DOM.
+Moot — see [Decision: separate per-app suites](#decision-separate-per-app-suites).
 
 ---
 
