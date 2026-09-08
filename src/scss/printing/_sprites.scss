@@ -1,71 +1,75 @@
 @use "variables" as *;
-// SVG sprite CSS background-image utility classes.
-// Uses the $sprites data-URI map and sprite() mixin from _icons-generated.scss.
-// Produces .icon-{name} (base) and .button.btn-icon-{name} (button before-icon) classes.
-// Color variants (.icon-{name}-{color}) are generated for every palette entry via c().
+// SVG sprite CSS utility classes.
+//
+// Produces `.icon-{name}` and `.button.btn-icon-{name}` plus a colour variant
+// per palette entry: `.icon-{name}-{color}` and `.icon-{name}-{color}-{variant}`.
+//
+// The SVG payload is embedded ONCE per icon, on a grouped selector covering the
+// base class and every variant. Colour is then a separate, payload-free rule
+// setting `color`, which the mask picks up via `currentColor`.
+//
+// Previously each variant re-embedded the entire percent-encoded SVG, because
+// `icons.sprite()` baked the colour into the payload. That produced ~1,441 rules
+// and an 11.46 MB stylesheet — and the colour never actually applied, since the
+// `___color___` placeholder it substitutes is absent from the generated map. See
+// `01-atoms/svg/_sprite-mask.scss`.
 
 @use "../variables" as *;
 @use "01-atoms/svg/generated/icons-generated" as icons;
+@use "01-atoms/svg/sprite-mask" as mask;
 
 @each $name, $_ in icons.$sprites {
-  .icon-#{$name} {
-    @include icons.sprite($name);
-    background-size: contain;
+
+  // ── Selector lists ────────────────────────────────────────────────────────
+  // Base class plus every colour variant, so a single rule — and therefore a
+  // single copy of the SVG — serves all of them. A variant class is usable on
+  // its own in markup, so it has to carry the mask itself.
+  $icon-selectors: ".icon-#{$name}";
+  $btn-selectors: ".button.btn-icon-#{$name}";
+
+  @each $color-name, $variantList in $c-palette {
+    @each $variant, $__ in $variantList {
+      $suffix: if($variant == 'base', "#{'' + $color-name}", "#{'' + $color-name}-#{$variant}");
+      $icon-selectors: "#{$icon-selectors}, .icon-#{$name}-#{$suffix}";
+      $btn-selectors: "#{$btn-selectors}, .button.btn-icon-#{$name}-#{$suffix}";
+    }
+  }
+
+  // ── The mask (one embed per icon) ─────────────────────────────────────────
+  #{$icon-selectors} {
+    @include mask.sprite-mask($name);
     display: inline-block;
     height: 30px;
     width: 30px;
   }
 
-  @each $color-name, $variantList in $c-palette {
-    @each $variant, $__ in $variantList {
-      @if $variant == 'base' {
-        .icon-#{$name}-#{"" + $color-name} {
-          @include icons.sprite($name, ('color': c($color-name)));
-          background-size: contain;
-          display: inline-block;
-          height: 30px;
-          width: 30px;
-        }
-      } @else {
-        .icon-#{$name}-#{"" + $color-name}-#{$variant} {
-          @include icons.sprite($name, ('color': c($color-name, $variant)));
-          background-size: contain;
-          display: inline-block;
-          height: 30px;
-          width: 30px;
-        }
-      }
-    }
-  }
-
-  .button.btn-icon-#{$name} {
+  #{$btn-selectors} {
     &:before {
-      @include icons.sprite($name);
-      background-size: contain;
+      @include mask.sprite-mask($name);
       content: "";
+      display: inline-block;
       vertical-align: middle;
     }
   }
 
+  // ── Colour variants (no payload) ──────────────────────────────────────────
   @each $color-name, $variantList in $c-palette {
     @each $variant, $__ in $variantList {
       @if $variant == 'base' {
-        .button.btn-icon-#{$name}-#{"" + $color-name} {
-          &:before {
-            @include icons.sprite($name, ('color': c($color-name)));
-            background-size: contain;
-            content: "";
-            vertical-align: middle;
-          }
+        .icon-#{$name}-#{"" + $color-name} {
+          color: c($color-name);
+        }
+
+        .button.btn-icon-#{$name}-#{"" + $color-name}:before {
+          color: c($color-name);
         }
       } @else {
-        .button.btn-icon-#{$name}-#{"" + $color-name}-#{$variant} {
-          &:before {
-            @include icons.sprite($name, ('color': c($color-name, $variant)));
-            background-size: contain;
-            content: "";
-            vertical-align: middle;
-          }
+        .icon-#{$name}-#{"" + $color-name}-#{$variant} {
+          color: c($color-name, $variant);
+        }
+
+        .button.btn-icon-#{$name}-#{"" + $color-name}-#{$variant}:before {
+          color: c($color-name, $variant);
         }
       }
     }

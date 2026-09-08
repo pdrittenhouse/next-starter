@@ -1,0 +1,49 @@
+@use 'sass:map';
+@use 'generated/icons-generated' as icons;
+
+// SVG sprite icons as CSS masks.
+//
+// The generated `sprite()` mixin emits the icon as a `background-image` with the
+// SVG inlined as a percent-encoded data URI, and takes a `color` argument it
+// substitutes into the payload. Two problems with that:
+//
+//  1. The substitution never worked. It replaces a `___color___` placeholder
+//     that does not appear anywhere in the generated `$sprites` map — the
+//     spritemap plugin emits `var:color.fill='black'` instead. Every generated
+//     colour variant was therefore byte-identical, and every icon rendered
+//     black whichever variant class was used.
+//
+//  2. Because colour was baked into the payload, each variant needed its own
+//     copy of the whole SVG. 36 icons x 20 palette variants, twice over (once
+//     for `.icon-*` and again for `.button.btn-icon-*`), produced ~1,441 rules
+//     and an 11.46 MB stylesheet.
+//
+// A mask sidesteps both. Only the alpha channel of the image matters, so the
+// SVG's own fill is irrelevant and one embed serves every colour; the visible
+// colour comes from `background-color: currentColor`, which means it inherits
+// and can be set by any ordinary colour rule or utility class.
+//
+// Prefixed properties are included for older WebKit, which shipped masks behind
+// `-webkit-` long before the unprefixed form.
+
+/// @param {String} $name  Sprite name, as keyed in `icons.$sprites`.
+/// @param {*}      $size  `mask-size` value. `contain` scales to the box.
+@mixin sprite-mask($name, $size: contain) {
+  $sprite: map.get(icons.$sprites, $name);
+
+  @if $sprite == null {
+    @error "Sprite '#{$name}' does not exist";
+  }
+
+  -webkit-mask-image: url($sprite);
+          mask-image: url($sprite);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: $size;
+          mask-size: $size;
+
+  // The paint. `currentColor` so the icon follows the cascade.
+  background-color: currentColor;
+}
