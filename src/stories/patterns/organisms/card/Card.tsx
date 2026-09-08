@@ -160,6 +160,40 @@ export interface CardProps {
    * Maps to card_image_overlay_text in Twig.
    */
   imageOverlayText?: string;
+  /**
+   * Mirrors the `include_image` ACF field. Accepted for API completeness — the
+   * block already decides whether to pass an `image`, so nothing here reads it.
+   *
+   * NOTE: the ACF field is currently inert in both starters. CardBlock passes
+   * it but never consults it when building `cardImageSrc`, so unchecking
+   * "include image" in WordPress does not hide the image. Wiring that up is a
+   * behaviour change and deliberately not done here.
+   */
+  includeImage?: boolean;
+
+  // ─── Flip-card back face styling ───────────────────────────────────────────
+  //
+  // Accepted for API completeness. Like `includeImage`, CardBlock passes these
+  // from ACF (`card_back_border`, `back_border_radius`) but nothing here reads
+  // them yet, so the back face does not pick up its border or radius settings.
+  // Wiring them up is a behaviour change and deliberately not done here.
+  //
+  // Shapes mirror the ACF group so the block can pass its data through
+  // unmodified; they match AcfBlockStyleData['border'] / ['border_radius'].
+  /** Per-side border for the flip-card back face. Maps to card_back_border in Twig. */
+  cardBackBorder?: {
+    top?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    bottom?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    left?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+    right?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
+  };
+  /** Corner radii for the flip-card back face. Maps to back_border_radius in Twig. */
+  backBorderRadius?: {
+    top_left?: number | null;
+    top_right?: number | null;
+    bottom_left?: number | null;
+    bottom_right?: number | null;
+  };
 
   // ─── Body content ──────────────────────────────────────────────────────────
   /** Card title rendered as <h4 class="card-title">. Maps to card_title in Twig. */

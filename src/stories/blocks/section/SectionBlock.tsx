@@ -20,6 +20,8 @@ interface SectionMargin {
 }
 
 interface SectionBlockData {
+  /** ACF select controlling the wrapper element. Only 'div' and 'aside' are honoured; anything else falls back to <section>. */
+  section_element?: string | null;
   section_layout?: { section_layout?: string | null };
   section_bg_color?: AcfBlockStyleData['bg_color'];
   section_border?: AcfBlockStyleData['border'];
