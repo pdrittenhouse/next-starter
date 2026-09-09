@@ -61,6 +61,7 @@ export async function HomeTemplate({ searchParams }: HomeTemplateProps = {}) {
           hasPreviousPage={pageInfo.hasPreviousPage}
           endCursor={pageInfo.endCursor}
           startCursor={pageInfo.startCursor}
+          searchParams={searchParams}
         />
       )}
       </div>

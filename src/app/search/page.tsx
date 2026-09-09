@@ -2,7 +2,7 @@
  * Search results route — dynamic.
  *
  * WordPress search URLs are `/?s=query`, which would force the site root to be
- * dynamic. Middleware rewrites those here instead, so the public URL is
+ * dynamic. The proxy rewrites those here instead, so the public URL is
  * unchanged while `/[[...uri]]` stays prerenderable.
  */
 

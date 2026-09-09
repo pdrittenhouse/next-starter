@@ -27,19 +27,36 @@ import type { SearchParams } from '@/lib/wp/utils/paginationArgs';
  */
 
 /**
- * Detect date archive patterns like /2024/, /2024/03/, /2024/03/15/.
- * Returns parsed date parts or null if not a date pattern.
+ * Detect date archive patterns: /YYYY/, /YYYY/MM/, /YYYY/MM/DD/.
+ * Returns the parsed parts, or null when the segments aren't a date.
+ *
+ * Matched with regexes, not `parseInt`. `parseInt` stops at the first
+ * non-digit, so `parseInt('2025-2', 10)` is 2025 — which made `/2025-2/` parse
+ * as a date archive. That is not a hypothetical slug: `wp_unique_post_slug()`
+ * refuses a purely numeric slug for a page and appends a suffix, so `2025-2` is
+ * exactly what WordPress hands out when someone names a page "2025".
  */
 export function parseDateArchiveUri(segments: string[] | undefined): { year: number; month?: number; day?: number } | null {
   if (!segments || segments.length < 1 || segments.length > 3) return null;
-  const year = parseInt(segments[0], 10);
-  if (isNaN(year) || year < 1970 || year > 2100) return null;
+
+  // WordPress date archives are all-digit segments: a 4-digit year, then a
+  // 1-2 digit month and day (both /2024/03/ and /2024/3/ resolve in WP).
+  const YEAR = /^\d{4}$/;
+  const MONTH_OR_DAY = /^\d{1,2}$/;
+
+  if (!YEAR.test(segments[0])) return null;
+  const year = Number(segments[0]);
+  if (year < 1970 || year > 2100) return null;
   if (segments.length === 1) return { year };
-  const month = parseInt(segments[1], 10);
-  if (isNaN(month) || month < 1 || month > 12) return null;
+
+  if (!MONTH_OR_DAY.test(segments[1])) return null;
+  const month = Number(segments[1]);
+  if (month < 1 || month > 12) return null;
   if (segments.length === 2) return { year, month };
-  const day = parseInt(segments[2], 10);
-  if (isNaN(day) || day < 1 || day > 31) return null;
+
+  if (!MONTH_OR_DAY.test(segments[2])) return null;
+  const day = Number(segments[2]);
+  if (day < 1 || day > 31) return null;
   return { year, month, day };
 }
 
@@ -88,34 +105,13 @@ async function getReadingSettings() {
 }
 
 /**
- * Determine which template to render based on the WP node's __typename.
- * Mirrors the WordPress template hierarchy — front-page vs home are separate
- * because their layouts differ fundamentally (static page vs posts listing).
+ * NOTE: template resolution deliberately does NOT live here.
+ *
+ * There used to be a `resolveTemplate()` in this file as well as in
+ * `node-renderer.tsx`. Only the node-renderer one was ever called; this copy
+ * was dead from the moment rendering moved out, and the two had already
+ * started to drift. One implementation, in the component that dispatches on it.
  */
-function resolveTemplate(node: any, isHomepage: boolean, isSearch: boolean) {
-  if (isSearch) return 'search';
-
-  switch (node?.__typename) {
-    case 'Post':
-      return 'single';
-    case 'Page':
-      // The homepage static page routes to front-page; all other pages to page.
-      return isHomepage ? 'front-page' : 'page';
-    case 'Category':
-    case 'Tag':
-      return 'archive';
-    case 'User':
-      return 'author';
-    case 'MediaItem':
-      return 'single';
-    case 'ContentType':
-      return 'archive'; // CPT archive pages
-    default:
-      // Generic ContentNode — check if it's a known CPT single
-      if (node?.contentTypeName) return 'single';
-      return null;
-  }
-}
 
 export interface RouteContentProps {
   /** Path segments from the route. Undefined for the site root. */
@@ -130,12 +126,6 @@ export interface RouteContentProps {
 export async function RouteContent({ uriSegments, searchParams }: RouteContentProps) {
   const uri = uriSegments ? `/${uriSegments.join('/')}/` : '/';
   const isHomepage = uri === '/';
-
-  // Date-based archives — detect /YYYY/, /YYYY/MM/, /YYYY/MM/DD/ patterns
-  const dateArchive = parseDateArchiveUri(uriSegments);
-  if (dateArchive) {
-    return <DateArchiveTemplate {...dateArchive} searchParams={searchParams} />;
-  }
 
   // Short-circuit paths that can never be WordPress content — static assets,
   // WP server paths, and browser auto-requests. Avoids expensive GraphQL calls
@@ -152,21 +142,26 @@ export async function RouteContent({ uriSegments, searchParams }: RouteContentPr
 
   const wpBaseUrl = process.env.NEXT_PUBLIC_WP_GRAPHQL_URL?.replace(/\/graphql$/, '') ?? '';
 
-  // Homepage and non-homepage both parallelize their fetches to eliminate waterfalls.
+  // Settings and node in parallel, for every URI rather than just the homepage.
+  // The settings are needed off the homepage too, to recognise the Posts page
+  // below, and both fetches are ISR-cached so the extra one is close to free.
+  //
+  // Redirects are resolved in the proxy — see src/proxy.ts. Doing it here
+  // would duplicate that work and force dynamic rendering, since it was an
+  // uncached fetch.
   let node: any = null;
+  const [settings, resolvedNode] = await Promise.all([
+    getReadingSettings(),
+    getNodeByUri(uri),
+  ]);
+
   if (isHomepage) {
-    // Fetch settings and the root node simultaneously — settings decides which
-    // we use, but the node is ISR-cached and cheap to fetch speculatively.
-    const [settings, homeNode] = await Promise.all([
-      getReadingSettings(),
-      getNodeByUri(uri),
-    ]);
     if (settings.showOnFront === 'page' && settings.pageOnFront) {
       // Static front page. nodeByUri('/') should return it, but WPGraphQL Smart Cache
       // can serve a stale null for '/' after the reading settings change. Fall back to
       // fetching the front page directly by database ID.
-      if (homeNode) {
-        node = homeNode;
+      if (resolvedNode) {
+        node = resolvedNode;
       } else {
         const { data } = await fetchGraphQL<{ page: any }>(
           print(GET_FRONT_PAGE_BY_ID),
@@ -180,13 +175,34 @@ export async function RouteContent({ uriSegments, searchParams }: RouteContentPr
       return <HomeTemplate searchParams={searchParams} />;
     }
   } else {
-    // Redirects are resolved in middleware now — see src/middleware.ts. Doing
-    // it here would both duplicate that work and force dynamic rendering, since
-    // it was an uncached fetch.
-    node = await getNodeByUri(uri);
+    node = resolvedNode;
   }
 
+  // WordPress's "Posts page" is an ordinary Page node with its own URI, but
+  // WordPress renders it with home.php — the blog loop — not the page
+  // template. Without this it resolved as a plain page and rendered that page's
+  // (almost always empty) content, silently losing the blog index. Returns the
+  // same template the homepage uses when showOnFront is 'posts', so both routes
+  // to the index render identically.
+  if (node && settings.pageForPosts && Number(node.databaseId) === settings.pageForPosts) {
+    return <HomeTemplate searchParams={searchParams} />;
+  }
+
+  // ─── Synthetic patterns come AFTER WordPress ────────────────────────────────
+  //
+  // Date archives used to be matched before the node lookup, on the reasoning
+  // that a regex is cheaper than a round trip. That made a page slugged like a
+  // year UNREACHABLE: `/2025/` matched the pattern, returned early, and
+  // rendered an empty date archive over the real page with no error anywhere.
+  //
+  // Safe to test second because `nodeByUri` returns null for date archives at
+  // every depth (verified for /2022/, /2022/01/ and /2022/01/10/) — WordPress
+  // has no node for one.
   if (!node) {
+    const dateArchive = parseDateArchiveUri(uriSegments);
+    if (dateArchive) {
+      return <DateArchiveTemplate {...dateArchive} searchParams={searchParams} />;
+    }
     notFound();
   }
 

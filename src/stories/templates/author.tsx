@@ -70,6 +70,7 @@ export async function AuthorTemplate({ slug, name, searchParams }: AuthorTemplat
           hasPreviousPage={pageInfo.hasPreviousPage}
           endCursor={pageInfo.endCursor}
           startCursor={pageInfo.startCursor}
+          searchParams={searchParams}
         />
       )}
       </div>

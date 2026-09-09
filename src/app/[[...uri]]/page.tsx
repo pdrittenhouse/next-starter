@@ -6,6 +6,7 @@ import {
   getNodeByUri,
 } from '@/stories/templates/partials/route-content';
 import { fetchGraphQL } from '@/lib/wp/client';
+import { isAppRoute } from '@/lib/routes';
 import {
   GET_NODE_BY_URI,
   GET_ALL_POST_URIS,
@@ -31,8 +32,8 @@ interface PageProps {
  *   search      -> /search
  *   cursors     -> /paged/*
  *   preview     -> /preview/*
- * The first two are reached by middleware rewrite, so public URLs are
- * unchanged; WordPress's own `/?s=query` links still work.
+ * The first two are reached by a proxy rewrite (see src/proxy.ts), so public
+ * URLs are unchanged; WordPress's own `/?s=query` links still work.
  */
 export const revalidate = 60;
 
@@ -52,37 +53,74 @@ export default async function CatchAllPage({ params }: PageProps) {
  * Generate static params for all known WordPress URIs.
  * This pre-renders posts and pages at build time.
  */
+const MONTH_NAMES = [
+  '', 'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+/** "2024" / "March 2024" / "March 15, 2024" — mirrors the date-archive heading. */
+export function formatDateArchiveTitle(
+  dateArchive: { year: number; month?: number; day?: number },
+): string {
+  if (dateArchive.month && MONTH_NAMES[dateArchive.month]) {
+    return dateArchive.day
+      ? `${MONTH_NAMES[dateArchive.month]} ${dateArchive.day}, ${dateArchive.year}`
+      : `${MONTH_NAMES[dateArchive.month]} ${dateArchive.year}`;
+  }
+  return `${dateArchive.year}`;
+}
+
 export async function generateStaticParams() {
-  const [postsResult, pagesResult] = await Promise.all([
+  const [postsResult, pagesResult, settingsResult] = await Promise.all([
     fetchGraphQL<{ posts: { edges: { node: { uri: string } }[] } }>(
       print(GET_ALL_POST_URIS),
     ).catch(() => ({ data: null })),
-    fetchGraphQL<{ pages: { edges: { node: { uri: string } }[] } }>(
+    fetchGraphQL<{ pages: { edges: { node: { databaseId: number; uri: string } }[] } }>(
       print(GET_ALL_PAGE_URIS),
     ).catch(() => ({ data: null })),
+    fetchGraphQL<{ readingSettings: { pageForPosts: number } }>(
+      print(GET_READING_SETTINGS),
+    ).catch(() => ({ data: null })),
   ]);
+
+  // WordPress's "Posts page" is an ordinary Page node, but WordPress renders it
+  // with the blog loop — so it paginates, and a cursor arrives as `?after=`,
+  // which the proxy rewrites to /paged/*. Prerendering it here is wasted work
+  // at best; matched by database ID, which is why GET_ALL_PAGE_URIS selects it.
+  const pageForPosts = Number((settingsResult as any)?.data?.readingSettings?.pageForPosts ?? 0);
 
   const uris: { uri: string[] }[] = [];
 
   // Add homepage
   uris.push({ uri: [] });
 
-  // Add posts
-  const posts = (postsResult as any)?.data?.posts?.edges ?? [];
-  for (const { node } of posts) {
-    if (node.uri) {
-      const segments = node.uri.replace(/^\/|\/$/g, '').split('/');
-      if (segments[0]) uris.push({ uri: segments });
-    }
-  }
+  const add = (uri: string | undefined, databaseId?: number) => {
+    if (!uri) return;
+    const segments = uri.replace(/^\/|\/$/g, '').split('/');
+    if (!segments[0]) return;
 
-  // Add pages
-  const pages = (pagesResult as any)?.data?.pages?.edges ?? [];
-  for (const { node } of pages) {
-    if (node.uri) {
-      const segments = node.uri.replace(/^\/|\/$/g, '').split('/');
-      if (segments[0]) uris.push({ uri: segments });
+    // A WordPress page slugged `search` or `data` would otherwise be prerendered
+    // over one of this app's own routes. Next gives the real route priority, so
+    // the entry is merely dead rather than harmful — but generating it hides a
+    // genuine content collision that someone should know about.
+    if (isAppRoute(uri)) {
+      console.warn(`[build] skipping ${uri} — collides with an app route`);
+      return;
     }
+
+    if (pageForPosts && databaseId != null && Number(databaseId) === pageForPosts) {
+      console.warn(`[build] skipping ${uri} — it is the Posts page, which paginates`);
+      return;
+    }
+
+    uris.push({ uri: segments });
+  };
+
+  for (const { node } of (postsResult as any)?.data?.posts?.edges ?? []) {
+    add(node?.uri);
+  }
+  for (const { node } of (pagesResult as any)?.data?.pages?.edges ?? []) {
+    add(node?.uri, node?.databaseId);
   }
 
   return uris;
@@ -112,21 +150,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
   }
 
-  const dateArchive = parseDateArchiveUri(uriSegments);
-  if (dateArchive) {
-    const MONTH_NAMES = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    let title = `${dateArchive.year}`;
-    if (dateArchive.month && MONTH_NAMES[dateArchive.month]) {
-      title = dateArchive.day
-        ? `${MONTH_NAMES[dateArchive.month]} ${dateArchive.day}, ${dateArchive.year}`
-        : `${MONTH_NAMES[dateArchive.month]} ${dateArchive.year}`;
-    }
-    return { title: `Archives: ${title}` };
-  }
-
+  // WordPress before synthetic patterns, matching RouteContent. When these two
+  // disagreed, the page rendered a post at /2025/ while the tab still said
+  // "Archives: 2025" — the body was right and only the title was wrong, which
+  // is exactly the kind of mismatch nobody notices.
+  //
+  // Free to do in this order: getNodeByUri is wrapped in React `cache()`, so
+  // this shares the page component's fetch rather than adding one.
   const node = await getNodeByUri(uri);
 
   if (!node) {
+    const dateArchive = parseDateArchiveUri(uriSegments);
+    if (dateArchive) {
+      return { title: `Archives: ${formatDateArchiveTitle(dateArchive)}` };
+    }
     return { title: 'Page Not Found' };
   }
 

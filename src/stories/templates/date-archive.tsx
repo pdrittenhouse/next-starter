@@ -85,6 +85,7 @@ export async function DateArchiveTemplate({ year, month, day, searchParams }: Da
           hasPreviousPage={pageInfo.hasPreviousPage}
           endCursor={pageInfo.endCursor}
           startCursor={pageInfo.startCursor}
+          searchParams={searchParams}
         />
       )}
       </div>

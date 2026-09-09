@@ -98,6 +98,7 @@ export async function ArchiveTemplate({ node, searchParams }: ArchiveTemplatePro
           hasPreviousPage={pageInfo.hasPreviousPage}
           endCursor={pageInfo.endCursor}
           startCursor={pageInfo.startCursor}
+          searchParams={searchParams}
         />
       )}
       </div>

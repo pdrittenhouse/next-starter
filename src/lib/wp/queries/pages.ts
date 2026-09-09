@@ -304,6 +304,9 @@ export const GET_ALL_PAGE_URIS = gql`
     pages(first: 1000, where: { hasPassword: false }) {
       edges {
         node {
+          # databaseId so callers can match a page against the reading
+          # settings' pageForPosts without a second request.
+          databaseId
           uri
           slug
         }

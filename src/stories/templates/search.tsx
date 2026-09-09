@@ -71,6 +71,7 @@ export async function SearchTemplate({ query, searchParams }: SearchTemplateProp
           hasPreviousPage={pageInfo.hasPreviousPage}
           endCursor={pageInfo.endCursor}
           startCursor={pageInfo.startCursor}
+          searchParams={searchParams}
         />
       )}
       </div>

@@ -1,5 +1,5 @@
 /**
- * Request middleware.
+ * Request proxy — Next's `proxy` file convention, formerly `middleware`.
  *
  * Two jobs:
  *
@@ -12,52 +12,46 @@
  * WordPress's own `/?s=query` search URLs and the `?after=` cursor links built
  * by `partials/pagination.tsx` keep working exactly as before.
  *
- * NOTE: no response cache here, unlike astro-starter's middleware. Next has its
- * own ISR — `revalidate` on the content route — so an HTML cache in front of it
- * would store the same output twice with two independent expiry clocks. Astro
- * has no ISR primitive, which is why it needs one.
+ * ─── The filename and the export name are coupled ────────────────────────────
+ *
+ * Next 16 renamed this convention from `middleware` to `proxy` and warns on
+ * every build while the old name is used. The rename is not just the file:
+ * `build/templates/middleware.js` resolves the handler as
+ *
+ *     const isProxy = page === '/proxy' || page === '/src/proxy';
+ *     const handlerUserland = (isProxy ? mod.proxy : mod.middleware) || mod.default;
+ *
+ * so once the file is `proxy.ts` the export MUST be named `proxy` (or be the
+ * default export). Renaming only one of the two throws
+ * `ProxyMissingExportError` — loudly, which is the good outcome.
+ *
+ * Keeping both `middleware.ts` and `proxy.ts` is a hard build error (E900), so
+ * this is a move, never a copy. Requires Next >= 16; on 15 the file is not a
+ * recognised convention at all and would simply never run — no redirects, and
+ * `/?s=` rendering the homepage.
+ *
+ * Everything else carried over unchanged: `NextProxy` is a pure alias of
+ * `NextMiddleware`, `ProxyConfig` and `MiddlewareConfig` are the same type, and
+ * `config.matcher` is read by the same matcher parser.
+ *
+ * NOTE: no response cache here, unlike astro-starter's middleware (Astro kept
+ * that name). Next has its own ISR — `revalidate` on the content route — so an
+ * HTML cache in front of it would store the same output twice with two
+ * independent expiry clocks. Astro has no ISR primitive, which is why it needs
+ * one.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import type { ProxyConfig } from 'next/server';
 import { matchRedirect } from '@/lib/wp/redirectTable';
+import {
+  WP_SERVER_PREFIXES,
+  firstSegment,
+  isAppRoute,
+  isNonContentPath,
+} from '@/lib/routes';
 
-/** WordPress server paths that can never be front-end content. */
-const WP_SERVER_PREFIXES = new Set([
-  'wp-content',
-  'wp-admin',
-  'wp-includes',
-  'wp-json',
-  'wp-cron.php',
-]);
-
-const ASSET_EXTENSION =
-  /\.(ico|png|jpg|jpeg|gif|webp|avif|svg|css|js|mjs|map|txt|xml|json|woff|woff2|ttf|eot|pdf|zip)$/i;
-
-function firstSegment(pathname: string): string | undefined {
-  return pathname.split('/').filter(Boolean)[0];
-}
-
-function isNonContentPath(pathname: string): boolean {
-  const first = firstSegment(pathname);
-  if (!first) return false;
-  if (WP_SERVER_PREFIXES.has(first)) return true;
-  const segments = pathname.split('/').filter(Boolean);
-  return ASSET_EXTENSION.test(segments[segments.length - 1]);
-}
-
-/** Routes that already handle their own query params — never rewrite these. */
-function isOwnDynamicRoute(pathname: string): boolean {
-  return (
-    pathname === '/search' ||
-    pathname.startsWith('/search/') ||
-    pathname.startsWith('/paged/') ||
-    pathname === '/preview' ||
-    pathname.startsWith('/preview/') ||
-    pathname.startsWith('/api/')
-  );
-}
-
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { nextUrl } = request;
   const { pathname, searchParams } = nextUrl;
 
@@ -68,7 +62,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (isOwnDynamicRoute(pathname)) {
+  // This app's own routes handle their own query params — never rewrite them.
+  // The list lives in lib/routes.ts, shared with generateStaticParams so the
+  // two cannot drift. It previously omitted /author and /data, so
+  // `/author/jane?s=cat` was rewritten onto /search and the author archive
+  // silently became a search results page.
+  if (isAppRoute(pathname)) {
     return NextResponse.next();
   }
 
@@ -108,14 +107,14 @@ export async function middleware(request: NextRequest) {
       }
     } catch (error) {
       // A redirect-table failure must not take down the page.
-      console.error('[middleware] redirect lookup failed:', error);
+      console.error('[proxy] redirect lookup failed:', error);
     }
   }
 
   return NextResponse.next();
 }
 
-export const config = {
+export const config: ProxyConfig = {
   // Skip Next internals and the favicon; everything else goes through.
   matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };
