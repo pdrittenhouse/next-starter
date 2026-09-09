@@ -8,6 +8,15 @@ import { SvgIcon } from '@/stories/patterns/atoms/svg/SvgIcon';
 import styles from './header.module.scss';
 import { cx } from '@/lib/cx';
 
+/*
+ * NOTE: the search form submits to /search, not /.
+ *
+ * Next's proxy rewrites /?s= either way, so this is not required here — but the
+ * two starters ship the same components, and astro-starter cannot serve a query
+ * string from its prerendered front page (@astrojs/node matches a static file
+ * on pathname alone). Keeping the markup identical avoids a silent divergence.
+ */
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -521,7 +530,7 @@ export function Header({
                                   id="headerSearch"
                                   className={cx(styles, 'searchform', 'placeholder-black')}
                                   role="search"
-                                  action="/"
+                                  action="/search"
                                   method="get"
                                   autoComplete="off"
                                 >
