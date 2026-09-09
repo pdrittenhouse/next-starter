@@ -38,6 +38,58 @@ const TEMPLATE_MANIFEST_KEYS: Record<string, string> = {
   'search': 'pages/search',
 };
 
+/**
+ * Ordered manifest keys to try for a node, most specific first.
+ *
+ * Mirrors the fallback chains in the framework's TemplateDispatcher:
+ *
+ *   single  ->  pages/single-{id}  ->  pages/single-{post-type}  ->  pages/single
+ *   archive ->  pages/archive-{term-id | post-type}  ->  pages/archive  ->  pages/index
+ *
+ * A single key lookup was enough while only post and page mattered. It is not
+ * enough for a custom post type: the manifest can carry
+ * `pages/single-{post-type}` for a CPT with its own template, and
+ * `TEMPLATE_MANIFEST_KEYS['single']` could only ever find `pages/single`.
+ *
+ * NOTE on custom page templates: the framework's four shipped templates are
+ * NOT mechanically derivable from `template.templateName` —
+ * `Template_CenteredLogoHeaderLayout` corresponds to
+ * `pages/page-template-centered`, and `Template_SideHeaderLayout` to
+ * `pages/page-template-header-side`. The manifest key comes from the PHP
+ * template's file name, which WPGraphQL does not expose; `templateName` is the
+ * human label. Matching those needs a `templateSlug` field on the WordPress
+ * side, so page-template candidates are deliberately not guessed at here.
+ */
+function templateCandidates(node: any, template: string | null): string[] {
+  const base = template ? TEMPLATE_MANIFEST_KEYS[template] : undefined;
+
+  switch (template) {
+    case 'single': {
+      const candidates: string[] = [];
+      if (node?.databaseId) candidates.push(`pages/single-${node.databaseId}`);
+      if (node?.contentTypeName) candidates.push(`pages/single-${node.contentTypeName}`);
+      candidates.push('pages/single');
+      return candidates;
+    }
+
+    case 'archive': {
+      const candidates: string[] = [];
+      // A ContentType node is a post-type archive and carries `name`; a
+      // Category or Tag is a term archive and carries `databaseId`.
+      if (node?.__typename === 'ContentType' && node?.name) {
+        candidates.push(`pages/archive-${node.name}`);
+      } else if (node?.databaseId) {
+        candidates.push(`pages/archive-${node.databaseId}`);
+      }
+      candidates.push('pages/archive', 'pages/index');
+      return candidates;
+    }
+
+    default:
+      return base ? [base] : [];
+  }
+}
+
 
 /**
  * Fetch the template-patterns manifest from WordPress.
@@ -108,9 +160,17 @@ export async function NodeRenderer({ node, isHomepage = false, searchParams }: N
   // Attempt to resolve a manifest tree for this template so TemplateRenderer
   // can drive the layout. Falls back to the static template components when
   // no manifest entry exists (manifest not built, unknown template key, etc.).
-  const manifestKey = template ? TEMPLATE_MANIFEST_KEYS[template] : undefined;
-  const manifest = manifestKey ? await getTemplatePatterns() : null;
-  const manifestEntry = manifest?.templates?.find(t => t.key === manifestKey);
+  //
+  // A CHAIN, not a single key. Order matters and `Array.includes` would lose it —
+  // `pages/single` would win over `pages/single-toasters` purely because it
+  // appears earlier in the manifest. Walk the candidates, not the manifest.
+  const candidates = templateCandidates(node, template);
+  const manifest = candidates.length ? await getTemplatePatterns() : null;
+  let manifestEntry: NonNullable<TimberlandPatternManifest['templates']>[number] | undefined;
+  for (const key of candidates) {
+    manifestEntry = manifest?.templates?.find(t => t.key === key);
+    if (manifestEntry) break;
+  }
   const tree = manifestEntry?.tree ?? null;
 
   // When a manifest tree is available, TemplateRenderer handles the layout.

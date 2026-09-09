@@ -480,6 +480,114 @@ export const GET_NODE_BY_URI = gql`
         status
         contentTypeName
       }
+
+      # ─── Generic content, resolved through interfaces ──────────────────────
+      #
+      # Everything above this point names a concrete type. That is fine for
+      # post and page, which every install has, but a headless client resolving
+      # an arbitrary URI cannot enumerate a site's custom post types — so a CPT
+      # single fell through to the bare "... on ContentNode" branch below and
+      # rendered a shell: correct body class, no title, no content, no blocks.
+      # Both toasters on the test install produced byte-identical HTML.
+      #
+      # These fragments cover any content node, present and future, without
+      # naming it. NodeWithTimberlandLayout is the framework's own interface
+      # (see its docs/guides/graphql.md); the rest are WPGraphQL's.
+      #
+      # A type that does not implement one simply does not match — a CPT
+      # registered without "supports: author" never resolves author, rather
+      # than erroring.
+      ... on NodeWithTitle {
+        title
+      }
+      ... on NodeWithContentEditor {
+        content
+      }
+      ... on NodeWithExcerpt {
+        excerpt
+      }
+      ... on NodeWithFeaturedImage {
+        featuredImage {
+          node {
+            id
+            sourceUrl
+            altText
+            caption
+            srcSet
+            sizes
+          }
+        }
+      }
+      ... on NodeWithEditorBlocks {
+        editorBlocks {
+          name
+          clientId
+          parentClientId
+          renderedHtml
+          attributesJSON
+        }
+      }
+      ... on NodeWithTemplate {
+        template {
+          templateName
+        }
+      }
+      ... on NodeWithAuthor {
+        author {
+          node {
+            id
+            name
+            slug
+            avatar {
+              url
+            }
+          }
+        }
+      }
+      ... on NodeWithComments {
+        commentStatus
+      }
+      ... on NodeWithTimberlandLayout {
+        mainClasses
+        contentWrapperStyle
+        sidebarSlug
+        sidebarCol
+        sidebarBp
+        seo {
+          title
+          description
+          canonicalUrl
+          ogTitle
+          ogDescription
+          ogImage
+          ogType
+          twitterTitle
+          twitterDescription
+          twitterImage
+          twitterCard
+          robots
+          schema
+          breadcrumbs {
+            label
+            url
+            isCurrentPage
+          }
+        }
+      }
+      # wpgraphql-acf registers a WithAcf* interface per field group, so these
+      # need no per-type naming either. They resolve to null on a post type
+      # whose location rules do not include the group — a manual step when a CPT
+      # is created, documented in the framework's template-dispatching guide.
+      ... on WithAcfSettingsPostOptions {
+        settingsPostOptions {
+          removeContentContainer
+        }
+      }
+      ... on WithAcfSettingsPageOptions {
+        settingsPageOptions {
+          removeContentContainer
+        }
+      }
     }
   }
 `;

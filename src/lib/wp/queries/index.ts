@@ -8,7 +8,7 @@ export { GET_ALL_CATEGORIES, GET_CATEGORY_BY_SLUG, GET_ALL_CATEGORY_URIS } from 
 export { GET_ALL_TAGS, GET_TAG_BY_SLUG, GET_ALL_TAG_URIS } from './tags';
 export { GET_ALL_TAXONOMIES, GET_TAXONOMY_BY_ID, GET_TERMS_BY_TAXONOMY } from './taxonomies';
 export { GET_ALL_COMMENTS, GET_COMMENTS_BY_POST } from './comments';
-export { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_NODES, SEARCH_CONTENT } from './content';
+export { GET_ALL_CONTENT_TYPES, GET_ALL_CONTENT_URIS, GET_ALL_CONTENT_NODES, SEARCH_CONTENT } from './content';
 export { GET_ALL_POST_FORMATS } from './post-formats';
 export { GET_ALL_REVISIONS } from './revisions';
 export { GET_ALL_REUSABLE_BLOCKS, GET_REUSABLE_BLOCK_BY_ID } from './reusable-blocks';

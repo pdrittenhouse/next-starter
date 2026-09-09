@@ -9,8 +9,7 @@ import { fetchGraphQL } from '@/lib/wp/client';
 import { isAppRoute } from '@/lib/routes';
 import {
   GET_NODE_BY_URI,
-  GET_ALL_POST_URIS,
-  GET_ALL_PAGE_URIS,
+  GET_ALL_CONTENT_URIS,
   GET_READING_SETTINGS,
 } from '@/lib/wp/queries';
 
@@ -71,13 +70,14 @@ export function formatDateArchiveTitle(
 }
 
 export async function generateStaticParams() {
-  const [postsResult, pagesResult, settingsResult] = await Promise.all([
-    fetchGraphQL<{ posts: { edges: { node: { uri: string } }[] } }>(
-      print(GET_ALL_POST_URIS),
-    ).catch(() => ({ data: null })),
-    fetchGraphQL<{ pages: { edges: { node: { databaseId: number; uri: string } }[] } }>(
-      print(GET_ALL_PAGE_URIS),
-    ).catch(() => ({ data: null })),
+  // One query across every post type, rather than `posts` + `pages`. Those two
+  // named the types explicitly, so a custom post type was never prerendered no
+  // matter how much content it had — every CPT single fell to the ISR fallback
+  // forever.
+  const [contentResult, settingsResult] = await Promise.all([
+    fetchGraphQL<{
+      contentNodes: { nodes: { databaseId: number; uri: string; contentTypeName: string }[] };
+    }>(print(GET_ALL_CONTENT_URIS)).catch(() => ({ data: null })),
     fetchGraphQL<{ readingSettings: { pageForPosts: number } }>(
       print(GET_READING_SETTINGS),
     ).catch(() => ({ data: null })),
@@ -116,10 +116,7 @@ export async function generateStaticParams() {
     uris.push({ uri: segments });
   };
 
-  for (const { node } of (postsResult as any)?.data?.posts?.edges ?? []) {
-    add(node?.uri);
-  }
-  for (const { node } of (pagesResult as any)?.data?.pages?.edges ?? []) {
+  for (const node of (contentResult as any)?.data?.contentNodes?.nodes ?? []) {
     add(node?.uri, node?.databaseId);
   }
 
