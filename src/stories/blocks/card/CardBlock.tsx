@@ -112,6 +112,20 @@ export interface CardBlockData extends Pick<AcfBlockStyleData, 'width' | 'height
   };
 
   // ─── Card image ─────────────────────────────────────────────────────────────
+  /**
+   * Editor-only toggle. Read by ACF's conditional logic to show or hide the
+   * `image`, `image_position`, `image_overlay` and `image_overlay_text` fields
+   * in the block editor — nothing renders from it.
+   *
+   * Deliberately NOT passed to `Card`. `card.twig` gates the image on the URL
+   * being present (`card_image_location`, ~L229) and never reads this field, so
+   * gating the render on it here would make the starters diverge from
+   * WordPress rather than match it. ACF also retains the values of
+   * conditionally hidden fields, so an image set before the box was unchecked
+   * still renders in WordPress.
+   *
+   * Kept on the type because GraphQL returns it.
+   */
   include_image?: boolean;
   image?: AcfCardImageField | null;
   image_position?: 'top' | 'bottom';
@@ -516,7 +530,6 @@ export async function CardBlock({ block }: CardBlockProps) {
       imageLocation={imageLocation}
       imageOverlay={data.image_overlay ?? false}
       imageOverlayText={data.image_overlay_text ?? undefined}
-      includeImage={data.include_image ?? false}
       cardBackBorder={data.card_back_border}
       backBorderRadius={data.back_border_radius}
       image={

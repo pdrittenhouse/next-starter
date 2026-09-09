@@ -7,6 +7,11 @@ import { List } from '@/stories/patterns/molecules/list/List';
 import type { ListProps } from '@/stories/patterns/molecules/list/List';
 import styles from './card.module.scss';
 import { cx } from '@/lib/cx';
+import {
+  buildAcfBorderStyle,
+  type AcfBorderContainer,
+  type AcfBorderRadiusContainer,
+} from '@/lib/wp/utils/buildAcfBlockStyle';
 
 // ─── Type exports ─────────────────────────────────────────────────────────────
 
@@ -160,40 +165,30 @@ export interface CardProps {
    * Maps to card_image_overlay_text in Twig.
    */
   imageOverlayText?: string;
-  /**
-   * Mirrors the `include_image` ACF field. Accepted for API completeness — the
-   * block already decides whether to pass an `image`, so nothing here reads it.
-   *
-   * NOTE: the ACF field is currently inert in both starters. CardBlock passes
-   * it but never consults it when building `cardImageSrc`, so unchecking
-   * "include image" in WordPress does not hide the image. Wiring that up is a
-   * behaviour change and deliberately not done here.
-   */
-  includeImage?: boolean;
 
   // ─── Flip-card back face styling ───────────────────────────────────────────
   //
-  // Accepted for API completeness. Like `includeImage`, CardBlock passes these
-  // from ACF (`card_back_border`, `back_border_radius`) but nothing here reads
-  // them yet, so the back face does not pick up its border or radius settings.
-  // Wiring them up is a behaviour change and deliberately not done here.
+  // Applied to the `.back` element only, and only when `flipCard` is set —
+  // matching `card_back_styles` in card.twig, where every entry is gated on
+  // `fields.flip_card == true`.
   //
-  // Shapes mirror the ACF group so the block can pass its data through
-  // unmodified; they match AcfBlockStyleData['border'] / ['border_radius'].
-  /** Per-side border for the flip-card back face. Maps to card_back_border in Twig. */
-  cardBackBorder?: {
-    top?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
-    bottom?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
-    left?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
-    right?: { width?: number | null; style?: string | null; color?: string | null; custom_color?: string | null; theme_color?: string | null };
-  };
-  /** Corner radii for the flip-card back face. Maps to back_border_radius in Twig. */
-  backBorderRadius?: {
-    top_left?: number | null;
-    top_right?: number | null;
-    bottom_left?: number | null;
-    bottom_right?: number | null;
-  };
+  // Shapes mirror the ACF groups so the block can pass its data through
+  // unmodified; they are the same types `buildAcfBlockStyle` reads.
+  /**
+   * Per-side border for the flip-card back face. Maps to card_back_border.
+   *
+   * Suppressed by `noBorder`, because Twig computes `card_back_border_*` inside
+   * the same `{% if fields.remove_card_border != true %}` guard as the front
+   * border — one checkbox removes both.
+   */
+  cardBackBorder?: AcfBorderContainer | null;
+  /**
+   * Corner radii for the flip-card back face. Maps to back_border_radius.
+   *
+   * NOT suppressed by `noBorder`: Twig computes these outside the
+   * `remove_card_border` guard, so a borderless back face keeps its radius.
+   */
+  backBorderRadius?: AcfBorderRadiusContainer | null;
 
   // ─── Body content ──────────────────────────────────────────────────────────
   /** Card title rendered as <h4 class="card-title">. Maps to card_title in Twig. */
@@ -341,6 +336,8 @@ export function Card({
   footer,
   noFooterPadding = false,
   flipCard = false,
+  cardBackBorder,
+  backBorderRadius,
   backBackgroundImage,
   backContent,
   className,
@@ -378,10 +375,20 @@ export function Card({
       ? { backgroundImage: `url('${backgroundImage}')` }
       : {};
 
-  const backStyle: React.CSSProperties =
-    flipCard && backBackgroundImage
-      ? { backgroundImage: `url('${backBackgroundImage}')` }
-      : {};
+  // Back face styling. Everything here is gated on `flipCard`, mirroring
+  // `card_back_styles` in card.twig where every entry carries
+  // `fields.flip_card == true` — a non-flip card has no `.back` element to
+  // style, and its ACF back fields are hidden in the editor.
+  //
+  // `noBorder` suppresses the border but NOT the radius: Twig computes
+  // `card_back_border_*` inside the `remove_card_border` guard and
+  // `back_border_radius_*` outside it.
+  const backStyle: React.CSSProperties = flipCard
+    ? {
+        ...(backBackgroundImage ? { backgroundImage: `url('${backBackgroundImage}')` } : {}),
+        ...buildAcfBorderStyle(noBorder ? null : cardBackBorder, backBorderRadius),
+      }
+    : {};
 
   // ─── Visibility flags ───────────────────────────────────────────────────────
   // Whether the icon resolves to a renderable value.

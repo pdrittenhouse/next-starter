@@ -62,14 +62,14 @@ interface AcfBorderSide {
   custom_color?: string | null;
 }
 
-interface AcfBorderContainer {
+export interface AcfBorderContainer {
   top?: AcfBorderSide | null;
   bottom?: AcfBorderSide | null;
   left?: AcfBorderSide | null;
   right?: AcfBorderSide | null;
 }
 
-interface AcfBorderRadiusContainer {
+export interface AcfBorderRadiusContainer {
   top_left?: number | null;
   top_right?: number | null;
   bottom_left?: number | null;
@@ -204,30 +204,8 @@ export function buildAcfBlockStyle(data: AcfBlockStyleData): {
   if (mar?.right?.auto)       css.marginRight  = 'auto';
   else { const v = px(mar?.right?.right);   if (v) css.marginRight  = v; }
 
-  // ── Border (per side) ──────────────────────────────────────────────────────
-  const SIDES = ['top', 'bottom', 'left', 'right'] as const;
-  for (const side of SIDES) {
-    const b = data.border?.[side];
-    if (!b) continue;
-    const cap = (side.charAt(0).toUpperCase() + side.slice(1)) as 'Top' | 'Bottom' | 'Left' | 'Right';
-
-    const bw = acfNum(b.width);
-    if (bw != null && bw > 0)            css[`border${cap}Width`] = `${bw}px`;
-    if (b.style)                         css[`border${cap}Style`] = b.style as CSSProperties['borderTopStyle'];
-
-    if (b.color === 'custom' && b.custom_color) {
-      css[`border${cap}Color`] = b.custom_color;
-    } else if (b.color === 'palette' && b.theme_color) {
-      css[`border${cap}Color`] = `var(--${b.theme_color})`;
-    }
-  }
-
-  // ── Border radius ──────────────────────────────────────────────────────────
-  const br = data.border_radius;
-  if (br?.top_left    != null && br.top_left    > 0) css.borderTopLeftRadius    = `${br.top_left}px`;
-  if (br?.top_right   != null && br.top_right   > 0) css.borderTopRightRadius   = `${br.top_right}px`;
-  if (br?.bottom_left != null && br.bottom_left > 0) css.borderBottomLeftRadius = `${br.bottom_left}px`;
-  if (br?.bottom_right!= null && br.bottom_right> 0) css.borderBottomRightRadius= `${br.bottom_right}px`;
+  // ── Border and border radius ───────────────────────────────────────────────
+  Object.assign(css, buildAcfBorderStyle(data.border, data.border_radius));
 
   // ── Box shadow ─────────────────────────────────────────────────────────────
   const bs = data.box_shadow;
@@ -273,4 +251,51 @@ export function buildAcfBlockStyle(data: AcfBlockStyleData): {
     style:   Object.keys(css).length > 0 ? css : undefined,
     bgClass,
   };
+}
+
+/**
+ * Per-side border and per-corner radius from an ACF border / border_radius pair.
+ *
+ * Split out of `buildAcfBlockStyle` so a component can style a SECOND element
+ * from a second pair of ACF groups. The flip card is the case that forced it:
+ * `card_back_border` and `back_border_radius` belong to the back face, which is
+ * a different element from the one `buildAcfBlockStyle` styles.
+ *
+ * Mirrors `card.twig`, which skips a value that `is not empty` — so 0 and ''
+ * produce no declaration. Without that, ACF's empty string for an untouched
+ * number field renders `border-top-width:px`.
+ */
+export function buildAcfBorderStyle(
+  border?: AcfBorderContainer | null,
+  borderRadius?: AcfBorderRadiusContainer | null,
+): CSSProperties {
+  const css: CSSProperties = {};
+
+  const SIDES = ['top', 'bottom', 'left', 'right'] as const;
+  for (const side of SIDES) {
+    const b = border?.[side];
+    if (!b) continue;
+    const cap = (side.charAt(0).toUpperCase() + side.slice(1)) as 'Top' | 'Bottom' | 'Left' | 'Right';
+
+    const bw = acfNum(b.width);
+    if (bw != null && bw > 0)            css[`border${cap}Width`] = `${bw}px`;
+    if (b.style)                         css[`border${cap}Style`] = b.style as CSSProperties['borderTopStyle'];
+
+    if (b.color === 'custom' && b.custom_color) {
+      css[`border${cap}Color`] = b.custom_color;
+    } else if (b.color === 'palette' && b.theme_color) {
+      css[`border${cap}Color`] = `var(--${b.theme_color})`;
+    }
+  }
+
+  const tl = acfNum(borderRadius?.top_left);
+  const tr = acfNum(borderRadius?.top_right);
+  const bl = acfNum(borderRadius?.bottom_left);
+  const brr = acfNum(borderRadius?.bottom_right);
+  if (tl  != null && tl  > 0) css.borderTopLeftRadius     = `${tl}px`;
+  if (tr  != null && tr  > 0) css.borderTopRightRadius    = `${tr}px`;
+  if (bl  != null && bl  > 0) css.borderBottomLeftRadius  = `${bl}px`;
+  if (brr != null && brr > 0) css.borderBottomRightRadius = `${brr}px`;
+
+  return css;
 }
