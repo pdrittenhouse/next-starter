@@ -7,6 +7,7 @@ import { HomeTemplate } from '@/stories/templates/home';
 import { DateArchiveTemplate } from '@/stories/templates/date-archive';
 import { NodeRenderer } from '@/stories/templates/partials/node-renderer';
 import type { SearchParams } from '@/lib/wp/utils/paginationArgs';
+import { normalizeWpNode } from '@/lib/wp/utils/rewriteWpHtml';
 
 /**
  * Resolves a WordPress URI to a node and renders it.
@@ -84,7 +85,9 @@ export const getNodeByUri = cache(async (uri: string) => {
   if (realErrors?.length) {
     console.error('[routing] GraphQL errors for URI:', uri, JSON.stringify(realErrors, null, 2));
   }
-  return data?.nodeByUri ?? null;
+  // Normalised here rather than at the block components that inject
+  // renderedHtml, so every render path gets identical treatment from one place.
+  return normalizeWpNode(data?.nodeByUri ?? null);
 });
 
 /**
@@ -168,7 +171,7 @@ export async function RouteContent({ uriSegments, searchParams }: RouteContentPr
           { id: String(settings.pageOnFront) },
           { next: { revalidate: 60 } },
         );
-        node = data?.page ?? null;
+        node = normalizeWpNode(data?.page ?? null);
       }
     } else {
       // Blog posts index (showOnFront='posts') — home.php equivalent.

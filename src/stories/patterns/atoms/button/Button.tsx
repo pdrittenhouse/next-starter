@@ -10,6 +10,7 @@ import type { ButtonProps as BsButtonProps } from 'react-bootstrap/Button';
 import type { Placement } from 'react-bootstrap/types';
 import styles from './button.module.scss';
 import { cx } from '@/lib/cx';
+import { toFrontEndUrl } from '@/lib/wp/utils/rewriteWpHtml';
 
 /**
  * Color variants matching the theme's extended Bootstrap palette.
@@ -231,7 +232,7 @@ export const Button = ({
       size={size}
       as={resolvedAs as any}
       type={!resolvedAs || resolvedAs === 'button' ? (type || 'button') : undefined}
-      href={href}
+      href={href ? toFrontEndUrl(href) : undefined}
       target={!toggle && href ? target : undefined}
       active={active}
       disabled={disabled}

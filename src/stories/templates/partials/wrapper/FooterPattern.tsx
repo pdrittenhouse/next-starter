@@ -195,7 +195,13 @@ export async function FooterPattern() {
 
   const socialNavItems: SocialNavItem[] = !hideSocialNavBoth && socialMenu?.menuItems?.edges?.length
     ? socialMenu.menuItems.edges.map(({ node }: any) => ({
-        url: node.url || node.path || '#',
+        // `path` BEFORE `url`. WPGraphQL returns `path` already root-relative
+        // ("/hello-world/") and `url` absolute against the WordPress origin
+        // ("http://wp.example.com/hello-world/"). With url first, every nav link
+        // on every page pointed at the WordPress install — a different host in
+        // production, often not publicly reachable. `path` falls back to the
+        // absolute URL for external custom links, which is what we want there.
+        url: node.path || node.url || '#',
         label: node.label || node.title || '',
         target: node.target || '_blank',
         icon: node.cssClasses?.filter(Boolean).join(' ') || undefined,

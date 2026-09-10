@@ -26,6 +26,7 @@ import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_PREVIEW_POST } from '@/lib/wp/queries';
 import { previewHeaders, PREVIEW_COOKIE } from '@/lib/wp/previewSession';
 import { NodeRenderer } from '@/stories/templates/partials/node-renderer';
+import { normalizeWpNode } from '@/lib/wp/utils/rewriteWpHtml';
 
 /** Never cached, never prerendered — drafts are per-user and change constantly. */
 export const dynamic = 'force-dynamic';
@@ -55,7 +56,9 @@ async function loadPreviewNode(previewId: string | undefined) {
     console.error('[preview] GraphQL errors fetching preview content:', errors);
   }
 
-  return data?.contentNode ?? null;
+  // Same normalisation the published fetchers apply — a draft must render
+  // identically to how it will once published.
+  return normalizeWpNode(data?.contentNode ?? null);
 }
 
 export default async function PreviewPage({ searchParams }: PageProps) {
