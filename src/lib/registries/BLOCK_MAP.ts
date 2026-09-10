@@ -15,6 +15,7 @@ import { GroupBlock } from '@/stories/blocks/group/GroupBlock';
 import { HeroUnitBlock } from '@/stories/blocks/hero-unit/HeroUnitBlock';
 import { IconsBlock } from '@/stories/blocks/icons/IconsBlock';
 import { ImageBlock } from '@/stories/blocks/image/ImageBlock';
+import { CoreImageBlock } from '@/stories/blocks/core-image/CoreImageBlock';
 import { JumbotronBlock } from '@/stories/blocks/jumbotron/JumbotronBlock';
 import { LinkGroupBlock } from '@/stories/blocks/link-group/LinkGroupBlock';
 import { MenuBlock } from '@/stories/blocks/menu/MenuBlock';
@@ -75,6 +76,23 @@ export const BLOCK_MAP: Record<string, BlockComponent> = {
   'acf/hero-unit': HeroUnitBlock,
   'acf/icons': IconsBlock,
   'acf/image': ImageBlock,
+
+  // ── Core WordPress blocks ───────────────────────────────────────────────────
+  //
+  // Deliberately almost empty. WordPress's server-rendered markup for a
+  // paragraph, heading, quote or list is correct and carries the right
+  // wp-block-* classes, so those go through the renderedHtml fallback in
+  // BlockRenderer and that is the right design — reimplementing ~90 core blocks
+  // across two frameworks buys nothing.
+  //
+  // core/image is the exception: its fallback markup was a full-size image with
+  // no srcset, no dimensions and no lazy loading. Measured at 1.4 MB and 22% of
+  // one page's bytes.
+  //
+  // Candidates if they ever appear in content: core/gallery, core/cover and
+  // core/media-text carry images with the same problem; core/embed renders
+  // third-party iframes.
+  'core/image': CoreImageBlock,
   'acf/jumbotron': JumbotronBlock,
   'acf/link-group': LinkGroupBlock,
   'acf/menu': MenuBlock,
