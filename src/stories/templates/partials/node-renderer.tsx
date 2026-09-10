@@ -206,7 +206,27 @@ export async function NodeRenderer({ node, isHomepage = false, searchParams }: N
       //                 article-content--container > row > column > article-body
       // The sidebar (when configured) is injected as a Bootstrap column sibling
       // inside the row — the manifest never includes a sidebar slot, so we add it here.
-      const contentSlotNodes = innerSlots.filter(n => n.type === 'slot' && n.name === 'content');
+      const rawContentSlotNodes = innerSlots.filter(n => n.type === 'slot' && n.name === 'content');
+
+      // ── Hoist the nested `comments` slot ──────────────────────────────────
+      //
+      // pages/single.twig wraps its comment box in `{% block comments %}`, and
+      // the manifest builder emits that as a CHILD of the `content` slot (a
+      // Twig block nested inside the content block override). Verified in the
+      // built manifest: [15] slot content children=1 -> slot comments
+      //
+      // It cannot stay there. The content slot renders inside
+      // `div.article-body`, the block-content wrapper — comments belong beside
+      // that wrapper, matching single.twig where `section.comment-box` is a
+      // sibling of `section.article-content` within the article.
+      const commentsSlots: TimberlandTreeNode[] = [];
+      const contentSlotNodes = rawContentSlotNodes.map(n => {
+        const kids = n.children ?? [];
+        const found = kids.filter(c => c.type === 'slot' && c.name === 'comments');
+        if (!found.length) return n;
+        commentsSlots.push(...found);
+        return { ...n, children: kids.filter(c => !(c.type === 'slot' && c.name === 'comments')) };
+      });
       let wrappedContent: TimberlandTreeNode[];
       if (template === 'front-page') {
         wrappedContent = [{
@@ -267,7 +287,11 @@ export async function NodeRenderer({ node, isHomepage = false, searchParams }: N
                 ],
               }],
             }],
-          }],
+          },
+          // Sibling of section.article-content, inside the article — where
+          // single.twig puts section.comment-box.
+          ...commentsSlots,
+          ],
         }];
       } else {
         wrappedContent = contentSlotNodes;
@@ -300,14 +324,18 @@ export async function NodeRenderer({ node, isHomepage = false, searchParams }: N
     }
 
     return (
-      <TemplateRenderer
-        tree={structuredTree}
-        editorBlocks={buildBlockTree(node.editorBlocks ?? [])}
-        content={node.content ?? undefined}
-        sidebarSlug={node.sidebarSlug ?? null}
-        sidebarColClass={sidebarColClass ?? undefined}
-        removeContentContainerPerPost={perPostRCC}
-      />
+      <>
+        <TemplateRenderer
+          tree={structuredTree}
+          editorBlocks={buildBlockTree(node.editorBlocks ?? [])}
+          content={node.content ?? undefined}
+          sidebarSlug={node.sidebarSlug ?? null}
+          sidebarColClass={sidebarColClass ?? undefined}
+          removeContentContainerPerPost={perPostRCC}
+          postDatabaseId={template === 'single' ? node.databaseId : null}
+          commentStatus={node.commentStatus ?? null}
+        />
+      </>
     );
   }
 

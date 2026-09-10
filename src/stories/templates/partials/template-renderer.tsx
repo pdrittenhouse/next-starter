@@ -5,6 +5,7 @@ import { getPatternMap } from '@/lib/registries/PATTERN_MAP';
 import { parseCssStyle } from '@/lib/wp/utils/parseCssStyle';
 import { BlockRenderer } from './block-renderer';
 import { SidebarPattern } from '@/stories/templates/partials/wrapper/SidebarPattern';
+import { Comments } from '@/stories/templates/partials/comments';
 
 interface TemplateRendererProps {
   tree: TimberlandTreeNode[];
@@ -17,6 +18,10 @@ interface TemplateRendererProps {
   sidebarColClass?: string;
   /** Per-post container override forwarded to BlockRenderer. */
   removeContentContainerPerPost?: boolean;
+  /** Post id for the `comments` slot. Omitted on templates without comments. */
+  postDatabaseId?: number | null;
+  /** WordPress commentStatus, forwarded to the comments slot. */
+  commentStatus?: string | null;
 }
 
 // Walks the manifest tree and renders registered PATTERN_MAP components.
@@ -24,7 +29,7 @@ interface TemplateRendererProps {
 // Twig-only concerns (html_head, foot, etc.) and are skipped.
 // Unregistered patterns use a generic HTML shell derived from the PHP-rendered
 // outer element (element + className + id) so their children still recurse.
-export async function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug, sidebarColClass, removeContentContainerPerPost }: TemplateRendererProps) {
+export async function TemplateRenderer({ tree, editorBlocks = [], content, sidebarSlug, sidebarColClass, removeContentContainerPerPost, postDatabaseId, commentStatus }: TemplateRendererProps) {
   const patternMap = await getPatternMap();
   return (
     <>
@@ -42,13 +47,20 @@ export async function TemplateRenderer({ tree, editorBlocks = [], content, sideb
           if (node.name === 'sidebar' && sidebarSlug) {
             return <SidebarPattern key="sidebar" slug={sidebarSlug} className={sidebarColClass} />;
           }
+          // `pages/single.twig` declares `{% block comments %}`, which the
+          // manifest builder emits as a slot. NodeRenderer hoists it out of the
+          // content slot's children and places it inside <article>; this
+          // renders it.
+          if (node.name === 'comments' && postDatabaseId) {
+            return <Comments key="comments" postDatabaseId={postDatabaseId} commentStatus={commentStatus ?? undefined} />;
+          }
           return null;
         }
 
         if (node.type === 'element') {
           const Tag = (node.element ?? 'div') as ElementType;
           const childContent = node.children?.length ? (
-            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} sidebarSlug={sidebarSlug} sidebarColClass={sidebarColClass} removeContentContainerPerPost={removeContentContainerPerPost} />
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} content={content} sidebarSlug={sidebarSlug} sidebarColClass={sidebarColClass} removeContentContainerPerPost={removeContentContainerPerPost} postDatabaseId={postDatabaseId} commentStatus={commentStatus} />
           ) : null;
           return (
             <Tag
@@ -64,7 +76,7 @@ export async function TemplateRenderer({ tree, editorBlocks = [], content, sideb
 
         if (node.type === 'pattern') {
           const childContent = node.children?.length ? (
-            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} sidebarSlug={sidebarSlug} sidebarColClass={sidebarColClass} />
+            <TemplateRenderer tree={node.children} editorBlocks={editorBlocks} sidebarSlug={sidebarSlug} sidebarColClass={sidebarColClass} postDatabaseId={postDatabaseId} commentStatus={commentStatus} />
           ) : null;
 
           const Component = patternMap[node.slug ?? ''];
