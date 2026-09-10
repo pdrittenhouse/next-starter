@@ -95,3 +95,23 @@ export const GET_ALL_USER_SLUGS = gql`
 `;
 
 export default GET_ALL_USERS;
+
+/**
+ * Author archive URIs, for the sitemap.
+ *
+ * `hasPublishedPosts: [POST]` excludes users with no posts — otherwise every
+ * subscriber account becomes an empty archive URL advertised to crawlers.
+ *
+ * Selects `uri` rather than building `/author/{slug}/` by hand: WordPress owns
+ * the author base and a project can rename it.
+ */
+export const GET_AUTHOR_ARCHIVE_URIS = gql`
+  query GetAuthorArchiveUris {
+    users(first: 100, where: { hasPublishedPosts: [POST] }) {
+      nodes {
+        uri
+        slug
+      }
+    }
+  }
+`;

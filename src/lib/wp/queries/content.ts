@@ -81,6 +81,9 @@ export const GET_ALL_CONTENT_URIS = gql`
         databaseId
         uri
         contentTypeName
+        # For the sitemap's <lastmod>. Harmless for the prerender path, which
+        # only reads uri and databaseId.
+        modified
       }
     }
   }

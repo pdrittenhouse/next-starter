@@ -615,3 +615,19 @@ export const GET_PREVIEW_POST = gql`
 `;
 
 export default GET_ALL_POSTS;
+
+/**
+ * Publish dates of every published post, for deriving date-archive URLs.
+ *
+ * Only posts: WordPress date archives cover the `post` type, so pages and CPT
+ * singles must not contribute months to the sitemap.
+ */
+export const GET_POST_DATES = gql`
+  query GetPostDates {
+    posts(first: 1000, where: { status: PUBLISH, hasPassword: false }) {
+      nodes {
+        date
+      }
+    }
+  }
+`;

@@ -9,9 +9,9 @@ import { fetchGraphQL } from '@/lib/wp/client';
 import { isAppRoute } from '@/lib/routes';
 import {
   GET_NODE_BY_URI,
-  GET_ALL_CONTENT_URIS,
   GET_READING_SETTINGS,
 } from '@/lib/wp/queries';
+import { listContentUris } from '@/lib/wp/contentUris';
 
 interface PageProps {
   params: Promise<{ uri?: string[] }>;
@@ -67,47 +67,6 @@ export function formatDateArchiveTitle(
       : `${MONTH_NAMES[dateArchive.month]} ${dateArchive.year}`;
   }
   return `${dateArchive.year}`;
-}
-
-/** Ordered content URIs for prerendering. Throws rather than returning empty. */
-async function listContentUris(): Promise<
-  { databaseId: number; uri: string; contentTypeName: string }[]
-> {
-  const attempts = 3;
-  let lastError: unknown;
-
-  for (let attempt = 1; attempt <= attempts; attempt++) {
-    try {
-      const { data, errors } = await fetchGraphQL<{
-        contentNodes: { nodes: { databaseId: number; uri: string; contentTypeName: string }[] };
-      }>(print(GET_ALL_CONTENT_URIS));
-
-      if (errors?.length) {
-        throw new Error(errors.map((e) => e.message).join('; '));
-      }
-      const nodes = data?.contentNodes?.nodes;
-      if (!nodes) {
-        throw new Error('response contained no contentNodes');
-      }
-      return nodes;
-    } catch (error) {
-      lastError = error;
-      if (attempt < attempts) {
-        const waitMs = attempt * 2000;
-        console.warn(
-          `[build] listing content URIs failed (attempt ${attempt}/${attempts}), ` +
-          `retrying in ${waitMs}ms: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        await new Promise((resolve) => setTimeout(resolve, waitMs));
-      }
-    }
-  }
-
-  throw new Error(
-    '[build] could not list content URIs from WordPress after ' + attempts + ' attempts. ' +
-    'Refusing to build a site with no content. Last error: ' +
-    (lastError instanceof Error ? lastError.message : String(lastError)),
-  );
 }
 
 export async function generateStaticParams() {

@@ -52,6 +52,9 @@ export const GET_ALL_CATEGORY_URIS = gql`
         node {
           uri
           slug
+          # Post count, so the sitemap can skip empty terms — a term archive
+          # with no posts is a thin page and should not be advertised.
+          count
         }
       }
     }
