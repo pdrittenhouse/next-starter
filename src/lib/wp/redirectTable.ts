@@ -44,6 +44,7 @@ const tableCache = new TtlCache<RedirectRule[]>({
   ttlMs: 5 * 60_000,
   staleMs: 5 * 60_000,
   maxEntries: 1,
+  name: 'redirectTable',
 });
 
 async function loadTable(): Promise<RedirectRule[]> {

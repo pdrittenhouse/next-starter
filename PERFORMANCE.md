@@ -44,22 +44,44 @@ not.
 It is still ~20 × ~0.55s on every cold render. Measured: `/category/uncategorized`
 took 23s, `/search?s=a` 12s.
 
-### The fix, and a trap
+### FIXED — and a correction to what this file used to say
 
-**Next's Data Cache does not cache POST requests**, and every GraphQL call here
-is a POST. Adding `{ next: { revalidate: 60 } }` will not fix it. React's
-`cache()` dedupes within a single render but not across renders.
+**This item is resolved.** All 17 site-level calls now pass
+`{ next: SITE_CACHE }` (`lib/wp/cacheTags.ts`), which caches them for an hour
+and tags them `site`, and the WordPress revalidation webhook invalidates that
+tag the moment anything site-level changes. See `app/api/revalidate/route.ts`.
 
-So it needs an explicit in-process TTL cache, the same as astro-starter's
-`lib/cache/ttlCache.ts`. Worth porting that module rather than inventing a
-second one.
+An earlier version of this file asserted:
 
-Corollary worth knowing: the `{ next: { revalidate: 60 } }` already present in
-`route-content.tsx` and `node-renderer.tsx` is probably not doing what it looks
-like it does, for the same POST reason. What actually keeps `/[[...uri]]` on the
-static path is the *absence of dynamic APIs* — no `searchParams`, no `cookies()`,
-no `draftMode()` — not fetch caching. Do not remove those annotations on the
-assumption they are load-bearing without checking, but do not trust them either.
+> **Next's Data Cache does not cache POST requests**, and every GraphQL call
+> here is a POST. Adding `{ next: { revalidate: 60 } }` will not fix it.
+
+**That was wrong**, and it is a widely repeated claim, so it is worth recording
+why. In Next 16.2.10, `next/dist/server/lib/patch-fetch.js`:
+
+```js
+let autoNoCache = Boolean(
+  (hasUnCacheableHeader || isUnCacheableMethod) && revalidateStore?.revalidate === 0
+);
+```
+
+POST forces no-cache only when the route is **already fully dynamic**
+(`revalidate === 0`). On a route with `export const revalidate = 60` that
+condition is false, and the sole remaining gate is `finalRevalidate > 0`
+(same file). The method is never re-checked after that line. And
+`incremental-cache/index.js` `generateCacheKey` reads the request body into the
+key, so distinct GraphQL queries do not collide.
+
+So the conclusion drawn from the false premise — "port `TtlCache` to next" —
+was also wrong, and the actual fix was one option object per call site.
+
+What genuinely does not work is passing cache options from a route that opts
+into dynamic rendering: `force-dynamic`, `cookies()`, `searchParams`. There the
+fetch is uncacheable no matter what it asks for. That is the real constraint,
+and it is about the *route*, not the HTTP method.
+
+The `{ next: { revalidate: 60 } }` already present in `route-content.tsx` and
+`node-renderer.tsx` was therefore doing exactly what it looks like it does.
 
 ---
 

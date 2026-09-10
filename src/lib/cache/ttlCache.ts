@@ -28,6 +28,72 @@ export interface TtlCacheOptions {
   maxEntries?: number;
   /** Injectable clock, for tests. */
   now?: () => number;
+  /**
+   * Label used by `clearAllCaches()` reporting, and to opt a cache into
+   * webhook-driven purging.
+   *
+   * Caches without a name are left alone by `clearAllCaches()` — a test's
+   * throwaway instance should not be reachable from an HTTP endpoint.
+   */
+  name?: string;
+}
+
+/**
+ * Every named cache, so the revalidation webhook can purge them.
+ *
+ * The instances themselves are module-private consts in the modules that own
+ * them, which is the right scope for ordinary use — but it leaves nothing for
+ * an inbound purge request to act on. Registering here keeps them private
+ * while making them collectively reachable, rather than exporting a handful of
+ * mutable singletons.
+ */
+const registry = new Map<string, TtlCache<unknown>>();
+
+/**
+ * Empty every named cache. Returns the names cleared, for the endpoint to
+ * report.
+ *
+ * Note this is per-process, inheriting the limitation described above: with N
+ * app instances, a webhook purges only the instance it happens to reach.
+ */
+export function clearAllCaches(): string[] {
+  const cleared: string[] = [];
+  for (const [name, cache] of registry) {
+    cache.clear();
+    cleared.push(name);
+  }
+  return cleared;
+}
+
+/**
+ * Delete one key from one named cache.
+ *
+ * Used for path-targeted purges, where the payload names an exact URL and
+ * clearing the whole response cache would be needlessly wasteful.
+ *
+ * Returns whether an entry was actually removed — NOT merely whether the cache
+ * exists. The distinction matters because the caller reports this back over
+ * HTTP: an endpoint claiming it purged `/hello-world/` when that page was never
+ * cached is worse than saying nothing, since it makes a no-op look like a
+ * successful invalidation while debugging a staleness complaint.
+ */
+export function deleteCacheKey(cacheName: string, key: string): boolean {
+  const cache = registry.get(cacheName);
+  if (!cache) return false;
+  return cache.delete(key);
+}
+
+/**
+ * Names of the caches currently registered.
+ *
+ * Populated as a side effect of module evaluation, so this grows over a
+ * process's life: a cache whose module has not been imported yet is absent.
+ * That is harmless for purging — an unevaluated module's cache is necessarily
+ * empty — but it does mean this list legitimately differs between two calls,
+ * and is not a reliable inventory of every cache in the codebase.
+ */
+export function registeredCaches(): string[] {
+  return [...registry.keys()];
 }
 
 interface Entry<V> {
@@ -48,6 +114,10 @@ export class TtlCache<V> {
     this.staleMs = options.staleMs ?? 0;
     this.maxEntries = options.maxEntries ?? 500;
     this.now = options.now ?? (() => Date.now());
+
+    if (options.name) {
+      registry.set(options.name, this as TtlCache<unknown>);
+    }
   }
 
   /**
@@ -100,8 +170,9 @@ export class TtlCache<V> {
     this.evict();
   }
 
-  delete(key: string): void {
-    this.store.delete(key);
+  /** Returns whether the key was actually present, so callers can report honestly. */
+  delete(key: string): boolean {
+    return this.store.delete(key);
   }
 
   clear(): void {

@@ -11,6 +11,7 @@ import '@phosphor-icons/web/regular';
 // import '@phosphor-icons/web/fill';
 import { gql } from '@apollo/client';
 import { fetchGraphQL } from '@/lib/wp/client';
+import { SITE_CACHE } from '@/lib/wp/cacheTags';
 import GET_SPRITEMAP_ICONS from '@/lib/wp/queries/spritemap-icons';
 import GET_DESIGN_TOKENS from '@/lib/wp/queries/design-tokens';
 
@@ -106,11 +107,17 @@ export default async function RootLayout({
         backgroundAttachment: string | null;
       } | null;
       themeHeaderOptions: { settingsHeaderOptions: { headerPosition: string | null; shrinkHeader: boolean | null } | null } | null;
-    }>(print(GET_GLOBAL_CSS)),
+    }>(print(GET_GLOBAL_CSS), undefined, { next: SITE_CACHE }),
     fetchGraphQL<{ spritemapIcons: { spritemap: string | null; url: string | null; scss: string | null } | null }>(
       print(GET_SPRITEMAP_ICONS),
+      undefined,
+      { next: SITE_CACHE },
     ),
-    fetchGraphQL<{ designTokens: Array<{ name: string; value: string }> | null }>(print(GET_DESIGN_TOKENS)),
+    fetchGraphQL<{ designTokens: Array<{ name: string; value: string }> | null }>(
+      print(GET_DESIGN_TOKENS),
+      undefined,
+      { next: SITE_CACHE },
+    ),
   ]);
 
   const cssData = cssResult.status === 'fulfilled' ? (cssResult.value as any)?.data : null;

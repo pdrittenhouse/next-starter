@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
+import { SITE_CACHE } from '@/lib/wp/cacheTags';
 import styles from './FooterPattern.module.scss';
 import { cx } from '@/lib/cx';
 import { Footer } from '@/stories/patterns/organisms/footer/Footer';
@@ -21,6 +22,8 @@ import { BlockRenderer } from '@/stories/templates/partials/block-renderer';
 const getCustomizerSettings = cache(async () => {
   const { data } = await fetchGraphQL<{ customizerSettings: any; generalSettings: any }>(
     print(GET_CUSTOMIZER_SETTINGS),
+    undefined,
+    { next: SITE_CACHE },
   ).catch(() => ({ data: null }));
   if (!data) return null;
   return {
@@ -30,13 +33,17 @@ const getCustomizerSettings = cache(async () => {
 });
 
 const getCoBrand = cache(async () => {
-  const { data } = await fetchGraphQL(print(GET_CO_BRAND)).catch(() => ({ data: null }));
+  const { data } = await fetchGraphQL(print(GET_CO_BRAND), undefined, {
+    next: SITE_CACHE,
+  }).catch(() => ({ data: null }));
   return (data as any)?.themeGeneralOptions?.settingsThemeGeneralOptions?.coBrand ?? null;
 });
 
 const getFooterOptions = cache(async () => {
   const { data } = await fetchGraphQL<{ themeFooterOptions: any }>(
     print(GET_FOOTER_OPTIONS),
+    undefined,
+    { next: SITE_CACHE },
   ).catch(() => ({ data: null }));
   return (data as any)?.themeFooterOptions?.settingsFooterOptions ?? null;
 });
@@ -44,6 +51,8 @@ const getFooterOptions = cache(async () => {
 const getFooterLayoutOptions = cache(async () => {
   const { data } = await fetchGraphQL<{ themeOptions: any }>(
     print(GET_FOOTER_LAYOUT_OPTIONS),
+    undefined,
+    { next: SITE_CACHE },
   ).catch(() => ({ data: null }));
   return (data as any)?.themeOptions?.footerLayoutOptions ?? null;
 });
@@ -52,6 +61,7 @@ const getMenuByLocation = cache(async (location: string) => {
   const { data } = await fetchGraphQL<{ menus: { nodes: any[] } }>(
     print(GET_MENU_BY_LOCATION),
     { location },
+    { next: SITE_CACHE },
   ).catch(() => ({ data: null }));
   return (data as any)?.menus?.nodes?.[0] ?? null;
 });
@@ -60,12 +70,15 @@ const getMegaMenuPanel = cache(async (id: number) => {
   const { data } = await fetchGraphQL<{ megaMenuPanel: any }>(
     print(GET_MEGA_MENU_PANEL_BY_ID),
     { id: String(id) },
+    { next: SITE_CACHE },
   ).catch(() => ({ data: null }));
   return (data as any)?.megaMenuPanel?.content ?? null;
 });
 
 const getWidgetAreaBlocks = cache(async (slug: string) => {
-  const { data } = await fetchGraphQL(print(GET_WIDGET_AREA_BLOCKS), { slug }).catch(() => ({ data: null }));
+  const { data } = await fetchGraphQL(print(GET_WIDGET_AREA_BLOCKS), { slug }, {
+    next: SITE_CACHE,
+  }).catch(() => ({ data: null }));
   return (data as any)?.widgetAreaBlocks ?? null;
 });
 
