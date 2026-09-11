@@ -6,7 +6,19 @@
 //   webpack.config.js: sass-loader.data|includePaths
 
 // Import responsive-tabs CSS (moved from index.js to prevent webpack chunking issues)
-@import 'responsive-tabs/css/responsive-tabs.css';
+//
+// Deliberately WITHOUT the .css extension. Sass treats `@import 'x.css'` as a
+// plain CSS import and passes it through to the output verbatim, so the bare
+// `responsive-tabs/...` specifier survived into the compiled stylesheet, where a
+// browser resolves it relative to the stylesheet's own URL and 404s — the
+// package's rules never loaded. webpack's sass-loader happened to hide this
+// because it rewrote the url, and so did Vite; compiling with plain Sass
+// exposed it.
+//
+// Without the extension, Sass resolves it through loadPaths (which includes
+// node_modules in both the framework's webpack config and the starters' Sass
+// config) and INLINES the rules, which is what was intended.
+@import 'responsive-tabs/css/responsive-tabs';
 
 .tabs-wrapper {
   margin: rem-calc(20px 0);
