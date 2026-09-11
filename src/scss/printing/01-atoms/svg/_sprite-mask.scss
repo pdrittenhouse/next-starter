@@ -28,6 +28,24 @@
 
 /// @param {String} $name  Sprite name, as keyed in `icons.$sprites`.
 /// @param {*}      $size  `mask-size` value. `contain` scales to the box.
+/// Icons are referenced as external files, NOT embedded.
+///
+/// Embedding put 251 percent-encoded data URIs totalling 1019.7 KB into the
+/// compiled stylesheet — 36% of a 2830 KB file — so every icon in the set
+/// shipped on every page whether used or not. The same 38 icons are 201.7 KB as
+/// standalone files; percent-encoding inflates them roughly 5x.
+///
+/// Written to public/icons/ by scripts/build-icon-files.mjs, decoded from the
+/// same generated $sprites map this file used to read, so the two cannot
+/// disagree.
+///
+/// Not `url(/spritemap.svg#sprite-#{$name})`, even though that spritemap
+/// already exists for `<use>`: the fragment names a `<symbol>`, which is not
+/// standalone-renderable, so browsers render nothing at all.
+///
+/// The map lookup below is kept purely as a build-time existence check — a
+/// typo'd icon name should fail the build, as it did before, rather than
+/// silently 404 at runtime.
 @mixin sprite-mask($name, $size: contain) {
   $sprite: map.get(icons.$sprites, $name);
 
@@ -35,8 +53,8 @@
     @error "Sprite '#{$name}' does not exist";
   }
 
-  -webkit-mask-image: url($sprite);
-          mask-image: url($sprite);
+  -webkit-mask-image: url("/icons/#{$name}.svg");
+          mask-image: url("/icons/#{$name}.svg");
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
   -webkit-mask-position: center;

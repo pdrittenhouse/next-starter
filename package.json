@@ -9,16 +9,17 @@
     "sync-pattern-styles": "node scripts/sync-pattern-styles.mjs",
     "sync-block-styles": "node scripts/sync-block-styles.mjs",
     "sync-theme-json": "node scripts/sync-theme-json.mjs",
-    "predev": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs",
+    "predev": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs",
+    "prebuild": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prestorybook": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs",
+    "prestorybook": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs",
     "storybook": "storybook dev -p 6006",
-    "prebuild-storybook": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs",
-    "build-storybook": "storybook build"
+    "prebuild-storybook": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs",
+    "build-storybook": "storybook build",
+    "build-icon-files": "node scripts/build-icon-files.mjs"
   },
   "dependencies": {
     "@apollo/client": "^3.9.5",
