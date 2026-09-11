@@ -5,7 +5,9 @@ import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_NODE_BY_URI, GET_READING_SETTINGS, GET_FRONT_PAGE_BY_ID } from '@/lib/wp/queries';
 import { HomeTemplate } from '@/stories/templates/home';
 import { DateArchiveTemplate } from '@/stories/templates/date-archive';
-import { NodeRenderer } from '@/stories/templates/partials/node-renderer';
+import { NodeRenderer, resolveTemplate } from '@/stories/templates/partials/node-renderer';
+import { SchemaJsonLd } from '@/stories/templates/partials/schema-json-ld';
+import { setBreadcrumbs } from '@/lib/wp/breadcrumbStore';
 import type { SearchParams } from '@/lib/wp/utils/paginationArgs';
 import { normalizeWpNode } from '@/lib/wp/utils/rewriteWpHtml';
 
@@ -175,7 +177,12 @@ export async function RouteContent({ uriSegments, searchParams }: RouteContentPr
       }
     } else {
       // Blog posts index (showOnFront='posts') — home.php equivalent.
-      return <HomeTemplate searchParams={searchParams} />;
+      return (
+        <>
+          <SchemaJsonLd template="home" pathname={uri} />
+          <HomeTemplate searchParams={searchParams} />
+        </>
+      );
     }
   } else {
     node = resolvedNode;
@@ -188,7 +195,12 @@ export async function RouteContent({ uriSegments, searchParams }: RouteContentPr
   // same template the homepage uses when showOnFront is 'posts', so both routes
   // to the index render identically.
   if (node && settings.pageForPosts && Number(node.databaseId) === settings.pageForPosts) {
-    return <HomeTemplate searchParams={searchParams} />;
+    return (
+      <>
+        <SchemaJsonLd template="home" pathname={uri} />
+        <HomeTemplate searchParams={searchParams} />
+      </>
+    );
   }
 
   // ─── Synthetic patterns come AFTER WordPress ────────────────────────────────
@@ -204,15 +216,46 @@ export async function RouteContent({ uriSegments, searchParams }: RouteContentPr
   if (!node) {
     const dateArchive = parseDateArchiveUri(uriSegments);
     if (dateArchive) {
-      return <DateArchiveTemplate {...dateArchive} searchParams={searchParams} />;
+      return (
+        <>
+          {/* Date archives are indexable — they are listed in the sitemap —
+              so they get CollectionPage like any other archive. */}
+          <SchemaJsonLd template="date-archive" pathname={uri} />
+          <DateArchiveTemplate {...dateArchive} searchParams={searchParams} />
+        </>
+      );
     }
     notFound();
   }
+
+  // Expose the trail to any breadcrumb block rendered anywhere below,
+  // including ones inside header or footer widget areas that get no node
+  // prop. See lib/wp/breadcrumbStore.ts.
+  setBreadcrumbs(node?.breadcrumbs ?? null);
 
   // Rendering lives in NodeRenderer so the preview route can produce identical
   // markup without duplicating the manifest-tree logic. It takes no dynamic
   // APIs of its own, so a statically rendered caller stays static.
   return (
-    <NodeRenderer node={node} isHomepage={isHomepage} searchParams={searchParams} />
+    <>
+      <SchemaJsonLd
+        node={
+          node
+            ? {
+                title: node.title ?? node.name ?? null,
+                uri: node.uri ?? null,
+                date: node.date ?? null,
+                modified: node.modified ?? null,
+                contentTypeName: node.contentTypeName ?? null,
+                author: node.author ?? null,
+                featuredImage: node.featuredImage ?? null,
+                breadcrumbs: node.breadcrumbs ?? null,
+              }
+            : null
+        }
+        template={resolveTemplate(node, isHomepage, false)}
+      />
+      <NodeRenderer node={node} isHomepage={isHomepage} searchParams={searchParams} />
+    </>
   );
 }

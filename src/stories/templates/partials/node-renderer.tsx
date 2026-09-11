@@ -114,7 +114,10 @@ const getTemplatePatterns = cache(async (): Promise<TimberlandPatternManifest | 
  * Mirrors the WordPress template hierarchy — front-page vs home are separate
  * because their layouts differ fundamentally (static page vs posts listing).
  */
-function resolveTemplate(node: any, isHomepage: boolean, isSearch: boolean) {
+// Exported so route-content can label the JSON-LD without a second copy. The
+// note in route-content.tsx warns against reimplementing this, not against
+// importing it — there is still exactly one implementation, here.
+export function resolveTemplate(node: any, isHomepage: boolean, isSearch: boolean) {
   if (isSearch) return 'search';
 
   switch (node?.__typename) {

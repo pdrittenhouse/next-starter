@@ -4,6 +4,7 @@ import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './breadcrumb.module.scss';
 import { cx } from '@/lib/cx';
+import { getBreadcrumbs } from '@/lib/wp/breadcrumbStore';
 
 /**
  * ACF field values for the breadcrumb block, as they appear in attributesJSON.data.
@@ -60,10 +61,30 @@ export async function BreadcrumbBlock({ block }: BreadcrumbBlockProps) {
   const divider = data.divider ?? undefined;
   const label = data.label ?? undefined;
 
-  // Resolve breadcrumb trail items.
-  // Priority 1: use the ACF repeater when it exists (headless-explicit trail).
-  let items: BreadcrumbItem[] = [];
+  // Resolve the breadcrumb trail.
+  //
+  // Priority 1: the REAL trail, from the node's `breadcrumbs` GraphQL field,
+  // seeded into a per-request store by RouteContent.
+  //
+  // This is what the block should have been using. It previously had only
+  // priorities 2 and 3, on the stated assumption that the PHP helper was
+  // "unavailable in the headless context" — true of
+  // `Breadcrumb::get_breadcrumb()`, which reads the main query, but the
+  // framework also has a post-ID-driven resolver that was never exposed: it
+  // computed the trail and threw it away behind an SEO-plugin check. The
+  // practical result was that this block rendered a lone "Home" crumb on every
+  // page.
+  let items: BreadcrumbItem[] = (getBreadcrumbs() ?? [])
+    .filter((crumb) => crumb?.label)
+    .map((crumb) => ({
+      text: crumb.label as string,
+      // The last crumb renders as text, not a link, so its URL is unused.
+      url: crumb.url ?? '',
+    }));
 
+  // Priority 2: an explicit ACF repeater, if a project populates one. Kept as
+  // an override for what the automatic trail cannot know — a landing page that
+  // should claim a different parent, say.
   if (Array.isArray(data.items) && data.items.length > 0) {
     items = data.items
       .filter((item): item is { text: string; url: string } =>
@@ -73,15 +94,17 @@ export async function BreadcrumbBlock({ block }: BreadcrumbBlockProps) {
       .map((item) => ({ text: item.text, url: item.url }));
   }
 
-  // Priority 2: build a minimal home-only trail from config fields.
+  // Priority 3: a minimal home-only trail, for a node-less route (search, a
+  // date archive) where a breadcrumb block still appears in a widget area.
   if (items.length === 0 && data.show_home) {
     const homeText = data.text_home?.trim() || 'Home';
     const homeUrl = data.home_link?.trim() || '/';
     items = [{ text: homeText, url: homeUrl }];
   }
 
-  // Require at least one item before rendering.
-  if (items.length === 0) {
+  // A single crumb is not a trail — the front page resolves to exactly one —
+  // and rendering "Home" alone is noise. Matches the JSON-LD threshold.
+  if (items.length < 2) {
     return null;
   }
 

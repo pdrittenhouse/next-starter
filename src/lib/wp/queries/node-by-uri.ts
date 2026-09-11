@@ -548,6 +548,14 @@ export const GET_NODE_BY_URI = gql`
         commentStatus
       }
       ... on NodeWithTimberlandLayout {
+        # Root-relative URLs. Feeds both the breadcrumb block and the
+        # BreadcrumbList JSON-LD. A first-class field rather than part of the
+        # seo field, because seo resolves to null without Yoast or RankMath.
+        breadcrumbs {
+          label
+          url
+          isCurrentPage
+        }
         mainClasses
         contentWrapperStyle
         sidebarSlug
