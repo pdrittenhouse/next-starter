@@ -1,4 +1,6 @@
 import { Promo } from '@/stories/extended/patterns/molecules/Promo';
+import { ButtonIcon } from '@/stories/patterns/atoms/button/ButtonIcon';
+import { resolveButtonIcon } from '@/lib/wp/utils/resolveButtonIcon';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
@@ -67,6 +69,12 @@ function resolveButtons(buttons?: PromoButtonData[] | null) {
   if (!buttons?.length) return undefined;
   return buttons.flatMap((b) => {
     if (!b.button?.link?.title && !b.button?.link?.url) return [];
+    // Icon slots (H5) — this block builds its props by hand rather than going through
+    // acfButtonToProps, so the icons have to be resolved here too. The Twig equivalent is
+    // _posts-loop~promo.twig overriding the button atom's {% block left %}/{% block right %}.
+    const iconLeft = resolveButtonIcon(b.button as Record<string, unknown>, 'left');
+    const iconRight = resolveButtonIcon(b.button as Record<string, unknown>, 'right');
+
     return [{
       label: b.button.link?.title ?? undefined,
       href: b.button.link?.url ?? undefined,
@@ -74,6 +82,8 @@ function resolveButtons(buttons?: PromoButtonData[] | null) {
       variant: (b.button.style && b.button.style !== 'custom' ? b.button.style : undefined) as any,
       size: b.button.size as any,
       outline: b.button.outline,
+      ...(iconLeft ? { iconLeft: <ButtonIcon data={iconLeft} side="left" /> } : {}),
+      ...(iconRight ? { iconRight: <ButtonIcon data={iconRight} side="right" /> } : {}),
     }];
   });
 }

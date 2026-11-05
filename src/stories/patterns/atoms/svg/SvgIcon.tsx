@@ -25,9 +25,15 @@ export interface SvgIconProps {
   height?: string;
   /** Additional CSS class names. */
   className?: string;
+  /**
+   * Inline styles for the wrapper span — mirrors `svg_styles` on the Twig include, which the
+   * button icon groups use for colour and transform offsets. Merged after width/height so a
+   * caller can override them.
+   */
+  style?: React.CSSProperties;
 }
 
-export function SvgIcon({ name, fill, width, height, className }: SvgIconProps) {
+export function SvgIcon({ name, fill, width, height, className, style: styleProp }: SvgIconProps) {
   const classes = cx(
     styles,
     'svg',
@@ -37,8 +43,11 @@ export function SvgIcon({ name, fill, width, height, className }: SvgIconProps) 
     className,
   );
 
-  const style: React.CSSProperties | undefined = (width || height)
+  const sizeStyle = (width || height)
     ? { ...(width ? { width } : {}), ...(height ? { height } : {}) }
+    : undefined;
+  const style: React.CSSProperties | undefined = (sizeStyle || styleProp)
+    ? { ...sizeStyle, ...styleProp }
     : undefined;
 
   return (

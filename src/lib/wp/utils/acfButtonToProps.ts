@@ -1,4 +1,7 @@
+import React from 'react';
 import type { ButtonProps, ButtonVariant, ButtonToggle } from '@/stories/patterns/atoms/button/Button';
+import { ButtonIcon } from '@/stories/patterns/atoms/button/ButtonIcon';
+import { resolveButtonIcon } from './resolveButtonIcon';
 
 const VALID_VARIANTS: ButtonVariant[] = [
   'default', 'primary', 'secondary', 'tertiary', 'quaternary', 'quinary', 'senary',
@@ -56,6 +59,13 @@ export function acfButtonToProps(
 
   const classes = [...extraClasses, visibilityClass].filter(Boolean);
 
+  // Icon slots (H5). Wired here rather than per-block because this mapper is the single
+  // entry point every ACF button goes through — header CTA, footer CTA, promo and the rest —
+  // which matches the framework, where eight templates override the Twig atom's left/right
+  // blocks rather than each re-implementing icons.
+  const left = resolveButtonIcon(cta, 'left');
+  const right = resolveButtonIcon(cta, 'right');
+
   return {
     href: cta.link.url,
     label: cta.link.title || undefined,
@@ -66,6 +76,8 @@ export function acfButtonToProps(
     disabled: cta.disabled ?? false,
     ...(as !== undefined ? { as } : {}),
     ...(toggle !== undefined ? { toggle } : {}),
+    ...(left ? { iconLeft: React.createElement(ButtonIcon, { data: left, side: 'left' }) } : {}),
+    ...(right ? { iconRight: React.createElement(ButtonIcon, { data: right, side: 'right' }) } : {}),
     className: classes.length ? classes.join(' ') : undefined,
   };
 }

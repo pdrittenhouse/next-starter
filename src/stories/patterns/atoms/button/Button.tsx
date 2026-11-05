@@ -63,6 +63,15 @@ export interface ButtonProps {
   href?: string;
   /** Link target (_blank, _self, etc.) for anchor buttons. When `toggle` is set, maps to data-bs-target instead. */
   target?: string;
+  /**
+   * Icon rendered BEFORE the label — the React equivalent of `{% block left %}` on
+   * `_button.tpl.twig`, which eight framework templates override. Ignored for
+   * `as="input"`, which is a void element, exactly as the Twig guards with
+   * `{% if button_element != 'input' %}`.
+   */
+  iconLeft?: React.ReactNode;
+  /** Icon rendered AFTER the label — `{% block right %}`. */
+  iconRight?: React.ReactNode;
   /** Button text. Use `children` for richer content (icons, etc.). */
   label?: string;
   /** Rich button content — takes precedence over `label`. */
@@ -121,6 +130,8 @@ export const Button = ({
   target,
   label,
   children,
+  iconLeft,
+  iconRight,
   active = false,
   disabled = false,
   toggle,
@@ -221,9 +232,20 @@ export const Button = ({
   }
 
   // Build the button content
-  const content = children || (
+  // Label, with the icon slots either side. Mirrors the Twig order exactly:
+  //   {% block left %} … {% block button_content %} … {% block right %}
+  // `children` still replaces the LABEL only, not the icons, so a caller passing both gets
+  // icons around their own content rather than losing them.
+  const labelContent = children || (
     hideLabel ? null : <span className={cx(styles, 'button--label')}>{label}</span>
   );
+  const content = (iconLeft || iconRight) ? (
+    <>
+      {iconLeft}
+      {labelContent}
+      {iconRight}
+    </>
+  ) : labelContent;
 
   // Assemble the button
   const button = (

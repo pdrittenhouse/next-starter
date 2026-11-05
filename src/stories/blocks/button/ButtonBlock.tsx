@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { Button } from '@/stories/patterns/atoms/button/Button';
+import { ButtonIcon } from '@/stories/patterns/atoms/button/ButtonIcon';
+import { resolveButtonIcon } from '@/lib/wp/utils/resolveButtonIcon';
 import type { ButtonToggle, ButtonVariant } from '@/stories/patterns/atoms/button/Button';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
@@ -103,7 +105,19 @@ export async function ButtonBlock({ block, children }: ButtonBlockProps) {
     .filter(Boolean)
     .join(' ') || undefined;
 
-  if (!label && !closeButton && !data.value && !children) return null;
+  // Icon slots (H5), resolved BEFORE the render gate below because they are one of the things
+  // that makes a button worth rendering.
+  const iconLeftData = resolveButtonIcon(data as Record<string, unknown>, 'left');
+  const iconRightData = resolveButtonIcon(data as Record<string, unknown>, 'right');
+
+  // An ICON-ONLY button is a legitimate editor state — label empty, one or both icons set —
+  // and the old gate returned null for it, so the block vanished entirely with no markup and no
+  // warning. Found with a real button on the test install: label empty, left icon `briefcase`,
+  // right icon `fas fa-rocket`. astro-starter's twin fell back to WordPress's rendered HTML
+  // instead, which hid the same bug behind output that looked correct.
+  if (!label && !closeButton && !data.value && !children && !iconLeftData && !iconRightData) {
+    return null;
+  }
 
   const { style: blockStyle } = buildAcfBlockStyle(data);
 
@@ -129,6 +143,8 @@ export async function ButtonBlock({ block, children }: ButtonBlockProps) {
         nowrap={acfBool(data.nowrap)}
         closeButton={closeButton}
         hideLabel={acfBool(data.hide_label)}
+        iconLeft={iconLeftData ? <ButtonIcon data={iconLeftData} side="left" /> : undefined}
+        iconRight={iconRightData ? <ButtonIcon data={iconRightData} side="right" /> : undefined}
         tooltip={tooltip}
         popoverTitle={popoverTitle}
         popoverContent={popoverContent}
