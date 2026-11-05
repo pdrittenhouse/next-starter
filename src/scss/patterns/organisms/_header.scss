@@ -134,8 +134,31 @@
     right: 0;
   }
 
-  .hide-header.header-hidden.scroll-up & {
+  .hide-header.header-hidden.scroll-up &,
+  // Within a header's height of the top the header is always revealed, whatever the last
+  // scroll direction. Overlay mode now persists down to scrollTop 0 (see the JS note), and
+  // the body padding reserving the header's space is only covered up while the header is
+  // actually shown -- park it in that window and the reserved space reads as a blank band
+  // at the top of the viewport. Reachable by scrolling up to just below the header height
+  // and then flicking down.
+  .hide-header.header-hidden.header-near-top & {
     transform: translateY(100%);
+  }
+
+  // E12. Suppresses the transform transition for the single frame in which the header
+  // leaves overlay mode (position:fixed + body padding) and re-enters normal flow.
+  //
+  // Without it the transform is still mid-flight when `header-hidden` is dropped, so it
+  // carries on unwinding against an element that is now in flow -- measured on the theme
+  // taking the header y = 6 -> 51 -> 109 -> -38 -> 0 over ~350 ms, which Chrome scores as a
+  // layout shift of 0.226 (deterministic on a one-step return to the top; 0 when the reveal
+  // is allowed to finish first). The scroll handler only drops the class at scrollY 0, where
+  // the revealed position and the in-flow position coincide, so landing the transform at 0
+  // in that same frame makes the two states visually identical and leaves nothing to shift.
+  //
+  // Specificity beats `.hide-header &` on its own, so no !important is needed.
+  .hide-header &.header-swap {
+    transition: none;
   }
 
   .hide-header.header-hidden.scroll-down & {}

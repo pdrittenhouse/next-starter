@@ -375,9 +375,43 @@ export function Header({
             t.classList.remove('show');
           });
           document.body.classList.remove('mega-menu-open');
+        } else if (document.body.classList.contains('header-hidden')) {
+          // Leave overlay mode only at the very top, not as soon as scrollY drops below the
+          // header's height (E12).
+          //
+          // The old threshold was the same `offset` used to enter overlay mode, so the class
+          // was dropped while the page was still up to a header's height from the top. At that
+          // point the revealed overlay header sits at the viewport top while its in-flow
+          // position is several hundred pixels higher, so re-entering flow moved it that far in
+          // one frame. Measured on the theme at scrollTop 382: the header's rect went
+          // [0,6] -> [5,389] and Chrome scored 0.226. Waiting for scrollY 0 makes the two
+          // positions coincide.
+          //
+          // Between 0 and `offset` the header simply stays in overlay mode, where the existing
+          // scroll-direction classes already decide whether it is parked or revealed -- so this
+          // is hysteresis, not a new state.
+          //
+          // `header-swap` suppresses the transform transition for this one frame; see the
+          // matching note in _header.scss for why that is required rather than cosmetic.
+          // Keep the header revealed while within its own height of the top, so the reserved
+          // body padding is never exposed as a blank band.
+          document.body.classList.toggle('header-near-top', window.scrollY <= offset);
+
+          if (window.scrollY <= 0) {
+            document.body.classList.remove('header-near-top');
+            header.classList.add('header-swap');
+            document.body.style.paddingTop = '';
+            document.body.classList.remove('header-hidden');
+            // Force the style flush while transitions are still suppressed, so the transform
+            // lands at 0 in the same frame the element re-enters flow.
+            void header.offsetHeight;
+            requestAnimationFrame(() => header.classList.remove('header-swap'));
+          }
         } else {
+          // Not in overlay mode: keep the padding clear. Idempotent, and the resize handler
+          // relies on it.
           document.body.style.paddingTop = '';
-          document.body.classList.remove('header-hidden');
+          document.body.classList.remove('header-near-top');
         }
       };
       handleHide();
