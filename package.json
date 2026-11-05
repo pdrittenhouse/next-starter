@@ -9,9 +9,10 @@
     "sync-pattern-styles": "node scripts/sync-pattern-styles.mjs",
     "sync-block-styles": "node scripts/sync-block-styles.mjs",
     "sync-theme-json": "node scripts/sync-theme-json.mjs",
-    "predev": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs",
+    "gen:fonts": "node scripts/gen-font-subsets.mjs",
+    "predev": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs && node scripts/gen-font-subsets.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs",
+    "prebuild": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs && node scripts/gen-font-subsets.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -68,11 +69,13 @@
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.2.10",
     "eslint-plugin-storybook": "^10.5.2",
+    "fontaine": "^1.0.3",
     "sass": "^1.71.0",
     "storybook": "^10.5.2",
     "storybook-addon-apollo-client": "^10.0.0",
     "storybook-deeper-sort": "^2.0.6",
     "style-loader": "^3.3.4",
+    "subset-font": "^2.9.0",
     "typescript": "^5"
   }
 }
