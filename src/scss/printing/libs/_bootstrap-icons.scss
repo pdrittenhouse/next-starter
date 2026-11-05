@@ -10,4 +10,9 @@
 // as before — the preamble is copied, not rewritten. Override variables before this import if
 // needed, e.g. `$bootstrap-icons-font-dir: "/custom/path/fonts";` (the library's own
 // declarations carry `!default`, so an earlier assignment still wins).
+// Served from public/fonts/bootstrap-icons/, holding the SUBSET face written by
+// scripts/subset-icon-fonts.mjs (130.9 KB -> 1.0 KB for the glyphs actually used).
+// Assigned before the import so it wins over the generated `!default` fallback, which
+// points at the pristine copy in node_modules.
+$bootstrap-icons-font-dir: "/fonts/bootstrap-icons";
 @import '../../generated/icons-bi';
