@@ -19,10 +19,27 @@
  *   Compares against the stored manifest. New blocks are logged; removed blocks
  *   are stubbed so existing @use references compile but produce no styles.
  *
- * Set SYNC_BLOCK_STYLES=false in .env.local to skip. When skipped the script
+ * Set SYNC_BLOCK_STYLES=true to enable; it is OFF by default. When skipped the script
  * writes placeholder stubs for any listed blocks that don't exist yet so
  * offline builds still compile.
  * TIMBERLAND_API_URL must point to the WP install.
+ *
+ * GATED OFF BY DEFAULT (H3, 2026-11-05). This layer is a FORK, not a mirror, so the sync is a
+ * hazard rather than a convenience and must be opted into explicitly with
+ * SYNC_BLOCK_STYLES=true.
+ *
+ * Measured: src/scss/patterns/organisms/_header.scss is 3,316 lines against the framework's
+ * 3,025, with ~1,900 changed lines, and carries no AUTO-GENERATED header — unlike the token and
+ * barrel layers, which do and sync cleanly. It is also actively hand-edited, with written
+ * rationale (explicit transition-property lists citing Lighthouse's non-composited-animation
+ * report; custom-property-driven alert fonts). The writeFileSync below is unguarded, and
+ * prebuild/predev run this script on EVERY `npm run dev` and `npm run build` — so one dev run
+ * against a reachable WP install would revert all of it.
+ *
+ * The default was previously ON (absent env var meant run), and the only guard was
+ * SYNC_BLOCK_STYLES=false in .env.local — which is gitignored, so the protection existed on
+ * exactly one machine and a fresh clone was unprotected. Re-enabling means reconciling the
+ * ~1,900-line divergence first; that is real work, not a flag flip.
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
@@ -93,9 +110,9 @@ function ensurePlaceholders() {
   }
 }
 
-if (env.SYNC_BLOCK_STYLES === 'false') {
+if (env.SYNC_BLOCK_STYLES !== 'true') {
   ensurePlaceholders();
-  console.log('[sync-block-styles] SYNC_BLOCK_STYLES=false — skipped.');
+  console.log(`[sync-block-styles] skipped — SYNC_BLOCK_STYLES is ${env.SYNC_BLOCK_STYLES === undefined ? 'unset (off by default, see the docblock)' : `"${env.SYNC_BLOCK_STYLES}"`}; set it to "true" to enable.`);
   process.exit(0);
 }
 
