@@ -1,0 +1,4 @@
+{
+  "http://localhost:3000/": "site-home",
+  "http://localhost:3000/search": "search"
+}

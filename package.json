@@ -22,7 +22,9 @@
     "storybook": "storybook dev -p 6006",
     "prebuild-storybook": "node scripts/sync-tokens.mjs && node scripts/sync-icons.mjs && node scripts/sync-scss-utils.mjs && node scripts/sync-pattern-styles.mjs && node scripts/sync-block-styles.mjs && node scripts/sync-theme-json.mjs && node scripts/build-icon-files.mjs",
     "build-storybook": "storybook build",
-    "build-icon-files": "node scripts/build-icon-files.mjs"
+    "build-icon-files": "node scripts/build-icon-files.mjs",
+    "test:lighthouse": "npm run build && node tests/lighthouse/warmup.mjs && lhci collect --config=./lighthouserc.cjs && node tests/lighthouse/aggregate.mjs",
+    "test:lighthouse:compare": "npm run build && node tests/lighthouse/warmup.mjs && lhci collect --config=./lighthouserc.cjs && node tests/lighthouse/aggregate.mjs --compare"
   },
   "dependencies": {
     "@apollo/client": "^3.9.5",
@@ -52,6 +54,7 @@
     "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.16.0",
     "@storybook/addon-a11y": "^10.5.2",
     "@storybook/addon-designs": "^11.1.4",
     "@storybook/addon-docs": "^10.5.2",

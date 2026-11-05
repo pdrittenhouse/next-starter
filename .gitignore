@@ -46,3 +46,7 @@ storybook-static/
 public/fonts/
 public/webfonts/
 public/icons/
+
+# Lighthouse CI raw per-run reports (ephemeral; aggregate.mjs turns them into the
+# committed baseline under tests/lighthouse/)
+.lighthouseci/
