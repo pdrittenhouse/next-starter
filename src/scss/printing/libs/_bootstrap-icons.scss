@@ -1,6 +1,13 @@
-// Bootstrap Icons
-// Full CSS output: @font-face + .bi base class + all ~2000 icon classes.
-// Font files resolved by the bundler from node_modules/bootstrap-icons/font/fonts/.
-// Override variables before this import if needed, e.g.:
-//   $bootstrap-icons-font-dir: "/custom/path/fonts";
-@import 'bootstrap-icons/font/bootstrap-icons';
+// Bootstrap Icons — narrowed to the icons this app can actually render (H5).
+//
+// `@import 'bootstrap-icons/font/bootstrap-icons'` emits all 2,078 glyph rules. The generated
+// partial below carries the library's own preamble verbatim (variables, @font-face, the .bi
+// base rule) plus only the used glyph rules — the union of scripts/icon-defaults.mjs, a scan of
+// src/ for literal class tokens, and tests/icons/stored-values.json. Regenerate with
+// `npm run gen:icons`; `npm run gen:icons -- --check` fails if the committed output is stale.
+//
+// Font files are resolved by the bundler from node_modules/bootstrap-icons/font/fonts/, exactly
+// as before — the preamble is copied, not rewritten. Override variables before this import if
+// needed, e.g. `$bootstrap-icons-font-dir: "/custom/path/fonts";` (the library's own
+// declarations carry `!default`, so an earlier assignment still wins).
+@import '../../generated/icons-bi';

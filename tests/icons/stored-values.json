@@ -1,0 +1,20 @@
+{
+    "generated_at": "2026-11-05T20:45:03+00:00",
+    "site_url": "http://headless-test.local",
+    "icons": {
+        "fa": [],
+        "ph": [],
+        "bi": [],
+        "sprite": []
+    },
+    "counts": {
+        "postmeta_rows": 774,
+        "menu_rows": 156,
+        "option_rows": 802,
+        "posts_scanned": 18,
+        "fa": 0,
+        "ph": 0,
+        "bi": 0,
+        "sprite": 0
+    }
+}

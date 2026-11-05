@@ -48,8 +48,17 @@
 // COMMENTED OUT: Using FontAwesome JS API instead of CSS fonts
 // The JS API (dom.watch()) dynamically converts <i> tags to inline SVG.
 // @import '@fortawesome/fontawesome-free/scss/icons'; // all icons
-// Importing specific icons
-@import './fa';
+// Importing specific icons — generated, not hand-maintained (H5).
+//
+// This replaced printing/libs/_fa.scss, whose list had rotted in both directions: four of its
+// five regular icons were referenced nowhere else in the repo, while thirteen icons that ARE
+// referenced in live component code had no glyph rule at all. Since FA's JS SVG API is never
+// initialised here (dom.watch() appears only in comments), a missing rule means the icon
+// renders as empty space, with no console error and no build warning.
+//
+// Must stay here, after FA's own `core`, so the .fa/.fas/.fab base rules exist first.
+// Regenerate with `npm run gen:icons`.
+@import '../../generated/icons-fa';
 
 // Import Font Awesome Free Fonts
 // Needed for CSS-based icons in pseudo-elements

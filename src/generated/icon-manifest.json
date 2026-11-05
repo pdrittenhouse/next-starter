@@ -1,0 +1,44 @@
+{
+  "generated_at": "2026-11-05T20:54:32.582Z",
+  "stored_values": {
+    "site_url": "http://headless-test.local",
+    "generated_at": "2026-11-05T20:45:03+00:00"
+  },
+  "icons": {
+    "fa": {
+      "arrow-right": "f061",
+      "check": "f00c",
+      "check-circle": "f058",
+      "clock": "f017",
+      "envelope": "f0e0",
+      "facebook": "f09a",
+      "facebook-f": "f39e",
+      "github": "f09b",
+      "instagram": "f16d",
+      "link": "f0c1",
+      "linkedin": "f08c",
+      "linkedin-in": "f0e1",
+      "quote-left": "f10d",
+      "quote-right": "f10e",
+      "reddit-alien": "f281",
+      "share": "f064",
+      "times-circle": "f057",
+      "twitter": "f099"
+    },
+    "bi": {
+      "check-circle-fill": "f26a",
+      "facebook": "f344",
+      "github": "f3ed",
+      "graph-up-arrow": "f673",
+      "instagram": "f437",
+      "linkedin": "f472",
+      "rocket": "f846",
+      "rocket-takeoff-fill": "f844",
+      "shield-check": "f52f",
+      "star": "f588",
+      "star-fill": "f586",
+      "twitter-x": "f8db",
+      "youtube": "f62b"
+    }
+  }
+}
