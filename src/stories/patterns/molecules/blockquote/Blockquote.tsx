@@ -23,6 +23,8 @@ export interface CitationImageProps {
   sizes?: string;
   /** Native lazy loading. Defaults to 'lazy'. */
   loading?: 'lazy' | 'eager';
+  /** Fetch priority hint — 'high' marks the LCP image. Mirrors the Image atom's prop. */
+  fetchPriority?: 'high' | 'low' | 'auto';
   /** Additional CSS class names (maps to image_other_classes in Twig). */
   className?: string;
 }
@@ -88,6 +90,7 @@ export function Blockquote({
             height={citationImage.height}
             sizes={citationImage.sizes}
             loading={citationImage.loading}
+          fetchPriority={citationImage.fetchPriority}
             className={cx(styles, 'citation-image', citationImage.className)}
           />
         </span>

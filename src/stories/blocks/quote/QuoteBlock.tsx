@@ -1,11 +1,17 @@
 import { Blockquote } from '@/stories/patterns/molecules/blockquote/Blockquote';
 import type { CitationImageProps } from '@/stories/patterns/molecules/blockquote/Blockquote';
+import { resolveLazyLoading, type LazyLoadingGroup } from '@/lib/wp/utils/resolveLazyLoading';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './quote.module.scss';
 import { cx } from '@/lib/cx';
 
 interface QuoteBlockData {
+  /**
+   * ACF `lazy_loading` clone group — read via resolveLazyLoading() (H1). Governs the INLINE
+   * image only; a background image cannot carry `loading`/`fetchpriority`.
+   */
+  lazy_loading?: LazyLoadingGroup | null;
   quote?: string | null;
   citation?: string | null;
   citation_image?: {
@@ -46,7 +52,7 @@ export async function QuoteBlock({ block }: QuoteBlockProps) {
     citationImage = {
       src: imageSrc,
       alt: data.citation_image?.image?.alt ?? '',
-      loading: 'lazy',
+      ...resolveLazyLoading(data),
     };
   }
 

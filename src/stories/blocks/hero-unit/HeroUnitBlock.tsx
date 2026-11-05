@@ -1,6 +1,7 @@
 import React from 'react';
 import { Jumbotron } from '@/stories/patterns/molecules/jumbotron/Jumbotron';
 import { Feature } from '@/stories/extended/patterns/molecules/Feature';
+import { resolveLazyLoading, type LazyLoadingGroup } from '@/lib/wp/utils/resolveLazyLoading';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './hero-unit.module.scss';
@@ -56,6 +57,11 @@ interface HeroBgColor {
 }
 
 interface HeroUnitBlockData extends Pick<AcfBlockStyleData, 'height' | 'padding' | 'margin' | 'border' | 'border_radius' | 'box_shadow'> {
+  /**
+   * ACF `lazy_loading` clone group — read via resolveLazyLoading() (H1). Governs the INLINE
+   * image only; a background image cannot carry `loading`/`fetchpriority`.
+   */
+  lazy_loading?: LazyLoadingGroup | null;
   // Dispatch
   hero_type?: 'section' | 'jumbotron' | 'feature' | null;
   hero_layout?: {
@@ -404,7 +410,7 @@ export async function HeroUnitBlock({ block }: HeroUnitBlockProps) {
           alt: data.image?.image?.alt ?? '',
           width: data.image?.image?.width ?? undefined,
           height: data.image?.image?.height ?? undefined,
-          loading: 'lazy' as const,
+          ...resolveLazyLoading(data),
         }
       : undefined;
 
@@ -497,7 +503,7 @@ export async function HeroUnitBlock({ block }: HeroUnitBlockProps) {
         alt: data.image?.image?.alt ?? '',
         width: data.image?.image?.width ?? undefined,
         height: data.image?.image?.height ?? undefined,
-        loading: 'lazy' as const,
+        ...resolveLazyLoading(data),
       }
     : undefined;
 

@@ -12,6 +12,7 @@ import type {
   CardIconProps,
 } from '@/stories/patterns/organisms/card/Card';
 import type { ButtonProps, ButtonVariant } from '@/stories/patterns/atoms/button/Button';
+import { resolveLazyLoading, type LazyLoadingGroup } from '@/lib/wp/utils/resolveLazyLoading';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import styles from './card.module.scss';
@@ -73,6 +74,11 @@ interface AcfCardImageField {
  * them (e.g. `card_bg_color.bg_theme_color`).
  */
 export interface CardBlockData extends Pick<AcfBlockStyleData, 'width' | 'height' | 'margin'> {
+  /**
+   * ACF `lazy_loading` clone group — read via resolveLazyLoading() (H1). Governs the INLINE
+   * image only; a background image cannot carry `loading`/`fetchpriority`.
+   */
+  lazy_loading?: LazyLoadingGroup | null;
   // ─── Content ────────────────────────────────────────────────────────────────
   card_title?: string | null;
   subtitle?: string | null;
@@ -541,7 +547,7 @@ export async function CardBlock({ block }: CardBlockProps) {
               width: cardImageWidth,
               height: cardImageHeight,
               sizes: '(max-width: 768px) 100vw, 960px',
-              loading: 'lazy',
+              ...resolveLazyLoading(data),
             }
           : undefined
       }

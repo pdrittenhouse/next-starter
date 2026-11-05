@@ -6,6 +6,7 @@ import { Image, type ImageVariant } from '@/stories/patterns/atoms/image/Image';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import { buildAcfBlockStyle, type AcfBlockStyleData } from '@/lib/wp/utils/buildAcfBlockStyle';
+import { resolveLazyLoading } from '@/lib/wp/utils/resolveLazyLoading';
 import styles from './image.module.scss';
 import { cx } from '@/lib/cx';
 
@@ -100,7 +101,10 @@ export async function ImageBlock({ block }: ImageBlockProps) {
   // Handle both flat format (image_image_type) and nested clone format (image.image_type)
   const imageType = data.image_image_type ?? data.image?.image_type ?? 'file';
   const variant = (data.image_variant as ImageVariant | undefined) ?? 'picture';
-  const loading = data.loading ?? 'lazy';
+  // H1: the ACF lazy_loading group wins over this block's own flat `loading` field.
+  // prioritize_image also emits fetchPriority='high'. Previously `loading` was read alone
+  // and the group was ignored entirely, so an editor's choice did nothing.
+  const { loading, fetchPriority } = resolveLazyLoading(data);
   const sizesAttr = data.sizes ?? '(max-width: 768px) 100vw, 50vw';
   const aspectRatio = variant === 'aspect-ratio' ? resolveAspectRatio(data) : null;
 
@@ -170,6 +174,7 @@ export async function ImageBlock({ block }: ImageBlockProps) {
       height={imageHeight}
       sizes={sizesAttr}
       loading={loading}
+      fetchPriority={fetchPriority}
       imgStyle={imgStyle}
     />
   );

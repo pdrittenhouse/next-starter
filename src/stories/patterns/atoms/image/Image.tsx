@@ -33,9 +33,10 @@ export interface ImageProps {
   /** Native lazy loading. Defaults to 'lazy'. Set to 'eager' for above-the-fold images. */
   loading?: 'lazy' | 'eager';
   /**
-   * Fetch priority hint. Use 'high' for the LCP image — sets next/image's `priority`
-   * flag which also disables lazy loading. 'low' and 'auto' fall through to the
-   * `loading` prop.
+   * Fetch priority hint, forwarded to the rendered <img> as `fetchpriority`.
+   * Use 'high' for the LCP image — that also sets next/image's `priority` flag,
+   * which emits a <link rel="preload"> and disables lazy loading. 'low' and 'auto'
+   * are passed through as-is and leave the `loading` prop in effect.
    */
   fetchPriority?: 'high' | 'low' | 'auto';
   /** Additional CSS class names — maps to `image_other_classes` in the Twig pattern. */
@@ -114,6 +115,7 @@ export function Image({
             sizes={sizes}
             loading={resolvedLoading}
             priority={priority}
+            fetchPriority={fetchPriority}
             style={{ objectFit: 'cover', maxWidth: '100%', ...imgStyle }}
           />
         </div>
@@ -132,6 +134,7 @@ export function Image({
         sizes={sizes}
         loading={resolvedLoading}
         priority={priority}
+        fetchPriority={fetchPriority}
         className={cls}
         style={imgStyle}
       />
@@ -150,6 +153,7 @@ export function Image({
         sizes={sizes}
         loading={resolvedLoading}
         priority={priority}
+        fetchPriority={fetchPriority}
         className={cls}
         style={imgStyle}
       />

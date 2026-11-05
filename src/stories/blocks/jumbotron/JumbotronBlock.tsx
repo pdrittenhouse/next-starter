@@ -2,6 +2,7 @@ import { print } from 'graphql';
 import { fetchGraphQL } from '@/lib/wp/client';
 import { GET_MEDIA_ITEM_BY_ID } from '@/lib/wp/queries';
 import { Jumbotron } from '@/stories/patterns/molecules/jumbotron/Jumbotron';
+import { resolveLazyLoading, type LazyLoadingGroup } from '@/lib/wp/utils/resolveLazyLoading';
 import { parseBlockAttributes } from '@/types/blocks';
 import type { EditorBlock } from '@/types/blocks';
 import type { ImageProps } from '@/stories/patterns/atoms/image/Image';
@@ -85,6 +86,11 @@ interface JumbotronContainerBreakpointData {
  * objects are typed as their own interfaces above.
  */
 interface JumbotronBlockData {
+  /**
+   * ACF `lazy_loading` clone group — read via resolveLazyLoading() (H1). Governs the INLINE
+   * image only; a background image cannot carry `loading`/`fetchpriority`.
+   */
+  lazy_loading?: LazyLoadingGroup | null;
   /** Eyebrow label rendered above the title. Twig: `fields['label']`. */
   label?: string;
   /** Primary heading. Twig: `fields['jumbotron_title']`. */
@@ -321,7 +327,7 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
       src: sideImgData.image_url,
       alt: '',
       variant: 'picture',
-      loading: 'lazy',
+      ...resolveLazyLoading(data),
     };
   } else if (sideImageId && sideMediaResult?.data?.mediaItem) {
     const media = sideMediaResult.data.mediaItem;
@@ -331,7 +337,7 @@ export async function JumbotronBlock({ block }: JumbotronBlockProps) {
       width: media.mediaDetails?.width,
       height: media.mediaDetails?.height,
       variant: 'picture',
-      loading: 'lazy',
+      ...resolveLazyLoading(data),
     };
   }
 
