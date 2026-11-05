@@ -64,4 +64,8 @@
 // Needed for CSS-based icons in pseudo-elements
 @import '@fortawesome/fontawesome-free/scss/regular';
 @import '@fortawesome/fontawesome-free/scss/solid';
-@import '@fortawesome/fontawesome-free/scss/brands';
+// Brands, narrowed. The library's own partial emits a `--fa` declaration for all 603
+// brand icons; the generated file below is its head — :root custom properties, the
+// brands @font-face, the .fab base rule — copied verbatim with the per-icon @each
+// dropped. The brands this app uses get their `--fa` from ../../generated/icons-fa.
+@import '../../generated/icons-fa-brands';

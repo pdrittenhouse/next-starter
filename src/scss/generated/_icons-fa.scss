@@ -9,24 +9,26 @@
 // imported. They are read at generate time from the installed package, so an upgrade is
 // picked up by re-running the generator and cannot drift silently.
 //
-// Replaces the hand-maintained printing/libs/_fa.scss. Must be imported from inside
-// printing/libs/_font-awesome.scss, after FA's own core, so .fa/.fas/.fab base rules exist.
+// Replaces the hand-maintained printing/libs/_fa.scss AND the narrowed @each that
+// scss/brands.scss would otherwise emit for all 603 brand icons. Must be imported from
+// inside printing/libs/_font-awesome.scss, after FA's own core, so the .fa/.fas/.fab base
+// rules and the @font-face declarations exist first.
 
-.fa-arrow-right::before { content: "\f061"; }
-.fa-check::before { content: "\f00c"; }
-.fa-check-circle::before { content: "\f058"; }
-.fa-clock::before { content: "\f017"; }
-.fa-envelope::before { content: "\f0e0"; }
-.fa-facebook::before { content: "\f09a"; }
-.fa-facebook-f::before { content: "\f39e"; }
-.fa-github::before { content: "\f09b"; }
-.fa-instagram::before { content: "\f16d"; }
-.fa-link::before { content: "\f0c1"; }
-.fa-linkedin::before { content: "\f08c"; }
-.fa-linkedin-in::before { content: "\f0e1"; }
-.fa-quote-left::before { content: "\f10d"; }
-.fa-quote-right::before { content: "\f10e"; }
-.fa-reddit-alien::before { content: "\f281"; }
-.fa-share::before { content: "\f064"; }
-.fa-times-circle::before { content: "\f057"; }
-.fa-twitter::before { content: "\f099"; }
+.fa-arrow-right { --fa: "\f061"; }
+.fa-check { --fa: "\f00c"; }
+.fa-check-circle { --fa: "\f058"; }
+.fa-clock { --fa: "\f017"; }
+.fa-envelope { --fa: "\f0e0"; }
+.fa-facebook { --fa: "\f09a"; }
+.fa-facebook-f { --fa: "\f39e"; }
+.fa-github { --fa: "\f09b"; }
+.fa-instagram { --fa: "\f16d"; }
+.fa-link { --fa: "\f0c1"; }
+.fa-linkedin { --fa: "\f08c"; }
+.fa-linkedin-in { --fa: "\f0e1"; }
+.fa-quote-left { --fa: "\f10d"; }
+.fa-quote-right { --fa: "\f10e"; }
+.fa-reddit-alien { --fa: "\f281"; }
+.fa-share { --fa: "\f064"; }
+.fa-times-circle { --fa: "\f057"; }
+.fa-twitter { --fa: "\f099"; }
