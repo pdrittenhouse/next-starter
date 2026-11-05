@@ -981,7 +981,39 @@
   text-shadow: $text-shadow-x $text-shadow-y $text-shadow-blur $text-shadow-color;
   color: $color;
   text-align: center;
-  transition: all $transition-duration $transition-timing-function;
+  // Every animatable property a button may want to transition, listed explicitly rather
+  // than as `all`. The hover state below can vary any of these, and a consumer that does so
+  // should get a transition whether or not this particular build changes the value.
+  // `all` is what Lighthouse reports as a non-composited animation.
+  //
+  // Omitted because they cannot be animated at all: border-*-style, cursor, text-transform,
+  // font-family, font-style. Longhand is used so the duration and timing are stated once
+  // instead of being repeated for every property.
+  transition-property:
+    color,
+    background-color,
+    border-color,
+    border-width,
+    border-radius,
+    box-shadow,
+    text-shadow,
+    text-decoration-color,
+    font-size,
+    font-weight,
+    line-height,
+    letter-spacing,
+    padding,
+    gap,
+    width,
+    min-width,
+    max-width,
+    opacity,
+    transform,
+    filter,
+    outline-color,
+    outline-offset;
+  transition-duration: $transition-duration;
+  transition-timing-function: $transition-timing-function;
   will-change: transform, color, background-color, border-top-color, border-bottom-color, border-left-color, border-right-color, padding, opacity;
   display: inline-block;
   text-decoration: none;

@@ -292,6 +292,10 @@
   // Header Branding
   --mobile-branding-width: #{rem-calc(180px)};
   --branding-width: #{rem-calc(226px)};
+  // The branding block can be placed anywhere, so it is sized independently of the header and
+  // footer instances. Defaults to the logo's own proportions rather than a layout slot's.
+  --block-branding-width: rem-calc(226px);
+  --block-branding-width-mobile: rem-calc(180px);
   --branding-color: #{c(black)};
   --branding-hover-color: #{c(guardsman-red)};
   --branding-margin-top: 0;

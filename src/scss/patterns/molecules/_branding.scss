@@ -40,6 +40,21 @@
 
   &.logo-type--svg {}
 
+  // The block form of this pattern can be placed anywhere, so it gets its own width rather
+  // than inheriting the footer's or the header's. Without any constraint the logo filled its
+  // container -- on a 390px viewport the footer instance rendered 300px wide, three quarters
+  // of the screen, purely because nothing said otherwise.
+  //
+  // `max-width` to match every other branding width in the theme, so the logo still shrinks
+  // on narrow viewports instead of forcing a horizontal scroll.
+  &.block-branding {
+    max-width: var(--block-branding-width-mobile);
+
+    @include media-breakpoint-up(xl) {
+      max-width: var(--block-branding-width);
+    }
+  }
+
   &--site-logo {}
 
   &--logo-img {

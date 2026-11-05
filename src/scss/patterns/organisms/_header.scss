@@ -1498,7 +1498,11 @@
   &--alert {
     @include make-col-ready;
     @include make-col(12);
-    @include font($font-stack-alternate, 600);
+    // Driven by custom properties so a consumer can restyle the alert without recompiling
+    // this pattern. Both are declared in printing/_css-variables.scss. The weight was
+    // previously hardcoded to 600, which synthesises a bold on single-weight families and
+    // defeats a metric-matched fallback; --alert-font-weight defaults to normal.
+    @include font(var(--alert-font-family), var(--alert-font-weight));
     @include fontSize(19px, 19px);
     text-align: center;
     color: var(--alert-text);
