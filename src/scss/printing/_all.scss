@@ -1,4 +1,8 @@
 @use "libs/bootstrap" as *;
+// Emits the palette as bare `--<name>` custom properties, which the ported
+// components reference as `var(--primary)` etc. Must come after libs/bootstrap so
+// $theme-colors is populated. See the file for why it is imported exactly once.
+@use "libs/bootstrap-root";
 @use "libs/font-awesome" as *;
 @use "libs/bootstrap-icons" as *;
 @use "libs/hamburgers";

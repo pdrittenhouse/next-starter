@@ -1,0 +1,30 @@
+// Bootstrap Root CSS Custom Properties
+//
+// Ported from the framework's 00-protons/printing/libs/_bootstrap-root.scss, which both it and
+// natural-rose carry and which these starters were missing entirely (H5).
+//
+// Bootstrap 5 emits its palette as `--bs-<name>` only. The framework's Twig templates, and the
+// components ported from them, emit `var(--<name>)` WITHOUT the prefix — the button icon colour
+// expression (`color: var(--quaternary)`) is one of many. With this file absent those resolved
+// to nothing, so every palette-coloured thing fell back to black, silently: an undefined
+// custom property is not an error, it just computes to the initial value.
+//
+// Found while verifying the button icon port: the inline style was correct
+// (`color: var(--quaternary)`) and `--quaternary` was simply never defined anywhere in either
+// starter. WordPress resolves it because it has this loop; the starters did not.
+//
+// Import ONCE, from printing/_all.scss. Importing it from a block or pattern partial would
+// duplicate the whole :root block into every compiled component stylesheet — the same reason
+// the framework's copy carries that warning.
+
+// `@import`, not `@use`, and that is deliberate: `$theme-colors` is a Bootstrap variable that
+// lives in the legacy global scope, assembled through the `variables` forwarding chain. The
+// sibling `libs/_bootstrap.scss` imports it the same way and for the same reason — `@use` here
+// fails with "Undefined variable: $theme-colors".
+@import "variables";
+
+@each $name, $color in $theme-colors {
+  :root {
+    --#{"" + $name}: #{$color};
+  }
+}
