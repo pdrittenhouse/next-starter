@@ -1,0 +1,4 @@
+{
+  "//": "Scopes this directory tree to CommonJS. The repo root sets \"type\": \"module\", which would make every .js file here an ES module -- and the gate's helpers and specs are copied verbatim from the framework, where they are CommonJS (require/module.exports). Renaming 11 files to .cjs would also mean rewriting every internal require, and would then drift from the framework copies they are kept in step with. Node resolves module type from the NEAREST package.json, so this one file does it instead. tests/lighthouse/*.mjs are unaffected: an explicit .mjs extension always wins.",
+  "type": "commonjs"
+}

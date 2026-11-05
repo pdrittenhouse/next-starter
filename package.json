@@ -24,7 +24,10 @@
     "build-storybook": "storybook build",
     "build-icon-files": "node scripts/build-icon-files.mjs",
     "test:lighthouse": "npm run build && node tests/lighthouse/warmup.mjs && lhci collect --config=./lighthouserc.cjs && node tests/lighthouse/aggregate.mjs",
-    "test:lighthouse:compare": "npm run build && node tests/lighthouse/warmup.mjs && lhci collect --config=./lighthouserc.cjs && node tests/lighthouse/aggregate.mjs --compare"
+    "test:lighthouse:compare": "npm run build && node tests/lighthouse/warmup.mjs && lhci collect --config=./lighthouserc.cjs && node tests/lighthouse/aggregate.mjs --compare",
+    "test:visual": "cross-env TIMBERLAND_VISUAL_CONFIG=./tests/visual.config.js playwright test --config=./playwright.config.cjs",
+    "test:visual:update": "cross-env TIMBERLAND_VISUAL_CONFIG=./tests/visual.config.js UPDATE_BASELINES=1 playwright test --config=./playwright.config.cjs",
+    "test:visual:report": "playwright show-report"
   },
   "dependencies": {
     "@apollo/client": "^3.9.5",
@@ -55,6 +58,7 @@
   },
   "devDependencies": {
     "@lhci/cli": "^0.16.0",
+    "@playwright/test": "^1.65.0",
     "@storybook/addon-a11y": "^10.5.2",
     "@storybook/addon-designs": "^11.1.4",
     "@storybook/addon-docs": "^10.5.2",
@@ -70,6 +74,7 @@
     "@types/react-dom": "^18",
     "@types/slick-carousel": "^1.6.40",
     "ajv": "^8.20.0",
+    "cross-env": "^10.1.0",
     "css-loader": "^6.10.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.2.10",

@@ -50,3 +50,11 @@ public/icons/
 # Lighthouse CI raw per-run reports (ephemeral; aggregate.mjs turns them into the
 # committed baseline under tests/lighthouse/)
 .lighthouseci/
+
+# Playwright per-run artefacts (traces, screenshots on failure)
+test-results/
+playwright-report/
+
+# Computed-style diff dumps, written only when the visual gate FAILS (the baselines
+# themselves are committed; these are the per-failure detail)
+tests/visual/__baselines__/__diffs__/
